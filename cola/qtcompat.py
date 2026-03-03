@@ -11,22 +11,22 @@ except ImportError:
 from . import hotkeys
 
 
-def patch(obj, attr, value):
+def patch(obj, attr, value) -> None:
     if not hasattr(obj, attr):
         setattr(obj, attr, value)
 
 
-def install():
+def install() -> None:
     patch(QtWidgets.QGraphicsItem, 'mapRectToScene', _map_rect_to_scene)
     patch(QtGui.QKeySequence, 'Preferences', hotkeys.PREFERENCES)
 
 
-def add_search_path(prefix, path):
+def add_search_path(prefix, path) -> None:
     if hasattr(QtCore.QDir, 'addSearchPath'):
         QtCore.QDir.addSearchPath(prefix, path)
 
 
-def set_common_dock_options(window):
+def set_common_dock_options(window) -> None:
     if not hasattr(window, 'setDockOptions'):
         return
     nested = QtWidgets.QMainWindow.AllowNestedDocks

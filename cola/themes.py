@@ -1,4 +1,5 @@
 """Themes generators"""
+from __future__ import annotations
 import os
 
 
@@ -7,6 +8,7 @@ try:
 except ImportError:
     AppKit = None
 from qtpy import QtGui
+from qtpy.QtGui import QColor
 
 from .i18n import N_
 from .widgets import defs
@@ -32,7 +34,7 @@ class Theme:
         style_sheet=EStylesheet.DEFAULT,
         main_color=None,
         macos_appearance=None,
-    ):
+    ) -> None:
         self.name = name
         self.title = title
         self.is_dark = is_dark
@@ -40,10 +42,10 @@ class Theme:
         self.style_sheet = style_sheet
         self.main_color = main_color
         self.macos_appearance = macos_appearance
-        self.disabled_text_color = None
-        self.text_color = None
-        self.highlight_color = None
-        self.background_color = None
+        self.disabled_text_color: str | None = None
+        self.text_color: str | None = None
+        self.highlight_color: str | None = None
+        self.background_color: str | None = None
         self.palette = None
 
     def build_style_sheet(self, app_palette, bold_fonts):
@@ -81,7 +83,7 @@ class Theme:
         self.palette = palette
         return palette
 
-    def style_sheet_flat(self, bold_fonts):
+    def style_sheet_flat(self, bold_fonts) -> str:
         main_color = self.main_color
         color = qtutils.css_color(main_color)
         color_rgb = qtutils.rgb_css(color)
@@ -516,7 +518,7 @@ class Theme:
             palette = self.palette
         return palette
 
-    def highlight_color_rgb(self):
+    def highlight_color_rgb(self) -> str:
         """Return an rgb(r,g,b) CSS color value for the selection highlight"""
         if self.highlight_color:
             highlight_rgb = self.highlight_color
@@ -530,7 +532,7 @@ class Theme:
             highlight_rgb = qtutils.rgb_css(color)
         return highlight_rgb
 
-    def selection_color(self):
+    def selection_color(self) -> QColor:
         """Return a color suitable for selections"""
         highlight = qtutils.css_color(self.highlight_color_rgb())
         if highlight.lightnessF() > 0.7:  # Avoid clamping light colors to white.
@@ -539,7 +541,7 @@ class Theme:
             color = highlight.lighter()
         return color
 
-    def text_colors_rgb(self):
+    def text_colors_rgb(self) -> tuple[str, str]:
         """Return a pair of rgb(r,g,b) CSS color values for text and selected text"""
         if self.text_color:
             text_rgb = self.text_color
@@ -553,7 +555,7 @@ class Theme:
             highlight_text_rgb = qtutils.rgb_css(color)
         return text_rgb, highlight_text_rgb
 
-    def disabled_text_color_rgb(self):
+    def disabled_text_color_rgb(self) -> str:
         """Return an rgb(r,g,b) CSS color value for the disabled text"""
         if self.disabled_text_color:
             disabled_text_rgb = self.disabled_text_color
@@ -563,7 +565,7 @@ class Theme:
             disabled_text_rgb = qtutils.rgb_css(color)
         return disabled_text_rgb
 
-    def background_color_rgb(self):
+    def background_color_rgb(self) -> str:
         """Return an rgb(r,g,b) CSS color value for the window background"""
         if self.background_color:
             background_color = self.background_color
@@ -574,7 +576,7 @@ class Theme:
         return background_color
 
 
-def style_sheet_default(palette, bold_fonts):
+def style_sheet_default(palette, bold_fonts) -> str:
     highlight = palette.color(QtGui.QPalette.Highlight)
     shadow = palette.color(QtGui.QPalette.Shadow)
     base = palette.color(QtGui.QPalette.Base)
@@ -742,7 +744,7 @@ def get_all_themes():
     return themes
 
 
-def apply_platform_theme(theme):
+def apply_platform_theme(theme) -> None:
     """Apply platform-specific themes (e.g. dark mode on macOS)"""
     # https://developer.apple.com/documentation/appkit/nsappearancecustomization/choosing_a_specific_appearance_for_your_macos_app
     # https://github.com/git-cola/git-cola/issues/905#issuecomment-461118465
@@ -767,7 +769,7 @@ def get_macos_themes():
     if AppKit is None:
         return themes
 
-    def add_macos_theme(name, description, is_dark, attr):
+    def add_macos_theme(name, description, is_dark, attr) -> None:
         """Add an AppKit theme if it exists"""
         if hasattr(AppKit, attr):
             themes[name] = Theme(

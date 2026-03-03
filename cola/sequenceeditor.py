@@ -1,3 +1,4 @@
+from __future__ import annotations
 import sys
 import re
 from argparse import ArgumentParser
@@ -24,6 +25,7 @@ from cola.widgets import filelist
 from cola.widgets import diff
 from cola.widgets import standard
 from cola.widgets import text
+from cola.qtutils import SimpleTask
 
 
 BREAK = 'break'
@@ -69,7 +71,7 @@ def main():
     return view.status
 
 
-def stop(context, _view):
+def stop(context, _view) -> None:
     """All done, cleanup"""
     context.view.stop()
     context.runtask.wait()
@@ -99,7 +101,7 @@ def unabbrev(cmd):
 class MainWindow(standard.MainWindow):
     """The main git-cola application window"""
 
-    def __init__(self, context, parent=None):
+    def __init__(self, context, parent=None) -> None:
         super().__init__(parent)
         self.context = context
         self.status = 1
@@ -120,7 +122,7 @@ class MainWindow(standard.MainWindow):
         qtutils.add_close_action(self)
         self.init_state(context.settings, self.init_window_size)
 
-    def init_window_size(self):
+    def init_window_size(self) -> None:
         """Set the window size on the first initial view"""
         if utils.is_darwin():
             width, height = qtutils.desktop_size()
@@ -128,22 +130,22 @@ class MainWindow(standard.MainWindow):
         else:
             self.showMaximized()
 
-    def set_editor(self, editor):
+    def set_editor(self, editor) -> None:
         self.editor = editor
         self.setCentralWidget(editor)
         editor.cancel.connect(self.close)
         editor.rebase.connect(self.rebase)
         editor.setFocus()
 
-    def start(self, _context, _view):
+    def start(self, _context, _view) -> None:
         """Start background tasks"""
         self.editor.start()
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop background tasks"""
         self.editor.stop()
 
-    def rebase(self):
+    def rebase(self) -> None:
         """Exit the editor and initiate a rebase"""
         self.status = self.editor.save()
         self.close()
@@ -153,7 +155,7 @@ class Editor(QtWidgets.QWidget):
     cancel = Signal()
     rebase = Signal()
 
-    def __init__(self, context, filename, parent=None):
+    def __init__(self, context, filename, parent=None) -> None:
         super().__init__(parent)
 
         self.widget_version = 1
@@ -227,7 +229,7 @@ class Editor(QtWidgets.QWidget):
         # selected paths the GUI freezes for a while on a big enough sequence. This
         # cache is used (commit ID to paths tuple) to minimize calls to git.
         self.oid_to_paths = {}
-        self.task = None  # A task fills the cache in the background.
+        self.task: SimpleTask | None = None  # A task fills the cache in the background.
         self.running = False  # This flag stops it.
 
         qtutils.connect_button(self.rebase_button, self.rebase.emit)
@@ -235,7 +237,7 @@ class Editor(QtWidgets.QWidget):
         qtutils.connect_button(self.help_button, partial(show_help, context))
         qtutils.connect_button(self.cancel_button, self.cancel.emit)
 
-    def start(self):
+    def start(self) -> None:
         insns = core.read(self.filename)
         self.parse_sequencer_instructions(insns)
 
@@ -244,14 +246,14 @@ class Editor(QtWidgets.QWidget):
         self.task = qtutils.SimpleTask(self.calculate_oid_to_paths)
         self.context.runtask.start(self.task)
 
-    def stop(self):
+    def stop(self) -> None:
         self.running = False
 
     # signal callbacks
-    def commits_selected(self, commits):
+    def commits_selected(self, commits) -> None:
         self.extdiff_button.setEnabled(bool(commits))
 
-    def remark_toggled_for_files(self, remark, filenames):
+    def remark_toggled_for_files(self, remark, filenames) -> None:
         filenames = set(filenames)
 
         items = self.tree.items()
@@ -267,7 +269,7 @@ class Editor(QtWidgets.QWidget):
 
         self.tree.toggle_remark_of_items(remark, touching_items)
 
-    def external_diff(self):
+    def external_diff(self) -> None:
         items = self.tree.selected_items()
         if not items:
             return
@@ -287,14 +289,14 @@ class Editor(QtWidgets.QWidget):
 
         return paths
 
-    def calculate_oid_to_paths(self):
+    def calculate_oid_to_paths(self) -> None:
         """Fills the oid_to_paths cache in the background"""
         for item in self.tree.items():
             if not self.running:
                 return
             self.paths_touched_by_oid(item.oid)
 
-    def parse_sequencer_instructions(self, insns):
+    def parse_sequencer_instructions(self, insns) -> None:
         idx = 1
         re_comment_char = re.escape(self.comment_char)
         break_rgx = re.compile(r'^\s*(%s)?\s*(b|break)$' % re_comment_char)
@@ -384,7 +386,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
     external_diff = Signal()
     move_rows = Signal(object, object)
 
-    def __init__(self, context, comment_char, parent):
+    def __init__(self, context, comment_char, parent) -> None:
         super().__init__(parent=parent)
         self.context = context
         self.comment_char = comment_char
@@ -474,8 +476,16 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.items_moved.connect(self.decorate)
 
     def add_item(
-        self, idx, enabled, command, oid='', summary='', cmdexec='', branch='', label=''
-    ):
+        self,
+        idx,
+        enabled,
+        command,
+        oid: str = '',
+        summary: str = '',
+        cmdexec: str = '',
+        branch: str = '',
+        label: str = '',
+    ) -> None:
         comment_char = self.comment_char
         item = RebaseTreeWidgetItem(
             idx,
@@ -491,21 +501,21 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         )
         self.invisibleRootItem().addChild(item)
 
-    def decorate(self, items):
+    def decorate(self, items) -> None:
         for item in items:
             item.decorate(self)
 
-    def refit(self):
+    def refit(self) -> None:
         """Resize columns to fit content"""
         for i in range(RebaseTreeWidgetItem.COLUMN_COUNT - 1):
             self.resizeColumnToContents(i)
 
-    def item_changed(self, item, column):
+    def item_changed(self, item, column) -> None:
         """Validate item ordering when toggling their enabled state"""
         if column == item.ENABLED_COLUMN:
             self.validate()
 
-    def validate(self):
+    def validate(self) -> None:
         invalid_first_choice = {FIXUP, SQUASH}
         for item in self.items():
             if item.is_enabled() and item.is_commit():
@@ -513,23 +523,23 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
                     item.reset_command(PICK)
                 break
 
-    def set_selected_to(self, command):
+    def set_selected_to(self, command) -> None:
         for i in self.selected_items():
             i.reset_command(command)
         self.validate()
 
-    def set_command(self, item, command):
+    def set_command(self, item, command) -> None:
         item.reset_command(command)
         self.validate()
 
-    def copy_oid(self):
+    def copy_oid(self) -> None:
         item = self.selected_item()
         if item is None:
             return
         clipboard = item.oid or item.cmdexec
         qtutils.set_clipboard(clipboard)
 
-    def selection_changed(self):
+    def selection_changed(self) -> None:
         item = self.selected_item()
         if item is None or not item.is_commit():
             return
@@ -544,7 +554,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             commits = commits[-1:]
         self.commits_selected.emit(commits)
 
-    def toggle_enabled(self):
+    def toggle_enabled(self) -> None:
         """Toggle the enabled state of each selected item"""
         items = self.selected_items()
         enable = should_enable(items, lambda item: item.is_enabled())
@@ -556,7 +566,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
             if needs_update:
                 item.set_enabled(enable)
 
-    def select_first(self):
+    def select_first(self) -> None:
         items = self.items()
         if not items:
             return
@@ -564,7 +574,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         if idx.isValid():
             self.setCurrentIndex(idx)
 
-    def shift_down(self):
+    def shift_down(self) -> None:
         sel_items = self.selected_items()
         all_items = self.items()
         sel_idx = sorted([all_items.index(item) for item in sel_items])
@@ -577,7 +587,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         ):
             self.move_rows.emit(sel_idx, idx)
 
-    def shift_up(self):
+    def shift_up(self) -> None:
         sel_items = self.selected_items()
         all_items = self.items()
         sel_idx = sorted([all_items.index(item) for item in sel_items])
@@ -587,12 +597,12 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         if idx >= 0:
             self.move_rows.emit(sel_idx, idx)
 
-    def toggle_remark(self, remark):
+    def toggle_remark(self, remark) -> None:
         """Toggle remarks for all selected items"""
         items = self.selected_items()
         self.toggle_remark_of_items(remark, items)
 
-    def toggle_remark_of_items(self, remark, items):
+    def toggle_remark_of_items(self, remark, items) -> None:
         """Toggle remarks for the selected items"""
         enable = should_enable(items, lambda item: remark in item.remarks)
         for item in items:
@@ -603,7 +613,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
                 else:
                     item.remove_remark(remark)
 
-    def move(self, src_idxs, dst_idx):
+    def move(self, src_idxs, dst_idx) -> None:
         moved_items = []
         src_base = sorted(src_idxs)[0]
         for idx in reversed(sorted(src_idxs)):
@@ -629,11 +639,11 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
     # Qt events
 
-    def dropEvent(self, event):
+    def dropEvent(self, event) -> None:
         super().dropEvent(event)
         self.validate()
 
-    def contextMenuEvent(self, event):
+    def contextMenuEvent(self, event) -> None:
         items = self.selected_items()
         menu = qtutils.create_menu(N_('Actions'), self)
         menu.addAction(self.action_pick)
@@ -703,17 +713,17 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         idx,
         enabled,
         command,
-        oid='',
-        summary='',
-        cmdexec='',
-        branch='',
-        label='',
-        comment_char='#',
+        oid: str = '',
+        summary: str = '',
+        cmdexec: str = '',
+        branch: str = '',
+        label: str = '',
+        comment_char: str = '#',
         remarks=(),
         parent=None,
-    ):
+    ) -> None:
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
-        self.combo = None
+        self.combo: ComboBox | None = None
         self.command = command
         self.idx = idx
         self.oid = oid
@@ -758,7 +768,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         flags = flags & ~Qt.ItemIsDropEnabled
         self.setFlags(flags)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return self is other
 
     def __hash__(self):
@@ -777,7 +787,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             remarks=self.remarks,
         )
 
-    def decorate(self, parent):
+    def decorate(self, parent) -> None:
         if self.is_exec():
             items = [EXEC]
             idx = 0
@@ -797,7 +807,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             items = [BREAK]
             idx = 0
         else:
-            items = COMMANDS
+            items: tuple = COMMANDS
             idx = COMMAND_IDX[self.command]
         combo = self.combo = ComboBox()
         combo.setEditable(False)
@@ -838,7 +848,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             not (self.is_exec() or self.is_update_ref()) and self.oid and self.summary
         )
 
-    def value(self):
+    def value(self) -> str:
         """Return the serialized representation of an item"""
         if self.is_enabled():
             comment = ''
@@ -858,23 +868,23 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         """Is the item enabled?"""
         return self.checkState(self.ENABLED_COLUMN) == Qt.Checked
 
-    def set_enabled(self, enabled):
+    def set_enabled(self, enabled) -> None:
         """Enable the item by checking its enabled checkbox"""
         self.setCheckState(self.ENABLED_COLUMN, enabled and Qt.Checked or Qt.Unchecked)
 
-    def toggle_enabled(self):
+    def toggle_enabled(self) -> None:
         """Toggle the enabled state of the item"""
         self.set_enabled(not self.is_enabled())
 
-    def add_remark(self, remark):
+    def add_remark(self, remark) -> None:
         """Add a remark to the item"""
         self.set_remarks(tuple(sorted(set(self.remarks + (remark,)))))
 
-    def remove_remark(self, remark):
+    def remove_remark(self, remark) -> None:
         """Remove a remark from the item"""
         self.set_remarks(tuple(r for r in self.remarks if r != remark))
 
-    def set_remarks(self, remarks):
+    def set_remarks(self, remarks) -> None:
         """Set the remarks and update the remark display"""
         if remarks == self.remarks:
             return
@@ -882,7 +892,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.update_remarks()
         self._parent.resizeColumnToContents(self.REMARKS_COLUMN)
 
-    def update_remarks(self):
+    def update_remarks(self) -> None:
         """Update the remarks label display to match the current remarks"""
         label = self.remarks_label
         if label is None:
@@ -898,24 +908,24 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
             """
         label.setText(label_text)
 
-    def set_command(self, command):
+    def set_command(self, command) -> None:
         """Set the item to a different command, no-op for exec items"""
         if self.is_exec():
             return
         self.command = command
 
-    def refresh(self):
+    def refresh(self) -> None:
         """Update the view to match the updated state"""
         if self.is_commit():
             command = self.command
             self.combo.setCurrentIndex(COMMAND_IDX[command])
 
-    def reset_command(self, command):
+    def reset_command(self, command) -> None:
         """Set and refresh the item in one shot"""
         self.set_command(command)
         self.refresh()
 
-    def set_command_and_validate(self, combo):
+    def set_command_and_validate(self, combo) -> None:
         """Set the command and validate the command order"""
         command = COMMANDS[combo.currentIndex()]
         self.set_command(command)

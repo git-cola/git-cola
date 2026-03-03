@@ -52,7 +52,7 @@ def md5_hexdigest(value):
 
 
 class GravatarLabel(QtWidgets.QLabel):
-    def __init__(self, context, parent=None):
+    def __init__(self, context, parent=None) -> None:
         QtWidgets.QLabel.__init__(self, parent)
 
         self.context = context
@@ -66,7 +66,7 @@ class GravatarLabel(QtWidgets.QLabel):
         self.network = QtNetwork.QNetworkAccessManager()
         self.network.finished.connect(self.network_finished)
 
-    def set_email(self, email):
+    def set_email(self, email) -> None:
         """Update the author icon based on the specified email"""
         pixmap = self.pixmaps.get(email, None)
         if pixmap is not None:
@@ -81,7 +81,7 @@ class GravatarLabel(QtWidgets.QLabel):
         self.email = email
         self.request(email)
 
-    def request(self, email):
+    def request(self, email) -> None:
         if prefs.enable_gravatar(self.context):
             url = Gravatar.url_for_email(email, self.imgsize)
             self.network.get(QtNetwork.QNetworkRequest(QtCore.QUrl(url)))
@@ -102,7 +102,7 @@ class GravatarLabel(QtWidgets.QLabel):
             byte_array = self._default_pixmap_bytes
         return byte_array
 
-    def network_finished(self, reply):
+    def network_finished(self, reply) -> None:
         email = self.email
 
         header = QtCore.QByteArray(b'Location')

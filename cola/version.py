@@ -133,7 +133,7 @@ def git_version(context):
     return result
 
 
-def cola_version(builtin=False):
+def cola_version(builtin: bool = False) -> str:
     """A version string for consumption by humans"""
     if builtin:
         suffix = builtin_version()
@@ -142,7 +142,7 @@ def cola_version(builtin=False):
     return 'cola version %s' % suffix
 
 
-def print_version(builtin=False, brief=False):
+def print_version(builtin: bool = False, brief: bool = False) -> None:
     if builtin and brief:
         msg = builtin_version()
     elif brief:

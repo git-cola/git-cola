@@ -39,11 +39,11 @@ OID_LENGTH_SHA256 = 64
 _index_lock = threading.Lock()
 
 
-def dashify(value):
+def dashify(value) -> str:
     return value.replace('_', '-')
 
 
-def is_git_dir(git_dir):
+def is_git_dir(git_dir) -> bool:
     """From git's setup.c:is_git_directory()."""
     result = False
     if git_dir:
@@ -69,15 +69,15 @@ def is_git_dir(git_dir):
     return result
 
 
-def is_git_file(filename):
+def is_git_file(filename) -> bool:
     return core.isfile(filename) and os.path.basename(filename) == '.git'
 
 
-def is_git_worktree(dirname):
+def is_git_worktree(dirname) -> bool:
     return is_git_dir(join(dirname, '.git'))
 
 
-def is_git_repository(path):
+def is_git_repository(path) -> bool:
     return is_git_worktree(path) or is_git_dir(path)
 
 
@@ -103,7 +103,9 @@ def read_git_file(path):
 class Paths:
     """Git repository paths of interest"""
 
-    def __init__(self, git_dir=None, git_file=None, worktree=None, common_dir=None):
+    def __init__(
+        self, git_dir=None, git_file=None, worktree=None, common_dir=None
+    ) -> None:
         if git_dir and not is_git_dir(git_dir):
             git_dir = None
         self.git_dir = git_dir
@@ -141,7 +143,7 @@ class Paths:
         # usage: Paths().get()
         return self
 
-    def _search_for_git(self, path, ceiling_dirs):
+    def _search_for_git(self, path, ceiling_dirs) -> None:
         """Search for git repositories located at path or above"""
         while path:
             if path in ceiling_dirs:
@@ -186,7 +188,7 @@ class Git:
     The Git class manages communication with the Git binary
     """
 
-    def __init__(self, worktree=None):
+    def __init__(self, worktree=None) -> None:
         self.paths = Paths()
 
         self._valid = {}  #: Store the result of is_git_dir() for performance
@@ -210,7 +212,7 @@ class Git:
             self.paths = find_git_directory(path)
         return self.paths.worktree
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """Is this a valid git repository?
 
         Cache the result to avoid hitting the filesystem.
@@ -250,14 +252,14 @@ class Git:
         command,
         _add_env=None,
         _cwd=None,
-        _decode=True,
+        _decode: bool = True,
         _encoding=None,
-        _raw=False,
+        _raw: bool = False,
         _stdin=None,
         _stderr=subprocess.PIPE,
         _stdout=subprocess.PIPE,
-        _readonly=False,
-        _no_win32_startupinfo=False,
+        _readonly: bool = False,
+        _no_win32_startupinfo: bool = False,
     ):
         """
         Execute a command and returns its output
@@ -434,7 +436,7 @@ def transform_kwargs(**kwargs):
     return args
 
 
-def win32_git_error_hint():
+def win32_git_error_hint() -> str:
     return (
         '\n'
         'NOTE: If you have Git installed in a custom location, e.g.\n'
@@ -448,7 +450,7 @@ def win32_git_error_hint():
 
 
 @memoize
-def _print_win32_git_hint():
+def _print_win32_git_hint() -> None:
     hint = '\n' + win32_git_error_hint() + '\n'
     core.print_stderr("error: unable to execute 'git'" + hint)
 

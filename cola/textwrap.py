@@ -50,8 +50,12 @@ class TextWrapper:
     wordsep_simple_re = re.compile(r'(\s+)')
 
     def __init__(
-        self, width=70, tabwidth=8, break_on_hyphens=False, drop_whitespace=True
-    ):
+        self,
+        width: int = 70,
+        tabwidth: int = 8,
+        break_on_hyphens: bool = False,
+        drop_whitespace: bool = True,
+    ) -> None:
         self.width = width
         self.tabwidth = tabwidth
         self.break_on_hyphens = break_on_hyphens
@@ -163,7 +167,7 @@ class TextWrapper:
 
         return lines
 
-    def chunklen(self, word):
+    def chunklen(self, word) -> int:
         """Return length of a word taking tabs into account
 
         >>> w = TextWrapper(tabwidth=8)
@@ -187,7 +191,7 @@ class TextWrapper:
         chunks = self._split(text)
         return self._wrap_chunks(chunks)
 
-    def fill(self, text):
+    def fill(self, text: str) -> str:
         """fill(text : string) -> string
 
         Reformat the single paragraph in 'text' to fit in lines of no
@@ -197,7 +201,7 @@ class TextWrapper:
         return '\n'.join(self.wrap(text))
 
 
-def word_wrap(text, tabwidth, limit, break_on_hyphens=False):
+def word_wrap(text, tabwidth, limit, break_on_hyphens: bool = False) -> str:
     """Wrap long lines to the specified limit"""
 
     lines = []
@@ -264,5 +268,5 @@ def word_wrap(text, tabwidth, limit, break_on_hyphens=False):
     return '\n'.join(lines)
 
 
-def is_blank(string):
+def is_blank(string: str):
     return string and not string.strip(' ')

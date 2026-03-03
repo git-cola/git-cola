@@ -1,4 +1,5 @@
 """Git commands and queries for Git"""
+from __future__ import annotations
 import json
 import os
 import re
@@ -15,7 +16,7 @@ from .models import dag
 from .models import prefs
 
 
-def add(context, items, u=False):
+def add(context, items, u: bool = False):
     """Run "git add" while preventing argument overflow"""
     git_add = context.git.add
     if prefs.verbose_simple_commands(context):
@@ -60,7 +61,7 @@ def upstream_remote(context, branch=None):
     return config.get(f'branch.{branch}.remote')
 
 
-def remote_url(context, remote, push=False):
+def remote_url(context, remote, push: bool = False):
     """Return the URL for the specified remote"""
     config = context.cfg
     url = config.get(f'remote.{remote}.url', '')
@@ -107,7 +108,7 @@ def git_diff_tree(git_repo, *args):
     )
 
 
-def listdir(context, dirname, ref='HEAD'):
+def listdir(context, dirname, ref: str = 'HEAD'):
     """Get the contents of a directory according to Git
 
     Query Git for the content of a directory, taking ignored
@@ -185,7 +186,7 @@ class CurrentBranchCache:
     value = None
 
 
-def reset():
+def reset() -> None:
     """Reset cached value in this module (e.g. the cached current branch)"""
     CurrentBranchCache.key = None
 
@@ -229,7 +230,7 @@ def current_branch(context):
     return data
 
 
-def _read_git_head(context, head, default='main'):
+def _read_git_head(context, head, default: str = 'main'):
     """Pure-python .git/HEAD reader"""
     # Common .git/HEAD "ref: refs/heads/main" files
     islink = core.islink(head)
@@ -250,7 +251,7 @@ def _read_git_head(context, head, default='main'):
     return default
 
 
-def branch_list(context, remote=False):
+def branch_list(context, remote: bool = False):
     """
     Return a list of local or remote branches
 
@@ -262,11 +263,11 @@ def branch_list(context, remote=False):
     return for_each_ref_basename(context, 'refs/heads')
 
 
-def _version_sort(context, key='version:refname'):
+def _version_sort(context, key: str = 'version:refname'):
     if version.check_git(context, 'version-sort'):
-        sort = key
+        sort: bool | str = key
     else:
-        sort = False
+        sort: bool | str = False
     return sort
 
 
@@ -287,7 +288,7 @@ def _prefix_and_size(prefix, values):
     return (prefix, len(prefix) + 1, values)
 
 
-def all_refs(context, split=False, sort_key='version:refname'):
+def all_refs(context, split: bool = False, sort_key: str = 'version:refname'):
     """Return a tuple of (local branches, remote branches, tags)."""
     local_branches = []
     remote_branches = []
@@ -379,7 +380,9 @@ def commit_diff(context, oid):
 _diff_overrides = {}
 
 
-def update_diff_overrides(space_at_eol, space_change, all_space, function_context):
+def update_diff_overrides(
+    space_at_eol, space_change, all_space, function_context
+) -> None:
     _diff_overrides['ignore_space_at_eol'] = space_at_eol
     _diff_overrides['ignore_space_change'] = space_change
     _diff_overrides['ignore_all_space'] = all_space
@@ -404,7 +407,7 @@ def common_diff_opts(context):
     return opts
 
 
-def _add_filename(args, filename):
+def _add_filename(args, filename) -> None:
     if filename:
         args.extend(['--', filename])
 
@@ -471,14 +474,14 @@ def diff_helper(
     ref=None,
     endref=None,
     filename=None,
-    cached=True,
-    deleted=False,
+    cached: bool = True,
+    deleted: bool = False,
     head=None,
-    amending=False,
-    with_diff_header=False,
-    suppress_header=True,
-    reverse=False,
-    untracked=False,
+    amending: bool = False,
+    with_diff_header: bool = False,
+    suppress_header: bool = True,
+    reverse: bool = False,
+    untracked: bool = False,
 ):
     """Invoke git diff on a path"""
     cfg = context.cfg
@@ -572,7 +575,7 @@ def extract_diff_header(deleted, with_diff_header, suppress_header, diffoutput):
     return output_text
 
 
-def format_patchsets(context, to_export, revs, output='patches'):
+def format_patchsets(context, to_export, revs, output: str = 'patches'):
     """
     Group contiguous revision selection into patch sets
 
@@ -627,7 +630,7 @@ def format_patchsets(context, to_export, revs, output='patches'):
     return (status, '\n'.join(outs), '\n'.join(errs))
 
 
-def export_patchset(context, start, end, output='patches', **kwargs):
+def export_patchset(context, start, end, output: str = 'patches', **kwargs):
     """Export patches from start^ to end."""
     return context.git.format_patch('-o', output, start + '^..' + end, **kwargs)
 
@@ -643,7 +646,7 @@ def reset_paths(context, head, items):
     return (status, out, err)
 
 
-def unstage_paths(context, args, head='HEAD'):
+def unstage_paths(context, args, head: str = 'HEAD'):
     """Unstage paths while accounting for git init"""
     status, out, err = reset_paths(context, head, args)
     if status == 128:
@@ -663,7 +666,11 @@ def untrack_paths(context, args):
 
 
 def worktree_state(
-    context, head='HEAD', update_index=False, display_untracked=True, paths=None
+    context,
+    head: str = 'HEAD',
+    update_index: bool = False,
+    display_untracked: bool = True,
+    paths=None,
 ):
     """Return a dict of files in various states of being
 
@@ -717,7 +724,7 @@ def _parse_raw_diff(out):
         yield (path, status, is_submodule)
 
 
-def diff_index(context, head, cached=True, paths=None):
+def diff_index(context, head, cached: bool = True, paths=None):
     staged = []
     unmerged = []
     deleted = set()
@@ -813,7 +820,7 @@ def merge_base_parent(context, branch):
     return 'HEAD'
 
 
-def ls_tree(context, path, ref='HEAD'):
+def ls_tree(context, path, ref: str = 'HEAD'):
     """Return a parsed git ls-tree result for a single directory"""
     result = []
     status, out, _ = context.git.ls_tree(
@@ -867,7 +874,7 @@ def parse_rev_list(raw_revs):
     return revs
 
 
-def log_helper(context, all=False, extra_args=None):
+def log_helper(context, all: bool = False, extra_args=None):
     """Return parallel arrays containing oids and summaries."""
     revs = []
     summaries = []
@@ -1134,7 +1141,7 @@ def is_binary(context, filename):
     return b'\0' in result
 
 
-def is_valid_ref(context, ref):
+def is_valid_ref(context, ref) -> bool:
     """Is the provided Git ref a valid refname?"""
     status, _, _ = context.git.rev_parse(ref, quiet=True, verify=True, _readonly=True)
     return status == 0

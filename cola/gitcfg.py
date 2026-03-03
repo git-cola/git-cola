@@ -89,7 +89,7 @@ class GitConfig(QtCore.QObject):
     repo_config_changed = Signal(str, object)
     updated = Signal()
 
-    def __init__(self, context):
+    def __init__(self, context) -> None:
         super().__init__()
         self.context = context
         self.git = context.git
@@ -105,14 +105,14 @@ class GitConfig(QtCore.QObject):
         self._attr_cache = {}
         self._binary_cache = {}
 
-    def reset(self):
+    def reset(self) -> None:
         self._cache_key = None
         self._cache_paths = []
         self._attr_cache.clear()
         self._binary_cache.clear()
         self.reset_values()
 
-    def reset_values(self):
+    def reset_values(self) -> None:
         self._system.clear()
         self._global.clear()
         self._global_or_system.clear()
@@ -140,7 +140,7 @@ class GitConfig(QtCore.QObject):
         cache_key = _cache_key_from_paths(self._cache_paths)
         return self._cache_key and cache_key == self._cache_key
 
-    def update(self):
+    def update(self) -> None:
         """Read git config value into the system, user and repo dicts."""
         if self._is_cached():
             return
@@ -198,7 +198,7 @@ class GitConfig(QtCore.QObject):
         # Send a notification that the configuration has been updated.
         self.updated.emit()
 
-    def _get(self, src, key, default, func=None, cached=True):
+    def _get(self, src, key, default, func=None, cached: bool = True):
         if not cached or not src:
             self.update()
         try:
@@ -225,7 +225,7 @@ class GitConfig(QtCore.QObject):
         # Allow the final KeyError to bubble up
         return src[key.lower()]
 
-    def get(self, key, default=None, func=None, cached=True):
+    def get(self, key, default=None, func=None, cached: bool = True):
         """Return the string value for a config key."""
         return self._get(self._all, key, default, func=func, cached=cached)
 
@@ -287,7 +287,7 @@ class GitConfig(QtCore.QObject):
             object_format = 'sha1'
         return object_format
 
-    def set_user(self, key, value):
+    def set_user(self, key, value) -> None:
         if value in (None, ''):
             self.git.config('--global', key, unset=True, _readonly=True)
         else:
@@ -295,7 +295,7 @@ class GitConfig(QtCore.QObject):
         self.update()
         self.user_config_changed.emit(key, value)
 
-    def set_repo(self, key, value):
+    def set_repo(self, key, value) -> None:
         if value in (None, ''):
             self.git.config(key, unset=True, _readonly=True)
             self._local.pop(key, None)
@@ -317,7 +317,7 @@ class GitConfig(QtCore.QObject):
                 result[key] = val
         return result
 
-    def is_annex(self):
+    def is_annex(self) -> bool:
         """Return True when git-annex is enabled"""
         return bool(self.get('annex.uuid', default=False))
 
@@ -340,7 +340,7 @@ class GitConfig(QtCore.QObject):
             value = cache[path] = self._is_binary(path)
         return value
 
-    def _is_binary(self, path):
+    def _is_binary(self, path) -> bool:
         """Return the file encoding for a path"""
         value = self.check_attr('binary', path)
         return value == 'set'

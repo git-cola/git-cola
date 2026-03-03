@@ -3,9 +3,11 @@
 The @interruptable functions retry when system calls are interrupted,
 e.g. when python raises an IOError or OSError with errno == EINTR.
 """
+from __future__ import annotations
 import ctypes
 import functools
 import itertools
+from itertools import chain
 import mimetypes
 import os
 import platform
@@ -69,7 +71,7 @@ class UStr(ustr):
         return obj
 
 
-def decode_maybe(value, encoding, errors='strict'):
+def decode_maybe(value, encoding, errors: str = 'strict'):
     """Decode a value when the "decode" method exists"""
     if hasattr(value, 'decode'):
         result = value.decode(encoding, errors=errors)
@@ -78,7 +80,7 @@ def decode_maybe(value, encoding, errors='strict'):
     return result
 
 
-def decode(value, encoding=None, errors='strict'):
+def decode(value, encoding=None, errors: str = 'strict'):
     """decode(encoded_string) returns an un-encoded Unicode string"""
     if value is None:
         result = None
@@ -89,9 +91,11 @@ def decode(value, encoding=None, errors='strict'):
     else:
         result = None
         if encoding is None:
-            encoding_tests = _encoding_tests
+            encoding_tests: chain | list[str] = _encoding_tests
         else:
-            encoding_tests = itertools.chain([encoding], _encoding_tests)
+            encoding_tests: chain | list[str] = itertools.chain(
+                [encoding], _encoding_tests
+            )
 
         for enc in encoding_tests:
             try:
@@ -128,17 +132,17 @@ def decode_seq(seq, encoding=None):
     return [decode(x, encoding=encoding) for x in seq]
 
 
-def list2cmdline(cmd):
+def list2cmdline(cmd) -> str:
     return subprocess.list2cmdline([decode(c) for c in cmd])
 
 
-def read(filename, size=-1, encoding=None, errors='strict'):
+def read(filename, size=-1, encoding=None, errors: str = 'strict'):
     """Read filename and return contents"""
     with xopen(filename, 'rb') as fh:
         return xread(fh, size=size, encoding=encoding, errors=errors)
 
 
-def write(path, contents, encoding=None, append=False):
+def write(path, contents, encoding=None, append: bool = False):
     """Writes a Unicode string to a file"""
     if append:
         mode = 'ab'
@@ -149,7 +153,7 @@ def write(path, contents, encoding=None, append=False):
 
 
 @interruptable
-def xread(fh, size=-1, encoding=None, errors='strict'):
+def xread(fh, size=-1, encoding=None, errors: str = 'strict'):
     """Read from a file handle and retry when interrupted"""
     return decode(fh.read(size), encoding=encoding, errors=errors)
 
@@ -176,10 +180,10 @@ def start_command(
     cmd,
     cwd=None,
     add_env=None,
-    universal_newlines=False,
+    universal_newlines: bool = False,
     stdin=subprocess.PIPE,
     stdout=subprocess.PIPE,
-    no_win32_startupinfo=False,
+    no_win32_startupinfo: bool = False,
     stderr=subprocess.PIPE,
     **extra,
 ):
@@ -243,7 +247,7 @@ def start_command(
     )
 
 
-def prep_for_subprocess(cmd, shell=False):
+def prep_for_subprocess(cmd, shell: bool = False):
     """Decode on Python3, encode on Python2"""
     # See the comment in start_command()
     if shell:
@@ -285,13 +289,13 @@ def run_command(cmd, *args, **kwargs):
 
 
 @interruptable
-def _fork_posix(args, cwd=None, shell=False):
+def _fork_posix(args, cwd=None, shell: bool = False):
     """Launch a process in the background."""
     encoded_args = [encode(arg) for arg in args]
     return subprocess.Popen(encoded_args, cwd=cwd, shell=shell).pid
 
 
-def _fork_win32(args, cwd=None, shell=False):
+def _fork_win32(args, cwd=None, shell: bool = False):
     """Launch a background process using crazy win32 voodoo."""
     # This is probably wrong, but it works.  Windows.. Wow.
     if args[0] == 'git-dag':
@@ -397,7 +401,7 @@ def guess_mimetype(filename):
     return mimetype
 
 
-def xopen(path, mode='r', encoding=None):
+def xopen(path, mode: str = 'r', encoding=None):
     """Open a file with the specified mode and encoding
 
     The path is decoded into Unicode on Windows and encoded into bytes on Unix.
@@ -420,21 +424,21 @@ def open_write(path, encoding=None):
     return open(mkpath(path, encoding=encoding), 'w', encoding='utf-8')
 
 
-def print_stdout(msg, linesep='\n'):
+def print_stdout(msg, linesep: str = '\n') -> None:
     msg = msg + linesep
     if PY2:
         msg = encode(msg, encoding=ENCODING)
     sys.stdout.write(msg)
 
 
-def print_stderr(msg, linesep='\n'):
+def print_stderr(msg, linesep: str = '\n') -> None:
     msg = msg + linesep
     if PY2:
         msg = encode(msg, encoding=ENCODING)
     sys.stderr.write(msg)
 
 
-def error(msg, status=EXIT_FAILURE, linesep='\n'):
+def error(msg, status=EXIT_FAILURE, linesep: str = '\n') -> None:
     print_stderr(msg, linesep=linesep)
     sys.exit(status)
 
@@ -485,7 +489,7 @@ def _find_executable(executable, path=None):
     return executable
 
 
-def _fdatasync(fd):
+def _fdatasync(fd) -> None:
     """fdatasync the file descriptor. Returns True on success"""
     try:
         os.fdatasync(fd)
@@ -493,7 +497,7 @@ def _fdatasync(fd):
         pass
 
 
-def _fsync(fd):
+def _fsync(fd) -> None:
     """fsync the file descriptor. Returns True on success"""
     try:
         os.fsync(fd)
@@ -501,7 +505,7 @@ def _fsync(fd):
         pass
 
 
-def fsync(fd):
+def fsync(fd) -> None:
     """Flush contents to disk using fdatasync() / fsync()"""
     has_libc_fdatasync = False
     has_libc_fsync = False
@@ -512,8 +516,8 @@ def fsync(fd):
             libc = ctypes.CDLL('libc.so.6')
         except OSError:
             libc = None
-        has_libc_fdatasync = libc and hasattr(libc, 'fdatasync')
-        has_libc_fsync = libc and hasattr(libc, 'fsync')
+        has_libc_fdatasync: bool | None = libc and hasattr(libc, 'fdatasync')
+        has_libc_fsync: bool | None = libc and hasattr(libc, 'fsync')
     if has_os_fdatasync:
         _fdatasync(fd)
     elif has_os_fsync:
@@ -524,7 +528,7 @@ def fsync(fd):
         libc.fsync(fd)
 
 
-def rename(old, new):
+def rename(old, new) -> None:
     """Rename a path. Transform arguments to handle non-ASCII file paths"""
     os.rename(mkpath(old), mkpath(new))
 

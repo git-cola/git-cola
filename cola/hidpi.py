@@ -21,7 +21,7 @@ def is_supported():
     return version.check('qt-hidpi-scale', QtCore.__version__)
 
 
-def apply_choice(value):
+def apply_choice(value) -> None:
     value = compat.ustr(value)
     if value == Option.AUTO:
         # Do not override the configuration when either of these

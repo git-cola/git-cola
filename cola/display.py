@@ -56,19 +56,19 @@ def shorten_paths(source_paths):
     return result
 
 
-def path_suffix(path, count):
+def path_suffix(path, count) -> str:
     """Return `count` number of trailing path components"""
     path = normalize_path(path)
     components = path.split('/')[-count:]
     return '/'.join(components)
 
 
-def normalize_path(path):
+def normalize_path(path) -> str:
     """Normalize a path so that only "/" is used as a separator"""
     return path.replace('\\', '/')
 
 
-def notify(context, title, message, icon):
+def notify(context, title, message, icon) -> None:
     """Send a notification using notify2 xor notifypy"""
     app_name = context.app_name
     if notify2:
@@ -86,7 +86,9 @@ def notify(context, title, message, icon):
         context.notifier.log.emit(f'{title}: {message}')
 
 
-def push_notification(context, title, message, error=False, allow_popups=True):
+def push_notification(
+    context, title, message, error: bool = False, allow_popups: bool = True
+) -> None:
     """Emit a push notification"""
     if prefs.enable_popups(context) and allow_popups:
         if error:

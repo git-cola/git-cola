@@ -1,4 +1,5 @@
 """Provides the main() routine and ColaApplication"""
+from __future__ import annotations
 from functools import partial
 import argparse
 import os
@@ -6,6 +7,7 @@ import random
 import signal
 import sys
 import time
+from .cmd import CommandBus
 
 try:
     from qtpy import QtCore
@@ -68,7 +70,7 @@ from . import utils
 from . import version
 
 
-def setup_environment():
+def setup_environment() -> None:
     """Set environment variables to control git's behavior"""
     # Allow Ctrl-C to exit
     random.seed(hash(time.time()))
@@ -188,7 +190,9 @@ class ColaApplication:
     ColaApplication handles i18n of user-visible data
     """
 
-    def __init__(self, context, argv, locale=None, icon_themes=None, gui_theme=None):
+    def __init__(
+        self, context, argv, locale=None, icon_themes=None, gui_theme=None
+    ) -> None:
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
@@ -204,7 +208,7 @@ class ColaApplication:
         self._app.setDesktopFileName('git-cola')
         self._install_style(gui_theme)
 
-    def _install_style(self, theme_str):
+    def _install_style(self, theme_str) -> None:
         """Generate and apply a stylesheet to the app"""
         if theme_str is None:
             theme_str = self.context.cfg.get('cola.theme', default='default')
@@ -221,7 +225,7 @@ class ColaApplication:
         elif theme_str != 'default':
             self._app.setPalette(theme.build_palette(self._app.palette()))
 
-    def _install_hidpi_config(self):
+    def _install_hidpi_config(self) -> None:
         """Sets QT HiDPI scaling (requires Qt 5.6)"""
         value = self.context.cfg.get('cola.hidpi', default=hidpi.Option.AUTO)
         hidpi.apply_choice(value)
@@ -249,7 +253,7 @@ class ColaApplication:
         monitor.start()
         return self._app.exec_()
 
-    def stop(self):
+    def stop(self) -> None:
         """Finalize the application"""
         self.context.fsmonitor.stop()
         # Workaround QTBUG-52988 by deleting the app manually to prevent a
@@ -269,7 +273,7 @@ class ColaApplication:
 class ColaQApplication(QtWidgets.QApplication):
     """QApplication implementation for handling custom events"""
 
-    def __init__(self, context, argv):
+    def __init__(self, context, argv) -> None:
         super().__init__(argv)
         self.context = context
         # Make icons sharp in HiDPI screen
@@ -288,7 +292,7 @@ class ColaQApplication(QtWidgets.QApplication):
                     cmds.do(cmds.Refresh, context)
         return super().event(e)
 
-    def commitData(self, session_mgr):
+    def commitData(self, session_mgr) -> None:
         """Save session data"""
         if not self.context or not self.context.view:
             return
@@ -303,7 +307,7 @@ class ColaQApplication(QtWidgets.QApplication):
         view.save_state(settings=session)
 
 
-def process_args(args, setup_repo=False):
+def process_args(args, setup_repo: bool = False) -> None:
     """Process and verify command-line arguments"""
     if args.version:
         # Accept 'git cola --version' or 'git cola version'
@@ -339,7 +343,7 @@ def process_args(args, setup_repo=False):
         sys.exit(core.EXIT_USAGE)
 
 
-def restore_session(args):
+def restore_session(args) -> None:
     """Load a session based on the window-manager provided arguments"""
     # args.settings is provided when restoring from a session.
     args.settings = None
@@ -353,10 +357,10 @@ def restore_session(args):
 
 def application_init(
     args,
-    update=False,
-    app_name='Git Cola',
-    setup_worktree=True,
-    setup_repo=False,
+    update: bool = False,
+    app_name: str = 'Git Cola',
+    setup_worktree: bool = True,
+    setup_repo: bool = False,
 ):
     """Parses the command-line arguments and starts git-cola"""
     # Ensure that we're working in a valid git repository.
@@ -381,7 +385,7 @@ def application_init(
     return context
 
 
-def new_context(args, app_name='Git Cola'):
+def new_context(args, app_name: str = 'Git Cola'):
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
     context.timestamp = time.time()
@@ -404,7 +408,7 @@ def create_context():
     return new_context(args)
 
 
-def enforce_single_instance(context):
+def enforce_single_instance(context) -> None:
     """Ensure that only a single instance of the application is running"""
     if not context.args.single_instance:
         return
@@ -471,7 +475,7 @@ def application_run(context, view, start=None, stop=None):
     return result
 
 
-def initialize_view(context, view):
+def initialize_view(context, view) -> None:
     """Register the main widget and display it"""
     context.set_view(view)
     view.show()
@@ -485,18 +489,18 @@ def application_start(context, view):
     return application_run(context, view, start=default_start, stop=default_stop)
 
 
-def default_start(context, _view):
+def default_start(context, _view) -> None:
     """Scan for the first time"""
     QtCore.QTimer.singleShot(0, startup_message)
     QtCore.QTimer.singleShot(0, lambda: async_update(context))
 
 
-def default_stop(_context, _view):
+def default_stop(_context, _view) -> None:
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
 
-def add_common_arguments(parser):
+def add_common_arguments(parser) -> None:
     """Add command arguments to the ArgumentParser"""
     # We also accept 'git cola version'
     parser.add_argument(
@@ -557,7 +561,7 @@ def new_application(context, args):
     )
 
 
-def new_worktree(context, repo, prompt):
+def new_worktree(context, repo, prompt) -> None:
     """Find a Git repository, or prompt for one when not found"""
     model = context.model
     cfg = context.cfg
@@ -598,7 +602,7 @@ def new_worktree(context, repo, prompt):
             )
 
 
-def offer_to_create_repo(context, gitdir):
+def offer_to_create_repo(context, gitdir) -> None:
     """Offer to create a new repo"""
     title = N_('Repository Not Found')
     text = N_('%s is not a Git repository.') % gitdir
@@ -610,7 +614,7 @@ def offer_to_create_repo(context, gitdir):
             Interaction.command_error(title, 'git init', status, out, err)
 
 
-def async_update(context):
+def async_update(context) -> None:
     """Update the model in the background
 
     git-cola should startup as quickly as possible.
@@ -621,7 +625,7 @@ def async_update(context):
     context.runtask.start(task)
 
 
-def startup_message():
+def startup_message() -> None:
     """Print debug startup messages"""
     trace = git.GIT_COLA_TRACE
     if trace in ('2', 'trace'):
@@ -636,7 +640,7 @@ def startup_message():
         Interaction.log(msg2)
 
 
-def initialize():
+def initialize() -> str:
     """System-level initialization"""
     # We support ~/.config/git-cola/git-bindir on Windows for configuring
     # a custom location for finding the "git" executable.
@@ -662,10 +666,10 @@ def initialize():
 class Timer:
     """Simple performance timer"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._data = {}
 
-    def start(self, key):
+    def start(self, key) -> None:
         """Start a timer"""
         now = time.time()
         self._data[key] = [now, now]
@@ -681,7 +685,7 @@ class Timer:
         entry = self._data[key]
         return entry[1] - entry[0]
 
-    def display(self, key):
+    def display(self, key) -> None:
         """Display a timer"""
         elapsed = self.elapsed(key)
         sys.stdout.write(f'{key}: {elapsed:.5f}s\n')
@@ -690,7 +694,7 @@ class Timer:
 class NullArgs:
     """Stub arguments for interactive API use"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.icon_themes = []
         self.perf = False
         self.prompt = False
@@ -709,24 +713,24 @@ def null_args():
 class ApplicationContext:
     """Context for performing operations on Git and related data models"""
 
-    def __init__(self, args):
+    def __init__(self, args) -> None:
         self.args = args
-        self.app = None  # ColaApplication
+        self.app: ColaApplication | None = None  # ColaApplication
         self.shared_memory = None  # QSharedMemory
-        self.command_bus = None  # cmd.CommandBus
+        self.command_bus: CommandBus | None = None  # cmd.CommandBus
         self.git = None  # git.Git
         self.cfg = None  # gitcfg.GitConfig
         self.model = None  # main.MainModel
         self.notifier = Notifier(self)
-        self.timer = None  # Timer
-        self.runtask = None  # qtutils.RunTask
+        self.timer: Timer | None = None  # Timer
+        self.runtask: qtutils.RunTask | None = None  # qtutils.RunTask
         self.settings = None  # settings.Settings
         self.selection = None  # selection.SelectionModel
         self.fsmonitor = None  # fsmonitor
         self.view = None  # QWidget
         self.browser_windows = []  # list of browse.Browser
 
-    def set_view(self, view):
+    def set_view(self, view) -> None:
         """Initialize view-specific members"""
         self.view = view
         self.notifier.setParent(view)
@@ -738,16 +742,16 @@ class ApplicationContext:
         self.notifier.log.connect(self._log, Qt.QueuedConnection)
         self.notifier.ready.emit()
 
-    def _command(self, title, cmd, status, out, err):
+    def _command(self, title, cmd, status, out, err) -> None:
         Interaction.command(title, cmd, status, out, err)
 
-    def _critical(self, title, kwargs):
+    def _critical(self, title, kwargs) -> None:
         Interaction.critical(title, **kwargs)
 
-    def _information(self, title, kwargs):
+    def _information(self, title, kwargs) -> None:
         Interaction.information(title, **kwargs)
 
-    def _log(self, message):
+    def _log(self, message) -> None:
         Interaction.log(message)
 
 
@@ -761,34 +765,34 @@ class Notifier(QtCore.QObject):
     message = Signal(object)
     ready = Signal()
 
-    def __init__(self, context, parent=None):
+    def __init__(self, context, parent=None) -> None:
         super().__init__(parent)
         self.context = context
 
-    def notify(self, message):
+    def notify(self, message) -> None:
         """Send messages to listeners"""
         self.message.emit(message)
 
-    def listen(self, message, callback):
+    def listen(self, message, callback) -> None:
         """Subscribe a callback specific messages"""
 
-        def listener(current_message, message=message, callback=callback):
+        def listener(current_message, message=message, callback=callback) -> None:
             """Fire a callback when specific messages are seen"""
             if current_message is message:
                 callback()
 
         self.message.connect(listener, type=Qt.QueuedConnection)
 
-    def emit_log(self, message):
+    def emit_log(self, message) -> None:
         """Emit a log message"""
         self.log.emit(message)
 
-    def git_cmd(self, message):
+    def git_cmd(self, message) -> None:
         """Emit a log message"""
         self.emit_log(f'[git] {message}')
 
 
-def find_git():
+def find_git() -> str | None:
     """Return the path of git.exe, or None if we can't find it."""
     if not utils.is_win32():
         return None  # UNIX systems have git in their $PATH
@@ -814,7 +818,7 @@ def find_git():
     return None
 
 
-def prepend_path(path):
+def prepend_path(path) -> None:
     """Adds git to the PATH.  This is needed on Windows."""
     path = core.decode(path)
     path_entries = core.getenv('PATH', '').split(os.pathsep)

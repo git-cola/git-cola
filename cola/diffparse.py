@@ -10,20 +10,22 @@ DIFF_DELETION = '-'
 DIFF_NO_NEWLINE = '\\'
 
 
-def parse_range_str(range_str):
+def parse_range_str(range_str: str) -> tuple[int, int]:
     if ',' in range_str:
         begin, end = range_str.split(',', 1)
         return int(begin), int(end)
     return int(range_str), 1
 
 
-def _format_range(start, count):
+def _format_range(start: int, count: int) -> str:
     if count == 1:
         return str(start)
     return '%d,%d' % (start, count)
 
 
-def _format_hunk_header(old_start, old_count, new_start, new_count, heading=''):
+def _format_hunk_header(
+    old_start, old_count, new_start, new_count, heading: str = ''
+) -> str:
     return '@@ -{} +{} @@{}\n'.format(
         _format_range(old_start, old_count),
         _format_range(new_start, new_count),
@@ -31,7 +33,7 @@ def _format_hunk_header(old_start, old_count, new_start, new_count, heading=''):
     )
 
 
-def digits(number):
+def digits(number) -> int:
     """Return the number of digits needed to display a number"""
     if number >= 0:
         result = int(math.log10(number)) + 1
@@ -43,7 +45,7 @@ def digits(number):
 class LineCounter:
     """Keep track of a diff range's values"""
 
-    def __init__(self, value=0, max_value=-1):
+    def __init__(self, value: int = 0, max_value=-1) -> None:
         self.count = 0  # Absolute count of additions/removals/...
         self.value = value  # Current line number counter.
         self.max_value = max_value
@@ -55,13 +57,13 @@ class LineCounter:
         self.max_value = self._initial_max_value
         return self
 
-    def parse(self, range_str):
+    def parse(self, range_str: str) -> None:
         """Parse a diff range and setup internal state"""
         start, count = parse_range_str(range_str)
         self.value = start
         self.max_value = max(start + count - 1, self.max_value)
 
-    def tick(self, amount=1):
+    def tick(self, amount: int = 1) -> int:
         """Return the current value and increment to the next"""
         value = self.value
         self.value += amount
@@ -75,7 +77,7 @@ class DiffLines:
     EMPTY = -1
     DASH = -2
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.merge = False
 
         # diff <old> <new>
@@ -184,24 +186,24 @@ class FormatDigits:
     DASH = DiffLines.DASH
     EMPTY = DiffLines.EMPTY
 
-    def __init__(self, dash='', empty=''):
+    def __init__(self, dash: str = '', empty: str = '') -> None:
         self.fmt = ''
         self.empty = ''
         self.dash = ''
         self._dash = dash or chr(0xB7)
         self._empty = empty or ' '
 
-    def set_digits(self, value):
+    def set_digits(self, value) -> None:
         self.fmt = '%%0%dd' % value
         self.empty = self._empty * value
         self.dash = self._dash * value
 
-    def value(self, old, new):
+    def value(self, old, new) -> str:
         old_str = self._format(old)
         new_str = self._format(new)
         return f'{old_str} {new_str}'
 
-    def merge_value(self, old, base, new):
+    def merge_value(self, old, base, new) -> str:
         old_str = self._format(old)
         base_str = self._format(base)
         new_str = self._format(new)
@@ -223,7 +225,7 @@ class FormatDigits:
 class _HunkGrouper:
     _HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.match = None
 
     def __call__(self, line):
@@ -234,7 +236,7 @@ class _HunkGrouper:
 
 
 class _DiffHunk:
-    def __init__(self, old_start, start_offset, heading, content_lines):
+    def __init__(self, old_start, start_offset, heading, content_lines) -> None:
         type_counts = Counter(line[:1] for line in content_lines)
         self.old_count = type_counts[DIFF_CONTEXT] + type_counts[DIFF_DELETION]
         self.new_count = type_counts[DIFF_CONTEXT] + type_counts[DIFF_ADDITION]
@@ -282,7 +284,7 @@ class Patch:
 
     """
 
-    def __init__(self, filename, hunks, header_line_count=0):
+    def __init__(self, filename, hunks, header_line_count: int = 0) -> None:
         self.filename = filename
         self.hunks = hunks
         self.header_line_count = header_line_count
@@ -313,7 +315,7 @@ class Patch:
     def has_changes(self):
         return bool(self.hunks)
 
-    def as_text(self, *, file_headers=True):
+    def as_text(self, *, file_headers: bool = True) -> str:
         lines = []
         if self.hunks:
             if file_headers:
@@ -363,7 +365,7 @@ class Patch:
         new_content_lines.extend(pending_additions)
         return new_content_lines
 
-    def extract_subset(self, first_line_idx, last_line_idx, *, reverse=False):
+    def extract_subset(self, first_line_idx, last_line_idx, *, reverse: bool = False):
         new_hunks = []
         start_offset = 0
         for hunk_first_line_idx, hunk_last_line_idx, hunk in self._hunk_iter():
@@ -426,7 +428,7 @@ class Patch:
 
         return Patch(self.filename, new_hunks)
 
-    def extract_hunk(self, line_idx, *, reverse=False):
+    def extract_hunk(self, line_idx, *, reverse: bool = False):
         """Return a new patch containing only the hunk containing the specified line"""
         new_hunks = []
         for _, hunk_last_line_idx, hunk in self._hunk_iter():

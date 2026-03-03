@@ -108,7 +108,7 @@ def html_docs():
     return doc('git-cola.rst')
 
 
-def show_html_docs():
+def show_html_docs() -> None:
     """Open the HTML documentation in a browser"""
     url = html_docs()
     webbrowser.open_new_tab('file://' + url)
