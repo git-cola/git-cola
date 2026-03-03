@@ -1,16 +1,19 @@
 """Launcher and command line interface to git-cola"""
 from __future__ import annotations
+
 import argparse
 import sys
+from typing import Callable, TYPE_CHECKING
 
 from . import app
 from . import cmds
 from . import compat
 from . import core
 from . import version
-from cola.app import ApplicationContext
-from cola.widgets.main import MainView
-from typing import Callable, List
+from .widgets.main import MainView
+
+if TYPE_CHECKING:
+    from .app import ApplicationContext
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -32,7 +35,7 @@ def main(argv: list[str] | None = None) -> int:
     return args.func(args)
 
 
-def parse_args(argv: List[str]) -> argparse.Namespace:
+def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     # Newer versions of argparse (Python 3.6+) emit an error message for
     # "--help-commands" unless we register the flag on the main parser.
@@ -511,7 +514,6 @@ def cmd_cola(
     args: argparse.Namespace, context: ApplicationContext | None = None
 ) -> int:
     """The "git cola" entry point"""
-    from .widgets.main import MainView
 
     status_filter = args.status_filter
     if status_filter:
@@ -540,7 +542,7 @@ def start_cola(context: ApplicationContext, view: MainView) -> None:
     view.start(context)
 
 
-def cmd_about(args):
+def cmd_about(args: argparse.Namespace) -> int:
     from .widgets import about
 
     context = app.application_init(args)
@@ -548,7 +550,7 @@ def cmd_about(args):
     return app.application_start(context, view)
 
 
-def cmd_am(args):
+def cmd_am(args: argparse.Namespace) -> int:
     from .widgets.patch import new_apply_patches
 
     context = app.application_init(args)
@@ -556,7 +558,7 @@ def cmd_am(args):
     return app.application_start(context, view)
 
 
-def cmd_archive(args):
+def cmd_archive(args: argparse.Namespace) -> int:
     from .widgets import archive
 
     context = app.application_init(args, update=True)
@@ -566,7 +568,7 @@ def cmd_archive(args):
     return app.application_start(context, view)
 
 
-def cmd_branch(args):
+def cmd_branch(args: argparse.Namespace) -> int:
     from .widgets.createbranch import create_new_branch
 
     context = app.application_init(args, update=True)
@@ -574,7 +576,7 @@ def cmd_branch(args):
     return app.application_start(context, view)
 
 
-def cmd_browse(args):
+def cmd_browse(args: argparse.Namespace) -> int:
     from .widgets.browse import worktree_browser
 
     context = app.application_init(args)
@@ -582,7 +584,7 @@ def cmd_browse(args):
     return app.application_start(context, view)
 
 
-def cmd_clone(args):
+def cmd_clone(args: argparse.Namespace) -> int:
     from .widgets import clone
 
     context = app.application_init(args)
@@ -593,7 +595,7 @@ def cmd_clone(args):
     return result
 
 
-def cmd_config(args):
+def cmd_config(args: argparse.Namespace) -> int:
     from .widgets.prefs import preferences
 
     context = app.application_init(args)
@@ -601,7 +603,7 @@ def cmd_config(args):
     return app.application_start(context, view)
 
 
-def cmd_dag(args):
+def cmd_dag(args: argparse.Namespace) -> int:
     from .widgets import dag
 
     context = app.application_init(args, app_name='Git DAG')
@@ -615,7 +617,7 @@ def cmd_dag(args):
     return app.application_start(context, view)
 
 
-def cmd_diff(args):
+def cmd_diff(args: argparse.Namespace) -> int:
     from .difftool import diff_expression
 
     context = app.application_init(args)
@@ -624,7 +626,7 @@ def cmd_diff(args):
     return app.application_start(context, view)
 
 
-def cmd_fetch(args):
+def cmd_fetch(args: argparse.Namespace) -> int:
     # TODO: the calls to update_status() can be done asynchronously
     # by hooking into the message_updated notification.
     from .widgets import remote
@@ -635,7 +637,7 @@ def cmd_fetch(args):
     return app.application_start(context, view)
 
 
-def cmd_find(args):
+def cmd_find(args: argparse.Namespace) -> int:
     from .widgets import finder
 
     context = app.application_init(args)
@@ -644,7 +646,7 @@ def cmd_find(args):
     return app.application_start(context, view)
 
 
-def cmd_grep(args):
+def cmd_grep(args: argparse.Namespace) -> int:
     from .widgets import grep
 
     context = app.application_init(args)
@@ -653,7 +655,7 @@ def cmd_grep(args):
     return app.application_start(context, view)
 
 
-def cmd_merge(args):
+def cmd_merge(args: argparse.Namespace) -> int:
     from .widgets.merge import Merge
 
     context = app.application_init(args, update=True)
@@ -661,7 +663,7 @@ def cmd_merge(args):
     return app.application_start(context, view)
 
 
-def cmd_open(args):
+def cmd_open(args: argparse.Namespace) -> int:
     from . import guicmds
 
     context = app.application_init(args, setup_worktree=False)
@@ -675,14 +677,14 @@ def cmd_open(args):
     return 0
 
 
-def cmd_version(args) -> int:
+def cmd_version(args: argparse.Namespace) -> int:
     from . import version
 
     version.print_version(builtin=args.builtin, brief=args.brief)
     return 0
 
 
-def cmd_pull(args):
+def cmd_pull(args: argparse.Namespace) -> int:
     from .widgets import remote
 
     context = app.application_init(args, update=True)
@@ -692,7 +694,7 @@ def cmd_pull(args):
     return app.application_start(context, view)
 
 
-def cmd_push(args):
+def cmd_push(args: argparse.Namespace) -> int:
     from .widgets import remote
 
     context = app.application_init(args, update=True)
@@ -700,7 +702,7 @@ def cmd_push(args):
     return app.application_start(context, view)
 
 
-def cmd_rebase(args):
+def cmd_rebase(args: argparse.Namespace) -> int:
     context = app.application_init(args)
     context.model.update_refs()
     kwargs = {
@@ -745,7 +747,7 @@ def cmd_rebase(args):
     return status
 
 
-def cmd_recent(args):
+def cmd_recent(args: argparse.Namespace) -> int:
     from .widgets import recent
 
     context = app.application_init(args)
@@ -753,7 +755,7 @@ def cmd_recent(args):
     return app.application_start(context, view)
 
 
-def cmd_remote(args):
+def cmd_remote(args: argparse.Namespace) -> int:
     from .widgets import editremotes
 
     context = app.application_init(args)
@@ -761,7 +763,7 @@ def cmd_remote(args):
     return app.application_start(context, view)
 
 
-def cmd_search(args):
+def cmd_search(args: argparse.Namespace) -> int:
     from .widgets.search import search
 
     context = app.application_init(args)
@@ -769,7 +771,7 @@ def cmd_search(args):
     return app.application_start(context, view)
 
 
-def cmd_stash(args):
+def cmd_stash(args: argparse.Namespace) -> int:
     from .widgets import stash
 
     context = app.application_init(args)
@@ -777,7 +779,7 @@ def cmd_stash(args):
     return app.application_start(context, view)
 
 
-def cmd_tag(args):
+def cmd_tag(args: argparse.Namespace) -> int:
     from .widgets.createtag import new_create_tag
 
     context = app.application_init(args)

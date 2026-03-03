@@ -1,15 +1,14 @@
 """Themes generators"""
 from __future__ import annotations
+
 import os
-from PyQt5.QtGui import QPalette
-from typing import List, Optional
+from typing import Any, TYPE_CHECKING
 
 try:
     import AppKit
 except ImportError:
     AppKit = None
 from qtpy import QtGui
-from qtpy.QtGui import QColor
 
 from .i18n import N_
 from .widgets import defs
@@ -18,6 +17,9 @@ from . import icons
 from . import qtutils
 from . import resources
 from . import utils
+
+if TYPE_CHECKING:
+    from qtpy.QtGui import QColor, QPalette
 
 
 class EStylesheet:
@@ -33,7 +35,7 @@ class Theme:
         title: str,
         is_dark: bool,
         style_sheet: int = EStylesheet.DEFAULT,
-        main_color: Optional[str] = None,
+        main_color: str | None = None,
         macos_appearance: None = None,
     ) -> None:
         self.name = name
@@ -47,7 +49,7 @@ class Theme:
         self.text_color: str | None = None
         self.highlight_color: str | None = None
         self.background_color: str | None = None
-        self.palette = None
+        self.palette: QPalette | None = None
 
     def build_style_sheet(self, app_palette: QPalette, bold_fonts: bool) -> str:
         if self.style_sheet == EStylesheet.CUSTOM:
@@ -58,7 +60,7 @@ class Theme:
         self.is_palette_dark = window.lightnessF() < 0.5
         return style_sheet_default(app_palette, bold_fonts)
 
-    def build_palette(self, app_palette):
+    def build_palette(self, app_palette: QPalette):
         QPalette = QtGui.QPalette
         palette_dark = app_palette.color(QPalette.Base).lightnessF() < 0.5
         if self.is_palette_dark is None:
@@ -84,7 +86,7 @@ class Theme:
         self.palette = palette
         return palette
 
-    def style_sheet_flat(self, bold_fonts) -> str:
+    def style_sheet_flat(self, bold_fonts: Any) -> str:
         main_color = self.main_color
         color = qtutils.css_color(main_color)
         color_rgb = qtutils.rgb_css(color)
@@ -496,7 +498,7 @@ class Theme:
             focus=focus,
         )
 
-    def style_sheet_custom(self, app_palette, bold_fonts):
+    def style_sheet_custom(self, app_palette: QPalette, bold_fonts: Any):
         """Get custom style sheet.
         File name is saved in variable self.name.
         If user has deleted file, use default style"""
@@ -653,7 +655,7 @@ def style_sheet_default(palette: QPalette, bold_fonts: bool) -> str:
     )
 
 
-def get_all_themes() -> List[Theme]:
+def get_all_themes() -> list[Theme]:
     themes = [
         Theme(
             'default',
@@ -745,7 +747,7 @@ def get_all_themes() -> List[Theme]:
     return themes
 
 
-def apply_platform_theme(theme) -> None:
+def apply_platform_theme(theme: Theme) -> None:
     """Apply platform-specific themes (e.g. dark mode on macOS)"""
     # https://developer.apple.com/documentation/appkit/nsappearancecustomization/choosing_a_specific_appearance_for_your_macos_app
     # https://github.com/git-cola/git-cola/issues/905#issuecomment-461118465
@@ -801,7 +803,7 @@ def get_macos_themes():
     return themes
 
 
-def options(themes=None):
+def options(themes: list[Theme] | None = None):
     """Return a dictionary mapping display names to theme names"""
     if themes is None:
         themes = get_all_themes()

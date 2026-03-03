@@ -11,6 +11,7 @@ modify entries, comments or metadata, etc. or create new po files from scratch.
 :func:`~polib.mofile` convenience functions.
 """
 from __future__ import annotations
+
 import array
 import codecs
 import os
@@ -20,6 +21,7 @@ import sys
 import textwrap
 import io
 from io import BufferedReader, TextIOWrapper, BufferedWriter
+from typing import Any
 
 from . import compat
 
@@ -62,7 +64,7 @@ def u(s):
 # _pofile_or_mofile {{{
 
 
-def _pofile_or_mofile(f, filetype, **kwargs):
+def _pofile_or_mofile(f, filetype, **kwargs) -> MOFile | POFile:
     """
     Internal function used by :func:`polib.pofile` and :func:`polib.mofile` to
     honor the DRY concept.
@@ -89,7 +91,7 @@ def _pofile_or_mofile(f, filetype, **kwargs):
 # _is_file {{{
 
 
-def _is_file(filename_or_contents):
+def _is_file(filename_or_contents: str) -> bool:
     """
     Safely returns the value of os.path.exists(filename_or_contents).
 
@@ -109,7 +111,7 @@ def _is_file(filename_or_contents):
 # function pofile() {{{
 
 
-def pofile(pofile, **kwargs):
+def pofile(pofile: str, **kwargs) -> MOFile | POFile:
     """
     Convenience function that parses the po or pot file ``pofile`` and returns
     a :class:`~polib.POFile` instance.
@@ -143,7 +145,7 @@ def pofile(pofile, **kwargs):
 # function mofile() {{{
 
 
-def mofile(mofile, **kwargs):
+def mofile(mofile: str, **kwargs) -> MOFile | POFile:
     """
     Convenience function that parses the mo file ``mofile`` and returns a
     :class:`~polib.MOFile` instance.
@@ -179,7 +181,7 @@ def mofile(mofile, **kwargs):
 # function detect_encoding() {{{
 
 
-def detect_encoding(file, binary_mode: bool = False):
+def detect_encoding(file: str, binary_mode: bool = False) -> str:
     """
     Try to detect the encoding used by the ``file``. The ``file`` argument can
     be a PO or MO file path or a string containing the contents of the file.
@@ -243,7 +245,7 @@ def detect_encoding(file, binary_mode: bool = False):
 # function escape() {{{
 
 
-def escape(st):
+def escape(st) -> str:
     """
     Escapes the characters ``\\\\``, ``\\t``, ``\\n``, ``\\r`` and ``"`` in
     the given string ``st`` and returns it.
@@ -261,7 +263,7 @@ def escape(st):
 # function unescape() {{{
 
 
-def unescape(st):
+def unescape(st) -> str:
     """
     Unescapes the characters ``\\\\``, ``\\t``, ``\\n``, ``\\r`` and ``"`` in
     the given string ``st`` and returns it.
@@ -286,7 +288,7 @@ def unescape(st):
 # function natural_sort() {{{
 
 
-def natural_sort(lst):
+def natural_sort(lst) -> list[Any]:
     """
     Sort naturally the given list.
     Credits: http://stackoverflow.com/a/4836734
@@ -349,7 +351,7 @@ class _BaseFile(list):
         self.metadata = {}
         self.metadata_is_fuzzy = 0
 
-    def __unicode__(self):
+    def __unicode__(self) -> Any:
         """
         Returns the unicode representation of the file.
         """
@@ -390,13 +392,13 @@ class _BaseFile(list):
         """
         return self.find(entry.msgid, by='msgid', msgctxt=entry.msgctxt) is not None
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return str(self) == str(other)
 
     def __hash__(self):
         return hash(str(self))
 
-    def append(self, entry):
+    def append(self, entry: _BaseEntry) -> None:
         """
         Overridden method to check for duplicates entries, if a user tries to
         add an entry that is already in the file, the method will raise a
@@ -413,7 +415,7 @@ class _BaseFile(list):
             raise ValueError('Entry "%s" already exists' % entry.msgid)
         super().append(entry)
 
-    def insert(self, index, entry):
+    def insert(self, index, entry: _BaseEntry) -> None:
         """
         Overridden method to check for duplicates entries, if a user tries to
         add an entry that is already in the file, the method will raise a
@@ -431,7 +433,7 @@ class _BaseFile(list):
             raise ValueError('Entry "%s" already exists' % entry.msgid)
         super().insert(index, entry)
 
-    def metadata_as_entry(self):
+    def metadata_as_entry(self) -> POEntry:
         """
         Returns the file metadata as a :class:`~polib.POFile` instance.
         """
@@ -487,7 +489,7 @@ class _BaseFile(list):
 
     def find(
         self,
-        st,
+        st: str,
         by: str = 'msgid',
         include_obsolete_entries: bool = False,
         msgctxt: bool = False,
@@ -536,7 +538,7 @@ class _BaseFile(list):
                 return matches[0]
         return None
 
-    def ordered_metadata(self):
+    def ordered_metadata(self) -> list[Any]:
         """
         Convenience method that returns an ordered version of the metadata
         dictionary. The return value is list of tuples (metadata name,
@@ -571,15 +573,15 @@ class _BaseFile(list):
             ordered_data.append((data, value))
         return ordered_data
 
-    def to_binary(self):
+    def to_binary(self) -> bytes:
         """
         Return the binary representation of the file.
         """
-        offsets = []
+        offsets: list[tuple[int, int, int, int]] = []
         entries = self.translated_entries()
 
         # the keys are sorted in the .mo file
-        def cmp(_self, other):
+        def cmp(_self, other) -> int:
             # msgfmt compares entries with msgctxt if it exists
             self_msgid = _self.msgctxt or _self.msgid
             other_msgid = other.msgctxt or other.msgid
@@ -609,10 +611,10 @@ class _BaseFile(list):
                 for index in sorted(e.msgstr_plural.keys()):
                     msgstr.append(e.msgstr_plural[index])
                 msgid += self._encode(e.msgid + '\0' + e.msgid_plural)
-                msgstr = self._encode('\0'.join(msgstr))
+                msgstr = self._encode('\0'.join(msgstr))  # type: ignore[assignment]
             else:
                 msgid += self._encode(e.msgid)
-                msgstr = self._encode(e.msgstr)
+                msgstr = self._encode(e.msgstr)  # type: ignore[assignment]
             offsets.append((len(ids), len(msgid), len(strs), len(msgstr)))
             ids += msgid + b('\0')
             strs += msgstr + b('\0')
@@ -628,7 +630,7 @@ class _BaseFile(list):
         for o1, l1, o2, l2 in offsets:
             koffsets += [l1, o1 + keystart]
             voffsets += [l2, o2 + valuestart]
-        offsets = koffsets + voffsets
+        offsets = koffsets + voffsets  # type: ignore[assignment]
 
         output = struct.pack(
             'Iiiiiii',
@@ -647,14 +649,14 @@ class _BaseFile(list):
             keystart,
         )
         if PY3 and sys.version_info.minor > 1:  # python 3.2 or newer
-            output += array.array('i', offsets).tobytes()
+            output += array.array('i', offsets).tobytes()  # type: ignore[type-var]
         else:
-            output += array.array('i', offsets).tostring()
+            output += array.array('i', offsets).tostring()  # type: ignore[type-var]
         output += ids
         output += strs
         return output
 
-    def _encode(self, mixed):
+    def _encode(self, mixed) -> bytes:
         """
         Encodes the given ``mixed`` argument with the file encoding if and
         only if it's a unicode string and returns the encoded string.
@@ -675,7 +677,7 @@ class POFile(_BaseFile):
     the python ``list`` type.
     """
 
-    def __unicode__(self):
+    def __unicode__(self) -> Any:
         """
         Returns the unicode representation of the po file.
         """
@@ -693,7 +695,7 @@ class POFile(_BaseFile):
 
         return ret + _BaseFile.__unicode__(self)
 
-    def save_as_mofile(self, fpath) -> None:
+    def save_as_mofile(self, fpath: str) -> None:
         """
         Saves the binary representation of the file to given ``fpath``.
 
@@ -704,7 +706,7 @@ class POFile(_BaseFile):
         """
         _BaseFile.save(self, fpath, 'to_binary')
 
-    def percent_translated(self):
+    def percent_translated(self) -> int:
         """
         Convenience method that returns the percentage of translated
         messages.
@@ -715,13 +717,13 @@ class POFile(_BaseFile):
         translated = len(self.translated_entries())
         return int(translated * 100 / float(total))
 
-    def translated_entries(self):
+    def translated_entries(self) -> list[Any]:
         """
         Convenience method that returns the list of translated entries.
         """
         return [e for e in self if e.translated()]
 
-    def untranslated_entries(self):
+    def untranslated_entries(self) -> list[Any]:
         """
         Convenience method that returns the list of untranslated entries.
         """
@@ -729,19 +731,19 @@ class POFile(_BaseFile):
             e for e in self if not e.translated() and not e.obsolete and not e.fuzzy
         ]
 
-    def fuzzy_entries(self):
+    def fuzzy_entries(self) -> list[Any]:
         """
         Convenience method that returns the list of fuzzy entries.
         """
         return [e for e in self if e.fuzzy and not e.obsolete]
 
-    def obsolete_entries(self):
+    def obsolete_entries(self) -> list[Any]:
         """
         Convenience method that returns the list of obsolete entries.
         """
         return [e for e in self if e.obsolete]
 
-    def merge(self, refpot) -> None:
+    def merge(self, refpot: POFile) -> None:
         """
         Convenience method that merges the current pofile with the pot file
         provided. It behaves exactly as the gettext msgmerge utility:
@@ -796,7 +798,7 @@ class MOFile(_BaseFile):
         self.magic_number = None
         self.version = 0
 
-    def save_as_pofile(self, fpath) -> None:
+    def save_as_pofile(self, fpath: str) -> None:
         """
         Saves the mofile as a pofile to ``fpath``.
 
@@ -824,25 +826,25 @@ class MOFile(_BaseFile):
         """
         return 100
 
-    def translated_entries(self):
+    def translated_entries(self) -> MOFile:
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return self
 
-    def untranslated_entries(self):
+    def untranslated_entries(self) -> list[Any]:
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return []
 
-    def fuzzy_entries(self):
+    def fuzzy_entries(self) -> list[Any]:
         """
         Convenience method to keep the same interface with POFile instances.
         """
         return []
 
-    def obsolete_entries(self):
+    def obsolete_entries(self) -> list[Any]:
         """
         Convenience method to keep the same interface with POFile instances.
         """
@@ -893,7 +895,7 @@ class _BaseEntry:
         self.obsolete = kwargs.get('obsolete', False)
         self.encoding = kwargs.get('encoding', default_encoding)
 
-    def __unicode__(self, wrapwidth: int = 78):
+    def __unicode__(self, wrapwidth: int = 78) -> Any:
         """
         Returns the unicode representation of the entry.
         """
@@ -943,13 +945,15 @@ class _BaseEntry:
             """
             return compat.ustr(self).encode(self.encoding)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return str(self) == str(other)
 
     def __hash__(self):
         return hash(str(self))
 
-    def _str_field(self, fieldname, delflag, plural_index, field, wrapwidth: int = 78):
+    def _str_field(
+        self, fieldname, delflag, plural_index, field, wrapwidth: int = 78
+    ) -> list[str]:
         lines = field.splitlines(True)
         if len(lines) > 1:
             lines = [''] + lines  # start with initial empty line
@@ -987,7 +991,7 @@ class _BaseEntry:
         return ret
 
     @property
-    def msgid_with_context(self):
+    def msgid_with_context(self) -> str:
         if self.msgctxt:
             return '{}{}{}'.format(self.msgctxt, '\x04', self.msgid)
         return self.msgid
@@ -1040,7 +1044,7 @@ class POEntry(_BaseEntry):
         self.previous_msgid_plural = kwargs.get('previous_msgid_plural', None)
         self.linenum = kwargs.get('linenum', None)
 
-    def __unicode__(self, wrapwidth: int = 78):
+    def __unicode__(self, wrapwidth: int = 78) -> Any:
         """
         Returns the unicode representation of the entry.
         """
@@ -1111,7 +1115,7 @@ class POEntry(_BaseEntry):
         ret = u('\n').join(ret)
         return ret
 
-    def __cmp__(self, other):
+    def __cmp__(self, other) -> int:
         """
         Called by comparison operations if rich comparison is not defined.
         """
@@ -1167,22 +1171,22 @@ class POEntry(_BaseEntry):
             return -1
         return 0
 
-    def __gt__(self, other):
+    def __gt__(self, other) -> bool:
         return self.__cmp__(other) > 0
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         return self.__cmp__(other) < 0
 
-    def __ge__(self, other):
+    def __ge__(self, other) -> bool:
         return self.__cmp__(other) >= 0
 
-    def __le__(self, other):
+    def __le__(self, other) -> bool:
         return self.__cmp__(other) <= 0
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return self.__cmp__(other) == 0
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return self.__cmp__(other) != 0
 
     def translated(self) -> bool:
@@ -1283,7 +1287,7 @@ class _POFileParser:
     file format.
     """
 
-    def __init__(self, pofile, *_args, **kwargs) -> None:
+    def __init__(self, pofile: str, *_args, **kwargs) -> None:
         """
         Constructor.
 
@@ -1308,7 +1312,7 @@ class _POFileParser:
                 enc = default_encoding
                 self.fhandle = open(pofile, encoding=enc)
         else:
-            self.fhandle = pofile.splitlines()
+            self.fhandle = pofile.splitlines()  # type: ignore[assignment]
 
         klass = kwargs.get('klass')
         if klass is None:
@@ -1387,7 +1391,7 @@ class _POFileParser:
         self.add('mx', ['mi', 'mx', 'mp', 'tc'], 'mx')
         self.add('mc', ['ct', 'mi', 'mp', 'ms', 'mx', 'pm', 'pp', 'pc'], 'mc')
 
-    def parse(self):
+    def parse(self) -> POFile:
         """
         Run the state machine, parse the file line by line and call process()
         with the current matched symbol.
@@ -1550,7 +1554,7 @@ class _POFileParser:
             self.fhandle.close()
         return self.instance
 
-    def add(self, symbol, states, next_state) -> None:
+    def add(self, symbol: str, states: list[Any], next_state: Any) -> None:
         """
         Add a transition to the state machine.
 
@@ -1569,7 +1573,7 @@ class _POFileParser:
             action = getattr(self, 'handle_%s' % next_state)
             self.transitions[(symbol, state)] = (action, next_state)
 
-    def process(self, symbol):
+    def process(self, symbol: str) -> None:
         """
         Process the transition corresponding to the current state and the
         symbol provided.
@@ -1743,7 +1747,7 @@ class _MOFileParser:
     A class to parse binary mo files.
     """
 
-    def __init__(self, mofile, *_args, **kwargs) -> None:
+    def __init__(self, mofile: str, *_args, **kwargs) -> None:
         """
         Constructor.
 
@@ -1763,7 +1767,7 @@ class _MOFileParser:
         if _is_file(mofile):
             self.fhandle: io.BytesIO | BufferedReader = open(mofile, 'rb')
         else:
-            self.fhandle: io.BytesIO | BufferedReader = io.BytesIO(mofile)
+            self.fhandle: io.BytesIO | BufferedReader = io.BytesIO(mofile)  # type: ignore[arg-type]
 
         klass = kwargs.get('klass')
         if klass is None:
@@ -1782,7 +1786,7 @@ class _MOFileParser:
         if self.fhandle and hasattr(self.fhandle, 'close'):
             self.fhandle.close()
 
-    def parse(self):
+    def parse(self) -> MOFile:
         """
         Build the instance with the file handle provided in the
         constructor.
@@ -1851,7 +1855,9 @@ class _MOFileParser:
         self.fhandle.close()
         return self.instance
 
-    def _build_entry(self, msgid, msgstr=None, msgid_plural=None, msgstr_plural=None):
+    def _build_entry(
+        self, msgid, msgstr=None, msgid_plural=None, msgstr_plural=None
+    ) -> MOEntry:
         msgctxt_msgid = msgid.split(b('\x04'))
         encoding = self.instance.encoding
         if len(msgctxt_msgid) > 1:
@@ -1871,7 +1877,7 @@ class _MOFileParser:
             kwargs['msgstr_plural'] = msgstr_plural
         return MOEntry(**kwargs)
 
-    def _readbinary(self, fmt, numbytes):
+    def _readbinary(self, fmt, numbytes) -> tuple[Any, ...] | Any:
         """
         Private method that unpack n bytes of data using format <fmt>.
         It returns a tuple or a mixed value if the tuple length is 1.

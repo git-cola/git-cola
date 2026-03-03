@@ -1,10 +1,13 @@
+from __future__ import annotations
+
 import collections
+from collections.abc import Iterator
 import glob
 import os
+from typing import Any
 
 from . import core
 from . import resources
-from typing import Any, List
 
 __copyright__ = """
 2012 Peter Norvig (http://norvig.com/spell-correct.html)
@@ -17,7 +20,9 @@ class GlobalState:
     LETTERS = set(ALPHABET)
 
     @classmethod
-    def train(cls, features, model, all_train_words):
+    def train(
+        cls, features: Any, model: dict[str, int], all_train_words: set[str]
+    ) -> dict[str, int]:
         """Add words to the model"""
         for word in features:
             if word not in all_train_words:
@@ -33,7 +38,7 @@ class GlobalState:
         cls.ALPHABET = ''.join(sorted(cls.LETTERS))
 
 
-def edits1(word):
+def edits1(word: str) -> set[str]:
     splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
     deletes = [a + b[1:] for a, b in splits if b]
     transposes = [a + b[1] + b[0] + b[2:] for a, b in splits if len(b) > 1]
@@ -42,15 +47,15 @@ def edits1(word):
     return set(deletes + transposes + replaces + inserts)
 
 
-def known_edits2(word, words):
+def known_edits2(word: str, words: Any) -> set[str]:
     return {e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in words}
 
 
-def known(word, words):
+def known(word: Any, words: Any) -> set[str]:
     return {w for w in word if w in words}
 
 
-def suggest(word, words):
+def suggest(word: str, words: Any) -> set[str] | list[str]:
     candidates = (
         known([word], words)
         or known(edits1(word), words)
@@ -60,7 +65,7 @@ def suggest(word, words):
     return candidates
 
 
-def correct(word, words):
+def correct(word: str, words: Any) -> Any:
     candidates = suggest(word, words)
     return max(candidates, key=words.get)
 
@@ -83,7 +88,7 @@ class NorvigSpellCheck:
         self.aspell_langs = set()
         self.aspell_ok = False
 
-    def add_dictionaries(self, dictionaries: List[Any]) -> None:
+    def add_dictionaries(self, dictionaries: list[Any]) -> None:
         """Add additional dictionaries to the spellcheck engine"""
         self.extra_dictionaries.update(dictionaries)
 
@@ -105,23 +110,23 @@ class NorvigSpellCheck:
         """Enable aspell support"""
         self.aspell_enabled = enabled
 
-    def set_aspell_langs(self, langs: List[Any]) -> None:
+    def set_aspell_langs(self, langs: list[Any]) -> None:
         """Set the aspell languages to query"""
         self.aspell_langs = set(langs)
 
-    def add_word(self, word) -> None:
+    def add_word(self, word: str) -> None:
         self.extra_words.add(word)
 
-    def suggest(self, word):
+    def suggest(self, word: str) -> list[str] | set[str]:
         self.init()
         return suggest(word, self.words)
 
-    def check(self, word) -> bool:
+    def check(self, word: str) -> bool:
         self.init()
         word = word.replace('.', '')
         return word in self.words or word.lower() in self.words
 
-    def read(self, use_common_files: bool = True):
+    def read(self, use_common_files: bool = True) -> Iterator[str]:
         """Read dictionary words"""
         paths = []
         words = self.dictwords
@@ -152,7 +157,7 @@ class NorvigSpellCheck:
             except OSError:
                 pass
 
-    def read_aspell_words(self):
+    def read_aspell_words(self) -> Iterator[Any]:
         """Read words from aspell"""
         # First, determine the languages to query.
         # Use "aspell dicts" and filter out any strings that are longer than 2
@@ -160,7 +165,7 @@ class NorvigSpellCheck:
         if self.aspell_langs:
             aspell_langs = self.aspell_langs
         else:
-            aspell_langs = _get_default_aspell_langs()
+            aspell_langs = _get_default_aspell_langs()  # type: ignore[assignment]
 
         ok = False
         all_words = self.all_words
@@ -185,7 +190,7 @@ class NorvigSpellCheck:
             yield from self.read(use_common_files=False)
 
 
-def _get_default_aspell_langs():
+def _get_default_aspell_langs() -> list[str]:
     cmd = ['aspell', 'dicts']
     status, out, _ = core.run_command(cmd)
     if status != 0:
@@ -193,7 +198,7 @@ def _get_default_aspell_langs():
     return [line for line in out.splitlines() if len(line) == 2]
 
 
-def get_available_dictionaries():
+def get_available_dictionaries() -> list[str]:
     """Query available dictionary files from hunspell"""
     dictionaries = []
     hunspell_cmd = core.find_executable('hunspell')

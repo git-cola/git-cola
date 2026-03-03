@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from functools import partial
 import errno
 import os
@@ -6,6 +7,7 @@ from os.path import join
 import subprocess
 import threading
 import time
+from typing import Any
 
 from . import core
 from .compat import int_types
@@ -13,9 +15,6 @@ from .compat import ustr
 from .compat import WIN32
 from .decorators import memoize
 from .interaction import Interaction
-from cola.core import UStr
-from io import BufferedWriter
-from typing import Any, List, Optional, Set, Tuple, Union
 
 
 GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
@@ -47,7 +46,7 @@ def dashify(value: str) -> str:
     return value.replace('_', '-')
 
 
-def is_git_dir(git_dir: Union[UStr, str]) -> bool:
+def is_git_dir(git_dir: core.UStr | str) -> bool:
     """From git's setup.c:is_git_directory()."""
     result = False
     if git_dir:
@@ -73,7 +72,7 @@ def is_git_dir(git_dir: Union[UStr, str]) -> bool:
     return result
 
 
-def is_git_file(filename: Union[UStr, str]) -> bool:
+def is_git_file(filename: core.UStr | str) -> bool:
     return core.isfile(filename) and os.path.basename(filename) == '.git'
 
 
@@ -109,10 +108,10 @@ class Paths:
 
     def __init__(
         self,
-        git_dir: str | UStr | None = None,
-        git_file: str | UStr | None = None,
-        worktree: str | UStr | None = None,
-        common_dir: str | UStr | None = None,
+        git_dir: str | core.UStr | None = None,
+        git_file: str | core.UStr | None = None,
+        worktree: str | core.UStr | None = None,
+        common_dir: str | core.UStr | None = None,
     ) -> None:
         if git_dir and not is_git_dir(git_dir):
             git_dir = None
@@ -121,7 +120,7 @@ class Paths:
         self.worktree = worktree
         self.common_dir = common_dir
 
-    def get(self, path: UStr) -> 'Paths':
+    def get(self, path: core.UStr) -> Paths:
         """Search for git worktrees and bare repositories"""
         if not self.git_dir or not self.worktree:
             ceiling_dirs = set()
@@ -151,7 +150,7 @@ class Paths:
         # usage: Paths().get()
         return self
 
-    def _search_for_git(self, path: str | UStr, ceiling_dirs: Set[Any]) -> None:
+    def _search_for_git(self, path: str | core.UStr, ceiling_dirs: set[Any]) -> None:
         """Search for git repositories located at path or above"""
         while path:
             if path in ceiling_dirs:
@@ -184,7 +183,7 @@ class Paths:
                 break
 
 
-def find_git_directory(path: UStr) -> Paths:
+def find_git_directory(path: core.UStr) -> Paths:
     """Perform Git repository discovery"""
     return Paths(
         git_dir=core.getenv('GIT_DIR'), worktree=core.getenv('GIT_WORK_TREE')
@@ -202,19 +201,19 @@ class Git:
         self._valid = {}  #: Store the result of is_git_dir() for performance
         self.set_worktree(worktree or core.getcwd())
 
-    def is_git_repository(self, path):
+    def is_git_repository(self, path) -> bool:
         return is_git_repository(path)
 
-    def getcwd(self) -> str | UStr:
+    def getcwd(self) -> str | core.UStr:
         """Return the working directory used by git()"""
         return self.paths.worktree or self.paths.git_dir
 
-    def set_worktree(self, path: str) -> str | UStr:
+    def set_worktree(self, path: str) -> str | core.UStr:
         path = core.decode(path)
         self.paths = find_git_directory(path)
         return self.paths.worktree
 
-    def worktree(self) -> str | UStr:
+    def worktree(self) -> str | core.UStr:
         if not self.paths.worktree:
             path = core.abspath(core.getcwd())
             self.paths = find_git_directory(path)
@@ -244,7 +243,7 @@ class Git:
                 result = common_result
         return result
 
-    def git_dir(self):
+    def git_dir(self) -> str | core.UStr:
         if not self.paths.git_dir:
             path = core.abspath(core.getcwd())
             self.paths = find_git_directory(path)
@@ -257,18 +256,18 @@ class Git:
 
     @staticmethod
     def execute(
-        command: List[Union[UStr, str]],
-        _add_env: Optional[dict[str, str]] = None,
-        _cwd: Optional[str | UStr] = None,
+        command: list[core.UStr | str],
+        _add_env: dict[str, str] | None = None,
+        _cwd: str | core.UStr | None = None,
         _decode: bool = True,
-        _encoding: Optional[str] = None,
+        _encoding: str | None = None,
         _raw: bool = False,
-        _stdin: Any = None,
-        _stderr: int = subprocess.PIPE,
-        _stdout: Union[BufferedWriter, int] = subprocess.PIPE,
+        _stdin: int | None = None,
+        _stderr: int | None = subprocess.PIPE,
+        _stdout: int | None = subprocess.PIPE,
         _readonly: bool = False,
         _no_win32_startupinfo: bool = False,
-    ) -> Tuple[int, UStr, UStr]:
+    ) -> tuple[int, core.UStr, core.UStr]:
         """
         Execute a command and returns its output
 
@@ -344,7 +343,9 @@ class Git:
         # Allow access to the command's status code
         return (status, out, err)
 
-    def git(self, cmd: str, *args, **kwargs) -> tuple[int, UStr | str, UStr | str]:
+    def git(
+        self, cmd: str, *args, **kwargs
+    ) -> tuple[int, core.UStr | str, core.UStr | str]:
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
         _kwargs = {'_cwd': self.getcwd()}
@@ -380,7 +381,9 @@ class Git:
         call = git_args + opt_args
         call.extend(args)
         try:
-            result: tuple[int, UStr | str, UStr | str] = self.execute(call, **_kwargs)  # type: ignore[arg-type]
+            result: tuple[int, core.UStr | str, core.UStr | str] = self.execute(
+                call, **_kwargs  # type: ignore[arg-type]
+            )
         except OSError as exc:
             if WIN32 and exc.errno == errno.ENOENT:
                 # see if git exists at all. On win32 it can fail with ENOENT in
@@ -408,7 +411,7 @@ def _git_is_installed():
     return result
 
 
-def transform_kwargs(**kwargs) -> List[Union[str, Any]]:
+def transform_kwargs(**kwargs) -> list[str | Any]:
     """Transform kwargs into git command line options
 
     Callers can assume the following behavior:

@@ -1,11 +1,11 @@
-from qtpy.QtWidgets import QGraphicsItem
+from __future__ import annotations
+
+from typing import Callable
 
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
-from PyQt5.QtGui import QKeySequence
-from typing import Callable, Type, Union
 
 try:
     from qtpy import PYQT4
@@ -16,9 +16,9 @@ from . import hotkeys
 
 
 def patch(
-    obj: Union[Type[QGraphicsItem], Type[QKeySequence]],
+    obj: type[QtWidgets.QGraphicsItem] | type[QtGui.QKeySequence],
     attr: str,
-    value: Union[Callable, QKeySequence],
+    value: Callable | QtGui.QKeySequence,
 ) -> None:
     if not hasattr(obj, attr):
         setattr(obj, attr, value)

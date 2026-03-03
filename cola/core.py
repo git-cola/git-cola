@@ -4,6 +4,7 @@ The @interruptable functions retry when system calls are interrupted,
 e.g. when python raises an IOError or OSError with errno == EINTR.
 """
 from __future__ import annotations
+
 import ctypes
 import functools
 import itertools
@@ -12,14 +13,16 @@ import os
 import platform
 import subprocess
 import sys
+from typing import Any, Callable, TYPE_CHECKING
 
 from .decorators import interruptable
 from .compat import ustr
 from .compat import PY2
 from .compat import PY3
 from .compat import WIN32
-from io import BufferedReader, BufferedWriter, TextIOWrapper
-from typing import Any, Callable, List, Optional, Tuple, Type, Union
+
+if TYPE_CHECKING:
+    from io import BufferedReader, BufferedWriter, TextIOWrapper
 
 # /usr/include/stdlib.h
 # #define EXIT_SUCCESS    0   /* Successful exit status.  */
@@ -61,7 +64,7 @@ class UStr(ustr):
 
     """
 
-    def __new__(cls: Type[UStr], string: Union[str, UStr], encoding: str) -> 'UStr':
+    def __new__(cls: type[UStr], string: str | UStr, encoding: str) -> UStr:
         if isinstance(string, UStr):
             if encoding != string.encoding:
                 raise ValueError(f'Encoding conflict: {string.encoding} vs. {encoding}')
@@ -72,7 +75,7 @@ class UStr(ustr):
         return obj
 
 
-def decode_maybe(value, encoding, errors: str = 'strict'):
+def decode_maybe(value, encoding, errors: str = 'strict') -> Any:
     """Decode a value when the "decode" method exists"""
     if hasattr(value, 'decode'):
         result = value.decode(encoding, errors=errors)
@@ -82,10 +85,10 @@ def decode_maybe(value, encoding, errors: str = 'strict'):
 
 
 def decode(
-    value: Optional[Union[bytes, str, UStr]],
+    value: bytes | str | UStr | None,
     encoding: None = None,
     errors: str = 'strict',
-) -> Optional[UStr]:
+) -> UStr | None:
     """decode(encoded_string) returns an un-encoded Unicode string"""
     if value is None:
         result = None
@@ -117,14 +120,14 @@ def decode(
     return result
 
 
-def encode(string: Union[str, UStr], encoding: Optional[str] = None) -> bytes:
+def encode(string: str | UStr, encoding: str | None = None) -> bytes:
     """encode(string) returns a byte string encoded to UTF-8"""
     if not isinstance(string, ustr):
         return string
     return string.encode(encoding or ENCODING, 'replace')
 
 
-def mkpath(path: Union[str, UStr], encoding: None = None) -> bytes | UStr:
+def mkpath(path: str | UStr, encoding: None = None) -> bytes | UStr:
     # The Windows API requires Unicode strings regardless of python version
     if WIN32:
         return decode(path, encoding=encoding)
@@ -132,24 +135,26 @@ def mkpath(path: Union[str, UStr], encoding: None = None) -> bytes | UStr:
     return encode(path, encoding=encoding)
 
 
-def decode_seq(seq: List[bytes], encoding: None = None) -> List[UStr]:
+def decode_seq(seq: list[bytes], encoding: None = None) -> list[UStr]:
     """Decode a sequence of values"""
     return [decode(x, encoding=encoding) for x in seq]
 
 
-def list2cmdline(cmd: List[Union[str, Any, UStr]]) -> str:
+def list2cmdline(cmd: list[str | Any | UStr]) -> str:
     return subprocess.list2cmdline([decode(c) for c in cmd])
 
 
 def read(
-    filename: str, size: int = -1, encoding: None = None, errors: str = 'strict'
+    filename: str, size: int = -1, encoding: str | None = None, errors: str = 'strict'
 ) -> UStr:
     """Read filename and return contents"""
     with xopen(filename, 'rb') as fh:
         return xread(fh, size=size, encoding=encoding, errors=errors)
 
 
-def write(path: str, contents: str, encoding: None = None, append: bool = False) -> int:
+def write(
+    path: str, contents: str, encoding: str | None = None, append: bool = False
+) -> int:
     """Writes a Unicode string to a file"""
     if append:
         mode = 'ab'
@@ -174,26 +179,26 @@ def xwrite(fh: BufferedWriter, content: str, encoding: None = None) -> int:
 
 
 @interruptable
-def wait(proc):
+def wait(proc) -> Any:
     """Wait on a subprocess and retry when interrupted"""
     return proc.wait()
 
 
 @interruptable
-def readline(fh, encoding=None):
+def readline(fh, encoding=None) -> UStr | None:
     return decode(fh.readline(), encoding=encoding)
 
 
 @interruptable
 def start_command(
-    cmd: List[UStr | str],
-    cwd: Optional[UStr] = None,
+    cmd: list[UStr | str],
+    cwd: UStr | None = None,
     add_env: None = None,
     universal_newlines: bool = False,
-    stdin: Optional[int] = subprocess.PIPE,
-    stdout: Union[BufferedWriter, int] = subprocess.PIPE,
+    stdin: int | None = subprocess.PIPE,
+    stdout: int | None = subprocess.PIPE,
     no_win32_startupinfo: bool = False,
-    stderr: int = subprocess.PIPE,
+    stderr: int | None = subprocess.PIPE,
     **extra,
 ) -> subprocess.Popen:
     """Start the given command, and return a subprocess object.
@@ -256,9 +261,7 @@ def start_command(
     )
 
 
-def prep_for_subprocess(
-    cmd: List[Union[UStr, str]], shell: bool = False
-) -> List[UStr | str]:
+def prep_for_subprocess(cmd: list[UStr | str], shell: bool = False) -> list[UStr | str]:
     """Decode on Python3, encode on Python2"""
     # See the comment in start_command()
     if shell:
@@ -277,11 +280,11 @@ def prep_for_subprocess(
 @interruptable
 def communicate(
     proc: subprocess.Popen,
-) -> Union[Tuple[None, bytes], Tuple[bytes, bytes]]:
+) -> tuple[None, bytes] | tuple[bytes, bytes]:
     return proc.communicate()
 
 
-def run_command(cmd: List[Union[UStr, str]], *args, **kwargs) -> Tuple[int, UStr, UStr]:
+def run_command(cmd: list[UStr | str], *args, **kwargs) -> tuple[int, UStr, UStr]:
     """Run the given command to completion, and return its results.
 
     This provides a simpler interface to the subprocess module.
@@ -302,13 +305,13 @@ def run_command(cmd: List[Union[UStr, str]], *args, **kwargs) -> Tuple[int, UStr
 
 
 @interruptable
-def _fork_posix(args: List[str], cwd: None = None, shell: bool = False) -> int:
+def _fork_posix(args: list[str], cwd: None = None, shell: bool = False) -> int:
     """Launch a process in the background."""
     encoded_args = [encode(arg) for arg in args]
     return subprocess.Popen(encoded_args, cwd=cwd, shell=shell).pid
 
 
-def _fork_win32(args, cwd=None, shell: bool = False):
+def _fork_win32(args, cwd=None, shell: bool = False) -> int:
     """Launch a background process using crazy win32 voodoo."""
     # This is probably wrong, but it works.  Windows.. Wow.
     if args[0] == 'git-dag':
@@ -330,7 +333,7 @@ def _fork_win32(args, cwd=None, shell: bool = False):
     ).pid
 
 
-def _win32_find_exe(exe):
+def _win32_find_exe(exe: Any) -> Any:
     """Find the actual file for a Windows executable.
 
     This function goes through the same process that the Windows shell uses to
@@ -372,14 +375,12 @@ else:
     fork = _fork_posix
 
 
-def _decorator_noop(
-    x: Optional[Union[bool, os.stat_result]]
-) -> Optional[Union[bool, os.stat_result]]:
+def _decorator_noop(x: bool | os.stat_result | None) -> bool | os.stat_result | None:
     return x
 
 
 def wrap(
-    action: Callable, func: Callable, decorator: Optional[Callable] = None
+    action: Callable, func: Callable, decorator: Callable | None = None
 ) -> Callable:
     """Wrap arguments with `action`, optionally decorate the result"""
     if decorator is None:
@@ -392,7 +393,7 @@ def wrap(
     return wrapped
 
 
-def decorate(decorator, func):
+def decorate(decorator, func) -> functools._Wrapped[..., Any, ..., Any]:
     """Decorate the result of `func` with `action`"""
 
     @functools.wraps(func)
@@ -402,11 +403,11 @@ def decorate(decorator, func):
     return decorated
 
 
-def getenv(name: str, default: Optional[str] = None) -> Optional[UStr]:
+def getenv(name: str, default: str | None = None) -> UStr | None:
     return decode(os.getenv(name, default))
 
 
-def guess_mimetype(filename: str) -> Optional[str]:
+def guess_mimetype(filename: str) -> str | None:
     """Robustly guess a filename's mimetype"""
     mimetype = None
     try:
@@ -426,7 +427,7 @@ def xopen(path: str, mode: str = 'r', encoding: None = None) -> Any:
     return open(mkpath(path, encoding=encoding), mode)
 
 
-def open_append(path, encoding=None):
+def open_append(path, encoding=None) -> TextIOWrapper:
     """Open a file for appending in UTF-8 text mode"""
     return open(mkpath(path, encoding=encoding), 'a', encoding='utf-8')
 
@@ -480,7 +481,7 @@ else:
 
 # NOTE: find_executable() is originally from the stdlib, but starting with
 # python3.7 the stdlib no longer bundles distutils.
-def _find_executable(executable: UStr, path: str | None = None) -> Optional[str]:
+def _find_executable(executable: UStr, path: str | None = None) -> str | None:
     """Tries to find 'executable' in the directories listed in 'path'.
 
     A string listing directories separated by 'os.pathsep'; defaults to

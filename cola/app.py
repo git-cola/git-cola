@@ -1,5 +1,6 @@
 """Provides the main() routine and ColaApplication"""
 from __future__ import annotations
+
 from functools import partial
 import argparse
 import os
@@ -7,10 +8,7 @@ import random
 import signal
 import sys
 import time
-from PyQt5.QtCore import QChildEvent, QEvent, QTimerEvent
-from cola.core import UStr
-from cola.widgets.main import MainView
-from typing import Any, Callable, List, Optional, Union
+from typing import Any, Callable, TYPE_CHECKING
 
 try:
     from qtpy import QtCore
@@ -72,6 +70,12 @@ from . import resources
 from . import themes
 from . import utils
 from . import version
+
+if TYPE_CHECKING:
+    from qtpy.QtCore import QEvent
+    from qtpy.QtGui import QPalette
+
+    from .widgets.standard import Dialog, MainWindow, Widget
 
 
 def setup_environment() -> None:
@@ -140,7 +144,7 @@ def setup_environment() -> None:
     compat.setenv('GIT_MERGE_AUTOEDIT', 'no')
 
 
-def _get_askpass() -> UStr:
+def _get_askpass() -> str | core.UStr:
     """Get a default askpass program appropriate for the current environment"""
     git_askpass = core.getenv('GIT_ASKPASS')
     ssh_askpass = core.getenv('SSH_ASKPASS')
@@ -169,7 +173,7 @@ def _get_askpass() -> UStr:
     return resources.package_command('ssh-askpass')
 
 
-def get_icon_themes(context: "ApplicationContext") -> List[str]:
+def get_icon_themes(context: ApplicationContext) -> list[str]:
     """Return the default icon theme names"""
     result = []
 
@@ -195,7 +199,12 @@ class ColaApplication:
     """
 
     def __init__(
-        self, context: "ApplicationContext", argv: List[str], locale: None=None, icon_themes: Optional[List[Any]]=None, gui_theme: None=None
+        self,
+        context: ApplicationContext,
+        argv: list[str],
+        locale: None = None,
+        icon_themes: list[Any] | None = None,
+        gui_theme: None = None,
     ) -> None:
         cfgactions.install()
         i18n.install(locale)
@@ -234,11 +243,11 @@ class ColaApplication:
         value = self.context.cfg.get('cola.hidpi', default=hidpi.Option.AUTO)
         hidpi.apply_choice(value)
 
-    def activeWindow(self):
+    def activeWindow(self) -> QtWidgets | None:
         """QApplication::activeWindow() pass-through"""
         return self._app.activeWindow()
 
-    def palette(self):
+    def palette(self) -> QPalette:
         """QApplication::palette() pass-through"""
         return self._app.palette()
 
@@ -269,7 +278,7 @@ class ColaApplication:
             pass
         self._app = None
 
-    def exit(self, status):
+    def exit(self, status) -> None:
         """QApplication::exit(status) pass-through"""
         return self._app.exit(status)
 
@@ -277,14 +286,14 @@ class ColaApplication:
 class ColaQApplication(QtWidgets.QApplication):
     """QApplication implementation for handling custom events"""
 
-    def __init__(self, context: "ApplicationContext", argv: List[str]) -> None:
+    def __init__(self, context: ApplicationContext, argv: list[str]) -> None:
         super().__init__(argv)
         self.context = context
         # Make icons sharp in HiDPI screen
         if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
             self.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
-    def event(self, e: Union[QEvent, QTimerEvent, QChildEvent]) -> bool:
+    def event(self, e: QEvent) -> bool:
         """Respond to focus events for the cola.refreshonfocus feature"""
         if e.type() == QtCore.QEvent.ApplicationActivate:
             context = self.context
@@ -331,7 +340,7 @@ def process_args(args: argparse.Namespace, setup_repo: bool = False) -> None:
         args.repo = core.getcwd()
 
     # Bail out if --repo is not a directory
-    repo = core.decode(args.repo)
+    repo: str | core.UStr = core.decode(args.repo)
     if repo.startswith('file:'):
         repo = repo[len('file:') :]
     repo = core.realpath(repo)
@@ -365,7 +374,7 @@ def application_init(
     app_name: str = 'Git Cola',
     setup_worktree: bool = True,
     setup_repo: bool = False,
-) -> "ApplicationContext":
+) -> ApplicationContext:
     """Parses the command-line arguments and starts git-cola"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
@@ -389,7 +398,9 @@ def application_init(
     return context
 
 
-def new_context(args: argparse.Namespace, app_name: str = 'Git Cola') -> "ApplicationContext":
+def new_context(
+    args: argparse.Namespace, app_name: str = 'Git Cola'
+) -> ApplicationContext:
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
     context.timestamp = time.time()
@@ -406,13 +417,13 @@ def new_context(args: argparse.Namespace, app_name: str = 'Git Cola') -> "Applic
     return context
 
 
-def create_context():
+def create_context() -> ApplicationContext:
     """Create a one-off context from the current directory"""
     args = null_args()
-    return new_context(args)
+    return new_context(args)  # type: ignore[arg-type]
 
 
-def enforce_single_instance(context: "ApplicationContext") -> None:
+def enforce_single_instance(context: ApplicationContext) -> None:
     """Ensure that only a single instance of the application is running"""
     if not context.args.single_instance:
         return
@@ -463,7 +474,12 @@ def enforce_single_instance(context: "ApplicationContext") -> None:
         sys.exit(1)
 
 
-def application_run(context: "ApplicationContext", view: MainView, start: Optional[Callable]=None, stop: Optional[Callable]=None) -> int:
+def application_run(
+    context: ApplicationContext,
+    view: Widget | Dialog | MainWindow,
+    start: Callable | None = None,
+    stop: Callable | None = None,
+) -> int:
     """Run the application main loop"""
     initialize_view(context, view)
     # Startup callbacks
@@ -479,7 +495,9 @@ def application_run(context: "ApplicationContext", view: MainView, start: Option
     return result
 
 
-def initialize_view(context: "ApplicationContext", view: MainView) -> None:
+def initialize_view(
+    context: ApplicationContext, view: Widget | Dialog | MainWindow
+) -> None:
     """Register the main widget and display it"""
     context.set_view(view)
     view.show()
@@ -487,19 +505,23 @@ def initialize_view(context: "ApplicationContext", view: MainView) -> None:
         view.raise_()
 
 
-def application_start(context, view):
+def application_start(context, view) -> int:
     """Show the GUI and start the main event loop"""
     # Store the view for session management
     return application_run(context, view, start=default_start, stop=default_stop)
 
 
-def default_start(context: "ApplicationContext", _view: MainView) -> None:
+def default_start(
+    context: ApplicationContext, _view: Widget | Dialog | MainWindow
+) -> None:
     """Scan for the first time"""
     QtCore.QTimer.singleShot(0, startup_message)
     QtCore.QTimer.singleShot(0, lambda: async_update(context))
 
 
-def default_stop(_context: "ApplicationContext", _view: MainView) -> None:
+def default_stop(
+    _context: ApplicationContext, _view: Widget | Dialog | MainWindow
+) -> None:
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
@@ -558,14 +580,16 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def new_application(context: "ApplicationContext", args: argparse.Namespace) -> ColaApplication:
+def new_application(
+    context: ApplicationContext, args: argparse.Namespace
+) -> ColaApplication:
     """Create a new ColaApplication"""
     return ColaApplication(
         context, sys.argv, icon_themes=args.icon_themes, gui_theme=args.theme
     )
 
 
-def new_worktree(context: "ApplicationContext", repo: str, prompt: bool) -> None:
+def new_worktree(context: ApplicationContext, repo: str, prompt: bool) -> None:
     """Find a Git repository, or prompt for one when not found"""
     model = context.model
     cfg = context.cfg
@@ -618,7 +642,7 @@ def offer_to_create_repo(context, gitdir) -> None:
             Interaction.command_error(title, 'git init', status, out, err)
 
 
-def async_update(context: "ApplicationContext") -> None:
+def async_update(context: ApplicationContext) -> None:
     """Update the model in the background
 
     git-cola should startup as quickly as possible.
@@ -709,7 +733,7 @@ class NullArgs:
         self.version = False
 
 
-def null_args():
+def null_args() -> NullArgs:
     """Create a new instance of application arguments"""
     return NullArgs()
 
@@ -721,20 +745,20 @@ class ApplicationContext:
         self.args = args
         self.app: ColaApplication | None = None  # ColaApplication
         self.shared_memory = None  # QSharedMemory
-        self.command_bus: CommandBus | None = None  # cmd.CommandBus
-        self.git = None  # git.Git
-        self.cfg = None  # gitcfg.GitConfig
+        self.command_bus: CommandBus | None = None
+        self.git: git.Git | None = None
+        self.cfg: gitcfg.GitConfig | None = None
         self.model: main.MainModel | None = None
         self.notifier = Notifier(self)
         self.timer: Timer | None = None  # Timer
-        self.runtask: qtutils.RunTask | None = None  # qtutils.RunTask
-        self.settings = None  # settings.Settings
+        self.runtask: qtutils.RunTask | None = None
+        self.settings: Settings | None = None
         self.selection: selection.SelectionModel | None = None
-        self.fsmonitor = None  # fsmonitor
-        self.view: MainView | None = None  # QWidget
+        self.fsmonitor: fsmonitor._Monitor | None = None
+        self.view: Widget | Dialog | MainWindow | None = None  # QWidget
         self.browser_windows = []  # list of browse.Browser
 
-    def set_view(self, view: MainView) -> None:
+    def set_view(self, view: Widget | Dialog | MainWindow) -> None:
         """Initialize view-specific members"""
         self.view = view
         self.notifier.setParent(view)
@@ -767,7 +791,7 @@ class Notifier(QtCore.QObject):
     log = Signal(object)
     message = Signal(object)
 
-    def __init__(self, context: ApplicationContext, parent: None=None) -> None:
+    def __init__(self, context: ApplicationContext, parent: None = None) -> None:
         super().__init__(parent)
         self.context = context
 

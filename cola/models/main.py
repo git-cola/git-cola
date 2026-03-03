@@ -92,11 +92,11 @@ class MainModel(QtCore.QObject):
         self.annex = False
         self.lfs = False
         self.head = 'HEAD'
-        self.diff_text = ''
+        self.diff_text: str | tuple[str, str] = ''
         self.diff_type = Types.TEXT
         self.file_type = Types.TEXT
         self.mode = self.mode_none
-        self.filename = None
+        self.filename: str | None = None
         self.is_cherry_picking = False
         self.is_merging = False
         self.is_rebasing = False
@@ -238,7 +238,7 @@ class MainModel(QtCore.QObject):
             pass
         return path
 
-    def set_diff_text(self, txt: str) -> None:
+    def set_diff_text(self, txt: str | tuple[str, str]) -> None:
         """Update the text displayed in the diff editor"""
         changed = txt != self.diff_text
         self.diff_text = txt
@@ -688,8 +688,8 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     if not xdg_current_desktop:
         return add_env
 
-    http_proxy: str | UStr | None = None
-    https_proxy: str | UStr | None = None
+    http_proxy: str | core.UStr | None = None
+    https_proxy: str | core.UStr | None = None
     if xdg_current_desktop == 'KDE' or xdg_current_desktop.endswith(':KDE'):
         kreadconfig = core.find_executable('kreadconfig5')
         if kreadconfig:

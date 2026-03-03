@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Any
 
 try:
     import urllib2 as parse  # noqa
@@ -65,7 +66,7 @@ def unsetenv(key: str) -> None:
         os.unsetenv(key)
 
 
-def no_op(value):
+def no_op(value: Any) -> Any:
     """Return the value as-is"""
     return value
 
