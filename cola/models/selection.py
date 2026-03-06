@@ -1,18 +1,21 @@
 """Provides a selection model to handle selection."""
+from __future__ import annotations
 import collections
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
+from cola.models.main import MainModel
+from typing import Any
 
 State = collections.namedtuple('State', 'staged unmerged modified untracked')
 
 
-def create():
+def create() -> SelectionModel:
     """Create a SelectionModel"""
     return SelectionModel()
 
 
-def pick(selection):
+def pick(selection: State) -> list[Any]:
     """Choose the first list from stage, unmerged, modified, untracked"""
     if selection.staged:
         files = selection.staged
@@ -27,7 +30,7 @@ def pick(selection):
     return files
 
 
-def union(selection):
+def union(selection: State) -> list[Any]:
     """Return the union of all selected items in a sorted list"""
     values = set(
         selection.staged + selection.unmerged + selection.modified + selection.untracked
@@ -35,7 +38,7 @@ def union(selection):
     return list(sorted(values))
 
 
-def _filter(values, remove) -> None:
+def _filter(values: list[str | Any], remove: list[str | Any]) -> None:
     """Filter a list in-place by removing items"""
     remove_set = set(remove)
     values_copy = list(values)
@@ -62,7 +65,7 @@ class SelectionModel(QtCore.QObject):
         self.untracked = []
         self.line_number = None
 
-    def reset(self, emit=False) -> None:
+    def reset(self, emit: bool = False) -> None:
         self.staged = []
         self.unmerged = []
         self.modified = []
@@ -76,7 +79,7 @@ class SelectionModel(QtCore.QObject):
             bool(self.staged or self.unmerged or self.modified or self.untracked)
         )
 
-    def set_selection(self, s) -> None:
+    def set_selection(self, s: State) -> None:
         """Set the new selection."""
         self.staged = s.staged
         self.unmerged = s.unmerged
@@ -84,17 +87,17 @@ class SelectionModel(QtCore.QObject):
         self.untracked = s.untracked
         self.selection_changed.emit()
 
-    def update(self, other) -> None:
+    def update(self, other: MainModel) -> None:
         _filter(self.staged, other.staged)
         _filter(self.unmerged, other.unmerged)
         _filter(self.modified, other.modified)
         _filter(self.untracked, other.untracked)
         self.selection_changed.emit()
 
-    def selection(self):
+    def selection(self) -> State:
         return State(self.staged, self.unmerged, self.modified, self.untracked)
 
-    def single_selection(self):
+    def single_selection(self) -> State:
         """Scan across staged, modified, etc. and return a single item."""
         staged = None
         modified = None
@@ -110,7 +113,7 @@ class SelectionModel(QtCore.QObject):
             untracked = self.untracked[0]
         return State(staged, unmerged, modified, untracked)
 
-    def filename(self):
+    def filename(self) -> str | None:
         """Return the currently selected filename"""
         paths = [path for path in self.single_selection() if path is not None]
         if paths:
@@ -119,10 +122,10 @@ class SelectionModel(QtCore.QObject):
             filename = None
         return filename
 
-    def group(self):
+    def group(self) -> list[Any]:
         """A list of selected files in various states of being"""
         return pick(self.selection())
 
-    def union(self):
+    def union(self) -> list[Any]:
         """Return the union of all selected items in a sorted list"""
         return union(self)

@@ -720,12 +720,12 @@ class ApplicationContext:
         self.command_bus: CommandBus | None = None  # cmd.CommandBus
         self.git = None  # git.Git
         self.cfg = None  # gitcfg.GitConfig
-        self.model = None  # main.MainModel
+        self.model: main.MainModel | None = None
         self.notifier = Notifier(self)
         self.timer: Timer | None = None  # Timer
         self.runtask: qtutils.RunTask | None = None  # qtutils.RunTask
         self.settings = None  # settings.Settings
-        self.selection = None  # selection.SelectionModel
+        self.selection: selection.SelectionModel | None = None
         self.fsmonitor = None  # fsmonitor
         self.view = None  # QWidget
         self.browser_windows = []  # list of browse.Browser

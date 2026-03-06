@@ -7,6 +7,7 @@ from .. import core
 from .. import hidpi
 from .. import utils
 from ..cmd import Command
+from typing import Any
 
 
 ABBREV = 'core.abbrev'
@@ -87,17 +88,17 @@ class DateFormat:
     FORMAT = 'format:'
 
     @classmethod
-    def is_custom(cls, value):
+    def is_custom(cls, value: str) -> bool:
         """Is the log format a custom log format?"""
         return value.startswith(cls.FORMAT)
 
     @classmethod
-    def get_custom_format(cls, value):
+    def get_custom_format(cls, value: str) -> str:
         """Return the custom format in a format:<...> string"""
         return value[len(cls.FORMAT) :]
 
 
-def date_formats():
+def date_formats() -> list[str]:
     """Return valid values for git config cola.logdate"""
     return [
         DateFormat.DEFAULT,
@@ -192,7 +193,7 @@ class Defaults:
     verbosity = 0
 
 
-def abbrev(context):
+def abbrev(context) -> int:
     """Return the configured length for shortening commit IDs"""
     default = Defaults.abbrev
     value = context.cfg.get(ABBREV, default=default)
@@ -206,82 +207,82 @@ def abbrev(context):
     return result
 
 
-def spelling_dictionaries(context):
+def spelling_dictionaries(context) -> list[Any]:
     """Return the list of additional spelling dictionaries"""
     return context.cfg.get_all(DICTIONARY)
 
 
-def aspell_enabled(context):
+def aspell_enabled(context) -> bool:
     """Return True when aspell should be used as the spelling dictionary source"""
     return context.cfg.get(ASPELL_ENABLED, default=Defaults.aspell_enabled)
 
 
-def aspell_languages(context):
+def aspell_languages(context) -> list[Any]:
     """Return the currently configured list of aspell languages"""
     return context.cfg.get_all(ASPELL_LANG)
 
 
-def autodetect_proxy(context):
+def autodetect_proxy(context) -> bool:
     """Return True when proxy settings should be automatically configured"""
     return context.cfg.get(AUTODETECT_PROXY, default=Defaults.autodetect_proxy)
 
 
-def blame_viewer(context):
+def blame_viewer(context) -> str:
     """Return the configured "blame" viewer"""
     default = Defaults.blame_viewer
     return context.cfg.get(BLAME_VIEWER, default=default)
 
 
-def block_cursor(context):
+def block_cursor(context) -> bool:
     """Should we display a block cursor in diff editors?"""
     return context.cfg.get(BLOCK_CURSOR, default=Defaults.block_cursor)
 
 
-def bold_fonts(context):
+def bold_fonts(context) -> bool:
     """Should we bold all fonts?"""
     return context.cfg.get(BOLD_FONTS, default=Defaults.bold_fonts)
 
 
-def bold_headers(context):
+def bold_headers(context) -> bool:
     """Should we bold the Status column headers?"""
     return context.cfg.get(BOLD_HEADERS, default=Defaults.bold_headers)
 
 
-def check_conflicts(context):
+def check_conflicts(context) -> bool:
     """Should we check for merge conflict markers in unmerged files?"""
     return context.cfg.get(CHECK_CONFLICTS, default=Defaults.check_conflicts)
 
 
-def check_published_commits(context):
+def check_published_commits(context) -> bool:
     """Should we check for published commits when amending?"""
     return context.cfg.get(
         CHECK_PUBLISHED_COMMITS, default=Defaults.check_published_commits
     )
 
 
-def display_untracked(context):
+def display_untracked(context) -> bool:
     """Should we display untracked files?"""
     return context.cfg.get(DISPLAY_UNTRACKED, default=Defaults.display_untracked)
 
 
-def editor(context):
+def editor(context) -> str:
     """Return the configured editor"""
     app = context.cfg.get(EDITOR, default=fallback_editor())
     return _remap_editor(app)
 
 
-def background_editor(context):
+def background_editor(context) -> str:
     """Return the configured non-blocking background editor"""
     app = context.cfg.get(BACKGROUND_EDITOR, default=editor(context))
     return _remap_editor(app)
 
 
-def enable_popups(context):
+def enable_popups(context) -> bool:
     """Should popups be used instead of notifications/logs?"""
     return context.cfg.get(ENABLE_POPUPS, default=Defaults.enable_popups)
 
 
-def fallback_editor():
+def fallback_editor() -> str:
     """Return a fallback editor for cases where one is not configured
 
     GIT_VISUAL and VISUAL are consulted before GIT_EDITOR and EDITOR to allow
@@ -302,7 +303,7 @@ def fallback_editor():
     return Defaults.editor
 
 
-def _remap_editor(app):
+def _remap_editor(app: str) -> str:
     """Remap a configured editor into a visual editor name"""
     # We do this for vim users because this configuration is convenient for new users.
     return {
@@ -311,17 +312,17 @@ def _remap_editor(app):
     }.get(app, app)
 
 
-def comment_char(context):
+def comment_char(context) -> str:
     """Return the configured git commit comment character"""
     return context.cfg.get(COMMENT_CHAR, default=Defaults.comment_char)
 
 
-def commit_cleanup(context):
+def commit_cleanup(context) -> str:
     """Return the configured git commit cleanup mode"""
     return context.cfg.get(COMMIT_CLEANUP, default=Defaults.commit_cleanup)
 
 
-def enable_gravatar(context):
+def enable_gravatar(context) -> bool:
     """Is gravatar enabled?"""
     return context.cfg.get(ENABLE_GRAVATAR, default=Defaults.enable_gravatar)
 
@@ -342,34 +343,34 @@ def default_history_browser() -> str:
     return default
 
 
-def history_browser(context):
+def history_browser(context) -> str:
     """Return the configured history browser"""
     default = default_history_browser()
     return context.cfg.get(HISTORY_BROWSER, default=default)
 
 
-def http_proxy(context):
+def http_proxy(context) -> str:
     """Return the configured http proxy"""
     return context.cfg.get(HTTP_PROXY, default=Defaults.http_proxy)
 
 
-def notify_on_push(context):
+def notify_on_push(context) -> bool:
     """Return whether to notify upon push or not"""
     default = Defaults.notifyonpush
     return context.cfg.get(NOTIFY_ON_PUSH, default=default)
 
 
-def linebreak(context):
+def linebreak(context) -> bool:
     """Should we word-wrap lines in the commit message editor?"""
     return context.cfg.get(LINEBREAK, default=Defaults.linebreak)
 
 
-def logdate(context):
+def logdate(context) -> str:
     """Return the configured log date format"""
     return context.cfg.get(LOGDATE, default=Defaults.logdate)
 
 
-def maxrecent(context):
+def maxrecent(context) -> int:
     """Return the configured maximum number of Recent Repositories"""
     value = Defaults.maxrecent
     if context:
@@ -377,72 +378,72 @@ def maxrecent(context):
     return value
 
 
-def fixup_commit_count(context):
+def fixup_commit_count(context) -> int:
     """The number of commits for the Fixup Previous Commit menu"""
     return context.cfg.get(FIXUP_COMMIT_COUNT, default=Defaults.fixup_commit_count)
 
 
-def load_commitmsg_count(context):
+def load_commitmsg_count(context) -> int:
     """The number of commits for the Load Previous Commit Message menu"""
     return context.cfg.get(LOAD_COMMITMSG_COUNT, default=Defaults.load_commitmsg_count)
 
 
-def mouse_zoom(context):
+def mouse_zoom(context) -> bool:
     """Should we zoom text when using Ctrl + MouseWheel scroll"""
     return context.cfg.get(MOUSE_ZOOM, default=Defaults.mouse_zoom)
 
 
-def inotify_delay(context):
+def inotify_delay(context) -> int:
     """How long to wait, in milliseconds, between inotify events"""
     return context.cfg.get(INOTIFY_DELAY, default=Defaults.inotify_delay)
 
 
-def spellcheck(context):
+def spellcheck(context) -> bool:
     """Should we spellcheck commit messages?"""
     return context.cfg.get(SPELL_CHECK, default=Defaults.spellcheck)
 
 
-def expandtab(context):
+def expandtab(context) -> bool:
     """Should we expand tabs in commit messages?"""
     return context.cfg.get(EXPANDTAB, default=Defaults.expandtab)
 
 
-def patches_directory(context):
+def patches_directory(context) -> str:
     """Return the patches output directory"""
     return context.cfg.get(PATCHES_DIRECTORY, default=Defaults.patches_directory)
 
 
-def sort_bookmarks(context):
+def sort_bookmarks(context) -> bool:
     """Should we sort bookmarks by name?"""
     return context.cfg.get(SORT_BOOKMARKS, default=Defaults.sort_bookmarks)
 
 
-def tabwidth(context):
+def tabwidth(context) -> int:
     """Return the configured tab width in the commit message editor"""
     return context.cfg.get(TABWIDTH, default=Defaults.tabwidth)
 
 
-def textwidth(context):
+def textwidth(context) -> int:
     """Return the configured text width for word wrapping commit messages"""
     return context.cfg.get(TEXTWIDTH, default=Defaults.textwidth)
 
 
-def status_indent(context):
+def status_indent(context) -> bool:
     """Should we indent items in the status widget?"""
     return context.cfg.get(STATUS_INDENT, default=Defaults.status_indent)
 
 
-def status_show_totals(context):
+def status_show_totals(context) -> bool:
     """Should we display count totals in the status widget headers?"""
     return context.cfg.get(STATUS_SHOW_TOTALS, default=Defaults.status_show_totals)
 
 
-def verbosity(context):
+def verbosity(context) -> int:
     """Return the console verbosity level"""
     return context.cfg.get(VERBOSITY, default=Defaults.verbosity)
 
 
-def verbose_simple_commands(context):
+def verbose_simple_commands(context) -> bool:
     """Is the verbosity level set to log commands?"""
     return verbosity(context) >= Verbosity.SIMPLE_COMMANDS
 
@@ -457,7 +458,7 @@ class PreferencesModel(QtCore.QObject):
         self.context = context
         self.config = context.cfg
 
-    def set_config(self, source, config, value) -> None:
+    def set_config(self, source: str, config: str, value: str) -> None:
         """Set a configuration value"""
         if source == 'local':
             self.config.set_repo(config, value)
@@ -465,7 +466,7 @@ class PreferencesModel(QtCore.QObject):
             self.config.set_user(config, value)
         self.config_updated.emit(source, config, value)
 
-    def get_config(self, source, config):
+    def get_config(self, source: str, config: str):
         """Get a configured value"""
         if source == 'local':
             value = self.config.get_repo(config)
@@ -479,7 +480,9 @@ class SetConfig(Command):
 
     UNDOABLE = True
 
-    def __init__(self, model, source, config, value) -> None:
+    def __init__(
+        self, model: PreferencesModel, source: str, config: str, value: str
+    ) -> None:
         self.source = source
         self.config = config
         self.value = value
@@ -503,7 +506,7 @@ class RemoveDictionary(Command):
 
     UNDOABLE = True
 
-    def __init__(self, context, values) -> None:
+    def __init__(self, context, values: list[str]) -> None:
         self.context = context
         self.values = values
 
@@ -532,7 +535,7 @@ class AddDictionary(Command):
 
     UNDOABLE = True
 
-    def __init__(self, context, values) -> None:
+    def __init__(self, context, values: list[str]) -> None:
         self.context = context
         self.values = values
 
