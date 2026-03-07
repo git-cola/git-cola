@@ -1770,8 +1770,10 @@ class Edit(ContextCommand):
             else:
                 args = self.filenames
 
+        argv = utils.shell_split(editor) + args
+        context.notifier.emit_log('[editor] ' + core.list2cmdline(argv))
         try:
-            core.fork(utils.shell_split(editor) + args)
+            core.fork(argv)
         except (OSError, ValueError) as err:
             message = N_('Cannot exec "%s": please configure your editor') % editor
             _, details = utils.format_exception(err)
