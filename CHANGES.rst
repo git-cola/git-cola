@@ -21,6 +21,8 @@ Usability, bells and whistles
 * The Git ``reftable`` ref storage extension is now supported.
   (`#1551 <https://github.com/git-cola/git-cola/issues/1551>`_)
 
+* The Git DAG gravatar icon loader improved its support for PySide6.
+
 
 Translations
 ------------

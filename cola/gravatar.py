@@ -104,9 +104,7 @@ class GravatarLabel(QtWidgets.QLabel):
 
     def network_finished(self, reply) -> None:
         email = self.email
-
-        header = QtCore.QByteArray(b'Location')
-        location = core.decode(bytes(reply.rawHeader(header))).strip()
+        location = core.decode(bytes(reply.rawHeader('Location'))).strip()
         if location:
             request_location = Gravatar.url_for_email(self.email, self.imgsize)
             relocated = location != request_location
