@@ -216,6 +216,7 @@ Thanks
 * nakanoi
 * Nanda Lopes
 * Naraesk
+* Nathan du Buy
 * Niel Buys
 * Nick Todd
 * Nicolas Dietrich
