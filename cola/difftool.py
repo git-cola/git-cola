@@ -342,13 +342,15 @@ def difftool_launch(
         args.append('--')
         args.extend(paths)
 
+    argv = ['git', 'difftool']
+    argv.extend(git.transform_kwargs(**kwargs))
+    argv.extend(args)
+    # "cmd" is for display purposes only and only displayed when an error occurs.
+    cmd = core.list2cmdline(argv)
+    context.notifier.git_cmd(cmd)
+
     runtask = context.runtask
     if runtask:
-        argv = ['git', 'difftool']
-        argv.extend(git.transform_kwargs(**kwargs))
-        argv.extend(args)
-        # "cmd" is for display purposes only and only displayed when an error occurs.
-        cmd = core.list2cmdline(argv)
         Interaction.async_task(
             N_('Difftool'), cmd, runtask, partial(context.git.difftool, *args, **kwargs)
         )
