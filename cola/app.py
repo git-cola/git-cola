@@ -7,7 +7,6 @@ import random
 import signal
 import sys
 import time
-from .cmd import CommandBus
 
 try:
     from qtpy import QtCore
@@ -42,6 +41,7 @@ except ImportError:
     pass
 
 # Import cola modules
+from .cmd import CommandBus
 from .i18n import N_
 from .interaction import Interaction
 from .models import main

@@ -119,7 +119,7 @@ class RepoTreeView(standard.TreeView):
         self.setDragEnabled(True)
         self.setRootIsDecorated(False)
         self.setSortingEnabled(False)
-        self.setSelectionMode(self.ExtendedSelection)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
         # Observe model updates
         model = context.model

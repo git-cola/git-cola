@@ -1,6 +1,7 @@
 """The central cola model"""
 from __future__ import annotations
 import os
+from typing import Any, Callable
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
@@ -14,8 +15,6 @@ from ..git import STDOUT, transform_kwargs
 from ..interaction import Interaction
 from ..i18n import N_
 from . import prefs
-from cola.core import UStr
-from typing import Any, Callable
 
 
 FETCH = 'fetch'
@@ -107,7 +106,7 @@ class MainModel(QtCore.QObject):
         self.directory = ''
         self.project = ''
         self.remotes = []
-        self.filter_paths: list[UStr | str] | None = None
+        self.filter_paths: list[str] | None = None
         self.images = []
 
         self.commitmsg = ''  # current commit message
@@ -217,7 +216,7 @@ class MainModel(QtCore.QObject):
             and core.exists(lfs_hook)
         )
 
-    def set_commitmsg(self, msg: UStr | str, notify: bool = True) -> None:
+    def set_commitmsg(self, msg: str, notify: bool = True) -> None:
         self.commitmsg = msg
         self._auto_commitmsg = ''
         if notify:
@@ -239,7 +238,7 @@ class MainModel(QtCore.QObject):
             pass
         return path
 
-    def set_diff_text(self, txt: UStr | str) -> None:
+    def set_diff_text(self, txt: str) -> None:
         """Update the text displayed in the diff editor"""
         changed = txt != self.diff_text
         self.diff_text = txt
@@ -266,7 +265,7 @@ class MainModel(QtCore.QObject):
         self.images = images
         self.images_changed.emit(images)
 
-    def set_directory(self, path: str | UStr) -> None:
+    def set_directory(self, path: str) -> None:
         self.directory = path
 
     def set_mode(self, mode: str, head: str | None = None) -> None:
@@ -296,7 +295,7 @@ class MainModel(QtCore.QObject):
         self.mode = mode
         self.mode_changed.emit(mode)
 
-    def update_path_filter(self, filter_paths: list[UStr | str]) -> None:
+    def update_path_filter(self, filter_paths: list[str]) -> None:
         self.filter_paths = filter_paths
         self.update_file_status()
 
@@ -728,7 +727,7 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     return add_env
 
 
-def autodetect_proxy_gnome_is_enabled(gsettings: UStr | str) -> bool:
+def autodetect_proxy_gnome_is_enabled(gsettings: str) -> bool:
     """Is the proxy manually configured on Gnome?"""
     status, out, _ = core.run_command(
         [gsettings, 'get', 'org.gnome.system.proxy', 'mode']
@@ -736,7 +735,7 @@ def autodetect_proxy_gnome_is_enabled(gsettings: UStr | str) -> bool:
     return status == 0 and out.strip().strip("'") == 'manual'
 
 
-def autodetect_proxy_gnome(gsettings: UStr | str, scheme: UStr | str) -> UStr | None:
+def autodetect_proxy_gnome(gsettings: str, scheme: str) -> str | None:
     """Return the configured HTTP proxy for Gnome"""
     status, out, _ = core.run_command(
         [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'host']
@@ -754,7 +753,7 @@ def autodetect_proxy_gnome(gsettings: UStr | str, scheme: UStr | str) -> UStr | 
     return proxy
 
 
-def autodetect_proxy_kde(kreadconfig: UStr | str, scheme: UStr | str) -> UStr | None:
+def autodetect_proxy_kde(kreadconfig: str, scheme: str) -> str | None:
     """Return the configured HTTP proxy for KDE"""
     cmd = [
         kreadconfig,

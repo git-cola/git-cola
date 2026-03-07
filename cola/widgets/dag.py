@@ -712,7 +712,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         standard.TreeWidget.__init__(self, parent)
         ViewerMixin.__init__(self)
 
-        self.setSelectionMode(self.ExtendedSelection)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
         self.header().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
 
@@ -1885,7 +1885,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.selecting = False
         self.last_mouse = [0, 0]
         self.zoom = 2
-        self.setDragMode(self.RubberBandDrag)
+        self.setDragMode(QtWidgets.QGraphicsView.DragMode.RubberBandDrag)
 
         scene = QtWidgets.QGraphicsScene(self)
         scene.setItemIndexMethod(QtWidgets.QGraphicsScene.BspTreeIndex)
@@ -1893,7 +1893,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         self.setScene(scene)
 
         self.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.setViewportUpdateMode(self.SmartViewportUpdate)
+        self.setViewportUpdateMode(QtWidgets.QGraphicsView.SmartViewportUpdate)
         self.setCacheMode(QtWidgets.QGraphicsView.CacheBackground)
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtWidgets.QGraphicsView.NoAnchor)

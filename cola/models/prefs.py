@@ -1,4 +1,5 @@
 import sys
+from typing import Any
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
@@ -7,7 +8,6 @@ from .. import core
 from .. import hidpi
 from .. import utils
 from ..cmd import Command
-from typing import Any
 
 
 ABBREV = 'core.abbrev'

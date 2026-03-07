@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections.abc import Iterator
 import datetime
 import json
 
@@ -6,7 +7,6 @@ from .. import core
 from .. import utils
 from ..i18n import N_
 from ..models import prefs
-from collections.abc import Iterator
 
 # put summary at the end b/c it can contain
 # any number of funky characters, including the separator

@@ -1,9 +1,9 @@
 """Base Command class"""
 import time
+from typing import Any
 
 from qtpy import QtCore
 from qtpy.QtCore import Qt, Signal
-from typing import Any
 
 
 class Command:

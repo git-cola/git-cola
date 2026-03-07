@@ -7,7 +7,6 @@ from __future__ import annotations
 import ctypes
 import functools
 import itertools
-from itertools import chain
 import mimetypes
 import os
 import platform
@@ -91,9 +90,9 @@ def decode(value, encoding=None, errors: str = 'strict'):
     else:
         result = None
         if encoding is None:
-            encoding_tests: chain | list[str] = _encoding_tests
+            encoding_tests: itertools.chain | list[str] = _encoding_tests
         else:
-            encoding_tests: chain | list[str] = itertools.chain(
+            encoding_tests: itertools.chain | list[str] = itertools.chain(
                 [encoding], _encoding_tests
             )
 

@@ -10,7 +10,7 @@ class FileTree(standard.TreeWidget):
 
     def __init__(self, parent=None):
         standard.TreeWidget.__init__(self, parent=parent)
-        self.setSelectionMode(self.ExtendedSelection)
+        self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.setHeaderHidden(True)
 
     def set_filenames(self, filenames, select=False):

@@ -1,8 +1,8 @@
 import argparse
 import sys
 
-from cola import app
-from cola.widgets.dag import git_dag
+from . import app
+from .widgets.dag import git_dag
 
 
 def main(argv=None):
