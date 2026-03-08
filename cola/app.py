@@ -75,8 +75,7 @@ if TYPE_CHECKING:
     from qtpy.QtCore import QEvent
     from qtpy.QtGui import QPalette
 
-    from .types import TextType
-    from .widgets.standard import Dialog, MainWindow, Widget
+    from .types import TextType, ViewType
 
 
 def setup_environment() -> None:
@@ -477,7 +476,7 @@ def enforce_single_instance(context: ApplicationContext) -> None:
 
 def application_run(
     context: ApplicationContext,
-    view: Widget | Dialog | MainWindow,
+    view: ViewType,
     start: Callable | None = None,
     stop: Callable | None = None,
 ) -> int:
@@ -496,9 +495,7 @@ def application_run(
     return result
 
 
-def initialize_view(
-    context: ApplicationContext, view: Widget | Dialog | MainWindow
-) -> None:
+def initialize_view(context: ApplicationContext, view: ViewType) -> None:
     """Register the main widget and display it"""
     context.set_view(view)
     view.show()
@@ -512,17 +509,13 @@ def application_start(context, view) -> int:
     return application_run(context, view, start=default_start, stop=default_stop)
 
 
-def default_start(
-    context: ApplicationContext, _view: Widget | Dialog | MainWindow
-) -> None:
+def default_start(context: ApplicationContext, _view: ViewType) -> None:
     """Scan for the first time"""
     QtCore.QTimer.singleShot(0, startup_message)
     QtCore.QTimer.singleShot(0, lambda: async_update(context))
 
 
-def default_stop(
-    _context: ApplicationContext, _view: Widget | Dialog | MainWindow
-) -> None:
+def default_stop(_context: ApplicationContext, _view: ViewType) -> None:
     """All done, cleanup"""
     QtCore.QThreadPool.globalInstance().waitForDone()
 
@@ -756,10 +749,10 @@ class ApplicationContext:
         self.settings: Settings | None = None
         self.selection: selection.SelectionModel | None = None
         self.fsmonitor: fsmonitor._Monitor | None = None
-        self.view: Widget | Dialog | MainWindow | None = None  # QWidget
+        self.view: ViewType | None = None  # QWidget
         self.browser_windows = []  # list of browse.Browser
 
-    def set_view(self, view: Widget | Dialog | MainWindow) -> None:
+    def set_view(self, view: ViewType) -> None:
         """Initialize view-specific members"""
         self.view = view
         self.notifier.setParent(view)
