@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import os
 import sys
+from typing import TYPE_CHECKING
 
 from . import core
 from .i18n import N_
+
+if TYPE_CHECKING:
+    from .types import TextType
 
 
 class Interaction:
@@ -15,11 +19,11 @@ class Interaction:
     @classmethod
     def command(
         cls,
-        title: str | core.UStr,
-        cmd: list[str | core.UStr] | str,
+        title: TextType,
+        cmd: list[TextType] | str,
         status: int,
-        out: str | core.UStr,
-        err: str | core.UStr,
+        out: TextType,
+        err: TextType,
     ) -> None:
         """Log a command and display error messages on failure"""
         cls.log_status(status, out, err)
@@ -30,10 +34,10 @@ class Interaction:
     def command_error(
         cls,
         title: str,
-        cmd: list[str | core.UStr] | str,
+        cmd: list[TextType] | str,
         status: int,
-        out: str | core.UStr,
-        err: str | core.UStr,
+        out: TextType,
+        err: TextType,
     ) -> None:
         """Display an error message for a failed command"""
         core.print_stderr(title)
@@ -46,7 +50,7 @@ class Interaction:
             core.print_stderr(err)
 
     @staticmethod
-    def format_command_status(cmd: list[str | core.UStr] | str, status: int) -> str:
+    def format_command_status(cmd: list[TextType] | str, status: int) -> str:
         return N_('"%(command)s" returned exit status %(status)d') % {
             'command': cmd,
             'status': status,
@@ -148,7 +152,7 @@ class Interaction:
 
     @classmethod
     def log_status(
-        cls, status: int, out: str | core.UStr, err: str | core.UStr | None = None
+        cls, status: int, out: TextType, err: TextType | None = None
     ) -> None:
         """Emit status, out, and err into the log"""
         msg = ''

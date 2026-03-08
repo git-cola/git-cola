@@ -31,6 +31,7 @@ from .models import prefs
 
 if TYPE_CHECKING:
     from .app import ApplicationContext
+    from .types import TextType
 
 
 class UsageError(Exception):
@@ -126,7 +127,7 @@ class ConfirmAction(ContextCommand):
         """Command error message"""
         return ''
 
-    def do(self) -> tuple[bool, int, str | core.UStr, str | core.UStr]:
+    def do(self) -> tuple[bool, int, TextType, TextType]:
         """Prompt for confirmation before running a command"""
         status = -1
         out = err = ''
@@ -965,7 +966,7 @@ class Ignore(ContextCommand):
         self.model.update_file_status()
 
 
-def file_summary(files: list[str | core.UStr]) -> str:
+def file_summary(files: list[TextType]) -> str:
     txt = core.list2cmdline(files)
     if len(txt) > 768:
         txt = txt[:768].rstrip() + '...'
@@ -2399,7 +2400,7 @@ class Rebase(ContextCommand):
 
         return args, kwargs
 
-    def do(self) -> tuple[int, str | core.UStr, str | core.UStr]:
+    def do(self) -> tuple[int, TextType, TextType]:
         (status, out, err) = (1, '', '')
         context = self.context
         cfg = self.cfg
@@ -2798,9 +2799,9 @@ class ShowUntracked(EditModel):
         cfg = self.cfg
         size = cfg.get('cola.readsize', 2048)
         try:
-            result: str | core.UStr = core.read(filename, size=size, encoding='bytes')
+            result: TextType = core.read(filename, size=size, encoding='bytes')
         except OSError:
-            result: str | core.UStr = ''
+            result: TextType = ''
 
         truncated = len(result) == size
 

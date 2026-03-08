@@ -1,7 +1,7 @@
 """The central cola model"""
 from __future__ import annotations
 import os
-from typing import Any, Callable
+from typing import Any, Callable, TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
@@ -16,6 +16,8 @@ from ..interaction import Interaction
 from ..i18n import N_
 from . import prefs
 
+if TYPE_CHECKING:
+    from ..types import TextType
 
 FETCH = 'fetch'
 FETCH_HEAD = 'FETCH_HEAD'
@@ -688,8 +690,8 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     if not xdg_current_desktop:
         return add_env
 
-    http_proxy: str | core.UStr | None = None
-    https_proxy: str | core.UStr | None = None
+    http_proxy: TextType | None = None
+    https_proxy: TextType | None = None
     if xdg_current_desktop == 'KDE' or xdg_current_desktop.endswith(':KDE'):
         kreadconfig = core.find_executable('kreadconfig5')
         if kreadconfig:

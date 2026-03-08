@@ -75,6 +75,7 @@ if TYPE_CHECKING:
     from qtpy.QtCore import QEvent
     from qtpy.QtGui import QPalette
 
+    from .types import TextType
     from .widgets.standard import Dialog, MainWindow, Widget
 
 
@@ -144,7 +145,7 @@ def setup_environment() -> None:
     compat.setenv('GIT_MERGE_AUTOEDIT', 'no')
 
 
-def _get_askpass() -> str | core.UStr:
+def _get_askpass() -> TextType:
     """Get a default askpass program appropriate for the current environment"""
     git_askpass = core.getenv('GIT_ASKPASS')
     ssh_askpass = core.getenv('SSH_ASKPASS')
@@ -340,7 +341,7 @@ def process_args(args: argparse.Namespace, setup_repo: bool = False) -> None:
         args.repo = core.getcwd()
 
     # Bail out if --repo is not a directory
-    repo: str | core.UStr = core.decode(args.repo)
+    repo: TextType = core.decode(args.repo)
     if repo.startswith('file:'):
         repo = repo[len('file:') :]
     repo = core.realpath(repo)

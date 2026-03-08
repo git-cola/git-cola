@@ -12,13 +12,14 @@ import tempfile
 import time
 import traceback
 import urllib.parse
-from typing import Any, Callable, TypeVar
-
-from qtpy.QtWidgets import QAction
+from typing import Any, Callable, TypeVar, TYPE_CHECKING
 
 from . import core
 from . import compat
 
+if TYPE_CHECKING:
+    from .types import TextType
+    from qtpy.QtWidgets import QAction
 
 _SSH_REGEX = re.compile(r'^(?P<user>[^@]+)@(?P<hostname>[^:]+):(?P<path>.+)')
 
@@ -63,15 +64,15 @@ def add_parents(paths: set[str]) -> set[str]:
     return all_paths
 
 
-def format_exception(exc) -> tuple[str | core.UStr | None, str]:
+def format_exception(exc) -> tuple[TextType | None, str]:
     """Format an exception object for display"""
     exc_type, exc_value, exc_tb = sys.exc_info()
     details: str = traceback.format_exception(exc_type, exc_value, exc_tb)  # type: ignore[assignment]
     details: str = '\n'.join(map(core.decode, details))
     if hasattr(exc, 'msg'):
-        msg: str | core.UStr | None = exc.msg
+        msg: TextType | None = exc.msg
     else:
-        msg: str | core.UStr | None = core.decode(repr(exc))
+        msg: TextType | None = core.decode(repr(exc))
     return (msg, details)
 
 

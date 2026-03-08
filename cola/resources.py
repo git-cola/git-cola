@@ -4,11 +4,13 @@ from __future__ import annotations
 import os
 import sys
 import webbrowser
-from typing import Callable
+from typing import Callable, TYPE_CHECKING
 
 from . import core
 from . import compat
 
+if TYPE_CHECKING:
+    from .types import TextType
 
 # Default git-cola icon theme
 _default_icon_theme = 'light'
@@ -174,7 +176,7 @@ def xdg_config_home(*args) -> str:
     return os.path.join(config, *args)
 
 
-def xdg_data_home(*args) -> str | core.UStr:
+def xdg_data_home(*args) -> TextType:
     """Return the XDG_DATA_HOME configuration directory, e.g. ~/.local/share"""
     config = core.getenv(
         'XDG_DATA_HOME', os.path.join(core.expanduser('~'), '.local', 'share')
@@ -182,27 +184,27 @@ def xdg_data_home(*args) -> str | core.UStr:
     return os.path.join(config, *args)
 
 
-def xdg_data_dirs() -> list[str | core.UStr]:
+def xdg_data_dirs() -> list[TextType]:
     """Return the current set of XDG data directories
 
     Returns the values from $XDG_DATA_DIRS when defined in the environment.
     If $XDG_DATA_DIRS is either not set or empty, a value equal to
     /usr/local/share:/usr/share is used.
     """
-    paths: list[str | core.UStr] = []
+    paths: list[TextType] = []
     xdg_data_home_dir = xdg_data_home()
     if os.path.isdir(xdg_data_home_dir):
         paths.append(xdg_data_home_dir)
 
-    xdg_data_dirs_env: str | core.UStr | None = core.getenv('XDG_DATA_DIRS', '')
+    xdg_data_dirs_env: TextType | None = core.getenv('XDG_DATA_DIRS', '')
     if not xdg_data_dirs_env:
-        xdg_data_dirs_env: str | core.UStr | None = '/usr/local/share:/usr/share'
+        xdg_data_dirs_env: TextType | None = '/usr/local/share:/usr/share'
     paths.extend(path for path in xdg_data_dirs_env.split(':') if os.path.isdir(path))
     return paths
 
 
 def find_first(
-    subpath: str, paths: list[str | core.UStr], validate: Callable = os.path.isfile
+    subpath: str, paths: list[TextType], validate: Callable = os.path.isfile
 ) -> str | None:
     """Return the first `subpath` found in the specified directory paths"""
     if os.path.isabs(subpath):

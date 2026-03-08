@@ -21,6 +21,7 @@ from .models import prefs
 if TYPE_CHECKING:
     from .app import ApplicationContext
     from .git import Git
+    from .types import TextType
 
 
 def add(
@@ -108,14 +109,12 @@ def changed_files(context: ApplicationContext, oid: str) -> list[str]:
 
 def diff_tree(
     context: ApplicationContext, *args
-) -> tuple[core.UStr | str, core.UStr | str, core.UStr | str]:
+) -> tuple[TextType, TextType, TextType]:
     """Return a list of filenames that have been modified"""
     return git_diff_tree(context.git, *args)
 
 
-def git_diff_tree(
-    git_repo: Git, *args
-) -> tuple[core.UStr | str, core.UStr | str, core.UStr | str]:
+def git_diff_tree(git_repo: Git, *args) -> tuple[TextType, TextType, TextType]:
     return git_repo.diff_tree(
         name_only=True, no_commit_id=True, r=True, z=True, _readonly=True, *args
     )
@@ -164,7 +163,7 @@ def diff(context: ApplicationContext, args: list[str]) -> list[str]:
     return _parse_diff_filenames(out)
 
 
-def _parse_diff_filenames(out: core.UStr | str) -> list[Any | str]:
+def _parse_diff_filenames(out: TextType) -> list[Any | str]:
     if out:
         return out[:-1].split('\0')
     return []
@@ -513,7 +512,7 @@ def diff_helper(
     suppress_header: bool = True,
     reverse: bool = False,
     untracked: bool = False,
-) -> tuple[str, str] | core.UStr | str:
+) -> tuple[str, str] | TextType:
     """Invoke git diff on a path"""
     cfg = context.cfg
     if commit:
@@ -757,7 +756,7 @@ def worktree_state(
     }
 
 
-def _parse_raw_diff(out: core.UStr | str) -> Iterator[tuple[str, str, bool]]:
+def _parse_raw_diff(out: TextType) -> Iterator[tuple[str, str, bool]]:
     while out:
         info, path, out = out.split('\0', 2)
         status = info[-1]
@@ -974,7 +973,7 @@ def merge_message_path(context: ApplicationContext) -> str | None:
     return None
 
 
-def read_merge_commit_message(context: ApplicationContext, path) -> str | core.UStr:
+def read_merge_commit_message(context: ApplicationContext, path) -> TextType:
     """Read a merge commit message from disk while stripping commentary"""
     content = core.read(path)
     cleanup_mode = prefs.commit_cleanup(context)

@@ -7,7 +7,7 @@ from os.path import join
 import subprocess
 import threading
 import time
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from . import core
 from .compat import int_types
@@ -16,6 +16,8 @@ from .compat import WIN32
 from .decorators import memoize
 from .interaction import Interaction
 
+if TYPE_CHECKING:
+    from .types import TextType
 
 GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
 GIT = core.getenv('GIT_COLA_GIT', 'git')
@@ -46,7 +48,7 @@ def dashify(value: str) -> str:
     return value.replace('_', '-')
 
 
-def is_git_dir(git_dir: core.UStr | str) -> bool:
+def is_git_dir(git_dir: TextType) -> bool:
     """From git's setup.c:is_git_directory()."""
     result = False
     if git_dir:
@@ -72,7 +74,7 @@ def is_git_dir(git_dir: core.UStr | str) -> bool:
     return result
 
 
-def is_git_file(filename: core.UStr | str) -> bool:
+def is_git_file(filename: TextType) -> bool:
     return core.isfile(filename) and os.path.basename(filename) == '.git'
 
 
@@ -108,10 +110,10 @@ class Paths:
 
     def __init__(
         self,
-        git_dir: str | core.UStr | None = None,
-        git_file: str | core.UStr | None = None,
-        worktree: str | core.UStr | None = None,
-        common_dir: str | core.UStr | None = None,
+        git_dir: TextType | None = None,
+        git_file: TextType | None = None,
+        worktree: TextType | None = None,
+        common_dir: TextType | None = None,
     ) -> None:
         if git_dir and not is_git_dir(git_dir):
             git_dir = None
@@ -150,7 +152,7 @@ class Paths:
         # usage: Paths().get()
         return self
 
-    def _search_for_git(self, path: str | core.UStr, ceiling_dirs: set[Any]) -> None:
+    def _search_for_git(self, path: TextType, ceiling_dirs: set[Any]) -> None:
         """Search for git repositories located at path or above"""
         while path:
             if path in ceiling_dirs:
@@ -204,16 +206,16 @@ class Git:
     def is_git_repository(self, path) -> bool:
         return is_git_repository(path)
 
-    def getcwd(self) -> str | core.UStr:
+    def getcwd(self) -> TextType:
         """Return the working directory used by git()"""
         return self.paths.worktree or self.paths.git_dir
 
-    def set_worktree(self, path: str) -> str | core.UStr:
+    def set_worktree(self, path: str) -> TextType:
         path = core.decode(path)
         self.paths = find_git_directory(path)
         return self.paths.worktree
 
-    def worktree(self) -> str | core.UStr:
+    def worktree(self) -> TextType:
         if not self.paths.worktree:
             path = core.abspath(core.getcwd())
             self.paths = find_git_directory(path)
@@ -243,7 +245,7 @@ class Git:
                 result = common_result
         return result
 
-    def git_dir(self) -> str | core.UStr:
+    def git_dir(self) -> TextType:
         if not self.paths.git_dir:
             path = core.abspath(core.getcwd())
             self.paths = find_git_directory(path)
@@ -256,9 +258,9 @@ class Git:
 
     @staticmethod
     def execute(
-        command: list[core.UStr | str],
+        command: list[TextType],
         _add_env: dict[str, str] | None = None,
-        _cwd: str | core.UStr | None = None,
+        _cwd: TextType | None = None,
         _decode: bool = True,
         _encoding: str | None = None,
         _raw: bool = False,
@@ -343,9 +345,7 @@ class Git:
         # Allow access to the command's status code
         return (status, out, err)
 
-    def git(
-        self, cmd: str, *args, **kwargs
-    ) -> tuple[int, core.UStr | str, core.UStr | str]:
+    def git(self, cmd: str, *args, **kwargs) -> tuple[int, TextType, TextType]:
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
         _kwargs = {'_cwd': self.getcwd()}
@@ -381,7 +381,7 @@ class Git:
         call = git_args + opt_args
         call.extend(args)
         try:
-            result: tuple[int, core.UStr | str, core.UStr | str] = self.execute(
+            result: tuple[int, TextType, TextType] = self.execute(
                 call, **_kwargs  # type: ignore[arg-type]
             )
         except OSError as exc:
