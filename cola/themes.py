@@ -2,7 +2,6 @@
 from __future__ import annotations
 import os
 
-
 try:
     import AppKit
 except ImportError:
