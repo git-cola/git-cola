@@ -4,12 +4,15 @@ from __future__ import annotations
 import json
 import os
 import sys
-from typing import Any, Callable
+from typing import Any, Callable, TYPE_CHECKING
 
 from . import core
 from . import display
 from . import git
 from . import resources
+
+if TYPE_CHECKING:
+    from .types import ConfigValue
 
 
 def mkdict(obj: dict[str, Any]) -> dict[str, Any]:
@@ -293,11 +296,11 @@ class Settings:
         self.gui_state[name] = mkdict(gui.export_state())
         self.save(sync=sync)
 
-    def get_gui_state(self, gui: Any) -> dict[str, str | int | bool]:
+    def get_gui_state(self, gui: Any) -> dict[str, ConfigValue]:
         """Returns the saved state for a tool"""
         return self.get(gui.name())
 
-    def get(self, gui_name: str) -> dict[str, str | int | bool]:
+    def get(self, gui_name: str) -> dict[str, ConfigValue]:
         """Returns the saved state for a tool by name"""
         try:
             state = mkdict(self.gui_state[gui_name])
@@ -306,8 +309,8 @@ class Settings:
         return state
 
     def get_value(
-        self, name: str, key: str, default: str | int | bool | None = None
-    ) -> str | int | bool | None:
+        self, name: str, key: str, default: ConfigValue | None = None
+    ) -> ConfigValue | None:
         """Return a specific setting value for the specified tool and setting key"""
         return self.get(name).get(key, default)
 
@@ -315,7 +318,7 @@ class Settings:
         self,
         name: str,
         key: str,
-        value: str | int | bool,
+        value: ConfigValue,
         save: bool = True,
         sync: bool = True,
     ) -> None:

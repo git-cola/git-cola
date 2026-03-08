@@ -27,6 +27,7 @@ from . import resources
 
 if TYPE_CHECKING:
     from .app import ApplicationContext
+    from .types import ConfigValue
 
 
 def create(context: ApplicationContext) -> GitConfig:
@@ -49,7 +50,7 @@ def _cache_key_from_paths(paths: list[Any | str]) -> list[float] | None:
     return None
 
 
-def _config_to_python(value: str) -> bool | str | int:
+def _config_to_python(value: str) -> ConfigValue:
     """Convert a Git config string into a Python value"""
     if value in ('true', 'yes'):
         value: bool = True
@@ -207,9 +208,9 @@ class GitConfig(QtCore.QObject):
 
     def _get(
         self,
-        src: dict[str, str | int | bool],
+        src: dict[str, ConfigValue],
         key: str,
-        default: bool | str | int | None,
+        default: ConfigValue,
         func: Callable[[], bool] | None = None,
         cached: bool = True,
     ) -> Any:
@@ -221,10 +222,10 @@ class GitConfig(QtCore.QObject):
             if func:
                 value = func()
             else:
-                value: bool | str | int | None = default
+                value = default
         return value
 
-    def _get_value(self, src: dict[str, str | int | bool], key: str) -> Any:
+    def _get_value(self, src: dict[str, ConfigValue], key: str) -> Any:
         """Return a value from the map"""
         try:
             return src[key]
@@ -242,7 +243,7 @@ class GitConfig(QtCore.QObject):
     def get(
         self,
         key: str,
-        default: bool | int | str | None = None,
+        default: ConfigValue | None = None,
         func: Callable[[], bool] | None = None,
         cached: bool = True,
     ) -> Any:
@@ -293,7 +294,7 @@ class GitConfig(QtCore.QObject):
     def get_user(self, key, default=None) -> Any:
         return self._get(self._global, key, default)
 
-    def get_repo(self, key: str, default: str | None = None) -> str:
+    def get_repo(self, key: str, default: ConfigValue | None = None) -> str:
         return self._get(self._local, key, default)
 
     def get_user_or_system(self, key, default=None) -> Any:
@@ -487,7 +488,7 @@ class GitConfig(QtCore.QObject):
 
 def _read_config_with_scope(
     context: ApplicationContext, cache_paths: set[Any], renamed_keys: dict[Any, Any]
-) -> Iterator[tuple[str, str, int | str | bool, bool],]:
+) -> Iterator[tuple[str, str, ConfigValue, bool],]:
     """Read the output from "git config --show-scope --show-origin --list
 
     ``--show-scope`` was introduced in Git v2.26.0.
@@ -548,7 +549,7 @@ def _read_config_with_scope(
 
 def _read_config_with_origin(
     context: ApplicationContext, cache_paths, renamed_keys
-) -> Iterator[tuple[str, str, bool | str | int, bool]]:
+) -> Iterator[tuple[str, str, ConfigValue, bool]]:
     """Read the output from "git config --show-origin --list
 
     ``--show-origin`` was introduced in Git v2.8.0.
@@ -617,7 +618,7 @@ def _read_config_with_origin(
 
 def _read_config_fallback(
     context: ApplicationContext, cache_paths, renamed_keys
-) -> Iterator[tuple[str, str, bool | str | int, bool]]:
+) -> Iterator[tuple[str, str, ConfigValue, bool]]:
     """Fallback config reader for Git < 2.8.0"""
     system_scope = 'system'
     global_scope = 'global'
@@ -675,7 +676,7 @@ def _read_config_fallback(
 
 def _read_config_from_null_list(
     config_output,
-) -> Iterator[tuple[str, bool | str | int]]:
+) -> Iterator[tuple[str, ConfigValue]]:
     """Parse the "git config --list -z" records"""
     for record in config_output.rstrip('\0').split('\0'):
         try:
