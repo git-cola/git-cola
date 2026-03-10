@@ -1,9 +1,12 @@
 """Git commands and queries for Git"""
 from __future__ import annotations
+
+from collections.abc import Iterator
 import json
 import os
 import re
 from io import StringIO
+from typing import Any, TYPE_CHECKING
 
 from . import core
 from . import textwrap
@@ -15,8 +18,15 @@ from .interaction import Interaction
 from .models import dag
 from .models import prefs
 
+if TYPE_CHECKING:
+    from .app import ApplicationContext
+    from .git import Git
+    from .types import TextType
 
-def add(context, items, u: bool = False):
+
+def add(
+    context: ApplicationContext, items: list[str], u: bool = False
+) -> tuple[int, str, str]:
     """Run "git add" while preventing argument overflow"""
     git_add = context.git.add
     if prefs.verbose_simple_commands(context):
@@ -27,24 +37,24 @@ def add(context, items, u: bool = False):
     )
 
 
-def apply_diff(context, filename):
+def apply_diff(context: ApplicationContext, filename: str) -> Any:
     """Use "git apply" to apply the patch in `filename` to the staging area"""
     return context.git.apply(filename, index=True, cached=True, recount=True)
 
 
-def apply_diff_to_worktree(context, filename):
+def apply_diff_to_worktree(context: ApplicationContext, filename: str) -> Any:
     """Use "git apply" to apply the patch in `filename` to the worktree"""
     return context.git.apply(filename, recount=True)
 
 
-def get_branch(context, branch):
+def get_branch(context: ApplicationContext, branch: str | None) -> str:
     """Get the current branch"""
     if branch is None:
         branch = current_branch(context)
     return branch
 
 
-def get_default_remote(context):
+def get_default_remote(context: ApplicationContext) -> Any:
     """Get the name of the default remote to use for pushing.
 
     This will be the remote the branch is set to track, if it is set. If it
@@ -54,14 +64,14 @@ def get_default_remote(context):
     return upstream or context.cfg.get('remote.pushDefault', default='origin')
 
 
-def upstream_remote(context, branch=None):
+def upstream_remote(context: ApplicationContext, branch: str | None = None) -> Any:
     """Return the remote associated with the specified branch"""
     config = context.cfg
     branch = get_branch(context, branch)
     return config.get(f'branch.{branch}.remote')
 
 
-def remote_url(context, remote, push: bool = False):
+def remote_url(context: ApplicationContext, remote: str, push: bool = False) -> Any:
     """Return the URL for the specified remote"""
     config = context.cfg
     url = config.get(f'remote.{remote}.url', '')
@@ -70,7 +80,7 @@ def remote_url(context, remote, push: bool = False):
     return url
 
 
-def diff_index_filenames(context, ref):
+def diff_index_filenames(context: ApplicationContext, ref: Any) -> Any:
     """
     Return a diff of filenames that have been modified relative to the index
     """
@@ -78,13 +88,13 @@ def diff_index_filenames(context, ref):
     return _parse_diff_filenames(out)
 
 
-def diff_filenames(context, *args):
+def diff_filenames(context: ApplicationContext, *args) -> list[Any | str]:
     """Return a list of filenames that have been modified"""
     out = diff_tree(context, *args)[STDOUT]
-    return _parse_diff_filenames(out)
+    return _parse_diff_filenames(out)  # type: ignore[arg-type]
 
 
-def changed_files(context, oid):
+def changed_files(context: ApplicationContext, oid: str) -> list[str]:
     """Return the list of filenames that changed in a given commit oid"""
     status, out, _ = diff_tree(context, oid + '~', oid)
     if status != 0:
@@ -97,18 +107,20 @@ def changed_files(context, oid):
     return result
 
 
-def diff_tree(context, *args):
+def diff_tree(
+    context: ApplicationContext, *args
+) -> tuple[TextType, TextType, TextType]:
     """Return a list of filenames that have been modified"""
     return git_diff_tree(context.git, *args)
 
 
-def git_diff_tree(git_repo, *args):
+def git_diff_tree(git_repo: Git, *args) -> tuple[TextType, TextType, TextType]:
     return git_repo.diff_tree(
         name_only=True, no_commit_id=True, r=True, z=True, _readonly=True, *args
     )
 
 
-def listdir(context, dirname, ref: str = 'HEAD'):
+def listdir(context: ApplicationContext, dirname: str, ref: str = 'HEAD'):
     """Get the contents of a directory according to Git
 
     Query Git for the content of a directory, taking ignored
@@ -141,7 +153,7 @@ def listdir(context, dirname, ref: str = 'HEAD'):
     return (dirs, files)
 
 
-def diff(context, args):
+def diff(context: ApplicationContext, args: list[str]) -> list[str]:
     """Return a list of filenames for the given diff arguments
 
     :param args: list of arguments to pass to "git diff --name-only"
@@ -151,13 +163,13 @@ def diff(context, args):
     return _parse_diff_filenames(out)
 
 
-def _parse_diff_filenames(out):
+def _parse_diff_filenames(out: TextType) -> list[Any | str]:
     if out:
         return out[:-1].split('\0')
     return []
 
 
-def tracked_files(context, *args):
+def tracked_files(context: ApplicationContext, *args) -> list[str]:
     """Return the names of all files in the repository"""
     out = context.git.ls_files('--', *args, z=True, _readonly=True)[STDOUT]
     if out:
@@ -165,7 +177,7 @@ def tracked_files(context, *args):
     return []
 
 
-def all_files(context, *args):
+def all_files(context: ApplicationContext, *args) -> list[str]:
     """Returns a sorted list of all files, including untracked files."""
     ls_files = context.git.ls_files(
         '--',
@@ -191,7 +203,7 @@ def reset() -> None:
     CurrentBranchCache.key = None
 
 
-def current_branch(context):
+def current_branch(context: ApplicationContext) -> core.UStr:
     """Return the current branch"""
     # The "files" backend updates .git/HEAD when changing branches.
     # The "reftables" backend updates .git/reftable/tables.list when changing branches.
@@ -230,7 +242,7 @@ def current_branch(context):
     return data
 
 
-def _read_git_head(context, head, default: str = 'main'):
+def _read_git_head(context: ApplicationContext, head, default: str = 'main') -> str:
     """Pure-python .git/HEAD reader"""
     # Common .git/HEAD "ref: refs/heads/main" files
     islink = core.islink(head)
@@ -251,7 +263,7 @@ def _read_git_head(context, head, default: str = 'main'):
     return default
 
 
-def branch_list(context, remote: bool = False):
+def branch_list(context: ApplicationContext, remote: bool = False) -> list[Any]:
     """
     Return a list of local or remote branches
 
@@ -263,7 +275,9 @@ def branch_list(context, remote: bool = False):
     return for_each_ref_basename(context, 'refs/heads')
 
 
-def _version_sort(context, key: str = 'version:refname'):
+def _version_sort(
+    context: ApplicationContext, key: str = 'version:refname'
+) -> bool | str:
     if version.check_git(context, 'version-sort'):
         sort: bool | str = key
     else:
@@ -271,7 +285,7 @@ def _version_sort(context, key: str = 'version:refname'):
     return sort
 
 
-def for_each_ref_basename(context, refs):
+def for_each_ref_basename(context: ApplicationContext, refs) -> list[Any]:
     """Return refs starting with 'refs'."""
     sort = _version_sort(context)
     _, out, _ = context.git.for_each_ref(
@@ -283,12 +297,18 @@ def for_each_ref_basename(context, refs):
     return [x[offset:] for x in non_heads]
 
 
-def _prefix_and_size(prefix, values):
+def _prefix_and_size(prefix: str, values: list[Any]) -> tuple[str, int, list[Any]]:
     """Return a tuple of (prefix, len(prefix) + 1, y) for <prefix>/ stripping"""
     return (prefix, len(prefix) + 1, values)
 
 
-def all_refs(context, split: bool = False, sort_key: str = 'version:refname'):
+def all_refs(
+    context: ApplicationContext, split: bool = False, sort_key: str = 'version:refname'
+) -> (
+    tuple[list[str], list[str], list[str]]
+    | tuple[list[str], list[str], list[Any]]
+    | list[Any]
+):
     """Return a tuple of (local branches, remote branches, tags)."""
     local_branches = []
     remote_branches = []
@@ -311,7 +331,9 @@ def all_refs(context, split: bool = False, sort_key: str = 'version:refname'):
     return local_branches + remote_branches + tags
 
 
-def tracked_branch(context, branch=None):
+def tracked_branch(
+    context: ApplicationContext, branch: str | None = None
+) -> str | None:
     """Return the remote branch associated with 'branch'."""
     if branch is None:
         branch = current_branch(context)
@@ -330,7 +352,7 @@ def tracked_branch(context, branch=None):
     return None
 
 
-def parse_remote_branch(branch):
+def parse_remote_branch(branch: str) -> tuple[str, str]:
     """Split a remote branch apart into (remote, name) components"""
     rgx = re.compile(r'^(?P<remote>[^/]+)/(?P<branch>.+)$')
     match = rgx.match(branch)
@@ -342,7 +364,9 @@ def parse_remote_branch(branch):
     return (remote, branch)
 
 
-def untracked_files(context, paths=None, **kwargs):
+def untracked_files(
+    context: ApplicationContext, paths: list[str] | None = None, **kwargs
+) -> list[Any | str]:
     """Returns a sorted list of untracked files."""
     if paths is None:
         paths = []
@@ -355,14 +379,14 @@ def untracked_files(context, paths=None, **kwargs):
     return []
 
 
-def tag_list(context):
+def tag_list(context: ApplicationContext) -> list[Any]:
     """Return a list of tags."""
     result = for_each_ref_basename(context, 'refs/tags')
     result.reverse()
     return result
 
 
-def log(context, *args, **kwargs):
+def log(context: ApplicationContext, *args, **kwargs) -> str:
     return context.git.log(
         no_color=True,
         no_abbrev_commit=True,
@@ -373,7 +397,7 @@ def log(context, *args, **kwargs):
     )[STDOUT]
 
 
-def commit_diff(context, oid):
+def commit_diff(context: ApplicationContext, oid: str) -> str:
     return log(context, '-1', oid, '--') + '\n\n' + oid_diff(context, oid)
 
 
@@ -389,7 +413,7 @@ def update_diff_overrides(
     _diff_overrides['function_context'] = function_context
 
 
-def common_diff_opts(context):
+def common_diff_opts(context: ApplicationContext):
     config = context.cfg
     # Default to --patience when diff.algorithm is unset
     patience = not config.get('diff.algorithm', default='')
@@ -407,17 +431,19 @@ def common_diff_opts(context):
     return opts
 
 
-def _add_filename(args, filename) -> None:
+def _add_filename(args, filename: str) -> None:
     if filename:
         args.extend(['--', filename])
 
 
-def oid_diff(context, oid, filename=None):
+def oid_diff(context: ApplicationContext, oid: str, filename: str | None = None) -> Any:
     """Return the diff for an oid"""
     return oid_diff_range(context, oid + '~', oid, filename=filename)
 
 
-def oid_diff_range(context, start, end, filename=None):
+def oid_diff_range(
+    context: ApplicationContext, start: str, end: str, filename: str | None = None
+) -> str:
     """Return the diff for a commit range"""
     if end == dag.STAGE:
         if start == dag.STAGE + '~':
@@ -444,12 +470,16 @@ def oid_diff_range(context, start, end, filename=None):
     return out
 
 
-def diff_info(context, oid, filename=None):
+def diff_info(
+    context: ApplicationContext, oid: str, filename: str | None = None
+) -> str:
     """Return the diff for the specified oid"""
     return diff_range(context, oid + '~', oid, filename=filename)
 
 
-def diff_range(context, start, end, filename=None):
+def diff_range(
+    context: ApplicationContext, start: str, end: str, filename: str | None = None
+) -> str:
     """Return the diff for the specified commit range"""
     if end == dag.WORKTREE or end == dag.STAGE:
         commitmsg = context.model.commitmsg
@@ -469,7 +499,7 @@ def diff_range(context, start, end, filename=None):
 
 
 def diff_helper(
-    context,
+    context: ApplicationContext,
     commit=None,
     ref=None,
     endref=None,
@@ -482,7 +512,7 @@ def diff_helper(
     suppress_header: bool = True,
     reverse: bool = False,
     untracked: bool = False,
-):
+) -> tuple[str, str] | TextType:
     """Invoke git diff on a path"""
     cfg = context.cfg
     if commit:
@@ -536,10 +566,12 @@ def diff_helper(
         return ''
 
     result = extract_diff_header(deleted, with_diff_header, suppress_header, out)
-    return core.UStr(result, out.encoding)
+    return core.UStr(result, out.encoding)  # type: ignore[arg-type]
 
 
-def extract_diff_header(deleted, with_diff_header, suppress_header, diffoutput):
+def extract_diff_header(
+    deleted: bool, with_diff_header: bool, suppress_header: bool, diffoutput: str
+) -> tuple[str, str] | str:
     """Split a diff into a header section and payload section"""
 
     if diffoutput.startswith('Submodule'):
@@ -575,7 +607,9 @@ def extract_diff_header(deleted, with_diff_header, suppress_header, diffoutput):
     return output_text
 
 
-def format_patchsets(context, to_export, revs, output: str = 'patches'):
+def format_patchsets(
+    context: ApplicationContext, to_export: Any, revs: Any, output: str = 'patches'
+) -> tuple[int, str, str]:
     """
     Group contiguous revision selection into patch sets
 
@@ -630,12 +664,16 @@ def format_patchsets(context, to_export, revs, output: str = 'patches'):
     return (status, '\n'.join(outs), '\n'.join(errs))
 
 
-def export_patchset(context, start, end, output: str = 'patches', **kwargs):
+def export_patchset(
+    context: ApplicationContext, start: str, end: str, output: str = 'patches', **kwargs
+) -> Any:
     """Export patches from start^ to end."""
     return context.git.format_patch('-o', output, start + '^..' + end, **kwargs)
 
 
-def reset_paths(context, head, items):
+def reset_paths(
+    context: ApplicationContext, head: str, items: list[str]
+) -> tuple[int, str, str]:
     """Run "git reset" while preventing argument overflow"""
     items = list(set(items))
     func = context.git.reset
@@ -646,7 +684,9 @@ def reset_paths(context, head, items):
     return (status, out, err)
 
 
-def unstage_paths(context, args, head: str = 'HEAD'):
+def unstage_paths(
+    context: ApplicationContext, args: list[str], head: str = 'HEAD'
+) -> tuple[int, str, str]:
     """Unstage paths while accounting for git init"""
     status, out, err = reset_paths(context, head, args)
     if status == 128:
@@ -656,7 +696,7 @@ def unstage_paths(context, args, head: str = 'HEAD'):
     return (status, out, err)
 
 
-def untrack_paths(context, args):
+def untrack_paths(context: ApplicationContext, args: list[str]) -> tuple[int, str, str]:
     if not args:
         return (-1, N_('Nothing to do'), '')
     if prefs.verbose_simple_commands(context):
@@ -666,12 +706,12 @@ def untrack_paths(context, args):
 
 
 def worktree_state(
-    context,
+    context: ApplicationContext,
     head: str = 'HEAD',
     update_index: bool = False,
     display_untracked: bool = True,
-    paths=None,
-):
+    paths: list[str] | None = None,
+) -> dict[str, list[str] | list[Any] | set[str] | set[Any]]:
     """Return a dict of files in various states of being
 
     :rtype: dict, keys are staged, unstaged, untracked, unmerged,
@@ -716,7 +756,7 @@ def worktree_state(
     }
 
 
-def _parse_raw_diff(out):
+def _parse_raw_diff(out: TextType) -> Iterator[tuple[str, str, bool]]:
     while out:
         info, path, out = out.split('\0', 2)
         status = info[-1]
@@ -724,7 +764,16 @@ def _parse_raw_diff(out):
         yield (path, status, is_submodule)
 
 
-def diff_index(context, head, cached: bool = True, paths=None):
+def diff_index(
+    context: ApplicationContext,
+    head: str,
+    cached: bool = True,
+    paths: list[Any] | None = None,
+) -> (
+    tuple[list[str], list[Any], set[Any], set[Any]]
+    | tuple[list[str], list[Any], set[str], set[Any]]
+    | tuple[list[Any], list[Any], set[Any], set[Any]]
+):
     staged = []
     unmerged = []
     deleted = set()
@@ -755,7 +804,13 @@ def diff_index(context, head, cached: bool = True, paths=None):
     return staged, unmerged, deleted, submodules
 
 
-def diff_worktree(context, paths=None):
+def diff_worktree(
+    context: ApplicationContext, paths: list[Any] | None = None
+) -> (
+    tuple[list[str], set[str], set[Any]]
+    | tuple[list[str], set[Any], set[Any]]
+    | tuple[list[Any], set[Any], set[Any]]
+):
     ignore_submodules_value = context.cfg.get('diff.ignoresubmodules', 'none')
     ignore_submodules = ignore_submodules_value in {'all', 'dirty', 'untracked'}
     modified = []
@@ -779,7 +834,7 @@ def diff_worktree(context, paths=None):
     return modified, deleted, submodules
 
 
-def diff_upstream(context, head):
+def diff_upstream(context: ApplicationContext, head: str) -> list[Any | str]:
     """Given `ref`, return $(git merge-base ref HEAD)..ref."""
     tracked = tracked_branch(context)
     if not tracked:
@@ -788,7 +843,7 @@ def diff_upstream(context, head):
     return diff_filenames(context, base, tracked)
 
 
-def list_submodule(context):
+def list_submodule(context: ApplicationContext) -> list[Any]:
     """Return submodules in the format(state, sha_1, path, describe)"""
     status, data, _ = context.git.submodule('status')
     ret = []
@@ -808,19 +863,21 @@ def list_submodule(context):
     return ret
 
 
-def merge_base(context, head, ref):
+def merge_base(context: ApplicationContext, head: str, ref: str) -> core.UStr:
     """Return the merge-base of head and ref"""
     return context.git.merge_base(head, ref, _readonly=True)[STDOUT]
 
 
-def merge_base_parent(context, branch):
+def merge_base_parent(context, branch) -> str:
     tracked = tracked_branch(context, branch=branch)
     if tracked:
         return tracked
     return 'HEAD'
 
 
-def ls_tree(context, path, ref: str = 'HEAD'):
+def ls_tree(
+    context: ApplicationContext, path, ref: str = 'HEAD'
+) -> list[tuple[str, str]]:
     """Return a parsed git ls-tree result for a single directory"""
     result = []
     status, out, _ = context.git.ls_tree(
@@ -842,7 +899,7 @@ def ls_tree(context, path, ref: str = 'HEAD'):
     return result
 
 
-def ls_tree_paths(context, ref, *args):
+def ls_tree_paths(context: ApplicationContext, ref: str, *args) -> list[str]:
     """Gather a list of file paths as they existed at the specified ref"""
     status, out, _ = context.git.ls_tree(
         ref, '--', *args, r=True, name_only=True, z=True, _readonly=True
@@ -859,7 +916,7 @@ def ls_tree_paths(context, ref, *args):
 REV_LIST_REGEX = re.compile(r'^([0-9a-f]{40}) (.*)$')
 
 
-def parse_rev_list(raw_revs):
+def parse_rev_list(raw_revs) -> list[tuple[str, str]]:
     """Parse `git log --pretty=online` output into (oid, summary) pairs."""
     revs = []
     for line in raw_revs.splitlines():
@@ -874,7 +931,9 @@ def parse_rev_list(raw_revs):
     return revs
 
 
-def log_helper(context, all: bool = False, extra_args=None):
+def log_helper(
+    context: ApplicationContext, all: bool = False, extra_args=None
+) -> tuple[list[str], list[str]]:
     """Return parallel arrays containing oids and summaries."""
     revs = []
     summaries = []
@@ -890,14 +949,14 @@ def log_helper(context, all: bool = False, extra_args=None):
     return (revs, summaries)
 
 
-def rev_list_range(context, start, end):
+def rev_list_range(context: ApplicationContext, start, end) -> list[tuple[str, str]]:
     """Return (oid, summary) pairs between start and end."""
     revrange = f'{start}..{end}'
     out = context.git.rev_list(revrange, pretty='oneline', _readonly=True)[STDOUT]
     return parse_rev_list(out)
 
 
-def commit_message_path(context):
+def commit_message_path(context: ApplicationContext) -> str:
     """Return the path to .git/GIT_COLA_MSG"""
     path = context.git.git_path('GIT_COLA_MSG')
     if core.exists(path):
@@ -905,7 +964,7 @@ def commit_message_path(context):
     return None
 
 
-def merge_message_path(context):
+def merge_message_path(context: ApplicationContext) -> str | None:
     """Return the path to .git/MERGE_MSG or .git/SQUASH_MSG."""
     for basename in ('MERGE_MSG', 'SQUASH_MSG'):
         path = context.git.git_path(basename)
@@ -914,7 +973,7 @@ def merge_message_path(context):
     return None
 
 
-def read_merge_commit_message(context, path):
+def read_merge_commit_message(context: ApplicationContext, path) -> TextType:
     """Read a merge commit message from disk while stripping commentary"""
     content = core.read(path)
     cleanup_mode = prefs.commit_cleanup(context)
@@ -926,14 +985,14 @@ def read_merge_commit_message(context, path):
     )
 
 
-def prepare_commit_message_hook(context):
+def prepare_commit_message_hook(context: ApplicationContext) -> str:
     """Run the cola.preparecommitmessagehook to prepare the commit message"""
     config = context.cfg
     default_hook = config.hooks_path('cola-prepare-commit-msg')
     return config.get('cola.preparecommitmessagehook', default=default_hook)
 
 
-def cherry_pick(context, revs):
+def cherry_pick(context: ApplicationContext, revs) -> tuple[int, str, str] | list:
     """Cherry-picks each revision into the current branch.
 
     Returns (0, out, err) where stdout and stderr across all "git cherry-pick"
@@ -964,7 +1023,7 @@ def cherry_pick(context, revs):
     return (0, '\n'.join(outs), '\n'.join(errs))
 
 
-def abort_apply_patch(context):
+def abort_apply_patch(context: ApplicationContext) -> tuple[int, str, str]:
     """Abort a "git am" session."""
     # Reset the worktree
     if prefs.verbose_simple_commands(context):
@@ -973,14 +1032,14 @@ def abort_apply_patch(context):
     return status, out, err
 
 
-def abort_cherry_pick(context):
+def abort_cherry_pick(context: ApplicationContext) -> tuple[int, str, str]:
     """Abort a cherry-pick."""
     # Reset the worktree
     status, out, err = context.git.cherry_pick(abort=True)
     return status, out, err
 
 
-def abort_merge(context):
+def abort_merge(context: ApplicationContext) -> tuple[int, str, str]:
     """Abort a merge"""
     # Reset the worktree
     if prefs.verbose_simple_commands(context):
@@ -989,7 +1048,7 @@ def abort_merge(context):
     return status, out, err
 
 
-def strip_remote(remotes, remote_branch):
+def strip_remote(remotes, remote_branch) -> str:
     """Get branch names with the "<remote>/" prefix removed"""
     for remote in remotes:
         prefix = remote + '/'
@@ -998,7 +1057,7 @@ def strip_remote(remotes, remote_branch):
     return remote_branch.split('/', 1)[-1]
 
 
-def parse_refs(context, argv):
+def parse_refs(context: ApplicationContext, argv) -> list[str]:
     """Parse command-line arguments into object IDs"""
     status, out, _ = context.git.rev_parse(_readonly=True, *argv)
     if status == 0:
@@ -1008,14 +1067,14 @@ def parse_refs(context, argv):
     return oids
 
 
-def prev_commitmsg(context, *args):
+def prev_commitmsg(context: ApplicationContext, *args) -> str:
     """Queries git for the latest commit message."""
     return context.git.log(
         '-1', no_color=True, pretty='format:%s%n%n%b', _readonly=True, *args
     )[STDOUT]
 
 
-def prev_author_and_commitmsg(context, *args):
+def prev_author_and_commitmsg(context: ApplicationContext, *args) -> tuple[str, str]:
     """Queries git for the latest commit message."""
     output = context.git.log(
         '-1',
@@ -1033,7 +1092,7 @@ def prev_author_and_commitmsg(context, *args):
     return author, commitmsg
 
 
-def rev_parse(context, name):
+def rev_parse(context: ApplicationContext, name: str) -> str:
     """Call git rev-parse and return the output"""
     status, out, _ = context.git.rev_parse(name, _readonly=True)
     if status == 0:
@@ -1043,7 +1102,7 @@ def rev_parse(context, name):
     return result
 
 
-def write_blob(context, oid, filename):
+def write_blob(context: ApplicationContext, oid: str, filename: str) -> str:
     """Write a blob to a temporary file and return the path
 
     Modern versions of Git allow invoking filters.  Older versions
@@ -1055,17 +1114,17 @@ def write_blob(context, oid, filename):
     return cat_file_blob(context, filename, oid)
 
 
-def cat_file_blob(context, filename, oid):
+def cat_file_blob(context: ApplicationContext, filename: str, oid: str) -> str:
     """Write a blob from git to the specified filename"""
     return cat_file(context, filename, 'blob', oid)
 
 
-def cat_file_to_path(context, filename, oid):
+def cat_file_to_path(context, filename: str, oid: str) -> str:
     """Extract a file from a commit ref and a write it to the specified filename"""
     return cat_file(context, filename, oid, path=filename, filters=True)
 
 
-def cat_file(context, filename, *args, **kwargs):
+def cat_file(context: ApplicationContext, filename: str, *args, **kwargs) -> str:
     """Redirect git cat-file output to a path"""
     result = None
     # Use the original filename in the suffix so that the generated filename
@@ -1085,7 +1144,7 @@ def cat_file(context, filename, *args, **kwargs):
     return result
 
 
-def cat_file_from_ref(context, ref, filename):
+def cat_file_from_ref(context: ApplicationContext, ref: str, filename: str) -> str:
     """Read file contents using git cat-file"""
     status, out, _ = context.git.cat_file(
         'blob', f'{ref}:{filename}', _raw=True, _readonly=True
@@ -1093,14 +1152,16 @@ def cat_file_from_ref(context, ref, filename):
     return out
 
 
-def write_blob_path(context, head, oid, filename):
+def write_blob_path(
+    context: ApplicationContext, head: str, oid: str, filename: str
+) -> str:
     """Use write_blob() when modern git is available"""
     if version.check_git(context, 'cat-file-filters-path'):
         return write_blob(context, oid, filename)
     return cat_file_blob(context, filename, head + ':' + filename)
 
 
-def annex_path(context, head, filename):
+def annex_path(context: ApplicationContext, head: str, filename: str):
     """Return the git-annex path for a filename at the specified commit"""
     path = None
     annex_info = {}
@@ -1126,7 +1187,7 @@ def annex_path(context, head, filename):
     return path
 
 
-def is_binary(context, filename):
+def is_binary(context: ApplicationContext, filename: str) -> bool:
     """A heuristic to determine whether `filename` contains (non-text) binary content"""
     cfg_is_binary = context.cfg.is_binary(filename)
     if cfg_is_binary is not None:
@@ -1136,12 +1197,12 @@ def is_binary(context, filename):
     try:
         result = core.read(filename, size=size, encoding='bytes')
     except OSError:
-        result = b''
+        result: bytes | core.UStr = b''
 
-    return b'\0' in result
+    return b'\0' in result  # type: ignore [operator]
 
 
-def is_valid_ref(context, ref) -> bool:
+def is_valid_ref(context: ApplicationContext, ref: str) -> bool:
     """Is the provided Git ref a valid refname?"""
     status, _, _ = context.git.rev_parse(ref, quiet=True, verify=True, _readonly=True)
     return status == 0

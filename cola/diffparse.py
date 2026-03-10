@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import math
 import re
 from collections import Counter
+from collections.abc import Iterator
 from itertools import groupby
-
+from typing import Any
 
 DIFF_CONTEXT = ' '
 DIFF_ADDITION = '+'
@@ -33,7 +36,7 @@ def _format_hunk_header(
     )
 
 
-def digits(number) -> int:
+def digits(number: int) -> int:
     """Return the number of digits needed to display a number"""
     if number >= 0:
         result = int(math.log10(number)) + 1
@@ -45,13 +48,13 @@ def digits(number) -> int:
 class LineCounter:
     """Keep track of a diff range's values"""
 
-    def __init__(self, value: int = 0, max_value=-1) -> None:
+    def __init__(self, value: int = 0, max_value: int = -1) -> None:
         self.count = 0  # Absolute count of additions/removals/...
         self.value = value  # Current line number counter.
         self.max_value = max_value
         self._initial_max_value = max_value
 
-    def reset(self):
+    def reset(self) -> LineCounter:
         """Reset the max counter and return self for convenience"""
         self.count = 0
         self.max_value = self._initial_max_value
@@ -89,7 +92,7 @@ class DiffLines:
         self.additions = LineCounter()
         self.removals = LineCounter()
 
-    def digits(self):
+    def digits(self) -> int:
         return digits(
             max(
                 self.old.max_value,
@@ -99,8 +102,8 @@ class DiffLines:
             )
         )
 
-    def parse(self, diff_text):
-        lines = []
+    def parse(self, diff_text: str) -> list[tuple[int, int] | tuple[int, int, int]]:
+        lines: list[tuple[int, int] | tuple[int, int, int]] = []
         diff_state = 1
         state = initial_state = 0
         merge = self.merge = False
@@ -193,12 +196,12 @@ class FormatDigits:
         self._dash = dash or chr(0xB7)
         self._empty = empty or ' '
 
-    def set_digits(self, value) -> None:
+    def set_digits(self, value: int) -> None:
         self.fmt = '%%0%dd' % value
         self.empty = self._empty * value
         self.dash = self._dash * value
 
-    def value(self, old, new) -> str:
+    def value(self, old: int, new: int) -> str:
         old_str = self._format(old)
         new_str = self._format(new)
         return f'{old_str} {new_str}'
@@ -209,10 +212,10 @@ class FormatDigits:
         new_str = self._format(new)
         return f'{old_str} {base_str} {new_str}'
 
-    def number(self, value):
+    def number(self, value: int) -> str:
         return self.fmt % value
 
-    def _format(self, value):
+    def _format(self, value: int) -> str:
         if value == self.DASH:
             result = self.dash
         elif value == self.EMPTY:
@@ -226,10 +229,10 @@ class _HunkGrouper:
     _HUNK_HEADER_RE = re.compile(r'^@@ -([0-9,]+) \+([0-9,]+) @@(.*)')
 
     def __init__(self) -> None:
-        self.match = None
+        self.match: re.Match[str] | None = None
 
-    def __call__(self, line):
-        match = self._HUNK_HEADER_RE.match(line)
+    def __call__(self, line) -> re.Match[str] | None:
+        match: re.Match[str] | None = self._HUNK_HEADER_RE.match(line)
         if match is not None:
             self.match = match
         return self.match
@@ -269,10 +272,10 @@ class _DiffHunk:
 
         self.changes = type_counts[DIFF_DELETION] + type_counts[DIFF_ADDITION]
 
-    def has_changes(self):
+    def has_changes(self) -> bool:
         return bool(self.changes)
 
-    def line_delta(self):
+    def line_delta(self) -> int:
         return self.new_count - self.old_count
 
 
@@ -290,7 +293,7 @@ class Patch:
         self.header_line_count = header_line_count
 
     @classmethod
-    def parse(cls, filename, diff_text):
+    def parse(cls, filename, diff_text) -> Patch:
         header_line_count = 0
         hunks = []
         start_offset = 0
@@ -312,7 +315,7 @@ class Patch:
                 header_line_count = len(list(hunk_lines))
         return cls(filename, hunks, header_line_count)
 
-    def has_changes(self):
+    def has_changes(self) -> bool:
         return bool(self.hunks)
 
     def as_text(self, *, file_headers: bool = True) -> str:
@@ -325,7 +328,7 @@ class Patch:
                 lines.extend(hunk.lines)
         return ''.join(lines)
 
-    def _hunk_iter(self):
+    def _hunk_iter(self) -> Iterator[tuple[int, int, Any]]:
         hunk_last_line_idx = self.header_line_count - 1
         for hunk in self.hunks:
             hunk_first_line_idx = hunk_last_line_idx + 1
@@ -333,7 +336,7 @@ class Patch:
             yield hunk_first_line_idx, hunk_last_line_idx, hunk
 
     @staticmethod
-    def _reverse_content_lines(content_lines):
+    def _reverse_content_lines(content_lines: list[str]) -> list[str]:
         # Normally in a diff, deletions come before additions.  In order to preserve
         # this property in reverse patches, when this function encounters a deletion
         # line and switches it to addition, it appends the line to the pending_additions
@@ -341,12 +344,12 @@ class Patch:
         # the content_lines list.  Each time a context line is encountered, any pending
         # additions are then appended to the content_lines list immediately before the
         # context line and the pending_additions list is cleared.
-        new_content_lines = []
-        pending_additions = []
-        line_type = None
+        new_content_lines: list[str] = []
+        pending_additions: list[str] = []
+        line_type: str | None = None
         for line in content_lines:
             prev_line_type = line_type
-            line_type = line[:1]
+            line_type: str | None = line[:1]
             if line_type == DIFF_ADDITION:
                 new_content_lines.append(DIFF_DELETION + line[1:])
             elif line_type == DIFF_DELETION:
@@ -365,7 +368,9 @@ class Patch:
         new_content_lines.extend(pending_additions)
         return new_content_lines
 
-    def extract_subset(self, first_line_idx, last_line_idx, *, reverse: bool = False):
+    def extract_subset(
+        self, first_line_idx: int, last_line_idx: int, *, reverse: bool = False
+    ) -> Patch:
         new_hunks = []
         start_offset = 0
         for hunk_first_line_idx, hunk_last_line_idx, hunk in self._hunk_iter():
@@ -428,7 +433,7 @@ class Patch:
 
         return Patch(self.filename, new_hunks)
 
-    def extract_hunk(self, line_idx, *, reverse: bool = False):
+    def extract_hunk(self, line_idx: int, *, reverse: bool = False) -> Patch:
         """Return a new patch containing only the hunk containing the specified line"""
         new_hunks = []
         for _, hunk_last_line_idx, hunk in self._hunk_iter():

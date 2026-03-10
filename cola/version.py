@@ -1,4 +1,6 @@
 """Provide git-cola's version number"""
+from __future__ import annotations
+
 try:
     from importlib import metadata
 except (ImportError, OSError):
@@ -52,12 +54,12 @@ _versions = {
 }
 
 
-def get(key):
+def get(key: str) -> str:
     """Returns an entry from the known versions table"""
     return _versions.get(key)
 
 
-def version():
+def version() -> str:
     """Returns the current version"""
     if SCM_VERSION:
         return SCM_VERSION
@@ -78,13 +80,13 @@ def version():
     return pkg_version
 
 
-def builtin_version():
+def builtin_version() -> str:
     """Returns the version recorded in cola/_version.py"""
     return VERSION
 
 
 @memoize
-def check_version(min_ver, ver):
+def check_version(min_ver: str, ver: str) -> bool:
     """Check whether ver is greater or equal to min_ver"""
     min_ver_list = version_to_list(min_ver)
     ver_list = version_to_list(ver)
@@ -92,37 +94,37 @@ def check_version(min_ver, ver):
 
 
 @memoize
-def check(key, ver):
+def check(key: str, ver: str) -> bool:
     """Checks if a version is greater than the known version for <what>"""
     return check_version(get(key), ver)
 
 
-def check_git(context, key):
+def check_git(context, key: str) -> bool:
     """Checks if Git has a specific feature"""
     return check(key, git_version(context))
 
 
-def version_to_list(value):
+def version_to_list(value: str) -> list[int]:
     """Convert a version string to a list of numbers or strings"""
     ver_list = []
     for part in value.split('.'):
         try:
-            number = int(part)
+            number: int = int(part)
         except ValueError:
-            number = part
+            number: int = 0
         ver_list.append(number)
     return ver_list
 
 
 @memoize
-def git_version_str(context):
+def git_version_str(context) -> str:
     """Returns the current GIT version"""
     git = context.git
     return git.version(_readonly=True)[STDOUT].strip()
 
 
 @memoize
-def git_version(context):
+def git_version(context) -> str:
     """Returns the current GIT version"""
     parts = git_version_str(context).split()
     if parts and len(parts) >= 3:

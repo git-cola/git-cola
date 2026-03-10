@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import os
 from functools import partial
+from typing import TYPE_CHECKING
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -20,12 +23,15 @@ from .widgets import defs
 from .widgets import filetree
 from .widgets import standard
 
+if TYPE_CHECKING:
+    from .app import ApplicationContext
+
 
 class LaunchDifftool(cmds.ContextCommand):
     """Launch "git difftool" with the currently selected files"""
 
     @staticmethod
-    def name():
+    def name() -> str:
         return N_('Launch Diff Tool')
 
     def do(self) -> None:
@@ -62,7 +68,7 @@ class LaunchDifftool(cmds.ContextCommand):
 class Difftool(standard.Dialog):
     def __init__(
         self,
-        context,
+        context: ApplicationContext,
         parent,
         a=None,
         b=None,
@@ -234,7 +240,7 @@ class Difftool(standard.Dialog):
             detect_renames=self.detect_renames,
         )
 
-    def _left_right_args(self):
+    def _left_right_args(self) -> tuple[str, str]:
         if self.diff_arg:
             left = self.diff_arg[0]
         else:
@@ -250,7 +256,9 @@ class Difftool(standard.Dialog):
         cmds.do(cmds.Edit, self.context, paths)
 
 
-def diff_commits(context, parent, a, b, detect_renames: bool = False) -> bool:
+def diff_commits(
+    context: ApplicationContext, parent, a, b, detect_renames: bool = False
+) -> bool:
     """Show a dialog for diffing two commits"""
     dlg = Difftool(context, parent, a=a, b=b, detect_renames=detect_renames)
     dlg.show()
@@ -259,13 +267,13 @@ def diff_commits(context, parent, a, b, detect_renames: bool = False) -> bool:
 
 
 def diff_expression(
-    context,
+    context: ApplicationContext,
     parent,
     expr,
     create_widget: bool = False,
     hide_expr: bool = False,
     focus_tree: bool = False,
-):
+) -> bool:
     """Show a diff dialog for diff expressions"""
     dlg = Difftool(
         context, parent, expr=expr, hide_expr=hide_expr, focus_tree=focus_tree
@@ -277,7 +285,7 @@ def diff_expression(
     return dlg.exec_() == QtWidgets.QDialog.Accepted
 
 
-def difftool_run(context) -> None:
+def difftool_run(context: ApplicationContext) -> None:
     """Start a default difftool session"""
     selection = context.selection
     files = selection.group()
@@ -288,7 +296,9 @@ def difftool_run(context) -> None:
     difftool_launch_with_head(context, files, bool(s.staged), head)
 
 
-def difftool_launch_with_head(context, filenames, staged, head) -> None:
+def difftool_launch_with_head(
+    context: ApplicationContext, filenames, staged, head
+) -> None:
     """Launch difftool against the provided head"""
     if head == 'HEAD':
         left = None
@@ -298,10 +308,10 @@ def difftool_launch_with_head(context, filenames, staged, head) -> None:
 
 
 def difftool_launch(
-    context,
+    context: ApplicationContext,
     left=None,
     right=None,
-    oid=None,
+    oid: str | None = None,
     paths=None,
     is_root_commit: bool = False,
     staged: bool = False,
@@ -358,10 +368,12 @@ def difftool_launch(
         context.git.difftool(*args, **kwargs)
 
 
-def _get_left_right_for_oid(context, oid, is_root_commit):
+def _get_left_right_for_oid(
+    context: ApplicationContext, oid: str, is_root_commit: bool
+) -> tuple[str, str]:
     """Specify diff parameters for diffing a commit"""
     if is_root_commit:
-        left = context.model.empty_tree_oid
+        left: str = context.model.empty_tree_oid
         right = oid
     else:
         left = f'{oid}~'
@@ -369,7 +381,9 @@ def _get_left_right_for_oid(context, oid, is_root_commit):
     return left, right
 
 
-def _add_difftool_args(context, args, left, right, left_take_parent):
+def _add_difftool_args(
+    context: ApplicationContext, args, left, right, left_take_parent
+) -> None:
     """Setup the first argument to difftool"""
     if left:
         original_left = left
@@ -404,7 +418,9 @@ def _add_difftool_args(context, args, left, right, left_take_parent):
         args.append(right)
 
 
-def _get_renamed_paths(context, left, right, path, detect_renames):
+def _get_renamed_paths(
+    context: ApplicationContext, left, right, path, detect_renames
+) -> set[str]:
     """Get filenames as they existed beyond a rename
 
     Use ``git log --follow --format= --name-only -- <path>`` to discover the

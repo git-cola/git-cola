@@ -1,7 +1,11 @@
+from __future__ import annotations
+
+from collections.abc import Iterator
 import ctypes
 import ctypes.util
 import errno
 import os
+from typing import Any
 
 # constant from Linux include/uapi/linux/limits.h
 NAME_MAX = 255
@@ -66,7 +70,9 @@ rm_watch.argtypes = [ctypes.c_int, ctypes.c_int]
 rm_watch.errcheck = _errcheck
 
 
-def read_events(inotify_fd, count: int = 64):
+def read_events(
+    inotify_fd: Any, count: int = 64
+) -> Iterator[tuple[Any, Any, Any, bytes | None]]:
     buf = ctypes.create_string_buffer(MAX_EVENT_SIZE * count)
     num = _read(inotify_fd, buf, ctypes.sizeof(buf))
 

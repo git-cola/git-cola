@@ -1,7 +1,7 @@
 """The central cola model"""
 from __future__ import annotations
 import os
-from typing import Any, Callable
+from typing import Any, Callable, TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
@@ -16,6 +16,8 @@ from ..interaction import Interaction
 from ..i18n import N_
 from . import prefs
 
+if TYPE_CHECKING:
+    from ..types import TextType
 
 FETCH = 'fetch'
 FETCH_HEAD = 'FETCH_HEAD'
@@ -92,11 +94,11 @@ class MainModel(QtCore.QObject):
         self.annex = False
         self.lfs = False
         self.head = 'HEAD'
-        self.diff_text = ''
+        self.diff_text: str | tuple[str, str] = ''
         self.diff_type = Types.TEXT
         self.file_type = Types.TEXT
         self.mode = self.mode_none
-        self.filename = None
+        self.filename: str | None = None
         self.is_cherry_picking = False
         self.is_merging = False
         self.is_rebasing = False
@@ -117,15 +119,15 @@ class MainModel(QtCore.QObject):
         self.empty_tree_oid = git.EMPTY_TREE_SHA1
         self.missing_blob_oid = git.MISSING_BLOB_SHA1
 
-        self.modified = []  # modified, staged, untracked, unmerged paths
-        self.staged = []
-        self.untracked = []
-        self.unmerged = []
-        self.upstream_changed = []  # paths that've changed upstream
-        self.staged_deleted = set()
-        self.unstaged_deleted = set()
-        self.submodules = set()
-        self.submodules_list = None  # lazy loaded
+        self.modified: list[str] = []  # modified, staged, untracked, unmerged paths
+        self.staged: list[str] = []
+        self.untracked: list[str] = []
+        self.unmerged: list[str] = []
+        self.upstream_changed: list[str] = []  # paths that've changed upstream
+        self.staged_deleted: set[str] = set()
+        self.unstaged_deleted: set[str] = set()
+        self.submodules: set[str] = set()
+        self.submodules_list: list[Any] | None = None  # lazy loaded
 
         self.error = None  # The last error message.
         self.ref_sort = 0  # (0: version, 1:reverse-chrono)
@@ -238,7 +240,7 @@ class MainModel(QtCore.QObject):
             pass
         return path
 
-    def set_diff_text(self, txt: str) -> None:
+    def set_diff_text(self, txt: str | tuple[str, str]) -> None:
         """Update the text displayed in the diff editor"""
         changed = txt != self.diff_text
         self.diff_text = txt
@@ -366,14 +368,14 @@ class MainModel(QtCore.QObject):
             display_untracked=display_untracked,
             paths=self.filter_paths,
         )
-        self.staged = state.get('staged', [])
-        self.modified = state.get('modified', [])
-        self.unmerged = state.get('unmerged', [])
-        self.untracked = state.get('untracked', [])
-        self.upstream_changed = state.get('upstream_changed', [])
-        self.staged_deleted = state.get('staged_deleted', set())
-        self.unstaged_deleted = state.get('unstaged_deleted', set())
-        self.submodules = state.get('submodules', set())
+        self.staged = state.get('staged', [])  # type: ignore[assignment]
+        self.modified = state.get('modified', [])  # type: ignore[assignment]
+        self.unmerged = state.get('unmerged', [])  # type: ignore[assignment]
+        self.untracked = state.get('untracked', [])  # type: ignore[assignment]
+        self.upstream_changed = state.get('upstream_changed', [])  # type: ignore[assignment]
+        self.staged_deleted = state.get('staged_deleted', set())  # type: ignore[assignment]
+        self.unstaged_deleted = state.get('unstaged_deleted', set())  # type: ignore[assignment]
+        self.submodules = state.get('submodules', set())  # type: ignore[assignment]
 
         selection = self.selection
         if self.is_empty():
@@ -688,8 +690,8 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     if not xdg_current_desktop:
         return add_env
 
-    http_proxy = None
-    https_proxy = None
+    http_proxy: TextType | None = None
+    https_proxy: TextType | None = None
     if xdg_current_desktop == 'KDE' or xdg_current_desktop.endswith(':KDE'):
         kreadconfig = core.find_executable('kreadconfig5')
         if kreadconfig:

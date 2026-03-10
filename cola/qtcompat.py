@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Callable
+
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
@@ -11,7 +15,11 @@ except ImportError:
 from . import hotkeys
 
 
-def patch(obj, attr, value) -> None:
+def patch(
+    obj: type[QtWidgets.QGraphicsItem] | type[QtGui.QKeySequence],
+    attr: str,
+    value: Callable | QtGui.QKeySequence,
+) -> None:
     if not hasattr(obj, attr):
         setattr(obj, attr, value)
 
@@ -21,7 +29,7 @@ def install() -> None:
     patch(QtGui.QKeySequence, 'Preferences', hotkeys.PREFERENCES)
 
 
-def add_search_path(prefix, path) -> None:
+def add_search_path(prefix: str, path: str) -> None:
     if hasattr(QtCore.QDir, 'addSearchPath'):
         QtCore.QDir.addSearchPath(prefix, path)
 

@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 import os
 import sys
+from typing import TYPE_CHECKING
 
 from . import core
 from .i18n import N_
+
+if TYPE_CHECKING:
+    from .types import TextType
 
 
 class Interaction:
@@ -11,14 +17,28 @@ class Interaction:
     VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))
 
     @classmethod
-    def command(cls, title, cmd, status, out, err) -> None:
+    def command(
+        cls,
+        title: TextType,
+        cmd: list[TextType] | str,
+        status: int,
+        out: TextType,
+        err: TextType,
+    ) -> None:
         """Log a command and display error messages on failure"""
         cls.log_status(status, out, err)
         if status != 0:
             cls.command_error(title, cmd, status, out, err)
 
     @classmethod
-    def command_error(cls, title, cmd, status, out, err) -> None:
+    def command_error(
+        cls,
+        title: str,
+        cmd: list[TextType] | str,
+        status: int,
+        out: TextType,
+        err: TextType,
+    ) -> None:
         """Display an error message for a failed command"""
         core.print_stderr(title)
         core.print_stderr('-' * len(title))
@@ -30,14 +50,14 @@ class Interaction:
             core.print_stderr(err)
 
     @staticmethod
-    def format_command_status(cmd, status):
+    def format_command_status(cmd: list[TextType] | str, status: int) -> str:
         return N_('"%(command)s" returned exit status %(status)d') % {
             'command': cmd,
             'status': status,
         }
 
     @staticmethod
-    def format_out_err(out, err):
+    def format_out_err(out: core.UStr, err: core.UStr) -> str:
         """Format stdout and stderr into a single string"""
         details = out or ''
         if err:
@@ -47,7 +67,12 @@ class Interaction:
         return details
 
     @staticmethod
-    def information(title, message=None, details=None, informative_text=None) -> None:
+    def information(
+        title: str,
+        message: str | None = None,
+        details: str | None = None,
+        informative_text: str | None = None,
+    ) -> None:
         if message is None:
             message = title
         scope = {}
@@ -68,21 +93,23 @@ class Interaction:
         sys.stdout.flush()
 
     @classmethod
-    def critical(cls, title, message=None, details=None) -> None:
+    def critical(
+        cls, title: str, message: str | None = None, details: str | None = None
+    ) -> None:
         """Show a warning with the provided title and message."""
         cls.information(title, message=message, details=details)
 
     @classmethod
     def confirm(
         cls,
-        title,
-        text,
-        informative_text,
-        ok_text,
+        title: str,
+        text: str,
+        informative_text: str,
+        ok_text: str,
         icon=None,
         default: bool = True,
-        cancel_text=None,
-    ):
+        cancel_text: str | None = None,
+    ) -> bool:
         cancel_text = cancel_text or 'Cancel'
         icon = icon or '?'
 
@@ -93,7 +120,7 @@ class Interaction:
             prompt = '%s? [y/N] ' % ok_text
         sys.stdout.write(prompt)
         sys.stdout.flush()
-        answer = sys.stdin.readline().strip()
+        answer: str = sys.stdin.readline().strip()
         if answer:
             result = answer.lower().startswith('y')
         else:
@@ -101,11 +128,13 @@ class Interaction:
         return result
 
     @classmethod
-    def question(cls, title, message, default: bool = True):
+    def question(cls, title: str, message: str, default: bool = True) -> bool:
         return cls.confirm(title, message, '', ok_text=N_('Continue'), default=default)
 
     @classmethod
-    def run_command(cls, title, cmd):
+    def run_command(
+        cls, title: str, cmd: list[str]
+    ) -> tuple[int, core.UStr, core.UStr]:
         cls.log('# ' + title)
         cls.log('$ ' + core.list2cmdline(cmd))
         status, out, err = core.run_command(cmd)
@@ -113,7 +142,7 @@ class Interaction:
         return status, out, err
 
     @classmethod
-    def confirm_config_action(cls, _context, name, _opts):
+    def confirm_config_action(cls, _context, name: str, _opts) -> bool:
         return cls.confirm(
             N_('Run %s?') % name,
             N_('Run the "%s" command?') % name,
@@ -122,7 +151,9 @@ class Interaction:
         )
 
     @classmethod
-    def log_status(cls, status, out, err=None) -> None:
+    def log_status(
+        cls, status: int, out: TextType, err: TextType | None = None
+    ) -> None:
         """Emit status, out, and err into the log"""
         msg = ''
         if out:
@@ -133,12 +164,12 @@ class Interaction:
         cls.log('exit status %s' % status)
 
     @classmethod
-    def log(cls, message) -> None:
+    def log(cls, message: str) -> None:
         if cls.VERBOSE:
             core.print_stdout(message)
 
     @classmethod
-    def save_as(cls, filename, title):
+    def save_as(cls, filename: str, title: str) -> str | None:
         if cls.confirm(title, 'Save as %s?' % filename, '', ok_text='Save'):
             return filename
         return None
@@ -148,7 +179,14 @@ class Interaction:
         pass
 
     @classmethod
-    def choose_ref(cls, _context, title, button_text, default=None, icon=None):
+    def choose_ref(
+        cls,
+        _context,
+        title: str,
+        button_text: str,
+        default: str | None = None,
+        icon=None,
+    ) -> str:
         icon = icon or '?'
         cls.information(title, button_text)
         return sys.stdin.readline().strip() or default

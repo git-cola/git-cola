@@ -613,7 +613,7 @@ def viewer_actions(widget, proxy):
     }
 
 
-class GitDagLineEdit(completion.GitLogLineEdit):
+class GitDagLineEdit(completion.GitLogLineEdit):  # type: ignore[misc, valid-type]
     """The text input field for specifying "git log" options"""
 
     def __init__(self, context):

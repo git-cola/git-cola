@@ -1,11 +1,16 @@
 """Functions for finding cola resources"""
+from __future__ import annotations
+
 import os
 import sys
 import webbrowser
+from typing import Callable, TYPE_CHECKING
 
 from . import core
 from . import compat
 
+if TYPE_CHECKING:
+    from .types import TextType
 
 # Default git-cola icon theme
 _default_icon_theme = 'light'
@@ -30,23 +35,23 @@ else:
     _prefix = os.path.dirname(_package)
 
 
-def get_prefix():
+def get_prefix() -> str:
     """Return the installation prefix"""
     return _prefix
 
 
-def prefix(*args):
+def prefix(*args) -> str:
     """Return a path relative to cola's installation prefix"""
     return os.path.join(get_prefix(), *args)
 
 
-def sibling_bindir(*args):
+def sibling_bindir(*args) -> str:
     """Return a command sibling to sys.argv[0]"""
     relative_bindir = os.path.dirname(sys.argv[0])
     return os.path.join(relative_bindir, *args)
 
 
-def command(name):
+def command(name: str) -> str:
     """Return a command from the bin/ directory"""
     if compat.WIN32:
         # On Windows we have to support being installed via the pynsist installation
@@ -80,7 +85,7 @@ def command(name):
     return result
 
 
-def doc(*args):
+def doc(*args) -> str:
     """Return a path relative to cola's /usr/share/doc/ or the docs/ directory"""
     # pyproject.toml does not support data_files in pyproject.toml so we install the
     # hotkey files as cola/data/ package data. This is a fallback location for when
@@ -91,12 +96,12 @@ def doc(*args):
     return path
 
 
-def i18n(*args):
+def i18n(*args) -> str:
     """Return a path relative to cola's i18n locale directory, e.g. cola/i18n"""
     return package_data('i18n', *args)
 
 
-def html_docs():
+def html_docs() -> str:
     """Return the path to the cola html documentation."""
     # html/index.html only exists after the install-docs target is run.
     # Fallback to the source tree and lastly git-cola.rst.
@@ -114,32 +119,32 @@ def show_html_docs() -> None:
     webbrowser.open_new_tab('file://' + url)
 
 
-def share(*args):
+def share(*args) -> str:
     """Return a path relative to cola's /usr/share/ directory"""
     return prefix('share', *args)
 
 
-def package_data(*args):
+def package_data(*args) -> str:
     """Return a path relative to cola's Python modules"""
     return os.path.join(_package, *args)
 
 
-def data_path(*args):
+def data_path(*args) -> str:
     """Return a path relative to cola's data directory"""
     return package_data('data', *args)
 
 
-def icon_path(*args):
+def icon_path(*args) -> str:
     """Return a path relative to cola's icons directory"""
     return package_data('icons', *args)
 
 
-def package_command(*args):
+def package_command(*args) -> str:
     """Return a path relative to cola's private bin/ directory"""
     return package_data('bin', *args)
 
 
-def icon_dir(theme):
+def icon_dir(theme: str) -> str:
     """Return the icons directory for the specified theme
 
     This returns the ``icons`` directory inside the ``cola`` Python package.
@@ -163,7 +168,7 @@ def icon_dir(theme):
     return icons
 
 
-def xdg_config_home(*args):
+def xdg_config_home(*args) -> str:
     """Return the XDG_CONFIG_HOME configuration directory, eg. ~/.config"""
     config = core.getenv(
         'XDG_CONFIG_HOME', os.path.join(core.expanduser('~'), '.config')
@@ -171,7 +176,7 @@ def xdg_config_home(*args):
     return os.path.join(config, *args)
 
 
-def xdg_data_home(*args):
+def xdg_data_home(*args) -> TextType:
     """Return the XDG_DATA_HOME configuration directory, e.g. ~/.local/share"""
     config = core.getenv(
         'XDG_DATA_HOME', os.path.join(core.expanduser('~'), '.local', 'share')
@@ -179,26 +184,28 @@ def xdg_data_home(*args):
     return os.path.join(config, *args)
 
 
-def xdg_data_dirs():
+def xdg_data_dirs() -> list[TextType]:
     """Return the current set of XDG data directories
 
     Returns the values from $XDG_DATA_DIRS when defined in the environment.
     If $XDG_DATA_DIRS is either not set or empty, a value equal to
     /usr/local/share:/usr/share is used.
     """
-    paths = []
+    paths: list[TextType] = []
     xdg_data_home_dir = xdg_data_home()
     if os.path.isdir(xdg_data_home_dir):
         paths.append(xdg_data_home_dir)
 
-    xdg_data_dirs_env = core.getenv('XDG_DATA_DIRS', '')
+    xdg_data_dirs_env: TextType | None = core.getenv('XDG_DATA_DIRS', '')
     if not xdg_data_dirs_env:
-        xdg_data_dirs_env = '/usr/local/share:/usr/share'
+        xdg_data_dirs_env: TextType | None = '/usr/local/share:/usr/share'
     paths.extend(path for path in xdg_data_dirs_env.split(':') if os.path.isdir(path))
     return paths
 
 
-def find_first(subpath, paths, validate=os.path.isfile):
+def find_first(
+    subpath: str, paths: list[TextType], validate: Callable = os.path.isfile
+) -> str | None:
     """Return the first `subpath` found in the specified directory paths"""
     if os.path.isabs(subpath):
         return subpath
@@ -210,6 +217,6 @@ def find_first(subpath, paths, validate=os.path.isfile):
     return None
 
 
-def config_home(*args):
+def config_home(*args) -> str:
     """Return git-cola's configuration directory, e.g. ~/.config/git-cola"""
     return xdg_config_home('git-cola', *args)

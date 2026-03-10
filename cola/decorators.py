@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import errno
 import functools
+from typing import Any, Callable, TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from qtpy.QtGui import QIcon
 
 __all__ = ('decorator', 'memoize', 'interruptable')
 
 
-def decorator(caller, func=None):
+def decorator(caller: Callable, func: Callable | None = None) -> Callable:
     """
     Create a new decorator
 
@@ -28,14 +33,14 @@ def decorator(caller, func=None):
 
     # return a decorated function
     @functools.wraps(func)
-    def _decorated(*args, **opts):
+    def _decorated(*args, **opts) -> Any:
         return caller(func, *args, **opts)
 
     _decorated.func = func
     return _decorated
 
 
-def memoize(func):
+def memoize(func: Callable) -> Callable:
     """
     A decorator for memoizing function calls
 
@@ -46,7 +51,7 @@ def memoize(func):
     return decorator(_memoize, func)
 
 
-def _memoize(func, *args, **opts):
+def _memoize(func: Callable, *args, **opts) -> QIcon | bool | str:
     """Implements memoized cache lookups"""
     if opts:  # frozenset is used to ensure hashability
         key = (args, frozenset(list(opts.items())))
@@ -61,7 +66,7 @@ def _memoize(func, *args, **opts):
 
 
 @decorator
-def interruptable(func, *args, **opts):
+def interruptable(func: Callable, *args, **opts) -> Any:
     """Handle interruptible system calls
 
     macOS and others are known to interrupt system calls

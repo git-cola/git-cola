@@ -1,15 +1,21 @@
 """Save settings, bookmarks, etc."""
+from __future__ import annotations
+
 import json
 import os
 import sys
+from typing import Any, Callable, TYPE_CHECKING
 
 from . import core
 from . import display
 from . import git
 from . import resources
 
+if TYPE_CHECKING:
+    from .types import ConfigValue
 
-def mkdict(obj):
+
+def mkdict(obj: dict[str, Any]) -> dict[str, Any]:
     """Transform None and non-dicts into dicts"""
     if isinstance(obj, dict):
         value = obj
@@ -18,7 +24,7 @@ def mkdict(obj):
     return value
 
 
-def mklist(obj):
+def mklist(obj: list[dict[str, str] | Any]) -> list[dict[str, str] | Any]:
     """Transform None and non-lists into lists"""
     if isinstance(obj, list):
         value = obj
@@ -29,7 +35,9 @@ def mklist(obj):
     return value
 
 
-def read_json(path):
+def read_json(
+    path: str,
+) -> dict[str, Any]:
     try:
         with core.open_read(path) as f:
             return mkdict(json.load(f))
@@ -37,7 +45,11 @@ def read_json(path):
         return {}
 
 
-def write_json(values, path, sync: bool = True) -> bool:
+def write_json(
+    values: dict[str, Any],
+    path: str,
+    sync: bool = True,
+) -> bool:
     """Write the specified values dict to a JSON file at the specified path"""
     try:
         parent = os.path.dirname(path)
@@ -53,7 +65,7 @@ def write_json(values, path, sync: bool = True) -> bool:
     return True
 
 
-def rename_path(old, new) -> bool:
+def rename_path(old: str, new: str) -> bool:
     """Rename a filename. Catch exceptions and return False on error."""
     try:
         core.rename(old, new)
@@ -63,7 +75,7 @@ def rename_path(old, new) -> bool:
     return True
 
 
-def remove_path(path) -> None:
+def remove_path(path: str) -> None:
     """Remove a filename. Report errors to stderr."""
     try:
         core.remove(path)
@@ -78,9 +90,9 @@ class Settings:
     recent = property(lambda self: mklist(self.values['recent']))
     copy_formats = property(lambda self: mklist(self.values['copy_formats']))
 
-    def __init__(self, verify=git.is_git_worktree) -> None:
+    def __init__(self, verify: Callable = git.is_git_worktree) -> None:
         """Load existing settings if they exist"""
-        self.values = {
+        self.values: dict[str, Any] = {
             'bookmarks': [],
             'gui_state': {},
             'recent': [],
@@ -114,13 +126,13 @@ class Settings:
             except ValueError:
                 pass
 
-    def add_bookmark(self, path, name) -> None:
+    def add_bookmark(self, path: str, name: str) -> None:
         """Adds a bookmark to the saved settings"""
         bookmark = {'path': display.normalize_path(path), 'name': name}
         if bookmark not in self.bookmarks:
             self.bookmarks.append(bookmark)
 
-    def remove_bookmark(self, path, name) -> None:
+    def remove_bookmark(self, path: str, name: str) -> None:
         """Remove a bookmark"""
         bookmark = {'path': display.normalize_path(path), 'name': name}
         try:
@@ -128,10 +140,10 @@ class Settings:
         except ValueError:
             pass
 
-    def rename_bookmark(self, path, name, new_name):
+    def rename_bookmark(self, path: str, name: str, new_name: str) -> bool:
         return rename_entry(self.bookmarks, path, name, new_name)
 
-    def add_recent(self, path, max_recent) -> None:
+    def add_recent(self, path: str, max_recent: int) -> None:
         normalize = display.normalize_path
         path = normalize(path)
         try:
@@ -146,7 +158,7 @@ class Settings:
         if len(self.recent) > max_recent:
             self.recent.pop()
 
-    def remove_recent(self, path) -> None:
+    def remove_recent(self, path: str) -> None:
         """Removes an item from the recent items list"""
         normalize = display.normalize_path
         path = normalize(path)
@@ -161,10 +173,10 @@ class Settings:
         except IndexError:
             return
 
-    def rename_recent(self, path, name, new_name):
+    def rename_recent(self, path: str, name: str, new_name: str) -> bool:
         return rename_entry(self.recent, path, name, new_name)
 
-    def path(self):
+    def path(self) -> str:
         return self.config_path
 
     def save(self, sync: bool = True) -> None:
@@ -195,7 +207,7 @@ class Settings:
         if core.exists(path_bak):
             remove_path(path_bak)
 
-    def load(self, path=None) -> bool:
+    def load(self, path: str | None = None) -> bool:
         """Load settings robustly.
 
         Attempt to load settings from the .bak file if it exists since it indicates
@@ -230,7 +242,7 @@ class Settings:
         return True
 
     @staticmethod
-    def read(verify=git.is_git_worktree):
+    def read(verify: Callable = git.is_git_worktree) -> Settings:
         """Load settings from disk"""
         settings = Settings(verify=verify)
         settings.load()
@@ -254,11 +266,11 @@ class Settings:
             ]
             self.values['recent'] = recent
 
-    def asdict(self, path=None):
+    def asdict(self, path: str | None = None) -> dict[str, Any]:
         if not path:
             path = self.path()
         if core.exists(path):
-            values = read_json(path)
+            values: dict[str, Any] = read_json(path)
         else:
             # We couldn't find ~/.config/git-cola, try ~/.cola
             values = {}
@@ -278,17 +290,17 @@ class Settings:
             entry['path'] = normalize(entry['path'])
         return values
 
-    def save_gui_state(self, gui, sync: bool = True) -> None:
+    def save_gui_state(self, gui: Any, sync: bool = True) -> None:
         """Saves settings for a widget"""
         name = gui.name()
         self.gui_state[name] = mkdict(gui.export_state())
         self.save(sync=sync)
 
-    def get_gui_state(self, gui):
+    def get_gui_state(self, gui: Any) -> dict[str, ConfigValue]:
         """Returns the saved state for a tool"""
         return self.get(gui.name())
 
-    def get(self, gui_name):
+    def get(self, gui_name: str) -> dict[str, ConfigValue]:
         """Returns the saved state for a tool by name"""
         try:
             state = mkdict(self.gui_state[gui_name])
@@ -296,11 +308,20 @@ class Settings:
             state = self.gui_state[gui_name] = {}
         return state
 
-    def get_value(self, name, key, default=None):
+    def get_value(
+        self, name: str, key: str, default: ConfigValue | None = None
+    ) -> ConfigValue | None:
         """Return a specific setting value for the specified tool and setting key"""
         return self.get(name).get(key, default)
 
-    def set_value(self, name, key, value, save: bool = True, sync: bool = True) -> None:
+    def set_value(
+        self,
+        name: str,
+        key: str,
+        value: ConfigValue,
+        save: bool = True,
+        sync: bool = True,
+    ) -> None:
         """Store a specific setting value for the specified tool and setting key value"""
         values = self.get(name)
         values[key] = value
@@ -308,7 +329,9 @@ class Settings:
             self.save(sync=sync)
 
 
-def rename_entry(entries, path, name, new_name):
+def rename_entry(
+    entries: list[dict[str, str]], path: str, name: str, new_name: str
+) -> bool:
     normalize = display.normalize_path
     path = normalize(path)
     entry = {'name': name, 'path': path}
@@ -349,11 +372,11 @@ class Session(Settings):
         self.values.update({'local': repo})
         self.expired = False
 
-    def session_path(self):
+    def session_path(self) -> str:
         """The session-specific session file"""
         return os.path.join(self._sessions_dir, self.session_id)
 
-    def path(self):
+    def path(self) -> str:
         base_path = super().path()
         if self.expired:
             path = base_path
@@ -363,7 +386,7 @@ class Session(Settings):
                 path = base_path
         return path
 
-    def load(self, path=None):
+    def load(self, path: str | None = None) -> bool:
         """Load the session and expire it for future loads
 
         The session should be loaded only once.  We remove the session file
@@ -397,7 +420,7 @@ class Session(Settings):
 
         return result
 
-    def update(self):
+    def update(self) -> bool:
         """Reload settings from the base settings path"""
         # This method does not expire the session.
         path = super().path()

@@ -1,5 +1,7 @@
 """Display models and utility functions"""
 import collections
+from datetime import datetime
+from typing import Any, TYPE_CHECKING
 
 try:
     import notify2
@@ -13,11 +15,13 @@ except ImportError:
 from . import resources
 from .models import prefs
 
+if TYPE_CHECKING:
+    from .app import ApplicationContext
 
 NOTIFICATIONS_AVAILABLE = bool(notify2 or notifypy)
 
 
-def shorten_paths(source_paths):
+def shorten_paths(source_paths) -> dict[Any, Any]:
     """Shorten a sequence of paths into unique strings for display"""
     result = {}
     # Start by assuming that all paths are in conflict.
@@ -56,19 +60,19 @@ def shorten_paths(source_paths):
     return result
 
 
-def path_suffix(path, count) -> str:
+def path_suffix(path: str, count: int) -> str:
     """Return `count` number of trailing path components"""
     path = normalize_path(path)
     components = path.split('/')[-count:]
     return '/'.join(components)
 
 
-def normalize_path(path) -> str:
+def normalize_path(path: str) -> str:
     """Normalize a path so that only "/" is used as a separator"""
     return path.replace('\\', '/')
 
 
-def notify(context, title, message, icon) -> None:
+def notify(context: 'ApplicationContext', title: str, message: str, icon) -> None:
     """Send a notification using notify2 xor notifypy"""
     app_name = context.app_name
     if notify2:
@@ -87,7 +91,11 @@ def notify(context, title, message, icon) -> None:
 
 
 def push_notification(
-    context, title, message, error: bool = False, allow_popups: bool = True
+    context: 'ApplicationContext',
+    title: str,
+    message: str,
+    error: bool = False,
+    allow_popups: bool = True,
 ) -> None:
     """Emit a push notification"""
     if prefs.enable_popups(context) and allow_popups:
@@ -103,6 +111,6 @@ def push_notification(
         notify(context, title, message, icon)
 
 
-def git_commit_date(datetime):
+def git_commit_date(datetime: datetime) -> str:
     """Return the datetime as a string for use by Git"""
     return datetime.strftime('%a %b %d %H:%M:%S %Y %z')

@@ -7,11 +7,13 @@ Windows monitoring uses pywin32 and the ReadDirectoryChanges function.
 
 """
 from __future__ import annotations
+
 import errno
 import os
 import os.path
 import select
 from threading import Lock
+from typing import Any, TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
@@ -24,6 +26,9 @@ from .compat import bchr
 from .i18n import N_
 from .interaction import Interaction
 from .models import prefs
+
+if TYPE_CHECKING:
+    from .app import ApplicationContext
 
 AVAILABLE = None
 
@@ -55,11 +60,13 @@ class _Monitor(QtCore.QObject):
     files_changed = Signal()
     config_changed = Signal()
 
-    def __init__(self, context, thread_class) -> None:
+    def __init__(
+        self, context: ApplicationContext, thread_class: type[_InotifyThread]
+    ) -> None:
         QtCore.QObject.__init__(self)
         self.context = context
         self._thread_class = thread_class
-        self._thread = None
+        self._thread: _InotifyThread | None = None
 
     def start(self) -> None:
         if self._thread_class is not None:
@@ -80,7 +87,7 @@ class _Monitor(QtCore.QObject):
 
 
 class _BaseThread(QtCore.QThread):
-    def __init__(self, context, monitor) -> None:
+    def __init__(self, context: ApplicationContext, monitor: _Monitor) -> None:
         QtCore.QThread.__init__(self)
         self.context = context
         #: The delay, in milliseconds, between detecting file system modification
@@ -173,7 +180,7 @@ if AVAILABLE == 'inotify':
         )
         _ADD_MASK = _TRIGGER_MASK | inotify.IN_EXCL_UNLINK | inotify.IN_ONLYDIR
 
-        def __init__(self, context, monitor) -> None:
+        def __init__(self, context: ApplicationContext, monitor: _Monitor) -> None:
             _BaseThread.__init__(self, context, monitor)
             git = context.git
             worktree = git.worktree()
@@ -265,7 +272,7 @@ if AVAILABLE == 'inotify':
             with self._lock:
                 self._refresh()
 
-        def _refresh(self):
+        def _refresh(self) -> None:
             if self._inotify_fd is None:
                 return
             context = self.context
@@ -295,7 +302,12 @@ if AVAILABLE == 'inotify':
                 else:
                     raise
 
-        def _refresh_watches(self, paths_to_watch, wd_to_path_map, path_to_wd_map):
+        def _refresh_watches(
+            self,
+            paths_to_watch: set[str],
+            wd_to_path_map: dict[int, str],
+            path_to_wd_map: dict[str, int],
+        ) -> None:
             watched_paths = set(path_to_wd_map)
             for path in watched_paths - paths_to_watch:
                 wd = path_to_wd_map.pop(path)
@@ -412,7 +424,7 @@ if AVAILABLE == 'pywin32':
             except pywintypes.error:
                 pass
 
-        def read(self):
+        def read(self) -> list[Any]:
             if self.handle is None or self.event is None:
                 return []
             if win32event.WaitForSingleObject(self.event, 0) == win32event.WAIT_TIMEOUT:
@@ -451,7 +463,7 @@ if AVAILABLE == 'pywin32':
             | win32con.FILE_NOTIFY_CHANGE_SECURITY
         )
 
-        def __init__(self, context, monitor) -> None:
+        def __init__(self, context: ApplicationContext, monitor) -> None:
             _BaseThread.__init__(self, context, monitor)
             git = context.git
             worktree = git.worktree()
@@ -556,7 +568,7 @@ if AVAILABLE == 'pywin32':
             self.wait()
 
 
-def create(context):
+def create(context: ApplicationContext) -> _Monitor:
     thread_class = None
     cfg = context.cfg
     if not cfg.get('cola.inotify', default=True):

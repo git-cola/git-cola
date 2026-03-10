@@ -1,5 +1,6 @@
 """Text wrapping and filling"""
 import re
+from typing import Any
 
 from .compat import ustr
 
@@ -67,7 +68,7 @@ class TextWrapper:
         self.wordsep_re_uni = re.compile(self.wordsep_re.pattern, re.U)
         self.wordsep_simple_re_uni = re.compile(self.wordsep_simple_re.pattern, re.U)
 
-    def _split(self, text):
+    def _split(self, text: str) -> list[Any]:
         """_split(text : string) -> [string]
 
         Split the text to wrap into indivisible chunks.  Chunks are
@@ -96,7 +97,7 @@ class TextWrapper:
         chunks = list(filter(None, chunks))  # remove empty chunks
         return chunks
 
-    def _wrap_chunks(self, chunks):
+    def _wrap_chunks(self, chunks: list[Any]) -> list[Any]:
         """_wrap_chunks(chunks : [string]) -> [string]
 
         Wrap a sequence of text chunks and return a list of lines of length
@@ -167,7 +168,7 @@ class TextWrapper:
 
         return lines
 
-    def chunklen(self, word) -> int:
+    def chunklen(self, word: str) -> int:
         """Return length of a word taking tabs into account
 
         >>> w = TextWrapper(tabwidth=8)
@@ -179,7 +180,7 @@ class TextWrapper:
 
     # -- Public interface ----------------------------------------------
 
-    def wrap(self, text):
+    def wrap(self, text: str) -> list[Any]:
         """wrap(text : string) -> [string]
 
         Reformat the single paragraph in 'text' so it fits in lines of
@@ -201,7 +202,9 @@ class TextWrapper:
         return '\n'.join(self.wrap(text))
 
 
-def word_wrap(text, tabwidth, limit, break_on_hyphens: bool = False) -> str:
+def word_wrap(
+    text: str, tabwidth: int, limit: int, break_on_hyphens: bool = False
+) -> str:
     """Wrap long lines to the specified limit"""
 
     lines = []

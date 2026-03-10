@@ -1,5 +1,8 @@
 """Miscellaneous Qt utility functions."""
+from __future__ import annotations
+
 import os
+from typing import Any, Callable, TYPE_CHECKING
 
 from qtpy import compat
 from qtpy import QtGui
@@ -18,59 +21,63 @@ from .compat import ustr
 from .models import prefs
 from .widgets import defs
 
+if TYPE_CHECKING:
+    from qtpy.QtCore import QCoreApplication
+    from qtpy.QtCore import QEvent
+    from qtpy.QtCore import QMimeData
 
 STRETCH = object()
 SKIPPED = object()
 
 
-def active_window():
+def active_window() -> QtWidgets.QWidget:
     """Return the active window for the current application"""
     return QtWidgets.QApplication.activeWindow()
 
 
-def current_palette():
+def current_palette() -> QtGui.QPalette:
     """Return the QPalette for the current application"""
     return QtWidgets.QApplication.instance().palette()
 
 
-def connect_action(action, func) -> None:
+def connect_action(action: Any, func: Callable) -> None:
     """Connect an action to a function"""
     action.triggered[bool].connect(lambda x: func(), type=Qt.QueuedConnection)
 
 
-def connect_action_bool(action, func) -> None:
+def connect_action_bool(action: QtWidgets.QAction, func: Callable) -> None:
     """Connect a triggered(bool) action to a function"""
     action.triggered[bool].connect(func, type=Qt.QueuedConnection)
 
 
-def connect_button(button, func) -> None:
+def connect_button(button: QtWidgets.QAbstractButton, func: Callable) -> None:
     """Connect a button to a function"""
     # Some versions of Qt send the `bool` argument to the clicked callback,
     # and some do not.  The lambda consumes all callback-provided arguments.
     button.clicked.connect(lambda *args, **kwargs: func(), type=Qt.QueuedConnection)
 
 
-def connect_checkbox(widget, func) -> None:
+def connect_checkbox(widget: QtWidgets.QCheckBox, func: Callable) -> None:
     """Connect a checkbox to a function taking bool"""
     widget.clicked.connect(lambda value: func(value), type=Qt.QueuedConnection)
 
 
-def connect_released(button, func) -> None:
+def connect_released(button: QtWidgets.QAbstractButton, func) -> None:
     """Connect a button to a function"""
     button.released.connect(func, type=Qt.QueuedConnection)
 
 
-def button_action(button, action) -> None:
+def button_action(button: QtWidgets.QAbstractButton, action: QtWidgets.QAction) -> None:
     """Make a button trigger an action"""
     connect_button(button, action.trigger)
 
 
-def connect_toggle(toggle, func) -> None:
+def connect_toggle(toggle: QtWidgets.QAbstractButton, func: Callable) -> None:
     """Connect a toggle button to a function"""
     toggle.toggled.connect(func, type=Qt.QueuedConnection)
 
 
-def disconnect(signal) -> None:
+def disconnect(signal: Signal) -> None:
     """Disconnect signal from all slots"""
     try:
         signal.disconnect()
@@ -78,7 +85,7 @@ def disconnect(signal) -> None:
         pass
 
 
-def get(widget, default=None):
+def get(widget: QtWidgets.QWidget, default=None):
     """Query a widget for its python value"""
     if hasattr(widget, 'isChecked'):
         value = widget.isChecked()
@@ -97,17 +104,17 @@ def get(widget, default=None):
     return value
 
 
-def hbox(margin, spacing, *items):
+def hbox(margin: int, spacing: int, *items: Any) -> QtWidgets.QBoxLayout:
     """Create an HBoxLayout with the specified sizes and items"""
     return box(QtWidgets.QHBoxLayout, margin, spacing, *items)
 
 
-def vbox(margin, spacing, *items):
+def vbox(margin: int, spacing: int, *items: Any) -> QtWidgets.QBoxLayout:
     """Create a VBoxLayout with the specified sizes and items"""
     return box(QtWidgets.QVBoxLayout, margin, spacing, *items)
 
 
-def buttongroup(*items):
+def buttongroup(*items: Any) -> QtWidgets.QButtonGroup:
     """Create a QButtonGroup for the specified items"""
     group = QtWidgets.QButtonGroup()
     for i in items:
@@ -115,12 +122,12 @@ def buttongroup(*items):
     return group
 
 
-def set_margin(layout, margin) -> None:
+def set_margin(layout, margin: int) -> None:
     """Set the content margins for a layout"""
     layout.setContentsMargins(margin, margin, margin, margin)
 
 
-def box(cls, margin, spacing, *items):
+def box(cls, margin: int, spacing: int, *items: Any) -> QtWidgets.QBoxLayout:
     """Create a QBoxLayout with the specified sizes and items"""
     stretch = STRETCH
     skipped = SKIPPED
@@ -151,7 +158,9 @@ def box(cls, margin, spacing, *items):
     return layout
 
 
-def form(margin, spacing, *widgets):
+def form(
+    margin: int, spacing: int, *widgets: QtWidgets.QWidget
+) -> QtWidgets.QFormLayout:
     """Create a QFormLayout with the specified sizes and items"""
     layout = QtWidgets.QFormLayout()
     layout.setSpacing(spacing)
@@ -168,7 +177,9 @@ def form(margin, spacing, *widgets):
     return layout
 
 
-def grid(margin, spacing, *widgets):
+def grid(
+    margin: int, spacing: int, *widgets: QtWidgets.QWidget
+) -> QtWidgets.QGridLayout:
     """Create a QGridLayout with the specified sizes and items"""
     layout = QtWidgets.QGridLayout()
     layout.setSpacing(spacing)
@@ -184,7 +195,7 @@ def grid(margin, spacing, *widgets):
     return layout
 
 
-def splitter(orientation, *widgets):
+def splitter(orientation: Qt.Horizontal | Qt.Vertical, *widgets: QtWidgets.QWidget):
     """Create a splitter over the specified widgets
 
     :param orientation: Qt.Horizontal or Qt.Vertical
@@ -207,8 +218,13 @@ def splitter(orientation, *widgets):
 
 
 def label(
-    text=None, align=None, fmt=None, selectable: bool = True, tooltip=None, parent=None
-):
+    text: str | None = None,
+    align: Qt.Alignment | Qt.AlignmentFlag | None = None,
+    fmt: Qt.TextFormat | None = None,
+    selectable: bool = True,
+    tooltip: str | None = None,
+    parent: QtWidgets.QWidget | None = None,
+) -> QtWidgets.QLabel:
     """Create a QLabel with the specified properties"""
     widget = QtWidgets.QLabel(parent)
     if align is not None:
@@ -226,8 +242,12 @@ def label(
 
 
 def plain_text_label(
-    text=None, align=None, selectable: bool = True, tooltip=None, parent=None
-):
+    text: str | None = None,
+    align: Qt.Alignment | Qt.AlignmentFlag | None = None,
+    selectable: bool = True,
+    tooltip: str | None = None,
+    parent: QtWidgets.QWidget | None = None,
+) -> QtWidgets.QLabel:
     """Create a QLabel that display plain text"""
     return label(
         text=text,
@@ -239,7 +259,13 @@ def plain_text_label(
     )
 
 
-def pixmap_label(icon, width, height=None, tooltip=None, parent=None):
+def pixmap_label(
+    icon: QtGui.QIcon,
+    width: int,
+    height: int | None = None,
+    tooltip: str | None = None,
+    parent: QtWidgets.QWidget | None = None,
+) -> QtWidgets.QLabel:
     """Create a QLabel that displays a pixmap"""
     if height is None:
         height = width
@@ -265,11 +291,11 @@ class ComboBox(QtWidgets.QComboBox):
             self.addItems(items)
             self.item_data.extend(items)
 
-    def set_index(self, idx) -> None:
+    def set_index(self, idx: int) -> None:
         idx = utils.clamp(idx, 0, self.count() - 1)
         self.setCurrentIndex(idx)
 
-    def set_index_if_enabled(self, idx) -> None:
+    def set_index_if_enabled(self, idx: int) -> None:
         """Set the current index while ignoring disabled items"""
         idx = utils.clamp(idx, 0, self.count() - 1)
         model = self.model()
@@ -285,7 +311,7 @@ class ComboBox(QtWidgets.QComboBox):
         """Return the index of the currently selected item"""
         return self.currentIndex()
 
-    def set_item_enabled(self, idx, enabled) -> None:
+    def set_item_enabled(self, idx: int, enabled: bool) -> None:
         """Enable an item on this combobox"""
         model = self.model()
         if model is None:
@@ -302,21 +328,21 @@ class ComboBox(QtWidgets.QComboBox):
                     self.setCurrentIndex(item_idx)
                     break
 
-    def add_item(self, text, data=None) -> None:
+    def add_item(self, text: str, data: Any = None) -> None:
         if data is None:
             data = text
         self.addItem(text)
         self.item_data.append(data)
 
-    def value(self):
+    def value(self) -> Any:
         """Return the current data"""
         return self.item_data[self.currentIndex()]
 
-    def values(self):
+    def values(self) -> Any:
         """Return all of the valid values"""
         return self.item_data
 
-    def set_value(self, value) -> None:
+    def set_value(self, value: Any) -> None:
         """Set the value to one of the known values"""
         if self.transform:
             value = self.transform(value)
@@ -326,16 +352,21 @@ class ComboBox(QtWidgets.QComboBox):
             index = 0
         self.setCurrentIndex(index)
 
-    def set_current_value(self, value) -> None:
+    def set_current_value(self, value: str) -> None:
         """Set the current value irrespective of the preset values"""
         self.setCurrentText(value)
 
-    def current_value(self):
+    def current_value(self) -> str:
         """Return the current value irrespective of the preset values"""
         return self.currentText()
 
 
-def combo(items, editable: bool = False, tooltip: str = '', parent=None):
+def combo(
+    items: list[Any],
+    editable: bool = False,
+    tooltip: str = '',
+    parent: QtWidgets.QWidget | None = None,
+) -> ComboBox:
     """Create a readonly (by default) combo box from a list of items"""
     combobox = ComboBox(editable=editable, items=items, parent=parent)
     if tooltip:
@@ -343,7 +374,12 @@ def combo(items, editable: bool = False, tooltip: str = '', parent=None):
     return combobox
 
 
-def combo_mapped(data, editable: bool = False, transform=None, parent=None):
+def combo_mapped(
+    data: Any,
+    editable: bool = False,
+    transform: Any = None,
+    parent: QtWidgets.QWidget | None = None,
+) -> ComboBox:
     """Create a readonly (by default) combo box from a list of items"""
     widget = ComboBox(editable=editable, transform=transform, parent=parent)
     for k, v in data:
@@ -351,7 +387,7 @@ def combo_mapped(data, editable: bool = False, transform=None, parent=None):
     return widget
 
 
-def textbrowser(text=None):
+def textbrowser(text: str | None = None) -> QtWidgets.QTextBrowser:
     """Create a QTextBrowser for the specified text"""
     widget = QtWidgets.QTextBrowser()
     widget.setOpenExternalLinks(True)
@@ -360,7 +396,7 @@ def textbrowser(text=None):
     return widget
 
 
-def link(url, text, palette=None) -> str:
+def link(url: str, text: str, palette: QtGui.QPalette | None = None) -> str:
     if palette is None:
         palette = QtGui.QPalette()
 
@@ -379,7 +415,7 @@ def link(url, text, palette=None) -> str:
     )
 
 
-def add_completer(widget, items) -> None:
+def add_completer(widget: QtWidgets.QWidget, items: list[Any]) -> None:
     """Add simple completion to a widget"""
     completer = QtWidgets.QCompleter(items, widget)
     completer.setCaseSensitivity(Qt.CaseInsensitive)
@@ -387,7 +423,12 @@ def add_completer(widget, items) -> None:
     widget.setCompleter(completer)
 
 
-def prompt(msg, title=None, text: str = '', parent=None):
+def prompt(
+    msg: str,
+    title: str | None = None,
+    text: str = '',
+    parent: QtWidgets.QWidget | None = None,
+) -> tuple[str, bool | None]:
     """Presents the user with an input widget and returns the input."""
     if title is None:
         title = msg
@@ -399,7 +440,7 @@ def prompt(msg, title=None, text: str = '', parent=None):
     return (result[0], result[1])
 
 
-def prompt_n(msg, inputs):
+def prompt_n(msg: str, inputs: Any) -> tuple[bool, list[Any]]:
     """Presents the user with N input widgets and returns the results"""
     dialog = QtWidgets.QDialog(active_window())
     dialog.setWindowModality(Qt.WindowModal)
@@ -447,23 +488,23 @@ def prompt_n(msg, inputs):
     return (success, text)
 
 
-def standard_item_type_value(value):
+def standard_item_type_value(value: Any) -> Any:
     """Return a custom UserType for use in QTreeWidgetItem.type() overrides"""
     return custom_item_type_value(QtGui.QStandardItem, value)
 
 
-def graphics_item_type_value(value):
+def graphics_item_type_value(value: Any) -> Any:
     """Return a custom UserType for use in QGraphicsItem.type() overrides"""
     return custom_item_type_value(QtWidgets.QGraphicsItem, value)
 
 
-def custom_item_type_value(cls, value):
+def custom_item_type_value(cls, value: Any) -> Any:
     """Return a custom cls.UserType for use in cls.type() overrides"""
     user_type = enum_value(cls.UserType)
     return user_type + value
 
 
-def enum_value(value):
+def enum_value(value: Any) -> Any:
     """Qt6 has enums with an inner '.value' attribute."""
     if hasattr(value, 'value'):
         value = value.value
@@ -484,7 +525,9 @@ class TreeWidgetItem(QtWidgets.QTreeWidgetItem):
         return self.TYPE
 
 
-def paths_from_indexes(model, indexes, item_type=TreeWidgetItem.TYPE, item_filter=None):
+def paths_from_indexes(
+    model: Any, indexes: list[int], item_type=TreeWidgetItem.TYPE, item_filter=None
+):
     """Return paths from a list of QStandardItemModel indexes"""
     items = [model.itemFromIndex(i) for i in indexes]
     return paths_from_items(items, item_type=item_type, item_filter=item_filter)
@@ -494,14 +537,16 @@ def _true_filter(_value) -> bool:
     return True
 
 
-def paths_from_items(items, item_type=TreeWidgetItem.TYPE, item_filter=None):
+def paths_from_items(
+    items: Any, item_type=TreeWidgetItem.TYPE, item_filter: Any = None
+):
     """Return a list of paths from a list of items"""
     if item_filter is None:
         item_filter = _true_filter
     return [i.path for i in items if i.type() == item_type and item_filter(i)]
 
 
-def tree_selection(tree_item, items):
+def tree_selection(tree_item: QtWidgets.QTreeWidgetItem, items: list[Any]) -> list[Any]:
     """Returns an array of model items that correspond to the selected
     QTreeWidgetItem children"""
     selected = []
@@ -513,7 +558,7 @@ def tree_selection(tree_item, items):
     return selected
 
 
-def tree_selection_items(tree_item):
+def tree_selection_items(tree_item: QtWidgets.QTreeWidgetItem):
     """Returns selected widget items"""
     selected = []
     for idx in range(tree_item.childCount()):
@@ -524,7 +569,7 @@ def tree_selection_items(tree_item):
     return selected
 
 
-def selected_item(list_widget, items):
+def selected_item(list_widget: QtWidgets.QListWidget, items: Any):
     """Returns the model item that corresponds to the selected QListWidget
     row."""
     widget_items = list_widget.selectedItems()
@@ -539,7 +584,7 @@ def selected_item(list_widget, items):
     return item
 
 
-def selected_items(list_widget, items):
+def selected_items(list_widget: QtWidgets.QListWidget, items: Any):
     """Returns an array of model items that correspond to the selected
     QListWidget rows."""
     item_count = len(items)
@@ -551,7 +596,7 @@ def selected_items(list_widget, items):
     return selected
 
 
-def open_file(title, directory=None):
+def open_file(title: str, directory: str | None = None) -> tuple[Any, Any]:
     """Creates an Open File dialog and returns a filename."""
     result = compat.getopenfilename(
         parent=active_window(), caption=title, basedir=directory
@@ -559,7 +604,9 @@ def open_file(title, directory=None):
     return result[0]
 
 
-def open_files(title, directory=None, filters: str = ''):
+def open_files(
+    title: str, directory: str | None = None, filters: str = ''
+) -> tuple[Any, Any]:
     """Creates an Open File dialog and returns a list of filenames."""
     result = compat.getopenfilenames(
         parent=active_window(), caption=title, basedir=directory, filters=filters
@@ -567,14 +614,14 @@ def open_files(title, directory=None, filters: str = ''):
     return result[0]
 
 
-def _enum_value(value):
+def _enum_value(value: Any) -> Any:
     """Resolve Qt6 enum values"""
     if hasattr(value, 'value'):
         return value.value
     return value
 
 
-def opendir_dialog(caption, path):
+def opendir_dialog(caption: Any, path: str) -> str:
     """Prompts for a directory path"""
     options = QtWidgets.QFileDialog.Option(
         _enum_value(QtWidgets.QFileDialog.Directory)
@@ -587,7 +634,7 @@ def opendir_dialog(caption, path):
     )
 
 
-def save_as(filename, title: str = 'Save As...'):
+def save_as(filename: str, title: str = 'Save As...') -> str:
     """Creates a Save File dialog and returns a filename."""
     result = compat.getsavefilename(
         parent=active_window(), caption=title, basedir=filename
@@ -595,7 +642,7 @@ def save_as(filename, title: str = 'Save As...'):
     return result[0]
 
 
-def existing_file(directory, title: str = 'Open File...'):
+def existing_file(directory: Any, title: str = 'Open File...') -> tuple[Any, Any]:
     """Creates an OpenSave File dialog and returns a filename."""
     result = compat.getopenfilename(
         parent=active_window(), caption=title, basedir=directory
@@ -603,7 +650,7 @@ def existing_file(directory, title: str = 'Open File...'):
     return result[0]
 
 
-def copy_path(filename, absolute: bool = True) -> None:
+def copy_path(filename: str, absolute: bool = True) -> None:
     """Copy a filename to the clipboard"""
     if filename is None:
         return
@@ -612,7 +659,7 @@ def copy_path(filename, absolute: bool = True) -> None:
     set_clipboard(filename)
 
 
-def set_clipboard(text) -> None:
+def set_clipboard(text: str) -> None:
     """Sets the copy/paste buffer to text."""
     if not text:
         return
@@ -639,7 +686,9 @@ def persist_clipboard() -> None:
     QtWidgets.QApplication.sendEvent(clipboard, event)
 
 
-def add_action_bool(widget, text, func, checked, *shortcuts):
+def add_action_bool(
+    widget: QtWidgets.QWidget, text: str, func: Callable, checked: bool, *shortcuts: Any
+) -> QtGui._QAction:
     tip = text
     action = _add_action(widget, text, tip, func, connect_action_bool, *shortcuts)
     action.setCheckable(True)
@@ -647,13 +696,21 @@ def add_action_bool(widget, text, func, checked, *shortcuts):
     return action
 
 
-def add_action(widget, text, func, *shortcuts):
+def add_action(
+    widget: QtWidgets.QWidget, text: str | None, func: Callable, *shortcuts
+) -> QtGui._QAction:
     """Create a QAction and bind it to the `func` callback and hotkeys"""
     tip = text
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
 
-def add_action_with_icon(widget, icon, text, func, *shortcuts):
+def add_action_with_icon(
+    widget: QtWidgets.QWidget,
+    icon: QtGui.QIcon,
+    text: str | None,
+    func: Callable,
+    *shortcuts: Any,
+) -> QtGui._QAction:
     """Create a QAction using a custom icon bound to the `func` callback and hotkeys"""
     tip = text
     action = _add_action(widget, text, tip, func, connect_action, *shortcuts)
@@ -661,19 +718,32 @@ def add_action_with_icon(widget, icon, text, func, *shortcuts):
     return action
 
 
-def add_action_with_tooltip(widget, text, tip, func, *shortcuts):
+def add_action_with_tooltip(
+    widget: QtWidgets.QWidget,
+    text: str | None,
+    tip: str | None,
+    func: Callable,
+    *shortcuts: Any,
+) -> QtGui._QAction:
     """Create an action with a tooltip"""
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
 
-def menu_separator(widget, text: str = ''):
+def menu_separator(widget: QtWidgets.QWidget, text: str = ''):
     """Return a QAction whose isSeparator() returns true. Used in context menus"""
     action = QtWidgets.QAction(text, widget)
     action.setSeparator(True)
     return action
 
 
-def _add_action(widget, text, tip, func, connect, *shortcuts):
+def _add_action(
+    widget: QtWidgets.QWidget,
+    text: str | None,
+    tip: str | None,
+    func: Callable,
+    connect: Any,
+    *shortcuts: Any,
+) -> QtGui._QAction:
     action = QtWidgets.QAction(text, widget)
     if hasattr(action, 'setIconVisibleInMenu'):
         action.setIconVisibleInMenu(True)
@@ -688,7 +758,7 @@ def _add_action(widget, text, tip, func, connect, *shortcuts):
     return action
 
 
-def set_selected_item(widget, idx) -> None:
+def set_selected_item(widget: QtWidgets.QWidget, idx: int) -> None:
     """Sets the currently selected item to the item at index idx."""
     if isinstance(widget, QtWidgets.QTreeWidget):
         item = widget.topLevelItem(idx)
@@ -697,7 +767,7 @@ def set_selected_item(widget, idx) -> None:
             widget.setCurrentItem(item)
 
 
-def add_items(widget, items) -> None:
+def add_items(widget: QtWidgets.QWidget, items: list[Any]) -> None:
     """Adds items to a widget."""
     for item in items:
         if item is None:
@@ -705,15 +775,15 @@ def add_items(widget, items) -> None:
         widget.addItem(item)
 
 
-def set_items(widget, items) -> None:
+def set_items(widget: QtWidgets.QWidget, items: list[Any]) -> None:
     """Clear the existing widget contents and set the new items."""
     widget.clear()
     add_items(widget, items)
 
 
 def create_treeitem(
-    filename, staged: bool = False, deleted: bool = False, untracked: bool = False
-):
+    filename: str, staged: bool = False, deleted: bool = False, untracked: bool = False
+) -> TreeWidgetItem:
     """Given a filename, return a TreeWidgetItem for a status widget
 
     "staged", "deleted, and "untracked" control which icon is used.
@@ -724,22 +794,22 @@ def create_treeitem(
     return TreeWidgetItem(filename, icon, deleted=deleted)
 
 
-def add_close_action(widget):
+def add_close_action(widget: QtWidgets.QWidget) -> QtGui._QAction:
     """Adds close action and shortcuts to a widget."""
     return add_action(widget, N_('Close...'), widget.close, hotkeys.CLOSE, hotkeys.QUIT)
 
 
-def app():
+def app() -> QCoreApplication | None:
     """Return the current application"""
     return QtWidgets.QApplication.instance()
 
 
-def desktop_size():
+def desktop_size() -> tuple[int, int]:
     rect = app().primaryScreen().geometry()
     return (rect.width(), rect.height())
 
 
-def center_on_screen(widget) -> None:
+def center_on_screen(widget: QtWidgets.QWidget) -> None:
     """Move widget to the center of the default screen"""
     width, height = desktop_size()
     center_x = width // 2
@@ -747,7 +817,9 @@ def center_on_screen(widget) -> None:
     widget.move(center_x - widget.width() // 2, center_y - widget.height() // 2)
 
 
-def default_size(parent, width, height, use_parent_height: bool = True):
+def default_size(
+    parent: QtWidgets.QWidget, width: int, height: int, use_parent_height: bool = True
+) -> tuple[int, int]:
     """Return the parent's size, or the provided defaults"""
     if parent is not None:
         width = parent.width()
@@ -756,7 +828,7 @@ def default_size(parent, width, height, use_parent_height: bool = True):
     return (width, height)
 
 
-def default_monospace_font():
+def default_monospace_font() -> QtGui.QFont:
     if utils.is_darwin():
         family = 'Monaco'
     elif utils.is_win32():
@@ -776,11 +848,11 @@ def diff_font_str(context) -> str:
     return font_str
 
 
-def diff_font(context):
+def diff_font(context) -> QtGui.QFont:
     return font_from_string(diff_font_str(context))
 
 
-def font_from_string(string):
+def font_from_string(string) -> QtGui.QFont:
     qfont = QtGui.QFont()
     qfont.fromString(string)
     return qfont
@@ -788,12 +860,12 @@ def font_from_string(string):
 
 def create_button(
     text: str = '',
-    layout=None,
-    tooltip=None,
-    icon=None,
+    layout: Any = None,
+    tooltip: str | None = None,
+    icon: QtGui.QIcon | None = None,
     enabled: bool = True,
     default: bool = False,
-):
+) -> QtWidgets.QPushButton:
     """Create a button, set its title, and add it to the parent."""
     button = QtWidgets.QPushButton()
     button.setCursor(Qt.PointingHandCursor)
@@ -814,7 +886,7 @@ def create_button(
     return button
 
 
-def tool_button():
+def tool_button() -> QtWidgets.QToolButton:
     """Create a flat border-less button"""
     button = QtWidgets.QToolButton()
     button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
@@ -848,7 +920,11 @@ def tool_button():
     return button
 
 
-def create_action_button(tooltip=None, icon=None, visible=None):
+def create_action_button(
+    tooltip: str | None = None,
+    icon: QtGui.QIcon | None = None,
+    visible: bool | None = None,
+) -> QtWidgets.QToolButton:
     """Create a small tool button for use in dock title widgets"""
     button = tool_button()
     if tooltip is not None:
@@ -861,41 +937,50 @@ def create_action_button(tooltip=None, icon=None, visible=None):
     return button
 
 
-def ok_button(text, default: bool = True, enabled: bool = True, icon=None):
+def ok_button(
+    text: str,
+    default: bool = True,
+    enabled: bool = True,
+    icon: QtGui.QIcon | None = None,
+) -> QtWidgets.QPushButton:
     if icon is None:
         icon = icons.ok()
     return create_button(text=text, icon=icon, default=default, enabled=enabled)
 
 
-def close_button(text=None, icon=None):
+def close_button(
+    text: str | None = None, icon: QtGui.QIcon | None = None
+) -> QtWidgets.QPushButton:
     text = text or N_('Close')
     icon = icons.mkicon(icon, icons.close)
     return create_button(text=text, icon=icon)
 
 
-def edit_button(enabled: bool = True, default: bool = False):
+def edit_button(enabled: bool = True, default: bool = False) -> QtWidgets.QPushButton:
     return create_button(
         text=N_('Edit'), icon=icons.edit(), enabled=enabled, default=default
     )
 
 
-def refresh_button(enabled: bool = True, default: bool = False):
+def refresh_button(
+    enabled: bool = True, default: bool = False
+) -> QtWidgets.QPushButton:
     return create_button(
         text=N_('Refresh'), icon=icons.sync(), enabled=enabled, default=default
     )
 
 
-def checkbox(text: str = '', tooltip: str = '', checked=None):
+def checkbox(text: str = '', tooltip: str = '', checked=None) -> QtWidgets.QCheckBox:
     """Create a checkbox"""
     return _checkbox(QtWidgets.QCheckBox, text, tooltip, checked)
 
 
-def radio(text: str = '', tooltip: str = '', checked=None):
+def radio(text: str = '', tooltip: str = '', checked=None) -> QtWidgets.QRadioButton:
     """Create a radio button"""
     return _checkbox(QtWidgets.QRadioButton, text, tooltip, checked)
 
 
-def _checkbox(cls, text, tooltip, checked):
+def _checkbox(cls, text: str, tooltip: str, checked: bool) -> QtWidgets.QWidget:
     """Create a widget and apply properties"""
     widget = cls()
     if text:
@@ -911,7 +996,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
     """Provides a dockwidget titlebar that can be extended with custom widgets"""
 
     def __init__(
-        self, parent, title, stretch: bool = True, hide_title: bool = False
+        self, parent, title: str, stretch: bool = True, hide_title: bool = False
     ) -> None:
         QtWidgets.QFrame.__init__(self, parent)
         self.setAutoFillBackground(True)
@@ -980,7 +1065,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
         """Refresh the floating state"""
         self.set_floating(self.parent().isFloating())
 
-    def set_floating(self, floating) -> None:
+    def set_floating(self, floating: bool) -> None:
         """Update state in response to floating state changes"""
         if floating:
             tooltip = N_('Attach')
@@ -991,14 +1076,14 @@ class DockTitleBarWidget(QtWidgets.QFrame):
 
 
 def create_dock(
-    name,
-    title,
-    parent,
+    name: str,
+    title: str,
+    parent: Any,
     stretch: bool = True,
-    widget=None,
-    func=None,
+    widget: QtWidgets.QWidget | None = None,
+    func: Callable | None = None,
     hide_title: bool = False,
-):
+) -> QtWidgets.QDockWidget:
     """Create a dock widget and set it up accordingly."""
     dock = QtWidgets.QDockWidget(parent)
     dock.setWindowTitle(title)
@@ -1016,12 +1101,12 @@ def create_dock(
     return dock
 
 
-def hide_dock(widget) -> None:
+def hide_dock(widget: QtWidgets.QWidget) -> None:
     widget.toggleViewAction().setChecked(False)
     widget.hide()
 
 
-def create_menu(title, parent):
+def create_menu(title: str, parent: Any) -> DebouncingMenu:
     """Create a menu and set its title."""
     qmenu = DebouncingMenu(title, parent)
     return qmenu
@@ -1038,19 +1123,19 @@ class DebouncingMenu(QtWidgets.QMenu):
 
     threshold_ms = 400
 
-    def __init__(self, title, parent) -> None:
+    def __init__(self, title: str, parent: Any) -> None:
         QtWidgets.QMenu.__init__(self, title, parent)
         self.created_at = utils.epoch_millis()
         if hasattr(self, 'setToolTipsVisible'):
             self.setToolTipsVisible(True)
 
-    def mouseReleaseEvent(self, event) -> None:
+    def mouseReleaseEvent(self, event: QEvent) -> None:
         threshold = DebouncingMenu.threshold_ms
         if (utils.epoch_millis() - self.created_at) > threshold:
             QtWidgets.QMenu.mouseReleaseEvent(self, event)
 
 
-def add_menu(title, parent):
+def add_menu(title: str, parent: Any) -> DebouncingMenu:
     """Create a menu and set its title."""
     menu = create_menu(title, parent)
     if hasattr(parent, 'addMenu'):
@@ -1061,13 +1146,13 @@ def add_menu(title, parent):
 
 
 def create_toolbutton(
-    text=None,
-    layout=None,
-    tooltip=None,
-    icon=None,
+    text: str | None = None,
+    layout: Any = None,
+    tooltip: str | None = None,
+    icon: QtGui.QIcon | None = None,
     icon_size=defs.default_icon,
     repeat: bool = False,
-):
+) -> QtWidgets.QToolButton:
     button = tool_button()
     if icon is not None:
         button.setIcon(icon)
@@ -1085,8 +1170,13 @@ def create_toolbutton(
 
 
 def create_toolbutton_with_callback(
-    callback, text, icon, tooltip, layout=None, repeat: bool = False
-):
+    callback: Callable,
+    text: str,
+    icon: QtGui.QIcon,
+    tooltip: str,
+    layout: Any = None,
+    repeat: bool = False,
+) -> QtWidgets.QToolButton:
     """Create a tool button that runs the specified callback"""
     toolbutton = create_toolbutton(
         text=text, layout=layout, tooltip=tooltip, icon=icon, repeat=repeat
@@ -1095,7 +1185,9 @@ def create_toolbutton_with_callback(
     return toolbutton
 
 
-def mimedata_from_paths(context, paths, include_urls: bool = True):
+def mimedata_from_paths(
+    context, paths: list[str], include_urls: bool = True
+) -> QMimeData:
     """Return mime data with a list of absolute path URLs
 
     Set `include_urls` to False to prevent URLs from being included
@@ -1146,7 +1238,7 @@ def path_mimetypes(include_urls: bool = True) -> list[str]:
 class BlockSignals:
     """Context manager for blocking a signals on a widget"""
 
-    def __init__(self, *widgets) -> None:
+    def __init__(self, *widgets: QtWidgets.QWidget) -> None:
         self.widgets = widgets
         self.values = []
 
@@ -1178,7 +1270,7 @@ class Task(QtCore.QRunnable):
         QtCore.QRunnable.__init__(self)
 
         self.channel = Channel()
-        self.result = None
+        self.result: tuple[Any, ...] | None = None
         # Python's garbage collector will try to double-free the task
         # once it's finished so disable the Qt auto-deletion.
         self.setAutoDelete(False)
@@ -1188,18 +1280,18 @@ class Task(QtCore.QRunnable):
         self.channel.result.emit(self.result)
         self.channel.finished.emit(self)
 
-    def task(self):
+    def task(self) -> tuple:
         """Perform a long-running task"""
         return ()
 
-    def connect(self, handler) -> None:
+    def connect(self, handler: Any) -> None:
         self.channel.result.connect(handler, type=Qt.QueuedConnection)
 
 
 class SimpleTask(Task):
     """Run a simple callable as a task"""
 
-    def __init__(self, func, *args, **kwargs) -> None:
+    def __init__(self, func: Callable, *args, **kwargs) -> None:
         Task.__init__(self)
 
         self.func = func
@@ -1220,7 +1312,9 @@ class RunTask(QtCore.QObject):
         self.threadpool = QtCore.QThreadPool.globalInstance()
         self.result_func = None
 
-    def start(self, task, progress=None, finish=None, result=None) -> None:
+    def start(
+        self, task: Task, progress: Any = None, finish: Any = None, result: Any = None
+    ) -> None:
         """Start the task and register a callback"""
         self.result_func = result
         if progress is not None:
@@ -1234,7 +1328,7 @@ class RunTask(QtCore.QObject):
         task.channel.finished.connect(self.finish, type=Qt.QueuedConnection)
         self.threadpool.start(task)
 
-    def finish(self, task) -> None:
+    def finish(self, task: Task) -> None:
         """The task has finished. Run the finish and result callbacks"""
         task_id = id(task)
         try:
@@ -1262,7 +1356,7 @@ class RunTask(QtCore.QObject):
         """Wait until all tasks have finished processing"""
         self.threadpool.waitForDone()
 
-    def run(self, fn, *args, **kwargs) -> None:
+    def run(self, fn: Callable, *args, **kwargs) -> None:
         """Run a task in the background"""
         task = SimpleTask(fn, *args, **kwargs)
         self.start(task)
@@ -1271,41 +1365,41 @@ class RunTask(QtCore.QObject):
 # Syntax highlighting
 
 
-def rgb(red, green, blue):
+def rgb(red: int, green: int, blue: int) -> QtGui.QColor:
     """Create a QColor from r, g, b arguments"""
     color = QtGui.QColor()
     color.setRgb(red, green, blue)
     return color
 
 
-def rgba(red, green, blue, alpha: int = 255):
+def rgba(red: int, green: int, blue: int, alpha: int = 255) -> QtGui.QColor:
     """Create a QColor with alpha from r, g, b, a arguments"""
     color = rgb(red, green, blue)
     color.setAlpha(alpha)
     return color
 
 
-def rgb_triple(args):
+def rgb_triple(args: list[int]) -> QtGui.QColor:
     """Create a QColor from an argument with an [r, g, b] triple"""
     return rgb(*args)
 
 
-def rgb_css(color) -> str:
+def rgb_css(color: QtGui.QColor) -> str:
     """Convert a QColor into an rgb #abcdef CSS string"""
     return '#%s' % rgb_hex(color)
 
 
-def rgb_hex(color) -> str:
+def rgb_hex(color: QtGui.QColor) -> str:
     """Convert a QColor into a hex aabbcc string"""
     return f'{color.red():02x}{color.green():02x}{color.blue():02x}'
 
 
-def clamp_color(value) -> int:
+def clamp_color(value: int) -> int:
     """Clamp an integer value between 0 and 255"""
     return min(255, max(value, 0))
 
 
-def css_color(value):
+def css_color(value: str) -> QtGui.QColor:
     """Convert a #abcdef hex string into a QColor"""
     if value.startswith('#'):
         value = value[1:]
@@ -1324,21 +1418,25 @@ def css_color(value):
     return rgb(red, green, blue)
 
 
-def hsl(hue, saturation, lightness):
+def hsl(hue: float, saturation: float, lightness: float) -> QtGui.QColor:
     """Return a QColor from hue, saturation and lightness"""
     return QtGui.QColor.fromHslF(
-        utils.clamp(hue, 0.0, 1.0),
-        utils.clamp(saturation, 0.0, 1.0),
-        utils.clamp(lightness, 0.0, 1.0),
+        utils.clamp(hue, 0.0, 1.0),  # type: ignore[arg-type]
+        utils.clamp(saturation, 0.0, 1.0),  # type: ignore[arg-type]
+        utils.clamp(lightness, 0.0, 1.0),  # type: ignore[arg-type]
     )
 
 
-def hsl_css(hue, saturation, lightness) -> str:
+def hsl_css(hue: float, saturation: float, lightness: float) -> str:
     """Convert HSL values to a CSS #abcdef color string"""
     return rgb_css(hsl(hue, saturation, lightness))
 
 
-def make_format(foreground=None, background=None, bold: bool = False):
+def make_format(
+    foreground: QtGui.QColor | None = None,
+    background: QtGui.QColor | None = None,
+    bold: bool = False,
+) -> QtGui.QTextCharFormat:
     """Create a QTextFormat from the provided foreground, background and bold values"""
     fmt = QtGui.QTextCharFormat()
     if foreground:
@@ -1359,12 +1457,14 @@ class ImageFormats:
         formats = [decode(x.data()) for x in formats_qba]
         self.extensions = {'.' + fmt for fmt in formats}
 
-    def ok(self, filename) -> bool:
+    def ok(self, filename: str) -> bool:
         _, ext = os.path.splitext(filename)
         return ext.lower() in self.extensions
 
 
-def set_scrollbar_values(widget, hscroll_value, vscroll_value) -> None:
+def set_scrollbar_values(
+    widget: QtWidgets.QWidget, hscroll_value: Any, vscroll_value: Any
+) -> None:
     """Set scrollbars to the specified values"""
     hscroll = widget.horizontalScrollBar()
     if hscroll and hscroll_value is not None:
@@ -1375,7 +1475,7 @@ def set_scrollbar_values(widget, hscroll_value, vscroll_value) -> None:
         vscroll.setValue(vscroll_value)
 
 
-def get_scrollbar_values(widget):
+def get_scrollbar_values(widget: QtWidgets.QWidget) -> tuple[Any, Any]:
     """Return the current (hscroll, vscroll) scrollbar values for a widget"""
     hscroll = widget.horizontalScrollBar()
     if hscroll:
@@ -1390,7 +1490,7 @@ def get_scrollbar_values(widget):
     return (hscroll_value, vscroll_value)
 
 
-def scroll_to_item(widget, item) -> None:
+def scroll_to_item(widget: QtWidgets.QWidget, item: Any) -> None:
     """Scroll to an item while retaining the horizontal scroll position"""
     hscroll = None
     hscrollbar = widget.horizontalScrollBar()
@@ -1401,27 +1501,29 @@ def scroll_to_item(widget, item) -> None:
         hscrollbar.setValue(hscroll)
 
 
-def select_item(widget, item) -> None:
+def select_item(widget: QtWidgets.QWidget, item: Any) -> None:
     """Scroll to and make a QTreeWidget item selected and current"""
     scroll_to_item(widget, item)
     widget.setCurrentItem(item)
     item.setSelected(True)
 
 
-def get_selected_values(widget, top_level_idx, values):
+def get_selected_values(
+    widget: QtWidgets.QWidget, top_level_idx: int, values: Any
+) -> list[Any]:
     """Map the selected items under the top-level item to the values list"""
     # Get the top-level item
     item = widget.topLevelItem(top_level_idx)
     return tree_selection(item, values)
 
 
-def get_selected_items(widget, idx):
+def get_selected_items(widget: QtWidgets.QWidget, idx: int) -> list[Any]:
     """Return the selected items under the top-level item"""
     item = widget.topLevelItem(idx)
     return tree_selection_items(item)
 
 
-def add_menu_actions(menu, menu_actions) -> None:
+def add_menu_actions(menu: Any, menu_actions: Any) -> None:
     """Add actions to a menu, treating None as a separator"""
     current_actions = menu.actions()
     if current_actions:
@@ -1436,7 +1538,7 @@ def add_menu_actions(menu, menu_actions) -> None:
         menu.insertAction(first_action, action)
 
 
-def fontmetrics_width(metrics, text):
+def fontmetrics_width(metrics: Any, text: str) -> int:
     """Get the width in pixels of specified text
 
     Calls QFontMetrics.horizontalAdvance() when available.
@@ -1447,13 +1549,13 @@ def fontmetrics_width(metrics, text):
     return metrics.width(text)
 
 
-def text_width(font, text: str) -> int:
+def text_width(font: QtGui.QFont, text: str) -> int:
     """Get the width in pixels for the QFont and text"""
     metrics = QtGui.QFontMetrics(font)
     return fontmetrics_width(metrics, text)
 
 
-def text_size(font, text: str) -> tuple[int, int]:
+def text_size(font: QtGui.QFont, text: str) -> tuple[int, int]:
     """Return the width in pixels for the specified text
 
     :param font_or_widget: The QFont or widget providing the font to use.

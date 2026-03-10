@@ -17,11 +17,11 @@ class Option:
     TIMES_2 = '2'
 
 
-def is_supported():
+def is_supported() -> bool:
     return version.check('qt-hidpi-scale', QtCore.__version__)
 
 
-def apply_choice(value) -> None:
+def apply_choice(value: str) -> None:
     value = compat.ustr(value)
     if value == Option.AUTO:
         # Do not override the configuration when either of these
@@ -36,7 +36,7 @@ def apply_choice(value) -> None:
         compat.setenv('QT_SCALE_FACTOR', value)
 
 
-def options():
+def options() -> tuple[tuple[str, str], ...]:
     return (
         (N_('Auto'), Option.AUTO),
         (N_('Disable'), Option.DISABLE),

@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Any
 
 try:
     import urllib2 as parse  # noqa
@@ -10,7 +11,7 @@ except ImportError:
 
 PY_VERSION = sys.version_info[:2]  # (2, 7)
 PY_VERSION_MAJOR = PY_VERSION[0]
-PY2 = PY_VERSION_MAJOR == 2
+PY2: bool = PY_VERSION_MAJOR == 2
 PY3 = PY_VERSION_MAJOR >= 3
 PY26_PLUS = PY2 and sys.version_info[1] >= 6
 WIN32 = sys.platform in {'win32', 'cygwin'}
@@ -31,7 +32,7 @@ else:
 
 if PY3:
 
-    def bchr(i):
+    def bchr(i: int) -> bytes:
         return bytes([i])
 
     int_types = (int,)
@@ -47,7 +48,7 @@ else:
 maxint = (2**31) - 1
 
 
-def setenv(key, value) -> None:
+def setenv(key: str, value: str) -> None:
     """Compatibility wrapper for setting environment variables
 
     Windows requires putenv(). Unix only requires os.environ.
@@ -58,14 +59,14 @@ def setenv(key, value) -> None:
     os.putenv(key, value)
 
 
-def unsetenv(key) -> None:
+def unsetenv(key: str) -> None:
     """Compatibility wrapper for clearing environment variables"""
     os.environ.pop(key, None)
     if hasattr(os, 'unsetenv'):
         os.unsetenv(key)
 
 
-def no_op(value):
+def no_op(value: Any) -> Any:
     """Return the value as-is"""
     return value
 

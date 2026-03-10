@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from functools import partial
 import errno
 import os
@@ -5,6 +7,7 @@ from os.path import join
 import subprocess
 import threading
 import time
+from typing import Any, TYPE_CHECKING
 
 from . import core
 from .compat import int_types
@@ -13,6 +16,8 @@ from .compat import WIN32
 from .decorators import memoize
 from .interaction import Interaction
 
+if TYPE_CHECKING:
+    from .types import TextType
 
 GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
 GIT = core.getenv('GIT_COLA_GIT', 'git')
@@ -39,11 +44,11 @@ OID_LENGTH_SHA256 = 64
 _index_lock = threading.Lock()
 
 
-def dashify(value) -> str:
+def dashify(value: str) -> str:
     return value.replace('_', '-')
 
 
-def is_git_dir(git_dir) -> bool:
+def is_git_dir(git_dir: TextType) -> bool:
     """From git's setup.c:is_git_directory()."""
     result = False
     if git_dir:
@@ -69,7 +74,7 @@ def is_git_dir(git_dir) -> bool:
     return result
 
 
-def is_git_file(filename) -> bool:
+def is_git_file(filename: TextType) -> bool:
     return core.isfile(filename) and os.path.basename(filename) == '.git'
 
 
@@ -81,7 +86,7 @@ def is_git_repository(path) -> bool:
     return is_git_worktree(path) or is_git_dir(path)
 
 
-def read_git_file(path):
+def read_git_file(path: str) -> str | None:
     """Read the path from a .git-file
 
     `None` is returned when <path> is not a .git-file.
@@ -104,7 +109,11 @@ class Paths:
     """Git repository paths of interest"""
 
     def __init__(
-        self, git_dir=None, git_file=None, worktree=None, common_dir=None
+        self,
+        git_dir: TextType | None = None,
+        git_file: TextType | None = None,
+        worktree: TextType | None = None,
+        common_dir: TextType | None = None,
     ) -> None:
         if git_dir and not is_git_dir(git_dir):
             git_dir = None
@@ -113,7 +122,7 @@ class Paths:
         self.worktree = worktree
         self.common_dir = common_dir
 
-    def get(self, path):
+    def get(self, path: core.UStr) -> Paths:
         """Search for git worktrees and bare repositories"""
         if not self.git_dir or not self.worktree:
             ceiling_dirs = set()
@@ -143,7 +152,7 @@ class Paths:
         # usage: Paths().get()
         return self
 
-    def _search_for_git(self, path, ceiling_dirs) -> None:
+    def _search_for_git(self, path: TextType, ceiling_dirs: set[Any]) -> None:
         """Search for git repositories located at path or above"""
         while path:
             if path in ceiling_dirs:
@@ -176,7 +185,7 @@ class Paths:
                 break
 
 
-def find_git_directory(path):
+def find_git_directory(path: core.UStr) -> Paths:
     """Perform Git repository discovery"""
     return Paths(
         git_dir=core.getenv('GIT_DIR'), worktree=core.getenv('GIT_WORK_TREE')
@@ -188,25 +197,25 @@ class Git:
     The Git class manages communication with the Git binary
     """
 
-    def __init__(self, worktree=None) -> None:
+    def __init__(self, worktree: None = None) -> None:
         self.paths = Paths()
 
         self._valid = {}  #: Store the result of is_git_dir() for performance
         self.set_worktree(worktree or core.getcwd())
 
-    def is_git_repository(self, path):
+    def is_git_repository(self, path) -> bool:
         return is_git_repository(path)
 
-    def getcwd(self):
+    def getcwd(self) -> TextType:
         """Return the working directory used by git()"""
         return self.paths.worktree or self.paths.git_dir
 
-    def set_worktree(self, path):
+    def set_worktree(self, path: str) -> TextType:
         path = core.decode(path)
         self.paths = find_git_directory(path)
         return self.paths.worktree
 
-    def worktree(self):
+    def worktree(self) -> TextType:
         if not self.paths.worktree:
             path = core.abspath(core.getcwd())
             self.paths = find_git_directory(path)
@@ -226,7 +235,7 @@ class Git:
 
         return valid
 
-    def git_path(self, *paths):
+    def git_path(self, *paths) -> str:
         result = None
         if self.paths.git_dir:
             result = join(self.paths.git_dir, *paths)
@@ -236,31 +245,31 @@ class Git:
                 result = common_result
         return result
 
-    def git_dir(self):
+    def git_dir(self) -> TextType:
         if not self.paths.git_dir:
             path = core.abspath(core.getcwd())
             self.paths = find_git_directory(path)
         return self.paths.git_dir
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> partial:
         git_cmd = partial(self.git, name)
         setattr(self, name, git_cmd)
         return git_cmd
 
     @staticmethod
     def execute(
-        command,
-        _add_env=None,
-        _cwd=None,
+        command: list[TextType],
+        _add_env: dict[str, str] | None = None,
+        _cwd: TextType | None = None,
         _decode: bool = True,
-        _encoding=None,
+        _encoding: str | None = None,
         _raw: bool = False,
-        _stdin=None,
-        _stderr=subprocess.PIPE,
-        _stdout=subprocess.PIPE,
+        _stdin: int | None = None,
+        _stderr: int | None = subprocess.PIPE,
+        _stdout: int | None = subprocess.PIPE,
         _readonly: bool = False,
         _no_win32_startupinfo: bool = False,
-    ):
+    ) -> tuple[int, core.UStr, core.UStr]:
         """
         Execute a command and returns its output
 
@@ -336,7 +345,7 @@ class Git:
         # Allow access to the command's status code
         return (status, out, err)
 
-    def git(self, cmd, *args, **kwargs):
+    def git(self, cmd: str, *args, **kwargs) -> tuple[int, TextType, TextType]:
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise they'll end up in args, which is bad.
         _kwargs = {'_cwd': self.getcwd()}
@@ -372,7 +381,9 @@ class Git:
         call = git_args + opt_args
         call.extend(args)
         try:
-            result = self.execute(call, **_kwargs)
+            result: tuple[int, TextType, TextType] = self.execute(
+                call, **_kwargs  # type: ignore[arg-type]
+            )
         except OSError as exc:
             if WIN32 and exc.errno == errno.ENOENT:
                 # see if git exists at all. On win32 it can fail with ENOENT in
@@ -400,7 +411,7 @@ def _git_is_installed():
     return result
 
 
-def transform_kwargs(**kwargs):
+def transform_kwargs(**kwargs) -> list[str | Any]:
     """Transform kwargs into git command line options
 
     Callers can assume the following behavior:
@@ -455,7 +466,7 @@ def _print_win32_git_hint() -> None:
     core.print_stderr("error: unable to execute 'git'" + hint)
 
 
-def create():
+def create() -> Git:
     """Create Git instances
 
     >>> git = create()
