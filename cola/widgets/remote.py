@@ -802,6 +802,7 @@ class RemoteActionDialog(standard.Dialog):
         self.progress.setMaximumHeight(
             self.action_button.height() - defs.small_margin * 2
         )
+        self.remember_action_state()
 
         # Use a thread to update in the background
         task = ActionTask(model_action, remote, kwargs)
@@ -850,6 +851,10 @@ class RemoteActionDialog(standard.Dialog):
             message += N_('Have you rebased/pulled lately?')
 
         Interaction.critical(self.windowTitle(), message=message, details=details)
+
+    def remember_action_state(self):
+        """Persist any action-specific settings prior to executing an action"""
+        return None
 
     def export_state(self):
         """Export persistent settings"""
@@ -931,6 +936,8 @@ class Fetch(RemoteActionDialog):
 class Push(RemoteActionDialog):
     """Push to remote repositories"""
 
+    UPSTREAM_STATE_KEY = 'upstream'
+
     def __init__(self, context, parent=None):
         super().__init__(context, PUSH, N_('Push'), parent=parent, icon=icons.push())
 
@@ -940,6 +947,8 @@ class Push(RemoteActionDialog):
         state['force'] = get(self.force_checkbox)
         state['prompt'] = get(self.prompt_checkbox)
         state['tags'] = get(self.tags_checkbox)
+        if prefs.remember_push_tracking_checkbox(self.context):
+            state['upstream'] = get(self.upstream_checkbox)
         return state
 
     def apply_state(self, state):
@@ -954,7 +963,27 @@ class Push(RemoteActionDialog):
         # Restore the "tags" checkbox
         tags = bool(state.get('tags', False))
         self.tags_checkbox.setChecked(tags)
+        if prefs.remember_push_tracking_checkbox(self.context):
+            settings = getattr(self.context, 'settings', None)
+            upstream = None
+            if settings is not None:
+                upstream = settings.get_value(self.name(), self.UPSTREAM_STATE_KEY)
+            if upstream is None and self.UPSTREAM_STATE_KEY in state:
+                upstream = state.get(self.UPSTREAM_STATE_KEY, False)
+            if upstream is not None:
+                self.upstream_checkbox.setChecked(bool(upstream))
         return result
+
+    def remember_action_state(self):
+        """Persist push-specific settings after user confirmation and before push"""
+        if prefs.remember_push_tracking_checkbox(self.context):
+            settings = getattr(self.context, 'settings', None)
+            if settings is not None:
+                settings.set_value(
+                    self.name(),
+                    self.UPSTREAM_STATE_KEY,
+                    get(self.upstream_checkbox),
+                )
 
 
 class Pull(RemoteActionDialog):
