@@ -931,8 +931,42 @@ class Fetch(RemoteActionDialog):
 class Push(RemoteActionDialog):
     """Push to remote repositories"""
 
+    REMEMBER_UPSTREAM_STATE_KEY = 'remember_upstream'
+    UPSTREAM_STATE_KEY = 'upstream'
+
     def __init__(self, context, parent=None):
         super().__init__(context, PUSH, N_('Push'), parent=parent, icon=icons.push())
+        self.upstream_checkbox.toggled.connect(self.upstream_checkbox_toggled)
+
+    def upstream_checkbox_toggled(self, enabled):
+        """Prompt once when enabling upstream.
+
+        Choose between one-time and remembered behavior.
+        """
+        if not enabled:
+            self._remember_upstream_checkbox = False
+            return
+        if getattr(self, '_remember_upstream_checkbox', False):
+            return
+        title = N_('Set upstream')
+        msg = N_(
+            'The upstream branch will be configured when branches are pushed.\n'
+            'This can affect all subsequent pushes.'
+        )
+        info_txt = N_(
+            'Do you want this setting to be remembered and apply to future pushes?'
+        )
+        ok_text = N_('Yes, remember this setting for future pushes')
+        cancel_text = N_('No, enable this setting just once for the next push')
+        self._remember_upstream_checkbox = Interaction.confirm(
+            title,
+            msg,
+            info_txt,
+            ok_text,
+            default=False,
+            cancel_text=cancel_text,
+            icon=icons.question(),
+        )
 
     def export_state(self):
         """Export persistent settings"""
@@ -940,6 +974,10 @@ class Push(RemoteActionDialog):
         state['force'] = get(self.force_checkbox)
         state['prompt'] = get(self.prompt_checkbox)
         state['tags'] = get(self.tags_checkbox)
+        remember_upstream = bool(getattr(self, '_remember_upstream_checkbox', False))
+        state[self.REMEMBER_UPSTREAM_STATE_KEY] = remember_upstream
+        if remember_upstream:
+            state['upstream'] = get(self.upstream_checkbox)
         return state
 
     def apply_state(self, state):
@@ -954,6 +992,13 @@ class Push(RemoteActionDialog):
         # Restore the "tags" checkbox
         tags = bool(state.get('tags', False))
         self.tags_checkbox.setChecked(tags)
+        self._remember_upstream_checkbox = bool(
+            state.get(self.REMEMBER_UPSTREAM_STATE_KEY, False)
+        )
+        if self._remember_upstream_checkbox and self.UPSTREAM_STATE_KEY in state:
+            upstream = bool(state.get(self.UPSTREAM_STATE_KEY, False))
+            with qtutils.BlockSignals(self.upstream_checkbox):
+                self.upstream_checkbox.setChecked(bool(upstream))
         return result
 
 
