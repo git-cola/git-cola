@@ -250,6 +250,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self._intraline_diff_preset: str = (
             diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
         )
+        self._intraline_diff_timing = False
 
         self._current_diff_text: str = ''
 
@@ -394,7 +395,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 
     def _log_intraline_diff_compute_result(self, diff_text, compute_ms, result):
         """Log intra-line diff compute output details."""
-        if result is None:
+        if result is None or not self._intraline_diff_timing:
             return
 
         diff_lines = diff_text.count('\n') + 1
@@ -444,6 +445,13 @@ class DiffTextEdit(VimHintedPlainTextEdit):
                 self._intraline_diff_preset, update=True
             )
         self.update_intraline_diff_spans()
+
+    def set_intraline_diff_timing(self, enabled, update=False):
+        """Store the intra-line diff timing option."""
+        self._intraline_diff_timing = enabled
+        if update and hasattr(self, 'options') and self.options is not None:
+            with qtutils.BlockSignals(self.options.intraline_diff_timing):
+                self.options.intraline_diff_timing.setChecked(enabled)
 
     def selected_diff_stripped(self):
         """Return the selected diff stripped of any diff characters"""
@@ -732,6 +740,7 @@ class Viewer(QtWidgets.QFrame):
         options.zoom_mode.currentIndexChanged.connect(lambda _: self.render())
 
         self.set_intraline_diff_preset(options.intraline_diff_preset())
+        self.set_intraline_diff_timing(options.intraline_diff_timing.isChecked())
 
         self.search_action = qtutils.add_action(
             self,
@@ -794,6 +803,7 @@ class Viewer(QtWidgets.QFrame):
         state['word_wrap'] = self.options.enable_word_wrapping.isChecked()
         state['max_diff_size'] = self.options.max_diff_spinbox.value()
         state['intraline_diff_preset'] = self.options.intraline_diff_preset()
+        state['intraline_diff_timing'] = self.options.intraline_diff_timing.isChecked()
         return state
 
     def apply_state(self, state):
@@ -820,6 +830,9 @@ class Viewer(QtWidgets.QFrame):
             'intraline_diff_preset', diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
         )
         self.set_intraline_diff_preset(intraline_diff_preset, update=True)
+
+        intraline_diff_timing = bool(state.get('intraline_diff_timing', False))
+        self.set_intraline_diff_timing(intraline_diff_timing, update=True)
         return True
 
     def set_intraline_diff_preset(self, preset_id, update=False):
@@ -827,6 +840,11 @@ class Viewer(QtWidgets.QFrame):
         # only the text editor
         if hasattr(self, 'text') and self.text is not None:
             self.text.set_intraline_diff_preset(preset_id, update=update)
+
+    def set_intraline_diff_timing(self, enabled, update=False):
+        """(Viewer) Forward the intra-line diff timing option to the editor."""
+        if hasattr(self, 'text') and self.text is not None:
+            self.text.set_intraline_diff_timing(enabled, update=update)
 
     def set_diff(self, diff):
         """Update the diffstat display in reponse to the new diff"""
@@ -1132,6 +1150,12 @@ class Options(QtWidgets.QWidget):
         self.intraline_diff_preset_combo.currentIndexChanged.connect(
             lambda _: self.intraline_diff_preset_changed()
         )
+        self.intraline_diff_timing = qtutils.add_action_bool(
+            self,
+            N_('Enable intra-line diff timing log'),
+            self.set_intraline_diff_timing,
+            False,
+        )
         # ^^^ intra-line diff widget end
 
         self.menu = menu = qtutils.create_menu(N_('Diff Options'), self.options)
@@ -1147,6 +1171,8 @@ class Options(QtWidgets.QWidget):
         menu.addAction(self.show_filenames)
         menu.addSeparator()
         menu.addAction(self.enable_word_wrapping)
+        menu.addSeparator()
+        menu.addAction(self.intraline_diff_timing)
 
         # Layouts
         layout = qtutils.hbox(
@@ -1219,6 +1245,10 @@ class Options(QtWidgets.QWidget):
         """Return the currently selected intra-line diff preset identifier."""
         preset_id = self.intraline_diff_preset_combo.value()
         return diff_intraline.sanitize_intraline_diff_preset_id(preset_id)
+
+    def set_intraline_diff_timing(self, enabled, update=False):
+        """Enable / disable intra-line diff timing logs."""
+        self.widget.set_intraline_diff_timing(enabled, update=update)
 
     # ^^^ intra-line diff preset end ^^^
 
@@ -1941,6 +1971,10 @@ class CommitDiffWidget(QtWidgets.QWidget):
     def set_word_wrapping(self, enabled, update=False):
         """Enable and disable word wrapping"""
         self.diff.set_word_wrapping(enabled, update=update)
+
+    def set_intraline_diff_timing(self, enabled, update=False):
+        """Enable and disable intra-line diff timing logs."""
+        self.diff.set_intraline_diff_timing(enabled, update=update)
 
     def set_options(self, options):
         """Register an options widget"""
