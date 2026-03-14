@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any, Callable, TYPE_CHECKING, TypeAlias, Union
 
 from qtpy import compat
 from qtpy import QtGui
@@ -1382,6 +1382,27 @@ def rgba(red: int, green: int, blue: int, alpha: int = 255) -> QtGui.QColor:
 def rgb_triple(args: list[int]) -> QtGui.QColor:
     """Create a QColor from an argument with an [r, g, b] triple"""
     return rgb(*args)
+
+
+ColorLike: TypeAlias = Union[
+    QtGui.QColor,
+    str,
+    tuple[int, int, int],
+    tuple[int, int, int, int],
+]
+
+
+def rgba_qcolor(value: ColorLike) -> QtGui.QColor:
+    """Normalize ColorLike input to QColor."""
+    if isinstance(value, QtGui.QColor):
+        return QtGui.QColor(value)
+    if isinstance(value, str):
+        return QtGui.QColor(value)
+    if len(value) == 3:
+        red, green, blue = value
+        return QtGui.QColor(int(red), int(green), int(blue))
+    red, green, blue, alpha = value
+    return QtGui.QColor(int(red), int(green), int(blue), int(alpha))
 
 
 def rgb_css(color: QtGui.QColor) -> str:
