@@ -1,6 +1,8 @@
 from functools import partial
 import os
 import re
+import time
+from typing import Optional
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -22,6 +24,7 @@ from .. import gitcmds
 from .. import gravatar
 from .. import hotkeys
 from .. import icons
+from .. import intraline_diff
 from .. import utils
 from .. import qtutils
 from .text import TextDecorator
@@ -30,8 +33,11 @@ from .text import PlainTextLabel
 from .text import TextSearchWidget
 from .text import label_selection_timer
 from . import defs
+from . import diff_intraline
 from . import standard
 from . import imageview
+
+ENABLE_INTRALINE_DIFF = True
 
 
 class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
@@ -56,6 +62,9 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         self.whitespace = whitespace
         self.enabled = True
         self.is_commit = is_commit
+
+        # block_number -> per-line intra-line spans
+        self._intraline_spans: intraline_diff.SpansByLineIndex = {}
 
         QPalette = QtGui.QPalette
         cfg = context.cfg
@@ -86,7 +95,22 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
             foreground=self.color_text, background=self.color_remove
         )
         self.bad_whitespace_fmt = qtutils.make_format(background=Qt.red)
+
+        # for intra-line diff style
+        self.intraline_styles: diff_intraline.IntralineStyleSet = (
+            diff_intraline.IntralineStyleSet.from_base_colors(
+                text_foreground=self.color_text,
+                added_line_background=self.color_add,
+                removed_line_background=self.color_remove,
+            )
+        )
+
         self.setCurrentBlockState(self.INITIAL_STATE)
+
+    def _set_intraline_spans(self, spans):
+        """Set the per-line spans used for intra-line diff highlighting."""
+        self._intraline_spans = spans or {}
+        self.rehighlight()
 
     def set_enabled(self, enabled):
         self.enabled = enabled
@@ -157,30 +181,55 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
         return state, formats
 
-    def get_formats_for_diff_text(self, state, text):
-        """Return (state, [(start, end fmt), ...]) for highlighting diff text"""
-        formats = []
+    def get_formats_for_diff_text(
+        self, state: int, text: str
+    ) -> tuple[int, list[tuple[int, int, QtGui.QTextCharFormat]]]:
+        """Return (state, [(start, length, fmt), ...]) for highlighting diff text.
+
+        Format order:
+        - base diff background
+        - bad whitespace highlight
+        - intra-line highlight spans
+        """
+        formats: list[tuple[int, int, QtGui.QTextCharFormat]] = []
+
+        # Qt text positions need UTF-16 indexes, so conversion is required.
+        # cf. qtutils.qt_index_from_codepoint()
+        len_qt = qtutils.qt_index_from_codepoint(text, len(text))
 
         if self.DIFF_FILE_HEADER_START_RGX.match(text):
             state = self.DIFF_FILE_HEADER_STATE
-            formats.append((0, len(text), self.diff_header_fmt))
+            formats.append((0, len_qt, self.diff_header_fmt))
 
         elif self.DIFF_HUNK_HEADER_RGX.match(text):
-            formats.append((0, len(text), self.bold_diff_header_fmt))
+            formats.append((0, len_qt, self.bold_diff_header_fmt))
 
         elif text.startswith('-'):
             if text == '-- ':
                 state = self.END_STATE
             else:
-                formats.append((0, len(text), self.diff_remove_fmt))
+                formats.append((0, len_qt, self.diff_remove_fmt))
 
         elif text.startswith('+'):
-            formats.append((0, len(text), self.diff_add_fmt))
+            formats.append((0, len_qt, self.diff_add_fmt))
             if self.whitespace:
                 match = self.BAD_WHITESPACE_RGX.search(text)
                 if match is not None:
                     start = match.start()
-                    formats.append((start, len(text) - start, self.bad_whitespace_fmt))
+                    start_qt = qtutils.qt_index_from_codepoint(text, start)
+                    formats.append(
+                        (start_qt, len_qt - start_qt, self.bad_whitespace_fmt)
+                    )
+
+        # Apply intra-line highlights after the base add/remove backgrounds.
+        block_number = self.currentBlock().blockNumber()
+        diff_intraline.append_intraline_highlight_formats(
+            formats,
+            block_number,
+            text,
+            self.intraline_styles,
+            self._intraline_spans.get(block_number),
+        )
 
         return state, formats
 
@@ -197,6 +246,13 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.highlighter = DiffSyntaxHighlighter(
             context, self.document(), is_commit=is_commit, whitespace=whitespace
         )
+        # Intra-line diff preset.
+        self._intraline_diff_preset: str = (
+            diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
+        )
+
+        self._current_diff_text: str = ''
+
         self.diff_lines = diffparse.DiffLines()
         if numbers:
             self.numbers = DiffLineNumbers(context, self, diff_lines=self.diff_lines)
@@ -283,7 +339,111 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             self.numbers.set_diff(diff, lines=lines)
 
         self.set_value(diff)
+        self._current_diff_text = diff
+        self.update_intraline_diff_spans()
+
         self.restore_scrollbar()
+
+    # vvv inline-diff highlight begin vvv
+    def update_intraline_diff_spans(self) -> None:
+        """(Re)compute and apply intra-line spans for the current diff text."""
+        if not self._should_enable_intraline_diff():
+            self.highlighter._set_intraline_spans({})
+            return
+
+        diff_text = self._current_diff_text
+        intraline_cfg = self._build_intraline_diff_config()
+        if intraline_cfg is None:
+            self.highlighter._set_intraline_spans({})
+            return
+
+        intraline_spans, compute_ms, result = self._try_compute_intraline_spans(
+            diff_text,
+            intraline_cfg,
+        )
+        self._log_intraline_diff_compute_result(diff_text, compute_ms, result)
+        self.highlighter._set_intraline_spans(intraline_spans)
+
+    def _should_enable_intraline_diff(self) -> bool:
+        """Return True when intra-line diff highlighting should be computed."""
+        return (
+            ENABLE_INTRALINE_DIFF
+            and self._intraline_diff_preset != 'line_only'
+            and bool(self._current_diff_text)
+        )
+
+    def _build_intraline_diff_config(
+        self,
+    ) -> Optional[intraline_diff.IntralineDiffConfig]:
+        """Build the intra-line diff config for the current preset."""
+        preset_item = diff_intraline.intraline_diff_preset_item(
+            self._intraline_diff_preset
+        )
+        if preset_item is None:
+            return None
+
+        line_pairing_strategy = preset_item.line_pairing_strategy
+        granularity = preset_item.granularity
+        if line_pairing_strategy is None or granularity is None:
+            return None
+
+        return intraline_diff.IntralineDiffConfig(
+            line_pairing_strategy=line_pairing_strategy,
+            granularity=granularity,
+        )
+
+    def _log_intraline_diff_compute_result(self, diff_text, compute_ms, result):
+        """Log intra-line diff compute output details."""
+        if result is None:
+            return
+
+        diff_lines = diff_text.count('\n') + 1
+        Interaction.log(
+            '[intraline-diff] perf compute=%.3f (diff_len=%d lines=%d state=%s)'
+            % (
+                compute_ms,
+                len(diff_text),
+                diff_lines,
+                result.state.value,
+            )
+        )
+
+    def _try_compute_intraline_spans(
+        self,
+        diff_text: str,
+        intraline_cfg: intraline_diff.IntralineDiffConfig,
+    ) -> tuple[
+        intraline_diff.SpansByLineIndex,
+        float,
+        Optional[intraline_diff.IntralineDiffResult],
+    ]:
+        """Try to compute intra-line spans and return output details."""
+        intraline_spans = {}
+        result = None
+        start = time.perf_counter()
+        try:
+            result = intraline_diff.compute_intraline_diff_spans(
+                diff_text,
+                config=intraline_cfg,
+            )
+            intraline_spans = result.spans
+        except Exception:
+            intraline_spans = {}
+        compute_ms = (time.perf_counter() - start) * 1000
+        return intraline_spans, compute_ms, result
+
+    # ^^^ inline-diff highlight end ^^^
+
+    def set_intraline_diff_preset(self, preset_id: str, update: bool = False) -> None:
+        """(DiffTextEdit) Store the editor preset and recompute intra-line highlighting."""
+        self._intraline_diff_preset = diff_intraline.sanitize_intraline_diff_preset_id(
+            preset_id
+        )
+        if update and hasattr(self, 'options') and self.options is not None:
+            self.options.set_intraline_diff_preset(
+                self._intraline_diff_preset, update=True
+            )
+        self.update_intraline_diff_spans()
 
     def selected_diff_stripped(self):
         """Return the selected diff stripped of any diff characters"""
@@ -571,6 +731,8 @@ class Viewer(QtWidgets.QFrame):
         options.image_mode.currentIndexChanged.connect(lambda _: self.render())
         options.zoom_mode.currentIndexChanged.connect(lambda _: self.render())
 
+        self.set_intraline_diff_preset(options.intraline_diff_preset())
+
         self.search_action = qtutils.add_action(
             self,
             N_('Search in Diff'),
@@ -631,6 +793,7 @@ class Viewer(QtWidgets.QFrame):
         state['image_zoom_mode'] = self.options.zoom_mode.currentIndex()
         state['word_wrap'] = self.options.enable_word_wrapping.isChecked()
         state['max_diff_size'] = self.options.max_diff_spinbox.value()
+        state['intraline_diff_preset'] = self.options.intraline_diff_preset()
         return state
 
     def apply_state(self, state):
@@ -652,7 +815,18 @@ class Viewer(QtWidgets.QFrame):
         max_diff_size = state.get('max_diff_size', 1)
         self.text.max_diff_size = max_diff_size
         self.options.max_diff_spinbox.set_value(max_diff_size)
+
+        intraline_diff_preset = state.get(
+            'intraline_diff_preset', diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
+        )
+        self.set_intraline_diff_preset(intraline_diff_preset, update=True)
         return True
+
+    def set_intraline_diff_preset(self, preset_id, update=False):
+        """(Viewer) Forward the selected text diff preset to the editor."""
+        # only the text editor
+        if hasattr(self, 'text') and self.text is not None:
+            self.text.set_intraline_diff_preset(preset_id, update=update)
 
     def set_diff(self, diff):
         """Update the diffstat display in reponse to the new diff"""
@@ -917,6 +1091,49 @@ class Options(QtWidgets.QWidget):
         zoom_modes = [factor[0] for factor in self.zoom_factors]
         self.zoom_mode = qtutils.combo(zoom_modes, parent=self)
 
+        # vvv intra-line diff widget begin vvv
+        # Intra-line diff preset widgets.
+        self.intraline_diff_widget = QtWidgets.QWidget(self)
+
+        self.intraline_diff_preset_label = QtWidgets.QLabel(
+            N_('Intra-line diff mode:'), self.intraline_diff_widget
+        )
+        intraline_diff_preset_data = [
+            (item.label, item.preset_id)
+            for item in diff_intraline.INTRALINE_DIFF_PRESET_ITEMS
+        ]
+        self.intraline_diff_preset_combo = qtutils.combo_mapped(
+            intraline_diff_preset_data, parent=self.intraline_diff_widget
+        )
+        self.intraline_diff_preset_combo.set_value(
+            diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
+        )
+        for idx, item in enumerate(diff_intraline.INTRALINE_DIFF_PRESET_ITEMS):
+            if not item.enabled:
+                self.intraline_diff_preset_combo.set_item_enabled(idx, False)
+
+        self.intraline_diff_preset_combo.setMinimumContentsLength(13)
+        try:
+            self.intraline_diff_preset_combo.setSizeAdjustPolicy(
+                QtWidgets.QComboBox.AdjustToMinimumContentsLength
+            )
+        except Exception:
+            pass
+
+        intraline_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.intraline_diff_preset_label,
+            self.intraline_diff_preset_combo,
+        )
+        self.intraline_diff_widget.setLayout(intraline_layout)
+
+        self._update_intraline_diff_preset_tooltip()
+        self.intraline_diff_preset_combo.currentIndexChanged.connect(
+            lambda _: self.intraline_diff_preset_changed()
+        )
+        # ^^^ intra-line diff widget end
+
         self.menu = menu = qtutils.create_menu(N_('Diff Options'), self.options)
         self.options.setMenu(menu)
         menu.addAction(self.max_diff_action)
@@ -936,6 +1153,7 @@ class Options(QtWidgets.QWidget):
             defs.no_margin,
             defs.button_spacing,
             self.options,
+            self.intraline_diff_widget,
             self.toggle_image_diff,
             self.filename,
             self.image_mode,
@@ -947,6 +1165,8 @@ class Options(QtWidgets.QWidget):
         # Policies
         self.image_mode.setFocusPolicy(Qt.NoFocus)
         self.zoom_mode.setFocusPolicy(Qt.NoFocus)
+        self.intraline_diff_preset_combo.setFocusPolicy(Qt.NoFocus)
+        self.intraline_diff_widget.setFocusPolicy(Qt.NoFocus)
         self.options.setFocusPolicy(Qt.NoFocus)
         self.toggle_image_diff.setFocusPolicy(Qt.NoFocus)
         self.setFocusPolicy(Qt.NoFocus)
@@ -961,10 +1181,46 @@ class Options(QtWidgets.QWidget):
         is_image = diff_type == main.Types.IMAGE
         self.image_mode.setVisible(is_image)
         self.zoom_mode.setVisible(is_image)
+        self.intraline_diff_widget.setVisible(not is_image)
         if is_image:
             self.toggle_image_diff.setIcon(icons.diff())
         else:
             self.toggle_image_diff.setIcon(icons.visualize())
+
+    # vvv intra-line diff preset begin vvv
+    def intraline_diff_preset_changed(self):
+        self._update_intraline_diff_preset_tooltip()
+        if hasattr(self.widget, 'set_intraline_diff_preset'):
+            self.widget.set_intraline_diff_preset(
+                self.intraline_diff_preset(), update=False
+            )
+
+    def set_intraline_diff_preset(self, preset_id: str, update: bool = False) -> None:
+        """(Options) Update the preset combobox from a stored identifier."""
+        if preset_id not in diff_intraline.INTRALINE_DIFF_UI_PRESET_IDS:
+            preset_id = diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
+        if update:
+            with qtutils.BlockSignals(self.intraline_diff_preset_combo):
+                self.intraline_diff_preset_combo.set_value(preset_id)
+        else:
+            self.intraline_diff_preset_combo.set_value(preset_id)
+        self._update_intraline_diff_preset_tooltip()
+
+    def _update_intraline_diff_preset_tooltip(self):
+        idx = self.intraline_diff_preset_combo.current_index()
+        try:
+            tooltip = diff_intraline.INTRALINE_DIFF_PRESET_ITEMS[idx].tooltip
+        except Exception:
+            tooltip = ''
+        self.intraline_diff_preset_combo.setToolTip(tooltip)
+        self.intraline_diff_preset_label.setToolTip(tooltip)
+
+    def intraline_diff_preset(self) -> str:
+        """Return the currently selected intra-line diff preset identifier."""
+        preset_id = self.intraline_diff_preset_combo.value()
+        return diff_intraline.sanitize_intraline_diff_preset_id(preset_id)
+
+    # ^^^ intra-line diff preset end ^^^
 
     def add_option(self, title):
         """Add a diff option which calls update_options() on change"""
