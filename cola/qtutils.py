@@ -1563,3 +1563,38 @@ def text_size(font: QtGui.QFont, text: str) -> tuple[int, int]:
     """
     metrics = QtGui.QFontMetrics(font)
     return (fontmetrics_width(metrics, text), metrics.height())
+
+
+#### Qt Text Offset Helpers ####
+#
+# Convert Python string indexes to Qt UTF-16 offsets.
+# Qt text APIs use UTF-16 offsets, so Python indexes cannot be used as-is.
+# This avoids wrong highlight positions when the text contains characters
+# such as emoji.
+# See:
+#   https://doc.qt.io/qt-6/qanystringview.html#sizes-and-sub-strings
+#   https://doc.qt.io/qt-6/qsyntaxhighlighter.html#setFormat
+def qt_index_from_codepoint(s: str, codepoint_index: int) -> int:
+    """Convert a Python codepoint index into a Qt UTF-16 index."""
+    if codepoint_index <= 0:
+        return 0
+    if codepoint_index >= len(s):
+        codepoint_index = len(s)
+    u = 0
+    for ch in s[:codepoint_index]:
+        u += 2 if ord(ch) > 0xFFFF else 1
+    return u
+
+
+def qt_span_from_codepoint(
+    s: str, start_codepoint: int, length_codepoint: int
+) -> tuple[int, int]:
+    """Convert a Python codepoint span into a Qt UTF-16 span."""
+    if length_codepoint <= 0:
+        return (0, 0)
+    if start_codepoint < 0:
+        start_codepoint = 0
+    end_codepoint = min(len(s), start_codepoint + length_codepoint)
+    start_qt = qt_index_from_codepoint(s, start_codepoint)
+    end_qt = qt_index_from_codepoint(s, end_codepoint)
+    return (start_qt, max(0, end_qt - start_qt))
