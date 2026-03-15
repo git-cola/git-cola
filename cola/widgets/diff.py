@@ -1114,7 +1114,7 @@ class Options(QtWidgets.QWidget):
         self.intraline_diff_widget = QtWidgets.QWidget(self)
 
         self.intraline_diff_preset_label = QtWidgets.QLabel(
-            N_('Intra-line diff mode:'), self.intraline_diff_widget
+            N_('Intra-line diff mode'), self.intraline_diff_widget
         )
         intraline_diff_preset_data = [
             (item.label, item.preset_id)
@@ -1156,10 +1156,13 @@ class Options(QtWidgets.QWidget):
             self.set_intraline_diff_timing,
             False,
         )
+        self.intraline_mode_action = QtWidgets.QWidgetAction(self)
+        self.intraline_mode_action.setDefaultWidget(self.intraline_diff_widget)
         # ^^^ intra-line diff widget end
 
         self.menu = menu = qtutils.create_menu(N_('Diff Options'), self.options)
         self.options.setMenu(menu)
+        menu.addAction(self.intraline_mode_action)
         menu.addAction(self.max_diff_action)
         menu.addSeparator()
         menu.addAction(self.ignore_space_at_eol)
@@ -1179,7 +1182,6 @@ class Options(QtWidgets.QWidget):
             defs.no_margin,
             defs.button_spacing,
             self.options,
-            self.intraline_diff_widget,
             self.toggle_image_diff,
             self.filename,
             self.image_mode,
@@ -1191,8 +1193,6 @@ class Options(QtWidgets.QWidget):
         # Policies
         self.image_mode.setFocusPolicy(Qt.NoFocus)
         self.zoom_mode.setFocusPolicy(Qt.NoFocus)
-        self.intraline_diff_preset_combo.setFocusPolicy(Qt.NoFocus)
-        self.intraline_diff_widget.setFocusPolicy(Qt.NoFocus)
         self.options.setFocusPolicy(Qt.NoFocus)
         self.toggle_image_diff.setFocusPolicy(Qt.NoFocus)
         self.setFocusPolicy(Qt.NoFocus)
@@ -1207,7 +1207,6 @@ class Options(QtWidgets.QWidget):
         is_image = diff_type == main.Types.IMAGE
         self.image_mode.setVisible(is_image)
         self.zoom_mode.setVisible(is_image)
-        self.intraline_diff_widget.setVisible(not is_image)
         if is_image:
             self.toggle_image_diff.setIcon(icons.diff())
         else:
