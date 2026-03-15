@@ -11,6 +11,12 @@ Breaking Changes
 
 Usability, bells and whistles
 -----------------------------
+* The diff editor can now display word and char-based intra-line diffs.
+  Use the diff editor's options menu to configure the intra-line diff mode.
+  (`#623 <https://github.com/git-cola/git-cola/issues/623>`_)
+  (`#1537 <https://github.com/git-cola/git-cola/issues/1537>`_)
+  (`#1542 <https://github.com/git-cola/git-cola/pull/1542>`_)
+
 * The number of commits shown in the "Load Previous Commit Message" and
   "Fixup Previous Commit" menus is now configurable through the Preferences
   window.  The ``cola.loadcommitmsgcount`` and ``cola.fixupcommitcount``
