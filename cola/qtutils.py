@@ -688,7 +688,7 @@ def persist_clipboard() -> None:
 
 def add_action_bool(
     widget: QtWidgets.QWidget, text: str, func: Callable, checked: bool, *shortcuts: Any
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     tip = text
     action = _add_action(widget, text, tip, func, connect_action_bool, *shortcuts)
     action.setCheckable(True)
@@ -698,7 +698,7 @@ def add_action_bool(
 
 def add_action(
     widget: QtWidgets.QWidget, text: str | None, func: Callable, *shortcuts
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     """Create a QAction and bind it to the `func` callback and hotkeys"""
     tip = text
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
@@ -710,7 +710,7 @@ def add_action_with_icon(
     text: str | None,
     func: Callable,
     *shortcuts: Any,
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     """Create a QAction using a custom icon bound to the `func` callback and hotkeys"""
     tip = text
     action = _add_action(widget, text, tip, func, connect_action, *shortcuts)
@@ -724,7 +724,7 @@ def add_action_with_tooltip(
     tip: str | None,
     func: Callable,
     *shortcuts: Any,
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     """Create an action with a tooltip"""
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
@@ -743,7 +743,7 @@ def _add_action(
     func: Callable,
     connect: Any,
     *shortcuts: Any,
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     action = QtWidgets.QAction(text, widget)
     if hasattr(action, 'setIconVisibleInMenu'):
         action.setIconVisibleInMenu(True)
@@ -794,7 +794,7 @@ def create_treeitem(
     return TreeWidgetItem(filename, icon, deleted=deleted)
 
 
-def add_close_action(widget: QtWidgets.QWidget) -> QtGui._QAction:
+def add_close_action(widget: QtWidgets.QWidget) -> QtGui.QAction:
     """Adds close action and shortcuts to a widget."""
     return add_action(widget, N_('Close...'), widget.close, hotkeys.CLOSE, hotkeys.QUIT)
 
