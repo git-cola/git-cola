@@ -440,7 +440,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self._intraline_diff_preset = diff_intraline.sanitize_intraline_diff_preset_id(
             preset_id
         )
-        if update and hasattr(self, 'options') and self.options is not None:
+        if update and getattr(self, 'options', None) is not None:
             self.options.set_intraline_diff_preset(
                 self._intraline_diff_preset, update=True
             )
