@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any, Callable, TYPE_CHECKING, TypeAlias, Union
 
 from qtpy import compat
 from qtpy import QtGui
@@ -688,7 +688,7 @@ def persist_clipboard() -> None:
 
 def add_action_bool(
     widget: QtWidgets.QWidget, text: str, func: Callable, checked: bool, *shortcuts: Any
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     tip = text
     action = _add_action(widget, text, tip, func, connect_action_bool, *shortcuts)
     action.setCheckable(True)
@@ -698,7 +698,7 @@ def add_action_bool(
 
 def add_action(
     widget: QtWidgets.QWidget, text: str | None, func: Callable, *shortcuts
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     """Create a QAction and bind it to the `func` callback and hotkeys"""
     tip = text
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
@@ -710,7 +710,7 @@ def add_action_with_icon(
     text: str | None,
     func: Callable,
     *shortcuts: Any,
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     """Create a QAction using a custom icon bound to the `func` callback and hotkeys"""
     tip = text
     action = _add_action(widget, text, tip, func, connect_action, *shortcuts)
@@ -724,7 +724,7 @@ def add_action_with_tooltip(
     tip: str | None,
     func: Callable,
     *shortcuts: Any,
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     """Create an action with a tooltip"""
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
@@ -743,7 +743,7 @@ def _add_action(
     func: Callable,
     connect: Any,
     *shortcuts: Any,
-) -> QtGui._QAction:
+) -> QtGui.QAction:
     action = QtWidgets.QAction(text, widget)
     if hasattr(action, 'setIconVisibleInMenu'):
         action.setIconVisibleInMenu(True)
@@ -794,7 +794,7 @@ def create_treeitem(
     return TreeWidgetItem(filename, icon, deleted=deleted)
 
 
-def add_close_action(widget: QtWidgets.QWidget) -> QtGui._QAction:
+def add_close_action(widget: QtWidgets.QWidget) -> QtGui.QAction:
     """Adds close action and shortcuts to a widget."""
     return add_action(widget, N_('Close...'), widget.close, hotkeys.CLOSE, hotkeys.QUIT)
 
@@ -1384,6 +1384,27 @@ def rgb_triple(args: list[int]) -> QtGui.QColor:
     return rgb(*args)
 
 
+ColorLike: TypeAlias = Union[
+    QtGui.QColor,
+    str,
+    tuple[int, int, int],
+    tuple[int, int, int, int],
+]
+
+
+def rgba_qcolor(value: ColorLike) -> QtGui.QColor:
+    """Normalize ColorLike input to QColor."""
+    if isinstance(value, QtGui.QColor):
+        return QtGui.QColor(value)
+    if isinstance(value, str):
+        return QtGui.QColor(value)
+    if len(value) == 3:
+        red, green, blue = value
+        return QtGui.QColor(int(red), int(green), int(blue))
+    red, green, blue, alpha = value
+    return QtGui.QColor(int(red), int(green), int(blue), int(alpha))
+
+
 def rgb_css(color: QtGui.QColor) -> str:
     """Convert a QColor into an rgb #abcdef CSS string"""
     return '#%s' % rgb_hex(color)
@@ -1563,3 +1584,38 @@ def text_size(font: QtGui.QFont, text: str) -> tuple[int, int]:
     """
     metrics = QtGui.QFontMetrics(font)
     return (fontmetrics_width(metrics, text), metrics.height())
+
+
+#### Qt Text Offset Helpers ####
+#
+# Convert Python string indexes to Qt UTF-16 offsets.
+# Qt text APIs use UTF-16 offsets, so Python indexes cannot be used as-is.
+# This avoids wrong highlight positions when the text contains characters
+# such as emoji.
+# See:
+#   https://doc.qt.io/qt-6/qanystringview.html#sizes-and-sub-strings
+#   https://doc.qt.io/qt-6/qsyntaxhighlighter.html#setFormat
+def qt_index_from_codepoint(s: str, codepoint_index: int) -> int:
+    """Convert a Python codepoint index into a Qt UTF-16 index."""
+    if codepoint_index <= 0:
+        return 0
+    if codepoint_index >= len(s):
+        codepoint_index = len(s)
+    u = 0
+    for ch in s[:codepoint_index]:
+        u += 2 if ord(ch) > 0xFFFF else 1
+    return u
+
+
+def qt_span_from_codepoint(
+    s: str, start_codepoint: int, length_codepoint: int
+) -> tuple[int, int]:
+    """Convert a Python codepoint span into a Qt UTF-16 span."""
+    if length_codepoint <= 0:
+        return (0, 0)
+    if start_codepoint < 0:
+        start_codepoint = 0
+    end_codepoint = min(len(s), start_codepoint + length_codepoint)
+    start_qt = qt_index_from_codepoint(s, start_codepoint)
+    end_qt = qt_index_from_codepoint(s, end_codepoint)
+    return (start_qt, max(0, end_qt - start_qt))
