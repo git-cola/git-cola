@@ -57,7 +57,7 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
     )
     BAD_WHITESPACE_RGX = re.compile(r'\s+$')
 
-    def __init__(self, context, doc, whitespace=True, is_commit=False):
+    def __init__(self, context, doc, whitespace=True, is_commit=False) -> None:
         QtGui.QSyntaxHighlighter.__init__(self, doc)
         self.whitespace = whitespace
         self.enabled = True
@@ -239,7 +239,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 
     def __init__(
         self, context, parent, is_commit=False, whitespace=True, numbers=False
-    ):
+    ) -> None:
         super().__init__(context, '', parent=parent)
         # Diff/patch syntax highlighter
         self.max_diff_size = 0
