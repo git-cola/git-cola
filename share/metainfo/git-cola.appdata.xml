@@ -22,6 +22,7 @@
   <url type="bugtracker">https://github.com/git-cola/git-cola/issues</url>
   <url type="vcs-browser">https://gitlab.com/git-cola/git-cola</url>
   <releases>
+    <release version="4.18.1" date="2026-03-15" />
     <release version="4.18.0" date="2026-03-15" />
     <release version="4.17.1" date="2026-01-30" />
     <release version="4.17.0" date="2025-12-30" />

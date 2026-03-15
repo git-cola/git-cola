@@ -112,7 +112,7 @@ cola = [
 ]
 
 [tool.setuptools_scm]
-fallback_version = "4.18.0"
+fallback_version = "4.18.1"
 
 [tool.mypy]
 python_version = "3.9"
