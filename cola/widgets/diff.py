@@ -1971,6 +1971,10 @@ class CommitDiffWidget(QtWidgets.QWidget):
         """Enable and disable word wrapping"""
         self.diff.set_word_wrapping(enabled, update=update)
 
+    def set_intraline_diff_preset(self, preset, update=False):
+        """Enable and disable intra-line diff timing logs."""
+        self.diff.set_intraline_diff_preset(preset, update=update)
+
     def set_intraline_diff_timing(self, enabled, update=False):
         """Enable and disable intra-line diff timing logs."""
         self.diff.set_intraline_diff_timing(enabled, update=update)

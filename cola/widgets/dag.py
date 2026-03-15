@@ -32,6 +32,7 @@ from . import createbranch
 from . import createtag
 from . import defs
 from . import diff
+from . import diff_intraline
 from . import filelist
 from . import standard
 from . import finder
@@ -1169,6 +1170,10 @@ class GitDAG(standard.MainWindow):
         state['display_status'] = self.params.display_status
         state['log'] = self.treewidget.export_state()
         state['word_wrap'] = self.diffwidget.options.enable_word_wrapping.isChecked()
+        state['intraline_diff_preset'] = self.diffwidget.options.intraline_diff_preset()
+        state['intraline_diff_timing'] = (
+            self.diffwidget.options.intraline_diff_timing.isChecked()
+        )
         return state
 
     def apply_state(self, state):
@@ -1198,7 +1203,24 @@ class GitDAG(standard.MainWindow):
         if log_state:
             self.treewidget.apply_state(log_state)
 
+        intraline_diff_preset = state.get(
+            'intraline_diff_preset', diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
+        )
+        self.diffwidget.set_intraline_diff_preset(intraline_diff_preset, update=True)
+
+        intraline_diff_timing = bool(state.get('intraline_diff_timing', False))
+        self.set_intraline_diff_timing(intraline_diff_timing, update=True)
+
         return result
+
+    def set_intraline_diff_preset(self, preset_id, update=False):
+        """Forward the selected text diff preset to the editor."""
+        # only the text editor
+        self.diffwidget.set_intraline_diff_preset(preset_id, update=update)
+
+    def set_intraline_diff_timing(self, enabled, update=False):
+        """Forward the intra-line diff timing option to the editor."""
+        self.diffwidget.set_intraline_diff_timing(enabled, update=update)
 
     def model_updated(self):
         """Refresh the view when the model is updated"""

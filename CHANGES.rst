@@ -1,3 +1,13 @@
+.. _v4.18.1:
+
+v4.18.1
+=======
+
+Usability, bells and whistles
+-----------------------------
+* The DAG viewer's inline diff settings can now be edited and restored.
+
+
 .. _v4.18.0:
 
 v4.18.0
