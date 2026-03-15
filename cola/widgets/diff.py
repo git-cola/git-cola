@@ -107,7 +107,7 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
 
         self.setCurrentBlockState(self.INITIAL_STATE)
 
-    def _set_intraline_spans(self, spans):
+    def set_intraline_spans(self, spans):
         """Set the per-line spans used for intra-line diff highlighting."""
         self._intraline_spans = spans or {}
         self.rehighlight()
@@ -349,13 +349,13 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     def update_intraline_diff_spans(self) -> None:
         """(Re)compute and apply intra-line spans for the current diff text."""
         if not self._should_enable_intraline_diff():
-            self.highlighter._set_intraline_spans({})
+            self.highlighter.set_intraline_spans({})
             return
 
         diff_text = self._current_diff_text
         intraline_cfg = self._build_intraline_diff_config()
         if intraline_cfg is None:
-            self.highlighter._set_intraline_spans({})
+            self.highlighter.set_intraline_spans({})
             return
 
         intraline_spans, compute_ms, result = self._try_compute_intraline_spans(
@@ -363,7 +363,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
             intraline_cfg,
         )
         self._log_intraline_diff_compute_result(diff_text, compute_ms, result)
-        self.highlighter._set_intraline_spans(intraline_spans)
+        self.highlighter.set_intraline_spans(intraline_spans)
 
     def _should_enable_intraline_diff(self) -> bool:
         """Return True when intra-line diff highlighting should be computed."""
