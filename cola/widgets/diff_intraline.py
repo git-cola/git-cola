@@ -9,10 +9,9 @@ Includes:
 Note:
 `widgets.diff` may import this module, but this module should not import
 `widgets.diff`.
+
 """
-
 from __future__ import annotations
-
 from typing import NamedTuple
 
 from qtpy import QtGui

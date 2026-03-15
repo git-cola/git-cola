@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from binascii import unhexlify
 import collections
 from collections.abc import Iterator

@@ -1,6 +1,5 @@
 """Git commands and queries for Git"""
 from __future__ import annotations
-
 from collections.abc import Iterator
 import json
 import os

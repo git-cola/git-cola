@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import sys
 import re
 from argparse import ArgumentParser, Namespace

@@ -1,6 +1,5 @@
 """Functions for finding cola resources"""
 from __future__ import annotations
-
 import os
 import sys
 import webbrowser

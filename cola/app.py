@@ -1,6 +1,5 @@
 """Provides the main() routine and ColaApplication"""
 from __future__ import annotations
-
 from functools import partial
 import argparse
 import os

@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import time
 import hashlib
 from typing import Any, TYPE_CHECKING

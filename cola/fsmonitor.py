@@ -7,7 +7,6 @@ Windows monitoring uses pywin32 and the ReadDirectoryChanges function.
 
 """
 from __future__ import annotations
-
 import errno
 import os
 import os.path

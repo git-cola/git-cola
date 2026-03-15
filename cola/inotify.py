@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from collections.abc import Iterator
 import ctypes
 import ctypes.util

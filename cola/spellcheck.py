@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import collections
 from collections.abc import Iterator
 import glob

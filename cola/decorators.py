@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import errno
 import functools
 from typing import Any, Callable, TYPE_CHECKING

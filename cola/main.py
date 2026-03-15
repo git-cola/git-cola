@@ -1,6 +1,5 @@
 """Launcher and command line interface to git-cola"""
 from __future__ import annotations
-
 import argparse
 import sys
 from typing import Callable, TYPE_CHECKING
