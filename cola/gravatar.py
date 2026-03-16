@@ -3,6 +3,7 @@ import time
 import hashlib
 from typing import Any, TYPE_CHECKING
 
+import qtpy
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
@@ -112,7 +113,12 @@ class GravatarLabel(QtWidgets.QLabel):
 
     def network_finished(self, reply: Any) -> None:
         email = self.email
-        location = core.decode(bytes(reply.rawHeader('Location'))).strip()
+        if qtpy.QT6:
+            header = 'Location'  # type: ignore
+        else:
+            # Qt5 requires byte strings.
+            header = b'Location'  # type: ignore
+        location = core.decode(bytes(reply.rawHeader(header))).strip()
         if location:
             request_location = Gravatar.url_for_email(self.email, self.imgsize)
             relocated = location != request_location
