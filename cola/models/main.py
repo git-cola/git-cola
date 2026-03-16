@@ -114,6 +114,8 @@ class MainModel(QtCore.QObject):
         self.commitmsg = ''  # current commit message
         self._auto_commitmsg = ''  # e.g. .git/MERGE_MSG
         self._prev_commitmsg = ''  # saved here when clobbered by .git/MERGE_MSG
+        self._cola_commitmsg = ''  # last content loaded from .git/GIT_COLA_MSG
+        self._cola_commitmsg_mtime: float | None = None  # .git/GIT_COLA_MSG mtime on last read
         self.object_format = 'sha1'  # repository object format variables.
         self.oid_len = git.OID_LENGTH_SHA1
         self.empty_tree_oid = git.EMPTY_TREE_SHA1
@@ -447,6 +449,36 @@ class MainModel(QtCore.QObject):
         elif self._auto_commitmsg and self._auto_commitmsg == self.commitmsg:
             self._auto_commitmsg = ''
             self.set_commitmsg(self._prev_commitmsg)
+
+        elif not self._auto_commitmsg:
+            self._update_cola_commitmsg()
+
+    def _update_cola_commitmsg(self) -> None:
+        """Reload the commit message when .git/GIT_COLA_MSG changes on disk
+
+        Updates the commit message only when the user has not modified the
+        previously loaded content, so manual edits are never clobbered.
+        """
+        path = gitcmds.commit_message_path(self.context)
+        if not path:
+            self._cola_commitmsg_mtime = None
+            return
+        try:
+            mtime = os.path.getmtime(path)
+        except OSError:
+            return
+        if mtime == self._cola_commitmsg_mtime:
+            return
+        msg = core.read(path)
+        self._cola_commitmsg_mtime = mtime
+        if msg != self._cola_commitmsg:
+            # needs stripping, as the empty commitmsg is saved as \n during close but initialized as ''
+            if (
+                not self.commitmsg.strip()
+                or self.commitmsg.strip() == self._cola_commitmsg.strip()
+            ):
+                self.set_commitmsg(msg)
+            self._cola_commitmsg = msg
 
     def update_submodules_list(self) -> None:
         self.submodules_list = gitcmds.list_submodule(self.context)
