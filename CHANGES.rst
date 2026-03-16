@@ -1,3 +1,14 @@
+.. _v4.18.2:
+
+v4.18.2
+=======
+
+Fixes
+-----
+* Git DAG support for PyQt5 was restored.
+  (`#1564 <https://github.com/git-cola/git-cola/issues/1564>`_)
+
+
 .. _v4.18.1:
 
 v4.18.1
