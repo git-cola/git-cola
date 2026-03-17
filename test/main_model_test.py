@@ -261,7 +261,8 @@ def test_remote_args_rebase_only(mock_context):
 def test_cola_msg_updated_when_not_manually_edited(app_context):
     """GIT_COLA_MSG is loaded into the commit message on refresh
 
-    GIT_COLA_MSG update is applied when the user has not edited the message"""
+    GIT_COLA_MSG update is applied when the user has not edited the message.
+    """
     msg_path = app_context.git.git_path('GIT_COLA_MSG')
     helper.write_file(msg_path, 'first message\n')
     app_context.model._update_commitmsg()
@@ -302,7 +303,8 @@ def test_cola_msg_loaded_after_merge_clears(app_context):
       - merge sets auto-msg
       - merge file removed
       - _prev_commitmsg (empty) restored
-      - next refresh loads GIT_COLA_MSG replacing empty commitmsg."""
+      - next refresh loads GIT_COLA_MSG replacing empty commitmsg.
+    """
     msg_path = app_context.git.git_path('GIT_COLA_MSG')
     merge_path = app_context.git.git_path('MERGE_MSG')
     helper.write_file(msg_path, 'agent message\n')
