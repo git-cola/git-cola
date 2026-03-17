@@ -323,6 +323,10 @@ class SettingsFormWidget(FormWidget):
         self.resize_browser_columns = qtutils.checkbox(checked=False)
         tooltip = N_('Emit notifications when commits are pushed.')
         self.notifyonpush = qtutils.checkbox(checked=False, tooltip=tooltip)
+        tooltip = N_('Remember the last "Set upstream" checkbox value in Push dialog')
+        self.remember_push_tracking_checkbox = qtutils.checkbox(
+            checked=False, tooltip=tooltip
+        )
 
         tooltip = N_('Use "aspell" as the spelling dictionary source')
         self.aspell_enabled = qtutils.checkbox(tooltip=tooltip)
@@ -369,6 +373,10 @@ class SettingsFormWidget(FormWidget):
             N_('Check Published Commits when Amending'), self.check_published_commits
         )
         self.add_row(N_('Notify on Push'), self.notifyonpush)
+        self.add_row(
+            N_('Remember "Set upstream tracking" checkbox in Push dialog'),
+            self.remember_push_tracking_checkbox,
+        )
         self.add_row(N_('Verbosity Level'), self.verbosity)
 
         self.add_row('', QtWidgets.QLabel())
@@ -426,6 +434,10 @@ class SettingsFormWidget(FormWidget):
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
             prefs.MOUSE_ZOOM: (self.mouse_zoom, Defaults.mouse_zoom),
             prefs.NOTIFY_ON_PUSH: (self.notifyonpush, Defaults.notifyonpush),
+            prefs.REMEMBER_PUSH_TRACKING_CHECKBOX: (
+                self.remember_push_tracking_checkbox,
+                Defaults.remember_push_tracking_checkbox,
+            ),
             prefs.VERBOSITY: (self.verbosity, Defaults.verbosity),
         })
 
