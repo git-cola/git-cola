@@ -131,6 +131,7 @@ Thanks
 * Jakub Klos
 * João Matos
 * Jan @hanksoff
+* Jan Kurella
 * Jan Šilhan
 * Jan Tumanov
 * jakubklos77
