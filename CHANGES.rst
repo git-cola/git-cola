@@ -1,3 +1,15 @@
+.. _v4.19.0:
+
+v4.19.0
+=======
+
+* Git Cola now detects changes to the `.git/GIT_COLA_MSG` file and will
+  reload its contents on ``Ctrl + R`` refresh when the file is edited
+  while the app is running.
+  (`#1559 <https://github.com/git-cola/git-cola/issues/1559>`_)
+  (`#1565 <https://github.com/git-cola/git-cola/pull/1565>`_)
+
+
 .. _v4.18.2:
 
 v4.18.2
