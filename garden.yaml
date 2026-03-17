@@ -193,6 +193,7 @@ trees:
       kisaragi-hiu: "${gh-https}/kisaragi-hiu/git-cola.git"
       kneirinck: "${gh-https}/kneirinck/git-cola.git"
       kt-devoss: "${gh-https}/kt-devoss/_oss_contrib_git-cola.git"
+      kurellajunior: "${gh-https}/kurellajunior/git-cola.git"
       kurtmckee: "${gh-https}/kurtmckee/git-cola.git"
       laerreal: "${gh-https}/laerreal/git-cola.git"
       lah7: "${gh-https}/lah7/git-cola.git"
