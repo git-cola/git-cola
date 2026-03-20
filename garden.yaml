@@ -63,7 +63,6 @@ trees:
         - check/fmt
         - check/pyupgrade
         - check/mypy
-      check/fmt: garden fmt -- --check
       check/pyupgrade: |
         ${activate}
         if type pyupgrade >/dev/null 2>&1
@@ -73,10 +72,69 @@ trees:
       check/mypy: |
         ${activate}
         python3 -m mypy --config-file pyproject.toml bin cola
-      fmt: |
+
+      fmt>:
+        - fix/isort-format
+        - fix/cercis-format
+        #- fix/ruff-isort
+        #- fix/ruff-format
+      check/fmt>:
+        # isort and cercis produce slightly different results,
+        # so both cannot be satisfied at the same time
+        - check/isort-isort
+        - check/cercis-format
+        #- check/ruff-isort
+        #- check/ruff-format
+
+      # helper targets for formatting and import-sorting
+      fix/cercis-format: |
         ${activate}
         cercis --version
+        echo cercis "$@" bin bin/git-* cola test extras/sphinxtogithub
         cercis "$@" bin bin/git-* cola test extras/sphinxtogithub
+      check/cercis-format: |
+        # check/cercis-fmt
+        garden fix/cercis-format -- --check
+
+      fix/isort-isort: |
+        garden exec-isort --
+      check/isort-isort: |
+        garden exec-isort -- --check
+
+      fix/ruff-isort: |
+        garden exec-ruff -- check --select I --fix
+      check/ruff-isort: |
+        garden exec-ruff -- check --select I
+
+      fix/ruff-format: |
+        garden exec-ruff -- format
+      check/ruff-format: |
+        garden exec-ruff -- format --check
+
+      fix/black-format: |
+        garden exec-black --
+      check/black-format: |
+        garden exec-black -- --check
+
+      exec-ruff: |
+        ${activate}
+        which ruff
+        ruff --version
+        echo ruff "$@" cola test
+        ruff "$@" cola test
+      exec-isort: |
+        ${activate}
+        which isort
+        isort --version
+        echo isort "$@" --force-single-line-imports cola test
+        isort "$@" --force-single-line-imports cola test
+      exec-black: |
+        ${activate}
+        which black
+        black --version
+        echo black "$@" cola test
+        black "$@" cola test
+
       html: garden html ${GARDEN_CMD_VERBOSE} docs
       install: |
         ${activate}
