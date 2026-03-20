@@ -266,6 +266,7 @@ Thanks
 * Rustam Safin
 * Sabri Ünal
 * Samsul Ma'arif
+* Sasha @legasik21
 * Scott Field
 * Sean Allred
 * Sebastian Brass
