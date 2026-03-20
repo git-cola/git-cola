@@ -1,7 +1,8 @@
 from __future__ import annotations
-from collections.abc import Iterator
+
 import datetime
 import json
+from collections.abc import Iterator
 
 from .. import core
 from .. import utils

@@ -5,19 +5,19 @@ from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from ..i18n import N_
-from ..interaction import Interaction
-from ..git import STDOUT
-from ..qtutils import connect_button
-from ..qtutils import create_toolbutton
-from ..qtutils import get
 from .. import core
 from .. import gitcmds
 from .. import icons
-from .. import utils
 from .. import qtutils
-from . import diff
+from .. import utils
+from ..git import STDOUT
+from ..i18n import N_
+from ..interaction import Interaction
+from ..qtutils import connect_button
+from ..qtutils import create_toolbutton
+from ..qtutils import get
 from . import defs
+from . import diff
 from . import standard
 
 

@@ -3,20 +3,14 @@ import itertools
 import math
 from functools import partial
 
-from qtpy.QtCore import Qt
-from qtpy.QtCore import Signal
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
-from ..compat import maxsize
-from ..i18n import N_
-from ..models import dag
-from ..models import main
-from ..models import prefs
-from ..qtutils import get
-from .. import core
 from .. import cmds
+from .. import core
 from .. import difftool
 from .. import gitcmds
 from .. import guicmds
@@ -25,6 +19,12 @@ from .. import icons
 from .. import qtcompat
 from .. import qtutils
 from .. import utils
+from ..compat import maxsize
+from ..i18n import N_
+from ..models import dag
+from ..models import main
+from ..models import prefs
+from ..qtutils import get
 from . import archive
 from . import browse
 from . import completion
@@ -34,8 +34,8 @@ from . import defs
 from . import diff
 from . import diff_intraline
 from . import filelist
-from . import standard
 from . import finder
+from . import standard
 
 
 def git_dag(context, args=None, existing_view=None, show=True):

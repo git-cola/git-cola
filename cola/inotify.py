@@ -1,9 +1,10 @@
 from __future__ import annotations
-from collections.abc import Iterator
+
 import ctypes
 import ctypes.util
 import errno
 import os
+from collections.abc import Iterator
 from typing import Any
 
 # constant from Linux include/uapi/linux/limits.h

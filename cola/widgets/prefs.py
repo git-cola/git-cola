@@ -1,8 +1,6 @@
 from qtpy import QtCore
 from qtpy import QtWidgets
 
-from . import defs
-from . import standard
 from .. import cmds
 from .. import hidpi
 from .. import icons
@@ -14,6 +12,8 @@ from ..i18n import N_
 from ..models import prefs
 from ..models.prefs import Defaults
 from ..models.prefs import fallback_editor
+from . import defs
+from . import standard
 
 
 def preferences(context, model=None, parent=None):

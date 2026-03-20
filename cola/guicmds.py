@@ -1,6 +1,9 @@
 from __future__ import annotations
+
 import os
-from typing import Any, Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Callable
 
 from qtpy import QtGui
 

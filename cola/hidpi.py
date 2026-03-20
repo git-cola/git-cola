@@ -2,10 +2,10 @@
 
 from qtpy import QtCore
 
-from .i18n import N_
-from . import core
 from . import compat
+from . import core
 from . import version
+from .i18n import N_
 
 
 class Option:

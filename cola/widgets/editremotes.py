@@ -5,15 +5,15 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..git import STDOUT
-from ..i18n import N_
-from ..qtutils import get
 from .. import cmds
 from .. import core
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from .. import utils
+from ..git import STDOUT
+from ..i18n import N_
+from ..qtutils import get
 from . import completion
 from . import defs
 from . import standard

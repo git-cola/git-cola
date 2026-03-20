@@ -1,5 +1,6 @@
 """Provides a selection model to handle selection."""
 from __future__ import annotations
+
 import collections
 from typing import Any
 
@@ -7,7 +8,6 @@ from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from .main import MainModel
-
 
 State = collections.namedtuple('State', 'staged unmerged modified untracked')
 

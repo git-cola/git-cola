@@ -6,8 +6,8 @@ from .. import icons
 from .. import qtutils
 from ..i18n import N_
 from ..qtutils import get
-from . import defs
 from . import completion
+from . import defs
 from . import standard
 from . import text
 

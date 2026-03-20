@@ -21,7 +21,6 @@ from ..widgets import defs
 from ..widgets import standard
 from ..widgets import switcher
 
-
 BOOKMARKS = 0
 RECENT_REPOS = 1
 

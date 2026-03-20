@@ -1,7 +1,7 @@
 import sys
 
-from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
+from qtpy.QtGui import QKeySequence
 
 
 def hotkey(*seq) -> QKeySequence:

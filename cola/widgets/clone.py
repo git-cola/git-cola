@@ -8,8 +8,8 @@ from qtpy.QtCore import Qt
 from .. import cmds
 from .. import core
 from .. import icons
-from .. import utils
 from .. import qtutils
+from .. import utils
 from ..i18n import N_
 from ..interaction import Interaction
 from ..qtutils import get

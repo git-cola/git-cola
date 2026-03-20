@@ -10,8 +10,8 @@ from .. import icons
 from .. import qtutils
 from ..i18n import N_
 from ..interaction import Interaction
-from . import defs
 from . import completion
+from . import defs
 from . import standard
 from .text import LineEdit
 
