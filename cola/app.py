@@ -62,6 +62,7 @@ from . import resources
 from . import themes
 from . import utils
 from . import version
+
 # Import cola modules
 from .cmd import CommandBus
 from .i18n import N_
