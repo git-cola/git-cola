@@ -933,6 +933,38 @@ class Push(RemoteActionDialog):
 
     def __init__(self, context, parent=None):
         super().__init__(context, PUSH, N_('Push'), parent=parent, icon=icons.push())
+        self.remember_upstream_checkbox_state = False
+        self.upstream_checkbox.toggled.connect(self.upstream_checkbox_toggled)
+
+    def upstream_checkbox_toggled(self, enabled):
+        """Prompt once when enabling upstream.
+
+        Choose between one-time and remembered behavior.
+        """
+        if not enabled:
+            self.remember_upstream_checkbox_state = False
+            return
+        if self.remember_upstream_checkbox_state:
+            return
+        title = N_('Set upstream')
+        msg = N_(
+            'The upstream branch will be configured when branches are pushed.\n'
+            'This can affect all subsequent pushes.'
+        )
+        info_txt = N_(
+            'Do you want this setting to be remembered and apply to future pushes?'
+        )
+        ok_text = N_('Yes, remember this setting for future pushes')
+        cancel_text = N_('No, enable this setting just once for the next push')
+        self.remember_upstream_checkbox_state = Interaction.confirm(
+            title,
+            msg,
+            info_txt,
+            ok_text,
+            default=False,
+            cancel_text=cancel_text,
+            icon=icons.question(),
+        )
 
     def export_state(self):
         """Export persistent settings"""
@@ -940,6 +972,10 @@ class Push(RemoteActionDialog):
         state['force'] = get(self.force_checkbox)
         state['prompt'] = get(self.prompt_checkbox)
         state['tags'] = get(self.tags_checkbox)
+        if self.remember_upstream_checkbox_state:
+            state['set_upstream_branch'] = get(self.upstream_checkbox)
+        else:
+            state.pop('set_upstream_branch', None)
         return state
 
     def apply_state(self, state):
@@ -954,6 +990,10 @@ class Push(RemoteActionDialog):
         # Restore the "tags" checkbox
         tags = bool(state.get('tags', False))
         self.tags_checkbox.setChecked(tags)
+        set_upstream_branch = bool(state.get('set_upstream_branch', False))
+        self.remember_upstream_checkbox_state = set_upstream_branch
+        with qtutils.BlockSignals(self.upstream_checkbox):
+            self.upstream_checkbox.setChecked(set_upstream_branch)
         return result
 
 
