@@ -74,17 +74,17 @@ trees:
         python3 -m mypy --config-file pyproject.toml bin cola
 
       fmt>:
-        - fix/isort-format
-        - fix/cercis-format
-        #- fix/ruff-isort
-        #- fix/ruff-format
+        #- fix/isort-format
+        #- fix/cercis-format
+        - fix/ruff-isort
+        - fix/ruff-format
       check/fmt>:
         # isort and cercis produce slightly different results,
         # so both cannot be satisfied at the same time
-        - check/isort-isort
-        - check/cercis-format
-        #- check/ruff-isort
-        #- check/ruff-format
+        #- check/isort-isort
+        #- check/cercis-format
+        - check/ruff-isort
+        - check/ruff-format
 
       # helper targets for formatting and import-sorting
       fix/cercis-format: |
