@@ -9,7 +9,6 @@ from .. import hidpi
 from .. import utils
 from ..cmd import Command
 
-
 ABBREV = 'core.abbrev'
 ASPELL_ENABLED = 'cola.aspell.enabled'
 ASPELL_LANG = 'cola.aspell.lang'

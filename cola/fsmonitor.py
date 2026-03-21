@@ -7,19 +7,21 @@ Windows monitoring uses pywin32 and the ReadDirectoryChanges function.
 
 """
 from __future__ import annotations
+
 import errno
 import os
 import os.path
 import select
 from threading import Lock
-from typing import Any, TYPE_CHECKING
+from typing import Any
+from typing import TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
 
-from . import utils
 from . import core
 from . import gitcmds
+from . import utils
 from . import version
 from .compat import bchr
 from .i18n import N_

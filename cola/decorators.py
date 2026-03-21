@@ -1,7 +1,10 @@
 from __future__ import annotations
+
 import errno
 import functools
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any
+from typing import Callable
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from qtpy.QtGui import QIcon

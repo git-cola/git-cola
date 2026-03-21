@@ -1,10 +1,13 @@
 """Base Command class"""
 from __future__ import annotations
+
 import time
-from typing import Any, TYPE_CHECKING
+from typing import Any
+from typing import TYPE_CHECKING
 
 from qtpy import QtCore
-from qtpy.QtCore import Qt, Signal
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 if TYPE_CHECKING:
     from .app import ApplicationContext

@@ -1,12 +1,15 @@
 from __future__ import annotations
-from binascii import unhexlify
+
 import collections
-from collections.abc import Iterator
 import copy
 import fnmatch
 import os
 import struct
-from typing import Any, Callable, TYPE_CHECKING
+from binascii import unhexlify
+from collections.abc import Iterator
+from typing import Any
+from typing import Callable
+from typing import TYPE_CHECKING
 
 try:
     import pwd
@@ -20,9 +23,9 @@ from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from . import core
+from . import resources
 from . import utils
 from . import version
-from . import resources
 
 if TYPE_CHECKING:
     from .app import ApplicationContext

@@ -1,7 +1,7 @@
-from functools import partial
 import os
 import re
 import time
+from functools import partial
 from typing import Optional
 
 from qtpy import QtCore
@@ -10,12 +10,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..i18n import N_
-from ..editpatch import edit_patch
-from ..interaction import Interaction
-from ..models import main
-from ..models import prefs
-from ..qtutils import get
 from .. import actions
 from .. import cmds
 from .. import core
@@ -25,17 +19,23 @@ from .. import gravatar
 from .. import hotkeys
 from .. import icons
 from .. import intraline_diff
-from .. import utils
 from .. import qtutils
-from .text import TextDecorator
-from .text import VimHintedPlainTextEdit
-from .text import PlainTextLabel
-from .text import TextSearchWidget
-from .text import label_selection_timer
+from .. import utils
+from ..editpatch import edit_patch
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import main
+from ..models import prefs
+from ..qtutils import get
 from . import defs
 from . import diff_intraline
-from . import standard
 from . import imageview
+from . import standard
+from .text import label_selection_timer
+from .text import PlainTextLabel
+from .text import TextDecorator
+from .text import TextSearchWidget
+from .text import VimHintedPlainTextEdit
 
 ENABLE_INTRALINE_DIFF = True
 

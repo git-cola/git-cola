@@ -1,15 +1,18 @@
 from __future__ import annotations
+
 import time
 
 from qtpy import QtGui
-from qtpy.QtCore import QMimeData, QModelIndex, Qt
+from qtpy.QtCore import QMimeData
+from qtpy.QtCore import QModelIndex
+from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import gitcmds
 from .. import core
+from .. import gitcmds
 from .. import icons
-from .. import utils
 from .. import qtutils
+from .. import utils
 from ..git import STDOUT
 from ..i18n import N_
 

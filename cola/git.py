@@ -1,12 +1,14 @@
 from __future__ import annotations
-from functools import partial
+
 import errno
 import os
-from os.path import join
 import subprocess
 import threading
 import time
-from typing import Any, TYPE_CHECKING
+from functools import partial
+from os.path import join
+from typing import Any
+from typing import TYPE_CHECKING
 
 from . import core
 from .compat import int_types

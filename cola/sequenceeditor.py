@@ -1,16 +1,15 @@
 from __future__ import annotations
-import sys
+
 import re
-from argparse import ArgumentParser, Namespace
+import sys
+from argparse import ArgumentParser
+from argparse import Namespace
 from functools import partial
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any
+from typing import Callable
+from typing import TYPE_CHECKING
 
 from cola import app  # prints a message if Qt cannot be found
-from qtpy import QtGui
-from qtpy import QtWidgets
-from qtpy.QtCore import Qt
-from qtpy.QtCore import Signal
-
 from cola import core
 from cola import difftool
 from cola import gitcmds
@@ -21,12 +20,16 @@ from cola import utils
 from cola.i18n import N_
 from cola.models import dag
 from cola.models import prefs
+from cola.qtutils import SimpleTask
 from cola.widgets import defs
-from cola.widgets import filelist
 from cola.widgets import diff
+from cola.widgets import filelist
 from cola.widgets import standard
 from cola.widgets import text
-from cola.qtutils import SimpleTask
+from qtpy import QtGui
+from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 if TYPE_CHECKING:
     from .app import ApplicationContext

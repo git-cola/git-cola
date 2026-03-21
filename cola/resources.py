@@ -1,12 +1,14 @@
 """Functions for finding cola resources"""
 from __future__ import annotations
+
 import os
 import sys
 import webbrowser
-from typing import Callable, TYPE_CHECKING
+from typing import Callable
+from typing import TYPE_CHECKING
 
-from . import core
 from . import compat
+from . import core
 
 if TYPE_CHECKING:
     from .types import TextType

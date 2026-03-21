@@ -7,7 +7,6 @@ from cola.git import STDOUT
 
 from .helper import patch
 
-
 # 16k+1 bytes to exhaust any output buffers.
 BUFFER_SIZE = (16 * 1024) + 1
 

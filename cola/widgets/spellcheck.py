@@ -8,7 +8,8 @@ from qtpy.QtCore import Qt
 from .. import qtutils
 from .. import spellcheck
 from ..i18n import N_
-from .text import event_anchor_mode, HintedTextEdit
+from .text import event_anchor_mode
+from .text import HintedTextEdit
 
 
 class SpellCheckTextEdit(HintedTextEdit):

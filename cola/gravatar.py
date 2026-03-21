@@ -1,13 +1,15 @@
 from __future__ import annotations
-import time
+
 import hashlib
-from typing import Any, TYPE_CHECKING
+import time
+from typing import Any
+from typing import TYPE_CHECKING
 
 import qtpy
 from qtpy import QtCore
 from qtpy import QtGui
-from qtpy import QtWidgets
 from qtpy import QtNetwork
+from qtpy import QtWidgets
 
 from . import core
 from . import icons

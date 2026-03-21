@@ -1,16 +1,16 @@
-from qtpy import QtWidgets
 from qtpy import QtCore
+from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..i18n import N_
-from ..interaction import Interaction
-from ..qtutils import get
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
-from . import defs
+from ..i18n import N_
+from ..interaction import Interaction
+from ..qtutils import get
 from . import completion
+from . import defs
 from . import standard
 
 

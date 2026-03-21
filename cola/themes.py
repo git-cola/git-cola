@@ -1,7 +1,9 @@
 """Themes generators"""
 from __future__ import annotations
+
 import os
-from typing import Any, TYPE_CHECKING
+from typing import Any
+from typing import TYPE_CHECKING
 
 try:
     import AppKit
@@ -9,16 +11,17 @@ except ImportError:
     AppKit = None
 from qtpy import QtGui
 
-from .i18n import N_
-from .widgets import defs
 from . import core
 from . import icons
 from . import qtutils
 from . import resources
 from . import utils
+from .i18n import N_
+from .widgets import defs
 
 if TYPE_CHECKING:
-    from qtpy.QtGui import QColor, QPalette
+    from qtpy.QtGui import QColor
+    from qtpy.QtGui import QPalette
 
 
 class EStylesheet:

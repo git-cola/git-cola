@@ -1,7 +1,8 @@
 """Display models and utility functions"""
 import collections
 from datetime import datetime
-from typing import Any, TYPE_CHECKING
+from typing import Any
+from typing import TYPE_CHECKING
 
 try:
     import notify2

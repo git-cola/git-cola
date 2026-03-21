@@ -1,6 +1,6 @@
 """Text widgets"""
-from functools import partial
 import math
+from functools import partial
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -8,13 +8,13 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..models import prefs
-from ..qtutils import get
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .. import utils
 from ..i18n import N_
+from ..models import prefs
+from ..qtutils import get
 from . import defs
 
 

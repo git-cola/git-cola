@@ -5,12 +5,14 @@ import pytest
 from cola import core
 from cola import git
 from cola.models import main
-from cola.models.main import FETCH, FETCH_HEAD, PULL, PUSH
+from cola.models.main import FETCH
+from cola.models.main import FETCH_HEAD
+from cola.models.main import PULL
+from cola.models.main import PUSH
 
 from . import helper
 from .helper import app_context
 from .helper import Mock
-
 
 # prevent unused imports lint errors.
 assert app_context is not None

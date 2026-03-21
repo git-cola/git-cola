@@ -1,11 +1,14 @@
 """Editor commands"""
 from __future__ import annotations
+
 import os
 import re
 import sys
 from fnmatch import fnmatch
 from io import StringIO
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any
+from typing import Callable
+from typing import TYPE_CHECKING
 
 try:
     from send2trash import send2trash
@@ -22,7 +25,8 @@ from . import textwrap
 from . import utils
 from . import version
 from .cmd import ContextCommand
-from .git import STDOUT, transform_kwargs
+from .git import STDOUT
+from .git import transform_kwargs
 from .i18n import N_
 from .interaction import Interaction
 from .models import main

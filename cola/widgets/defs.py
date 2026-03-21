@@ -1,6 +1,5 @@
-import os
 import math
-
+import os
 
 try:
     scale_factor = float(os.getenv('GIT_COLA_SCALE', '1'))

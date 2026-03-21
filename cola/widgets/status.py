@@ -2,17 +2,10 @@ import itertools
 import os
 from functools import partial
 
-from qtpy.QtCore import Qt
 from qtpy import QtCore
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
-from ..i18n import N_
-from ..models import prefs
-from ..models import selection
-from ..widgets import gitignore
-from ..widgets import standard
-from ..qtutils import get
-from ..settings import Settings
 from .. import actions
 from .. import cmds
 from .. import core
@@ -21,11 +14,17 @@ from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .. import utils
+from ..i18n import N_
+from ..models import prefs
+from ..models import selection
+from ..qtutils import get
+from ..settings import Settings
+from ..widgets import gitignore
+from ..widgets import standard
 from . import common
 from . import completion
 from . import defs
 from . import text
-
 
 # Top-level status widget item indexes.
 HEADER_IDX = -1
