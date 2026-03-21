@@ -6,6 +6,7 @@ Linux monitoring uses using inotify.
 Windows monitoring uses pywin32 and the ReadDirectoryChanges function.
 
 """
+
 from __future__ import annotations
 
 import errno
@@ -574,8 +575,7 @@ def create(context: ApplicationContext) -> _Monitor:
     cfg = context.cfg
     if not cfg.get('cola.inotify', default=True):
         msg = N_(
-            'File system change monitoring: disabled because'
-            ' "cola.inotify" is false.\n'
+            'File system change monitoring: disabled because "cola.inotify" is false.\n'
         )
         Interaction.log(msg)
     elif AVAILABLE == 'inotify':

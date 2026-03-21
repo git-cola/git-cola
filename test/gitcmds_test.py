@@ -1,4 +1,5 @@
 """Test the cola.gitcmds module"""
+
 import os
 
 from cola import core

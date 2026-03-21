@@ -1,4 +1,5 @@
 """Test Startup Dialog (git cola --prompt) Context Menu and related classes"""
+
 from cola.widgets import startup
 
 from .helper import app_context

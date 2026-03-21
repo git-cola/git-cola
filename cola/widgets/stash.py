@@ -1,4 +1,5 @@
 """Widgets for manipulating git stashes"""
+
 from qtpy.QtCore import Qt
 
 from .. import cmds

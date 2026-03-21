@@ -1,4 +1,5 @@
 """A widget for searching git commits"""
+
 import time
 
 from qtpy import QtCore

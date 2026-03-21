@@ -1,4 +1,5 @@
 """Actions widget"""
+
 from functools import partial
 
 from qtpy import QtCore

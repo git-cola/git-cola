@@ -1,4 +1,5 @@
 """File finder widgets"""
+
 import os
 from functools import partial
 

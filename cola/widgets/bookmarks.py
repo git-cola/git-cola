@@ -1,4 +1,5 @@
 """Provides widgets related to bookmarks"""
+
 import os
 
 from qtpy import QtCore

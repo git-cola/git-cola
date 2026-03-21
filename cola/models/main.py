@@ -1,4 +1,5 @@
 """The central cola model"""
+
 from __future__ import annotations
 
 import os

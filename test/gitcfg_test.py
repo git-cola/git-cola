@@ -1,4 +1,5 @@
 """Test the cola.gitcfg module."""
+
 import pathlib
 
 from . import helper

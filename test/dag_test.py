@@ -1,4 +1,5 @@
 """Tests DAG functionality"""
+
 import pytest
 
 from cola.models import dag

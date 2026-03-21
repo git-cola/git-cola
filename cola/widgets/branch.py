@@ -1,4 +1,5 @@
 """Provides widgets related to branches"""
+
 from functools import partial
 
 from qtpy import QtWidgets

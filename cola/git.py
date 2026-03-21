@@ -383,7 +383,8 @@ class Git:
         call.extend(args)
         try:
             result: tuple[int, TextType, TextType] = self.execute(
-                call, **_kwargs  # type: ignore[arg-type]
+                call,
+                **_kwargs,  # type: ignore[arg-type]
             )
         except OSError as exc:
             if WIN32 and exc.errno == errno.ENOENT:

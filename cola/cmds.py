@@ -1,4 +1,5 @@
 """Editor commands"""
+
 from __future__ import annotations
 
 import os
@@ -284,8 +285,7 @@ class AmendMode(EditModel):
                 Interaction.information(
                     N_('Cannot Amend'),
                     N_(
-                        'You are in the middle of a merge.\n'
-                        'Cannot amend while merging.'
+                        'You are in the middle of a merge.\nCannot amend while merging.'
                     ),
                 )
                 return
@@ -3354,7 +3354,7 @@ class SubmoduleAdd(ConfirmAction):
     def confirm(self) -> bool:
         title = N_('Add Submodule...')
         question = N_('Add this submodule?')
-        info = N_('The submodule will be added using\n' '"%s"' % self.command())
+        info = N_('The submodule will be added using\n"%s"' % self.command())
         ok_txt = N_('Add Submodule')
         return Interaction.confirm(title, question, info, ok_txt, icon=icons.ok())
 
@@ -3401,7 +3401,7 @@ class SubmoduleUpdate(ConfirmAction):
     def confirm(self) -> bool:
         title = N_('Update Submodule...')
         question = N_('Update this submodule?')
-        info = N_('The submodule will be updated using\n' '"%s"' % self.command())
+        info = N_('The submodule will be updated using\n"%s"' % self.command())
         ok_txt = N_('Update Submodule')
         return Interaction.confirm(
             title, question, info, ok_txt, default=False, icon=icons.pull()
@@ -3439,7 +3439,7 @@ class SubmodulesUpdate(ConfirmAction):
     def confirm(self) -> bool:
         title = N_('Update submodules...')
         question = N_('Update all submodules?')
-        info = N_('All submodules will be updated using\n' '"%s"' % self.command())
+        info = N_('All submodules will be updated using\n"%s"' % self.command())
         ok_txt = N_('Update Submodules')
         return Interaction.confirm(
             title, question, info, ok_txt, default=False, icon=icons.pull()

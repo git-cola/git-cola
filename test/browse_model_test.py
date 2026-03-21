@@ -1,4 +1,5 @@
 """Test interfaces used by the browser (git cola browse)"""
+
 from cola import core
 from cola import gitcmds
 

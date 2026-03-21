@@ -1171,9 +1171,9 @@ class GitDAG(standard.MainWindow):
         state['log'] = self.treewidget.export_state()
         state['word_wrap'] = self.diffwidget.options.enable_word_wrapping.isChecked()
         state['intraline_diff_preset'] = self.diffwidget.options.intraline_diff_preset()
-        state[
-            'intraline_diff_timing'
-        ] = self.diffwidget.options.intraline_diff_timing.isChecked()
+        state['intraline_diff_timing'] = (
+            self.diffwidget.options.intraline_diff_timing.isChecked()
+        )
         return state
 
     def apply_state(self, state):
@@ -1603,23 +1603,27 @@ class EdgeColor:
     def update_colors(cls, theme):
         """Update the colors based on the color theme"""
         if theme.is_dark or theme.is_palette_dark:
-            cls.colors.extend([
-                QtGui.QColor(Qt.red).lighter(),
-                QtGui.QColor(Qt.cyan).lighter(),
-                QtGui.QColor(Qt.magenta).lighter(),
-                QtGui.QColor(Qt.green).lighter(),
-                QtGui.QColor(Qt.yellow).lighter(),
-            ])
+            cls.colors.extend(
+                [
+                    QtGui.QColor(Qt.red).lighter(),
+                    QtGui.QColor(Qt.cyan).lighter(),
+                    QtGui.QColor(Qt.magenta).lighter(),
+                    QtGui.QColor(Qt.green).lighter(),
+                    QtGui.QColor(Qt.yellow).lighter(),
+                ]
+            )
         else:
-            cls.colors.extend([
-                QtGui.QColor(Qt.blue),
-                QtGui.QColor(Qt.darkRed),
-                QtGui.QColor(Qt.darkCyan),
-                QtGui.QColor(Qt.darkMagenta),
-                QtGui.QColor(Qt.darkGreen),
-                QtGui.QColor(Qt.darkYellow),
-                QtGui.QColor(Qt.darkBlue),
-            ])
+            cls.colors.extend(
+                [
+                    QtGui.QColor(Qt.blue),
+                    QtGui.QColor(Qt.darkRed),
+                    QtGui.QColor(Qt.darkCyan),
+                    QtGui.QColor(Qt.darkMagenta),
+                    QtGui.QColor(Qt.darkGreen),
+                    QtGui.QColor(Qt.darkYellow),
+                    QtGui.QColor(Qt.darkBlue),
+                ]
+            )
 
     @classmethod
     def cycle(cls):

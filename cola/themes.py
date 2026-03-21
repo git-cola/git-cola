@@ -1,4 +1,5 @@
 """Themes generators"""
+
 from __future__ import annotations
 
 import os
@@ -671,64 +672,66 @@ def get_all_themes() -> list[Theme]:
     if utils.is_darwin():
         themes.extend(get_macos_themes().values())
 
-    themes.extend([
-        Theme(
-            'flat-light-blue',
-            N_('Flat light blue'),
-            False,
-            style_sheet=EStylesheet.FLAT,
-            main_color='#5271cc',
-        ),
-        Theme(
-            'flat-light-red',
-            N_('Flat light red'),
-            False,
-            style_sheet=EStylesheet.FLAT,
-            main_color='#cc5452',
-        ),
-        Theme(
-            'flat-light-grey',
-            N_('Flat light grey'),
-            False,
-            style_sheet=EStylesheet.FLAT,
-            main_color='#707478',
-        ),
-        Theme(
-            'flat-light-green',
-            N_('Flat light green'),
-            False,
-            style_sheet=EStylesheet.FLAT,
-            main_color='#42a65c',
-        ),
-        Theme(
-            'flat-dark-blue',
-            N_('Flat dark blue'),
-            True,
-            style_sheet=EStylesheet.FLAT,
-            main_color='#5271cc',
-        ),
-        Theme(
-            'flat-dark-red',
-            N_('Flat dark red'),
-            True,
-            style_sheet=EStylesheet.FLAT,
-            main_color='#cc5452',
-        ),
-        Theme(
-            'flat-dark-grey',
-            N_('Flat dark grey'),
-            True,
-            style_sheet=EStylesheet.FLAT,
-            main_color='#aaaaaa',
-        ),
-        Theme(
-            'flat-dark-green',
-            N_('Flat dark green'),
-            True,
-            style_sheet=EStylesheet.FLAT,
-            main_color='#42a65c',
-        ),
-    ])
+    themes.extend(
+        [
+            Theme(
+                'flat-light-blue',
+                N_('Flat light blue'),
+                False,
+                style_sheet=EStylesheet.FLAT,
+                main_color='#5271cc',
+            ),
+            Theme(
+                'flat-light-red',
+                N_('Flat light red'),
+                False,
+                style_sheet=EStylesheet.FLAT,
+                main_color='#cc5452',
+            ),
+            Theme(
+                'flat-light-grey',
+                N_('Flat light grey'),
+                False,
+                style_sheet=EStylesheet.FLAT,
+                main_color='#707478',
+            ),
+            Theme(
+                'flat-light-green',
+                N_('Flat light green'),
+                False,
+                style_sheet=EStylesheet.FLAT,
+                main_color='#42a65c',
+            ),
+            Theme(
+                'flat-dark-blue',
+                N_('Flat dark blue'),
+                True,
+                style_sheet=EStylesheet.FLAT,
+                main_color='#5271cc',
+            ),
+            Theme(
+                'flat-dark-red',
+                N_('Flat dark red'),
+                True,
+                style_sheet=EStylesheet.FLAT,
+                main_color='#cc5452',
+            ),
+            Theme(
+                'flat-dark-grey',
+                N_('Flat dark grey'),
+                True,
+                style_sheet=EStylesheet.FLAT,
+                main_color='#aaaaaa',
+            ),
+            Theme(
+                'flat-dark-green',
+                N_('Flat dark green'),
+                True,
+                style_sheet=EStylesheet.FLAT,
+                main_color='#42a65c',
+            ),
+        ]
+    )
 
     # check if themes path exists in user folder
     path = resources.config_home('themes')

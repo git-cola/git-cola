@@ -1,4 +1,5 @@
 """Main UI for authoring commits and other Git Cola interactions"""
+
 import os
 from functools import partial
 

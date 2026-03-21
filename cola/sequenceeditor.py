@@ -399,14 +399,16 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         self.context = context
         self.comment_char = comment_char
         # header
-        self.setHeaderLabels([
-            N_('#'),
-            N_('Enabled'),
-            N_('Command'),
-            N_('Commit@@noun'),
-            N_('Remarks'),
-            N_('Summary'),
-        ])
+        self.setHeaderLabels(
+            [
+                N_('#'),
+                N_('Enabled'),
+                N_('Command'),
+                N_('Commit@@noun'),
+                N_('Remarks'),
+                N_('Summary'),
+            ]
+        )
         self.header().setStretchLastSection(True)
         self.setColumnCount(6)
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)

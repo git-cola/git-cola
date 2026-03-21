@@ -1,4 +1,5 @@
 """Provides the main() routine and ColaApplication"""
+
 from __future__ import annotations
 
 import argparse
@@ -27,9 +28,7 @@ On a Debian/Ubuntu system you can install these modules using apt:
 
     sudo apt install python3-pyqt5 python3-pyqt5.qtwebengine python3-qtpy
 
-""".format(
-            err=error
-        )
+""".format(err=error)
     )
     sys.exit(1)
 

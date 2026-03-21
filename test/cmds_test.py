@@ -1,4 +1,5 @@
 """Test the cmds module"""
+
 import time
 
 from cola import cmds

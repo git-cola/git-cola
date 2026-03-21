@@ -1,4 +1,5 @@
 """Provide git-cola's version number"""
+
 from __future__ import annotations
 
 try:

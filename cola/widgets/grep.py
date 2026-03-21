@@ -195,7 +195,7 @@ class Grep(Dialog):
             'Focus Results',
             self.focus_results,
             hotkeys.DOWN,
-            *hotkeys.ACCEPT
+            *hotkeys.ACCEPT,
         )
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
 

@@ -1,4 +1,5 @@
 """Text widgets"""
+
 import math
 from functools import partial
 

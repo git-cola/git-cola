@@ -1,4 +1,5 @@
 """Test the cola.settings module"""
+
 import os
 
 import pytest

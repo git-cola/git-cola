@@ -38,7 +38,7 @@ def edit_action(context, parent, *keys):
         N_('Edit selected paths'),
         cmds.run(cmds.LaunchEditor, context),
         hotkeys.EDIT,
-        *keys
+        *keys,
     )
     action.setIcon(icons.edit())
     return action

@@ -1,4 +1,5 @@
 """Tests basic git operations: commit, log, config"""
+
 from . import helper
 from .helper import app_context
 

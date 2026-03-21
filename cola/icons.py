@@ -1,4 +1,5 @@
 """The only file where icon filenames are mentioned"""
+
 from __future__ import annotations
 
 import os

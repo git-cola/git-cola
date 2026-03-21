@@ -1,4 +1,5 @@
 """Display models and utility functions"""
+
 import collections
 from datetime import datetime
 from typing import Any

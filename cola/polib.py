@@ -10,6 +10,7 @@ modify entries, comments or metadata, etc. or create new po files from scratch.
 **polib** provides a simple and pythonic API via the :func:`~polib.pofile` and
 :func:`~polib.mofile` convenience functions.
 """
+
 from __future__ import annotations
 
 import array

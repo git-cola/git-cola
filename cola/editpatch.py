@@ -77,7 +77,7 @@ def edit_patch(
     context: 'ApplicationContext',
     *,
     reverse: bool,
-    apply_to_worktree: bool
+    apply_to_worktree: bool,
 ):
     patch_file_path = utils.tmp_filename('edit', '.patch')
     try:

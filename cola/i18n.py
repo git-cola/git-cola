@@ -1,4 +1,5 @@
 """i18n and l10n support for git-cola"""
+
 from __future__ import annotations
 
 import locale

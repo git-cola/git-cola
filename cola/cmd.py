@@ -1,4 +1,5 @@
 """Base Command class"""
+
 from __future__ import annotations
 
 import time

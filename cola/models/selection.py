@@ -1,4 +1,5 @@
 """Provides a selection model to handle selection."""
+
 from __future__ import annotations
 
 import collections

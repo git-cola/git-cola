@@ -1,4 +1,5 @@
 """Git Archive dialog"""
+
 import os
 
 from qtpy import QtCore
