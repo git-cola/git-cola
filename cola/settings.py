@@ -1,9 +1,12 @@
 """Save settings, bookmarks, etc."""
 from __future__ import annotations
+
 import json
 import os
 import sys
-from typing import Any, Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Callable
 
 from . import core
 from . import display

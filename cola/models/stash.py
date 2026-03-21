@@ -4,8 +4,8 @@ from .. import cmds
 from .. import core
 from .. import gitcmds
 from .. import utils
-from ..i18n import N_
 from ..git import STDOUT
+from ..i18n import N_
 from ..interaction import Interaction
 
 

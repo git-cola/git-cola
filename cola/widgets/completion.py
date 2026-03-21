@@ -7,12 +7,12 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..models import prefs
 from .. import core
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from .. import utils
+from ..models import prefs
 from . import defs
 from .text import HintedLineEdit
 

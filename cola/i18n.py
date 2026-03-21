@@ -1,5 +1,6 @@
 """i18n and l10n support for git-cola"""
 from __future__ import annotations
+
 import locale
 import os
 
@@ -7,6 +8,7 @@ try:
     import polib
 except ImportError:
     from . import polib
+
 import sys
 
 from . import core

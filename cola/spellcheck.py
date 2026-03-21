@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 import collections
-from collections.abc import Iterator
 import glob
 import os
+from collections.abc import Iterator
 from typing import Any
 
 from . import core

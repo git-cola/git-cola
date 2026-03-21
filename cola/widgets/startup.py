@@ -1,12 +1,10 @@
 """The startup dialog is presented when no repositories can be found at startup"""
 
-from qtpy.QtCore import Qt
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
-from ..i18n import N_
-from ..models import prefs
 from .. import cmds
 from .. import core
 from .. import display
@@ -16,10 +14,11 @@ from .. import icons
 from .. import qtutils
 from .. import utils
 from .. import version
+from ..i18n import N_
+from ..models import prefs
 from . import clone
 from . import defs
 from . import standard
-
 
 ICON_MODE = 0
 LIST_MODE = 1

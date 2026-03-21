@@ -1,17 +1,19 @@
 from __future__ import annotations
-from functools import partial
+
 import errno
 import os
-from os.path import join
 import subprocess
 import threading
 import time
-from typing import Any, TYPE_CHECKING
+from functools import partial
+from os.path import join
+from typing import TYPE_CHECKING
+from typing import Any
 
 from . import core
+from .compat import WIN32
 from .compat import int_types
 from .compat import ustr
-from .compat import WIN32
 from .decorators import memoize
 from .interaction import Interaction
 

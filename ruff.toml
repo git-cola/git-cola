@@ -1,0 +1,25 @@
+# ruff
+
+line-length = 88
+indent-width = 4
+
+target-version = 'py39'
+
+[lint]
+# use default
+#select = [
+#    "F", # pyflakes
+#    "E", # pycodestyle
+#    "W", # pycodestyle warnings
+#    "I", # isort
+#    "D", # pydocstyle
+#]
+#ignore = ["E501"]
+
+[lint.isort]
+force-single-line = true
+order-by-type = false
+
+[format]
+quote-style = 'single'
+skip-magic-trailing-comma = false

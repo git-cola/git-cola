@@ -3,17 +3,17 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..i18n import N_
-from ..qtutils import get
 from .. import cmds
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
-from .browse import GitTreeWidget
-from .browse import GitFileTreeModel
+from ..i18n import N_
+from ..qtutils import get
 from . import defs
 from . import standard
+from .browse import GitFileTreeModel
+from .browse import GitTreeWidget
 
 
 def browse_recent_files(context):

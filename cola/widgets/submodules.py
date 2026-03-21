@@ -7,8 +7,8 @@ from qtpy.QtCore import Signal
 from .. import cmds
 from .. import compat
 from .. import core
-from .. import qtutils
 from .. import icons
+from .. import qtutils
 from ..i18n import N_
 from ..widgets import defs
 from ..widgets import standard

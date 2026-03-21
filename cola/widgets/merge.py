@@ -1,15 +1,15 @@
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from ..i18n import N_
-from ..interaction import Interaction
-from ..qtutils import get
 from .. import cmds
 from .. import icons
 from .. import qtutils
+from ..i18n import N_
+from ..interaction import Interaction
+from ..qtutils import get
 from . import completion
-from . import standard
 from . import defs
+from . import standard
 
 
 def local_merge(context):

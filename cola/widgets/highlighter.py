@@ -4,10 +4,10 @@ from qtpy import QtWidgets
 
 have_pygments = True
 try:
-    from pygments.styles import get_style_by_name
     from pygments import lex
-    from pygments.util import ClassNotFound
     from pygments.lexers import get_lexer_for_filename
+    from pygments.styles import get_style_by_name
+    from pygments.util import ClassNotFound
 except ImportError:
     have_pygments = False
 

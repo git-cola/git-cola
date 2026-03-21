@@ -12,6 +12,7 @@ Note:
 
 """
 from __future__ import annotations
+
 from typing import NamedTuple
 
 from qtpy import QtGui

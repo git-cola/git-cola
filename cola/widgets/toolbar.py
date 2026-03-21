@@ -1,16 +1,15 @@
 from functools import partial
 
 from qtpy import QtGui
-from qtpy.QtCore import Qt
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
-from ..i18n import N_
 from .. import icons
 from .. import qtutils
+from ..i18n import N_
 from . import defs
 from . import standard
 from .toolbarcmds import COMMANDS
-
 
 TREE_LAYOUT = {
     'Others': ['Others::LaunchEditor', 'Others::RevertUnstagedEdits'],
