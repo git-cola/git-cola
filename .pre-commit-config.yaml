@@ -8,6 +8,8 @@ repos:
     rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
+        exclude: share/doc/git-cola
+        # For some reason, this file fails
       - id: trailing-whitespace
 
   - repo: https://github.com/asottile/pyupgrade
