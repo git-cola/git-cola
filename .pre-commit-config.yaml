@@ -18,10 +18,19 @@ repos:
         args:
           - --py39-plus
 
-  - repo: https://github.com/jsh9/cercis
-    rev: 0.2.5
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.7
     hooks:
-      - id: cercis
-        args:
-          - --line-length=88
-          - --function-definition-extra-indent=False
+      # 1. sort imports
+      - id: ruff-check
+        args: [--fix, --select, I, --exit-non-zero-on-fix]
+        files: ^(cola)/
+      # 2. format codes
+      - id: ruff-format
+        args: [--check]
+        files: ^(cola)/
+        types_or: [ python, pyi ]
+      # 2. format codes
+      - id: ruff-format
+        files: ^(cola)/
+        types_or: [ python, pyi ]
