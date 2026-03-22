@@ -5,6 +5,8 @@ v4.19.0
 
 Usability, bells and whistles
 -----------------------------
+* The DAG viewer now supports inline DAG viewer in the commit list.
+
 * Git Cola now detects changes to the `.git/GIT_COLA_MSG` file and will
   reload its contents on ``Ctrl + R`` refresh when the file is edited
   while the app is running.
