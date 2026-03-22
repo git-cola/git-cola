@@ -270,7 +270,9 @@ def test_cola_msg_updated_when_not_manually_edited(app_context):
     app_context.model._update_commitmsg()
     assert app_context.model.commitmsg == 'first message\n'
     helper.write_file(msg_path, 'updated message\n')
-    os.utime(msg_path, (os.path.getmtime(msg_path) + 1,) * 2)  # ensure mtime differs on coarse-grained filesystems
+    os.utime(
+        msg_path, (os.path.getmtime(msg_path) + 1,) * 2
+    )  # ensure mtime differs on coarse-grained filesystems
     app_context.model._update_commitmsg()
     assert app_context.model.commitmsg == 'updated message\n'
 
@@ -282,7 +284,9 @@ def test_cola_msg_not_overwritten_when_user_edited(app_context):
     app_context.model._update_commitmsg()
     app_context.model.commitmsg = 'user message'
     helper.write_file(msg_path, 'second message\n')
-    os.utime(msg_path, (os.path.getmtime(msg_path) + 1,) * 2)  # ensure mtime differs on coarse-grained filesystems
+    os.utime(
+        msg_path, (os.path.getmtime(msg_path) + 1,) * 2
+    )  # ensure mtime differs on coarse-grained filesystems
     app_context.model._update_commitmsg()
     assert app_context.model.commitmsg == 'user message'
 

@@ -120,7 +120,9 @@ class MainModel(QtCore.QObject):
         self._auto_commitmsg = ''  # e.g. .git/MERGE_MSG
         self._prev_commitmsg = ''  # saved here when clobbered by .git/MERGE_MSG
         self._cola_commitmsg = ''  # last content loaded from .git/GIT_COLA_MSG
-        self._cola_commitmsg_mtime: float | None = None  # .git/GIT_COLA_MSG mtime on last read
+        self._cola_commitmsg_mtime: float | None = (
+            None  # .git/GIT_COLA_MSG mtime on last read
+        )
         self.object_format = 'sha1'  # repository object format variables.
         self.oid_len = git.OID_LENGTH_SHA1
         self.empty_tree_oid = git.EMPTY_TREE_SHA1
