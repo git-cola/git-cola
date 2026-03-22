@@ -131,6 +131,7 @@ Thanks
 * Jakub Klos
 * João Matos
 * Jan @hanksoff
+* Jan Kurella
 * Jan Šilhan
 * Jan Tumanov
 * jakubklos77
@@ -265,6 +266,7 @@ Thanks
 * Rustam Safin
 * Sabri Ünal
 * Samsul Ma'arif
+* Sasha @legasik21
 * Scott Field
 * Sean Allred
 * Sebastian Brass

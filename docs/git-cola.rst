@@ -445,6 +445,13 @@ The `Ctrl+i` keyboard shortcut adds a standard "Signed-off-by: " line,
 and `Ctrl+Enter` creates a new commit using the commit message and
 staged content.
 
+The commit message is saved to `.git/GIT_COLA_MSG` when `git cola` closes and
+restored from it on the next startup. In addition this file is checked on updates (Ctrl+R)
+and if modified by any tool and not conflicting with manual changes the commit
+message will be updated on the next refresh.
+This feature is useful as it allows scripts or agents to prepare a message for manual
+review.
+
 Sign Off
 --------
 
