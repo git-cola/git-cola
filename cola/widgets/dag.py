@@ -693,12 +693,16 @@ class GitDagLineEdit(completion.GitLogLineEdit):  # type: ignore[misc, valid-typ
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     """Custom TreeWidgetItem used in to build the commit tree widget"""
 
+    SUMMARY = 0
+    AUTHOR = 1
+    DATE = 2
+
     def __init__(self, commit, parent=None):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
         self.commit = commit
-        self.setText(0, commit.summary)
-        self.setText(1, commit.author)
-        self.setText(2, commit.authdate)
+        self.setText(self.SUMMARY, commit.summary)
+        self.setText(self.AUTHOR, commit.author)
+        self.setText(self.DATE, commit.authdate)
 
 
 class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
@@ -715,7 +719,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
-        self.header().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+        self.header().setSectionResizeMode(
+            CommitTreeWidgetItem.DATE, QtWidgets.QHeaderView.Stretch
+        )
 
         self.context = context
         self.oidmap = {}
@@ -771,8 +777,8 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             width = self.header().width()
             one_half = width // 2
             one_quarter = width // 4
-            self.setColumnWidth(0, one_half)
-            self.setColumnWidth(1, one_quarter)
+            self.setColumnWidth(CommitTreeWidgetItem.SUMMARY, one_half)
+            self.setColumnWidth(CommitTreeWidgetItem.AUTHOR, one_quarter)
 
     # ViewerMixin
     def go_up(self):
