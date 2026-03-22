@@ -12,6 +12,7 @@ from qtpy import QtWidgets
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
+from ..models.graph import build_graph
 from ..models import main
 from ..models import prefs
 from ..qtutils import get
@@ -690,15 +691,121 @@ class GitDagLineEdit(completion.GitLogLineEdit):  # type: ignore[misc, valid-typ
         self.insert('--no-merges')
 
 
+GRAPH_ROW_ROLE = Qt.UserRole + 1
+GRAPH_PREV_ROW_ROLE = Qt.UserRole + 2
+
+
+class GraphDelegate(QtWidgets.QStyledItemDelegate):
+    LANE_WIDTH = 16
+    DOT_RADIUS = 5
+    EDGE_WIDTH = 3
+    commit_color = QtGui.QColor(Qt.white)
+    merge_color = QtGui.QColor(Qt.lightGray)
+    outline_pen = QtGui.QPen()
+    outline_pen.setWidth(2)
+    outline_pen.setColor(QtGui.QColor(Qt.white).darker())
+
+    def paint(self, painter, option, index):
+        row = index.data(GRAPH_ROW_ROLE)
+        prev_row = index.data(GRAPH_PREV_ROW_ROLE)
+        if row is None and prev_row is None:
+            return
+
+        painter.save()
+        painter.setRenderHint(QtGui.QPainter.Antialiasing)
+        painter.setClipRect(option.rect)
+
+        rect = option.rect
+        mid_y = rect.center().y()
+        top_y = rect.top()
+        bottom_y = rect.bottom()
+        lane_w = self.LANE_WIDTH
+
+        if option.state & QtWidgets.QStyle.State_Selected:
+            painter.fillRect(rect, option.palette.highlight())
+
+        pen = QtGui.QPen()
+        pen.setWidth(self.EDGE_WIDTH)
+
+        # Top half: edges from the previous row arrive vertically.
+        if prev_row is not None:
+            for edge in prev_row.edges_to_parent:
+                color = EdgeColor.colors[edge.color_index % len(EdgeColor.colors)]
+                pen.setColor(color)
+                painter.setPen(pen)
+                to_x = rect.left() + edge.to_column * lane_w + lane_w // 2
+                painter.drawLine(to_x, top_y, to_x, mid_y)
+
+        # Bottom half: straight or spline depending on diagonal.
+        if row is not None:
+            for edge in row.edges_to_parent:
+                color = EdgeColor.colors[edge.color_index % len(EdgeColor.colors)]
+                pen.setColor(color)
+                painter.setPen(pen)
+                from_x = rect.left() + edge.from_column * lane_w + lane_w // 2
+                to_x = rect.left() + edge.to_column * lane_w + lane_w // 2
+                if edge.from_column == edge.to_column:
+                    painter.drawLine(from_x, mid_y, to_x, bottom_y)
+                else:
+                    path = QtGui.QPainterPath()
+                    path.moveTo(from_x, mid_y)
+                    path.cubicTo(
+                        from_x,
+                        bottom_y,
+                        to_x,
+                        mid_y,
+                        to_x,
+                        bottom_y,
+                    )
+                    painter.drawPath(path)
+
+        if row is not None:
+            cx = rect.left() + row.commit_column * lane_w + lane_w // 2
+            is_merge = (
+                sum(
+                    1 for e in row.edges_to_parent if e.from_column == row.commit_column
+                )
+                > 1
+            )
+            painter.setPen(self.outline_pen)
+            painter.setBrush(self.merge_color if is_merge else self.commit_color)
+            painter.drawEllipse(
+                QtCore.QPointF(cx, mid_y), self.DOT_RADIUS, self.DOT_RADIUS
+            )
+
+        painter.restore()
+
+    def sizeHint(self, option, index):
+        graph_row = index.data(GRAPH_ROW_ROLE)
+        if graph_row is None:
+            width = self.LANE_WIDTH
+        else:
+            max_col = graph_row.commit_column
+            for edge in graph_row.edges_to_parent:
+                max_col = max(max_col, edge.from_column, edge.to_column)
+            prev_row = index.data(GRAPH_PREV_ROW_ROLE)
+            if prev_row is not None:
+                for edge in prev_row.edges_to_parent:
+                    max_col = max(max_col, edge.from_column, edge.to_column)
+            width = (max_col + 1) * self.LANE_WIDTH
+        height = option.fontMetrics.height() + 4
+        return QtCore.QSize(width, height)
+
+
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     """Custom TreeWidgetItem used in to build the commit tree widget"""
+
+    GRAPH = 0
+    SUMMARY = 1
+    AUTHOR = 2
+    DATE = 3
 
     def __init__(self, commit, parent=None):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
         self.commit = commit
-        self.setText(0, commit.summary)
-        self.setText(1, commit.author)
-        self.setText(2, commit.authdate)
+        self.setText(self.SUMMARY, commit.summary)
+        self.setText(self.AUTHOR, commit.author)
+        self.setText(self.DATE, commit.authdate)
 
 
 class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
@@ -714,8 +821,15 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         ViewerMixin.__init__(self)
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
-        self.header().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+        self.setHeaderLabels(
+            [N_('Graph'), N_('Summary'), N_('Author'), N_('Date, Time')]
+        )
+        self.header().setSectionResizeMode(
+            CommitTreeWidgetItem.DATE, QtWidgets.QHeaderView.Stretch
+        )
+
+        self.graph_delegate = GraphDelegate(self)
+        self.setItemDelegateForColumn(CommitTreeWidgetItem.GRAPH, self.graph_delegate)
 
         self.context = context
         self.oidmap = {}
@@ -754,9 +868,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         except (KeyError, ValueError):
             column_widths = None
         if column_widths:
-            # We only care about the first two columns. This allows the final
+            # We only care about the first three columns. This allows the final
             # column to stretch and shrink.
-            self.set_column_widths(column_widths[:2])
+            self.set_column_widths(column_widths[:3])
             self._columns_initialized = True
         return True
 
@@ -769,10 +883,13 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if not self._columns_initialized:
             self._columns_initialized = True
             width = self.header().width()
-            one_half = width // 2
-            one_quarter = width // 4
-            self.setColumnWidth(0, one_half)
-            self.setColumnWidth(1, one_quarter)
+            graph_width = GraphDelegate.LANE_WIDTH * 4
+            remaining = width - graph_width
+            one_half = remaining // 2
+            one_quarter = remaining // 4
+            self.setColumnWidth(CommitTreeWidgetItem.GRAPH, graph_width)
+            self.setColumnWidth(CommitTreeWidgetItem.SUMMARY, one_half)
+            self.setColumnWidth(CommitTreeWidgetItem.AUTHOR, one_quarter)
 
     # ViewerMixin
     def go_up(self):
@@ -854,6 +971,32 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
                 self.oidmap[tag] = item
         self.insertTopLevelItems(0, items)
 
+    def apply_graph_result(self, graph_result):
+        oid_to_index: dict[str, int] = {}
+        for i, row in enumerate(graph_result.rows):
+            oid_to_index[row.commit_oid] = i
+        max_lanes = graph_result.max_columns
+        graph_width = max(
+            GraphDelegate.LANE_WIDTH * 2,
+            max_lanes * GraphDelegate.LANE_WIDTH,
+        )
+        self.setColumnWidth(CommitTreeWidgetItem.GRAPH, graph_width)
+        rows = graph_result.rows
+        for i in range(self.topLevelItemCount()):
+            item = self.topLevelItem(i)
+            if item is None:
+                continue
+            row_idx = oid_to_index.get(item.commit.oid)
+            if row_idx is None:
+                continue
+            item.setData(CommitTreeWidgetItem.GRAPH, GRAPH_ROW_ROLE, rows[row_idx])
+            if row_idx > 0:
+                item.setData(
+                    CommitTreeWidgetItem.GRAPH,
+                    GRAPH_PREV_ROW_ROLE,
+                    rows[row_idx - 1],
+                )
+
     def create_patch(self):
         """Export a patch from the selected items"""
         items = self.selectedItems()
@@ -929,6 +1072,9 @@ class GitDAG(standard.MainWindow):
         self.diffwidget = diff.CommitDiffWidget(context, self, is_commit=True)
         self.filewidget = filelist.FileWidget(context, self)
         self.graphview = GraphView(context, self)
+
+        self.show_inline_graph = False
+        self._update_show_inline_graph()
 
         self.treewidget.commits_selected.connect(
             self.commits_selected, type=Qt.QueuedConnection
@@ -1120,6 +1266,12 @@ class GitDAG(standard.MainWindow):
         self.thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
         self.thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
 
+    def _update_show_inline_graph(self) -> None:
+        self.show_inline_graph = prefs.show_inline_graph(self.context)
+        self.treewidget.setColumnHidden(
+            CommitTreeWidgetItem.GRAPH, not self.show_inline_graph
+        )
+
     def _stop_reader_thread(self):
         """Stop the reader thread if it is currently running"""
         if self.thread is not None and self.thread.isRunning():
@@ -1310,6 +1462,12 @@ class GitDAG(standard.MainWindow):
     def thread_end(self):
         """The reader thread has completed"""
         self.graphview.add_commits(self.commit_list)
+
+        if self.show_inline_graph and self.commit_list:
+            graph_result = build_graph(
+                [(c.oid, [p.oid for p in c.parents]) for c in self.commit_list]
+            )
+            self.treewidget.apply_graph_result(graph_result)
         self.restore_selection()
 
     def thread_status(self, successful):
@@ -1418,6 +1576,7 @@ class GitDAG(standard.MainWindow):
     def showEvent(self, event):
         """Resize widgets once their sizes are known"""
         standard.MainWindow.showEvent(self, event)
+        self._update_show_inline_graph()
         if not self._widgets_initialized:
             self._widgets_initialized = True
             self.maxresults.setMinimumHeight(self.revtext.height())

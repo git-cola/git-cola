@@ -1167,6 +1167,13 @@ cola.showpath
 This can be disabled by setting `cola.showpath` to `false`.
 Defaults to `true`.
 
+cola.showinlinegraph
+--------------------
+
+Controls whether the inline graph column is shown in the DAG commit list.
+Set to ``true`` to show the inline graph column.
+Defaults to ``false``.
+
 cola.signcommits
 ----------------
 

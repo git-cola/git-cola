@@ -5,6 +5,10 @@ v4.19.0
 
 Usability, bells and whistles
 -----------------------------
+* The DAG viewer now supports inline DAG viewer in the commit list.
+  This can be controlled by the "Show Inline Graph in DAG" option in the settings
+  backend by the ``cola.showinlinegraph`` configuration variable.
+
 * Git Cola now detects changes to the `.git/GIT_COLA_MSG` file and will
   reload its contents on ``Ctrl + R`` refresh when the file is edited
   while the app is running.
