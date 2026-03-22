@@ -1,4 +1,5 @@
 """Tests for the i18n translation module"""
+
 import os
 
 import pytest

@@ -1,13 +1,17 @@
 """Provides the main() routine and ColaApplication"""
+
 from __future__ import annotations
-from functools import partial
+
 import argparse
 import os
 import random
 import signal
 import sys
 import time
-from typing import Any, Callable, TYPE_CHECKING
+from functools import partial
+from typing import Any
+from typing import Callable
+from typing import TYPE_CHECKING
 
 try:
     from qtpy import QtCore
@@ -24,14 +28,13 @@ On a Debian/Ubuntu system you can install these modules using apt:
 
     sudo apt install python3-pyqt5 python3-pyqt5.qtwebengine python3-qtpy
 
-""".format(
-            err=error
-        )
+""".format(err=error)
     )
     sys.exit(1)
 
 from qtpy import QtWidgets
-from qtpy.QtCore import Qt, Signal
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
 try:
     # Qt 5.12 / PyQt 5.13 is unable to use QtWebEngineWidgets unless it is
@@ -42,39 +45,40 @@ except ImportError:
     pass
 
 # Import cola modules
-from .cmd import CommandBus
-from .i18n import N_
-from .interaction import Interaction
-from .models import main
-from .models import selection
-from .widgets import cfgactions
-from .widgets import standard
-from .widgets import startup
-from .settings import Session
-from .settings import Settings
 from . import cmd
 from . import cmds
-from . import core
 from . import compat
+from . import core
 from . import fsmonitor
 from . import git
 from . import gitcfg
 from . import guicmds
 from . import hidpi
-from . import icons
 from . import i18n
+from . import icons
 from . import qtcompat
 from . import qtutils
 from . import resources
 from . import themes
 from . import utils
 from . import version
+from .cmd import CommandBus
+from .i18n import N_
+from .interaction import Interaction
+from .models import main
+from .models import selection
+from .settings import Session
+from .settings import Settings
+from .widgets import cfgactions
+from .widgets import standard
+from .widgets import startup
 
 if TYPE_CHECKING:
     from qtpy.QtCore import QEvent
     from qtpy.QtGui import QPalette
 
-    from .types import TextType, ViewType
+    from .types import TextType
+    from .types import ViewType
 
 
 def setup_environment() -> None:

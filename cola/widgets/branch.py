@@ -1,23 +1,24 @@
 """Provides widgets related to branches"""
+
 from functools import partial
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..git import STDOUT
-from ..i18n import N_
-from ..interaction import Interaction
-from ..models import main as main_mod
-from ..widgets import completion
-from ..widgets import defs
-from ..widgets import standard
-from ..qtutils import get
 from .. import cmds
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from ..git import STDOUT
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import main as main_mod
+from ..qtutils import get
+from ..widgets import completion
+from ..widgets import defs
+from ..widgets import standard
 from . import log
 from . import text
 

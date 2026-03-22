@@ -1,4 +1,5 @@
 """Git Archive dialog"""
+
 import os
 
 from qtpy import QtCore
@@ -6,16 +7,16 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..git import STDOUT
-from ..i18n import N_
-from ..interaction import Interaction
 from .. import cmds
 from .. import core
 from .. import icons
 from .. import qtutils
-from .text import LineEdit
-from .standard import Dialog
+from ..git import STDOUT
+from ..i18n import N_
+from ..interaction import Interaction
 from . import defs
+from .standard import Dialog
+from .text import LineEdit
 
 
 class ExpandableGroupBox(QtWidgets.QGroupBox):

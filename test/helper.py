@@ -2,7 +2,8 @@ import os
 import shutil
 import stat
 import tempfile
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
+from unittest.mock import patch
 
 import pytest
 
@@ -11,7 +12,6 @@ from cola import git
 from cola import gitcfg
 from cola import gitcmds
 from cola.models import main
-
 
 # prevent unused imports lint errors.
 assert patch is not None

@@ -1,5 +1,7 @@
 """Miscellaneous utility functions"""
+
 from __future__ import annotations
+
 import copy
 import hashlib
 import os
@@ -11,14 +13,18 @@ import tempfile
 import time
 import traceback
 import urllib.parse
-from typing import Any, Callable, TypeVar, TYPE_CHECKING
+from typing import Any
+from typing import Callable
+from typing import TYPE_CHECKING
+from typing import TypeVar
 
-from . import core
 from . import compat
+from . import core
 
 if TYPE_CHECKING:
-    from .types import TextType
     from qtpy.QtWidgets import QAction
+
+    from .types import TextType
 
 _SSH_REGEX = re.compile(r'^(?P<user>[^@]+)@(?P<hostname>[^:]+):(?P<path>.+)')
 

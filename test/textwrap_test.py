@@ -1,4 +1,5 @@
 """Test the textwrap module"""
+
 import pytest
 
 from cola import textwrap

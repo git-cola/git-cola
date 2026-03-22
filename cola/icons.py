@@ -1,5 +1,7 @@
 """The only file where icon filenames are mentioned"""
+
 from __future__ import annotations
+
 import os
 from typing import Callable
 
@@ -12,7 +14,6 @@ from . import qtcompat
 from . import resources
 from .compat import ustr
 from .i18n import N_
-
 
 KNOWN_FILE_MIME_TYPES = [
     ('text', 'file-code.svg'),

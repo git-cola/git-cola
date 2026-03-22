@@ -1,4 +1,5 @@
 """Test Quick Switcher"""
+
 from cola import icons
 from cola.widgets import switcher
 

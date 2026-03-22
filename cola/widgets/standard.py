@@ -1,6 +1,6 @@
-from functools import partial
 import os
 import time
+from functools import partial
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -9,16 +9,17 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 from qtpy.QtWidgets import QDockWidget
 
-from ..i18n import N_
-from ..interaction import Interaction
-from ..settings import Settings, mklist
-from ..models import prefs
 from .. import core
 from .. import hotkeys
 from .. import icons
 from .. import qtcompat
 from .. import qtutils
 from .. import utils
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import prefs
+from ..settings import mklist
+from ..settings import Settings
 from . import defs
 
 

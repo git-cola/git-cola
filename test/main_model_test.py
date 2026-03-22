@@ -5,12 +5,14 @@ import pytest
 from cola import core
 from cola import git
 from cola.models import main
-from cola.models.main import FETCH, FETCH_HEAD, PULL, PUSH
+from cola.models.main import FETCH
+from cola.models.main import FETCH_HEAD
+from cola.models.main import PULL
+from cola.models.main import PUSH
 
 from . import helper
 from .helper import app_context
 from .helper import Mock
-
 
 # prevent unused imports lint errors.
 assert app_context is not None
@@ -268,7 +270,9 @@ def test_cola_msg_updated_when_not_manually_edited(app_context):
     app_context.model._update_commitmsg()
     assert app_context.model.commitmsg == 'first message\n'
     helper.write_file(msg_path, 'updated message\n')
-    os.utime(msg_path, (os.path.getmtime(msg_path) + 1,) * 2)  # ensure mtime differs on coarse-grained filesystems
+    os.utime(
+        msg_path, (os.path.getmtime(msg_path) + 1,) * 2
+    )  # ensure mtime differs on coarse-grained filesystems
     app_context.model._update_commitmsg()
     assert app_context.model.commitmsg == 'updated message\n'
 
@@ -280,7 +284,9 @@ def test_cola_msg_not_overwritten_when_user_edited(app_context):
     app_context.model._update_commitmsg()
     app_context.model.commitmsg = 'user message'
     helper.write_file(msg_path, 'second message\n')
-    os.utime(msg_path, (os.path.getmtime(msg_path) + 1,) * 2)  # ensure mtime differs on coarse-grained filesystems
+    os.utime(
+        msg_path, (os.path.getmtime(msg_path) + 1,) * 2
+    )  # ensure mtime differs on coarse-grained filesystems
     app_context.model._update_commitmsg()
     assert app_context.model.commitmsg == 'user message'
 

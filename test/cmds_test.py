@@ -1,9 +1,11 @@
 """Test the cmds module"""
+
 import time
 
 from cola import cmds
 
-from .helper import Mock, patch
+from .helper import Mock
+from .helper import patch
 
 
 def test_Commit_strip_comments():

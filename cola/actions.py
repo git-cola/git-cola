@@ -1,5 +1,7 @@
 """QAction creator functions"""
+
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from . import cmds
@@ -14,7 +16,9 @@ if TYPE_CHECKING:
     from qtpy.QtWidgets import QAction
 
     from .app import ApplicationContext
-    from .cmds import LaunchEditor, LaunchEditorAtLine, StageOrUnstage
+    from .cmds import LaunchEditor
+    from .cmds import LaunchEditorAtLine
+    from .cmds import StageOrUnstage
     from .widgets.commitmsg import CommitMessageEditor
     from .widgets.diff import DiffEditor
     from .widgets.status import StatusTreeWidget

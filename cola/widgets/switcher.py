@@ -1,4 +1,5 @@
 """Provides quick switcher"""
+
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets

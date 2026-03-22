@@ -1,4 +1,5 @@
 """Test the cola.gitcmds module"""
+
 import os
 
 from cola import core
@@ -6,7 +7,6 @@ from cola import gitcmds
 
 from . import helper
 from .helper import app_context
-
 
 # Prevent unused imports lint errors.
 assert app_context is not None

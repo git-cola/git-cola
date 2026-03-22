@@ -10,8 +10,8 @@ from .. import icons
 from .. import qtutils
 from ..i18n import N_
 from ..interaction import Interaction
-from . import defs
 from . import completion
+from . import defs
 from . import standard
 from .text import LineEdit
 
@@ -146,8 +146,7 @@ class GitCommandWidget(standard.Dialog):
             # The process is still running, make sure we really want to abort.
             title = N_('Abort Action')
             msg = N_(
-                'An action is still running.\n'
-                'Terminating it could result in data loss.'
+                'An action is still running.\nTerminating it could result in data loss.'
             )
             info_text = N_('Abort the action?')
             ok_text = N_('Abort Action')

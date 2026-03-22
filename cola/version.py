@@ -1,4 +1,5 @@
 """Provide git-cola's version number"""
+
 from __future__ import annotations
 
 try:
@@ -6,9 +7,9 @@ try:
 except (ImportError, OSError):
     metadata = None
 
-from .git import STDOUT
-from .decorators import memoize
 from ._version import VERSION
+from .decorators import memoize
+from .git import STDOUT
 
 try:
     from ._scm_version import __version__ as SCM_VERSION

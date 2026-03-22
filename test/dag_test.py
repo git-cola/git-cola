@@ -1,4 +1,5 @@
 """Tests DAG functionality"""
+
 import pytest
 
 from cola.models import dag
@@ -6,7 +7,6 @@ from cola.models import dag
 from .helper import app_context
 from .helper import commit_files
 from .helper import patch
-
 
 # Prevent unused imports lint errors.
 assert app_context is not None

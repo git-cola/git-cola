@@ -1,19 +1,24 @@
 """The central cola model"""
+
 from __future__ import annotations
+
 import os
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any
+from typing import Callable
+from typing import TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from .. import core
 from .. import git
-from .. import gitcmds
 from .. import gitcfg
+from .. import gitcmds
 from .. import version
-from ..git import STDOUT, transform_kwargs
-from ..interaction import Interaction
+from ..git import STDOUT
+from ..git import transform_kwargs
 from ..i18n import N_
+from ..interaction import Interaction
 from . import prefs
 
 if TYPE_CHECKING:
@@ -115,7 +120,9 @@ class MainModel(QtCore.QObject):
         self._auto_commitmsg = ''  # e.g. .git/MERGE_MSG
         self._prev_commitmsg = ''  # saved here when clobbered by .git/MERGE_MSG
         self._cola_commitmsg = ''  # last content loaded from .git/GIT_COLA_MSG
-        self._cola_commitmsg_mtime: float | None = None  # .git/GIT_COLA_MSG mtime on last read
+        self._cola_commitmsg_mtime: float | None = (
+            None  # .git/GIT_COLA_MSG mtime on last read
+        )
         self.object_format = 'sha1'  # repository object format variables.
         self.oid_len = git.OID_LENGTH_SHA1
         self.empty_tree_oid = git.EMPTY_TREE_SHA1

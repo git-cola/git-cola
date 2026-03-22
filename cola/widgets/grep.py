@@ -3,19 +3,19 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..i18n import N_
-from ..utils import Group
 from .. import cmds
 from .. import core
 from .. import hotkeys
-from .. import utils
 from .. import qtutils
+from .. import utils
+from ..i18n import N_
 from ..qtutils import get
+from ..utils import Group
+from . import defs
 from .standard import Dialog
 from .text import HintedLineEdit
 from .text import VimHintedPlainTextEdit
 from .text import VimTextBrowser
-from . import defs
 
 
 def grep(context):
@@ -195,7 +195,7 @@ class Grep(Dialog):
             'Focus Results',
             self.focus_results,
             hotkeys.DOWN,
-            *hotkeys.ACCEPT
+            *hotkeys.ACCEPT,
         )
         qtutils.add_action(self, 'Focus Input', self.focus_input, hotkeys.FOCUS)
 

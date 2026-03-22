@@ -1,4 +1,5 @@
 """Actions widget"""
+
 from functools import partial
 
 from qtpy import QtCore
@@ -7,11 +8,11 @@ from qtpy import QtWidgets
 from .. import cmds
 from .. import qtutils
 from ..i18n import N_
+from ..qtutils import connect_button
+from ..qtutils import create_button
 from ..widgets import defs
 from ..widgets import remote
 from ..widgets import stash
-from ..qtutils import create_button
-from ..qtutils import connect_button
 
 
 class QFlowLayoutWidget(QtWidgets.QFrame):

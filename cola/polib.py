@@ -10,20 +10,23 @@ modify entries, comments or metadata, etc. or create new po files from scratch.
 **polib** provides a simple and pythonic API via the :func:`~polib.pofile` and
 :func:`~polib.mofile` convenience functions.
 """
+
 from __future__ import annotations
+
 import array
 import codecs
+import io
 import os
 import re
 import struct
 import sys
 import textwrap
-import io
-from io import BufferedReader, TextIOWrapper, BufferedWriter
+from io import BufferedReader
+from io import BufferedWriter
+from io import TextIOWrapper
 from typing import Any
 
 from . import compat
-
 
 __author__ = 'David Jean Louis <izimobil@gmail.com>'
 __version__ = '1.1.1'

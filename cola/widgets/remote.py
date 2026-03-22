@@ -1,19 +1,13 @@
 """Widgets for Fetch, Push, and Pull"""
+
 import fnmatch
-import time
 import os
+import time
 
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
-from ..i18n import N_
-from ..interaction import Interaction
-from ..models import main
-from ..models import prefs
-from ..models.main import FETCH, FETCH_HEAD, PULL, PUSH
-from ..qtutils import connect_button
-from ..qtutils import get
 from .. import core
 from .. import display
 from .. import git
@@ -21,6 +15,16 @@ from .. import gitcmds
 from .. import icons
 from .. import qtutils
 from .. import utils
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import main
+from ..models import prefs
+from ..models.main import FETCH
+from ..models.main import FETCH_HEAD
+from ..models.main import PULL
+from ..models.main import PUSH
+from ..qtutils import connect_button
+from ..qtutils import get
 from . import defs
 from . import log
 from . import standard

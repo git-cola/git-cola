@@ -1,11 +1,11 @@
 import functools
 
-from ..i18n import N_
 from .. import cmds
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .. import utils
+from ..i18n import N_
 
 
 def cmd_action(parent, cmd, context, func, *keys):
@@ -38,7 +38,7 @@ def edit_action(context, parent, *keys):
         N_('Edit selected paths'),
         cmds.run(cmds.LaunchEditor, context),
         hotkeys.EDIT,
-        *keys
+        *keys,
     )
     action.setIcon(icons.edit())
     return action

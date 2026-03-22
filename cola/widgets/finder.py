@@ -1,4 +1,5 @@
 """File finder widgets"""
+
 import os
 from functools import partial
 
@@ -7,16 +8,16 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..i18n import N_
-from ..qtutils import get
-from ..utils import Group
 from .. import cmds
 from .. import core
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
-from .. import utils
 from .. import qtutils
+from .. import utils
+from ..i18n import N_
+from ..qtutils import get
+from ..utils import Group
 from . import completion
 from . import defs
 from . import filetree

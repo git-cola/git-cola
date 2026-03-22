@@ -1,4 +1,5 @@
 """Provides widgets related to bookmarks"""
+
 import os
 
 from qtpy import QtCore
@@ -20,7 +21,6 @@ from ..models import prefs
 from ..widgets import defs
 from ..widgets import standard
 from ..widgets import switcher
-
 
 BOOKMARKS = 0
 RECENT_REPOS = 1

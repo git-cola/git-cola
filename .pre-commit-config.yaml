@@ -8,6 +8,8 @@ repos:
     rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
+        exclude: share/doc/git-cola
+        # For some reason, this file fails
       - id: trailing-whitespace
 
   - repo: https://github.com/asottile/pyupgrade
@@ -18,10 +20,25 @@ repos:
         args:
           - --py39-plus
 
-  - repo: https://github.com/jsh9/cercis
-    rev: 0.2.5
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.7
     hooks:
-      - id: cercis
-        args:
-          - --line-length=88
-          - --function-definition-extra-indent=False
+      # sort imports
+      - id: ruff-check
+        args: [--fix, --select, I]
+        files: ^(cola)/
+      # format codes
+      - id: ruff-format
+        args: [--check]
+        files: ^(cola)/
+        types_or: [ python, pyi ]
+      # format codes
+      - id: ruff-format
+        args: [--diff]
+        files: ^(cola)/
+        types_or: [ python, pyi ]
+      # format codes
+      - id: ruff-format
+        args: []
+        files: ^(cola)/
+        types_or: [ python, pyi ]

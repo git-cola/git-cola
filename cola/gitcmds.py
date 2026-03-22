@@ -1,11 +1,14 @@
 """Git commands and queries for Git"""
+
 from __future__ import annotations
-from collections.abc import Iterator
+
 import json
 import os
 import re
+from collections.abc import Iterator
 from io import StringIO
-from typing import Any, TYPE_CHECKING
+from typing import Any
+from typing import TYPE_CHECKING
 
 from . import core
 from . import textwrap
@@ -923,10 +926,12 @@ def parse_rev_list(raw_revs) -> list[tuple[str, str]]:
         if match:
             rev_id = match.group(1)
             summary = match.group(2)
-            revs.append((
-                rev_id,
-                summary,
-            ))
+            revs.append(
+                (
+                    rev_id,
+                    summary,
+                )
+            )
     return revs
 
 

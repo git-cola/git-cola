@@ -1,16 +1,15 @@
 from functools import partial
 
 from qtpy import QtGui
-from qtpy.QtCore import Qt
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
-from ..i18n import N_
 from .. import icons
 from .. import qtutils
+from ..i18n import N_
 from . import defs
 from . import standard
 from .toolbarcmds import COMMANDS
-
 
 TREE_LAYOUT = {
     'Others': ['Others::LaunchEditor', 'Others::RevertUnstagedEdits'],
@@ -152,20 +151,22 @@ class ToolBarState:
             items = [x.data() for x in toolbar.actions()]
             # show_icons is for backwards compatibility with git-cola <= 3.11.0
             show_icons = toolbar.toolbar_style() != ToolBar.STYLE_TEXT_ONLY
-            result.append({
-                'name': toolbar.windowTitle(),
-                'area': encode_toolbar_area(toolbar_area),
-                'break': widget.toolBarBreak(toolbar),
-                'float': toolbar.isFloating(),
-                'x': toolbar.pos().x(),
-                'y': toolbar.pos().y(),
-                'width': toolbar.width(),
-                'height': toolbar.height(),
-                'show_icons': show_icons,
-                'toolbar_style': toolbar.toolbar_style(),
-                'visible': toolbar.isVisible(),
-                'items': items,
-            })
+            result.append(
+                {
+                    'name': toolbar.windowTitle(),
+                    'area': encode_toolbar_area(toolbar_area),
+                    'break': widget.toolBarBreak(toolbar),
+                    'float': toolbar.isFloating(),
+                    'x': toolbar.pos().x(),
+                    'y': toolbar.pos().y(),
+                    'width': toolbar.width(),
+                    'height': toolbar.height(),
+                    'show_icons': show_icons,
+                    'toolbar_style': toolbar.toolbar_style(),
+                    'visible': toolbar.isVisible(),
+                    'items': items,
+                }
+            )
 
         return result
 

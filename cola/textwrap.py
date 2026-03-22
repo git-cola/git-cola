@@ -1,4 +1,5 @@
 """Text wrapping and filling"""
+
 import re
 from typing import Any
 

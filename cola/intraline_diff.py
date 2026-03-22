@@ -14,7 +14,9 @@ intra-line diff algorithm can be developed and tested independently.
 Main API:
     compute_intraline_diff_spans()
 """
+
 from __future__ import annotations
+
 import difflib
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -62,8 +64,9 @@ class TextSpan:
     def __post_init__(self) -> None:
         if self.start > self.end:
             raise ValueError(
-                'TextSpan start must be less than or equal to end: '
-                '{!r} > {!r}'.format(self.start, self.end)
+                'TextSpan start must be less than or equal to end: {!r} > {!r}'.format(
+                    self.start, self.end
+                )
             )
 
 

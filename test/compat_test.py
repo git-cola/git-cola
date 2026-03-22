@@ -1,4 +1,5 @@
 """Tests the compat module"""
+
 import os
 
 from cola import compat

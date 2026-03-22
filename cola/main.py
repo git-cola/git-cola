@@ -1,8 +1,11 @@
 """Launcher and command line interface to git-cola"""
+
 from __future__ import annotations
+
 import argparse
 import sys
-from typing import Callable, TYPE_CHECKING
+from typing import Callable
+from typing import TYPE_CHECKING
 
 from . import app
 from . import cmds
@@ -302,7 +305,7 @@ def add_rebase_command(subparser: argparse._SubParsersAction) -> None:
         '-x',
         '--exec',
         default=None,
-        help='add exec lines after each commit of ' 'the editable list',
+        help='add exec lines after each commit of the editable list',
     )
     parser.add_argument(
         '-k',
@@ -348,7 +351,7 @@ def add_rebase_command(subparser: argparse._SubParsersAction) -> None:
         '--rerere-autoupdate',
         default=False,
         action='store_true',
-        help='allow rerere to update index with ' 'resolved conflicts',
+        help='allow rerere to update index with resolved conflicts',
     )
     parser.add_argument(
         '--root',
@@ -360,14 +363,14 @@ def add_rebase_command(subparser: argparse._SubParsersAction) -> None:
         '--autosquash',
         default=True,
         action='store_true',
-        help='move commits that begin with ' 'squash!/fixup! under -i',
+        help='move commits that begin with squash!/fixup! under -i',
     )
     parser.add_argument(
         '--no-autosquash',
         default=True,
         action='store_false',
         dest='autosquash',
-        help='do not move commits that begin with ' 'squash!/fixup! under -i',
+        help='do not move commits that begin with squash!/fixup! under -i',
     )
     parser.add_argument(
         '--committer-date-is-author-date',

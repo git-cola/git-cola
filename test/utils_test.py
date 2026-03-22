@@ -1,4 +1,5 @@
 """Tests the cola.utils module."""
+
 import os
 
 from cola import core

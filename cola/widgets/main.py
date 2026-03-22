@@ -1,4 +1,5 @@
 """Main UI for authoring commits and other Git Cola interactions"""
+
 import os
 from functools import partial
 
@@ -8,28 +9,27 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from ..compat import WIN32
-from ..i18n import N_
-from ..interaction import Interaction
-from ..models import prefs
-from ..qtutils import get
 from .. import cmds
 from .. import core
-from .. import guicmds
 from .. import git
 from .. import gitcmds
+from .. import guicmds
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .. import resources
 from .. import utils
 from .. import version
+from ..compat import WIN32
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import prefs
+from ..qtutils import get
 from . import about
 from . import action
 from . import archive
 from . import bookmarks
 from . import branch
-from . import submodules
 from . import browse
 from . import cfgactions
 from . import clone
@@ -40,8 +40,8 @@ from . import createbranch
 from . import createtag
 from . import dag
 from . import diff
-from . import finder
 from . import editremotes
+from . import finder
 from . import grep
 from . import log
 from . import merge
@@ -50,8 +50,9 @@ from . import recent
 from . import remote
 from . import search
 from . import standard
-from . import status
 from . import stash
+from . import status
+from . import submodules
 from . import toolbar
 
 

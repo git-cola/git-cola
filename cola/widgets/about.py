@@ -1,21 +1,21 @@
-import platform
-import webbrowser
 import os
+import platform
 import sys
+import webbrowser
 
 import qtpy
 from qtpy import QtCore
-from qtpy.QtCore import Qt
 from qtpy import QtGui
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
-from ..i18n import N_
-from .. import resources
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from .. import resources
 from .. import utils
 from .. import version
+from ..i18n import N_
 from . import defs
 
 
