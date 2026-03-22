@@ -1073,6 +1073,9 @@ class GitDAG(standard.MainWindow):
         self.filewidget = filelist.FileWidget(context, self)
         self.graphview = GraphView(context, self)
 
+        self.show_inline_graph = False
+        self._update_show_inline_graph()
+
         self.treewidget.commits_selected.connect(
             self.commits_selected, type=Qt.QueuedConnection
         )
@@ -1262,6 +1265,12 @@ class GitDAG(standard.MainWindow):
         self.thread.status.connect(self.thread_status, type=Qt.QueuedConnection)
         self.thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
         self.thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
+
+    def _update_show_inline_graph(self) -> None:
+        self.show_inline_graph = prefs.show_inline_graph(self.context)
+        self.treewidget.setColumnHidden(
+            CommitTreeWidgetItem.GRAPH, not self.show_inline_graph
+        )
 
     def _stop_reader_thread(self):
         """Stop the reader thread if it is currently running"""
@@ -1453,7 +1462,8 @@ class GitDAG(standard.MainWindow):
     def thread_end(self):
         """The reader thread has completed"""
         self.graphview.add_commits(self.commit_list)
-        if self.commit_list:
+
+        if self.show_inline_graph and self.commit_list:
             graph_result = build_graph(
                 [(c.oid, [p.oid for p in c.parents]) for c in self.commit_list]
             )
@@ -1566,6 +1576,7 @@ class GitDAG(standard.MainWindow):
     def showEvent(self, event):
         """Resize widgets once their sizes are known"""
         standard.MainWindow.showEvent(self, event)
+        self._update_show_inline_graph()
         if not self._widgets_initialized:
             self._widgets_initialized = True
             self.maxresults.setMinimumHeight(self.revtext.height())
