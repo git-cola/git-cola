@@ -23,16 +23,22 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.7
     hooks:
-      # 1. sort imports
+      # sort imports
       - id: ruff-check
-        args: [--fix, --select, I, --exit-non-zero-on-fix]
+        args: [--fix, --select, I]
         files: ^(cola)/
-      # 2. format codes
+      # format codes
       - id: ruff-format
         args: [--check]
         files: ^(cola)/
         types_or: [ python, pyi ]
-      # 2. format codes
+      # format codes
       - id: ruff-format
+        args: [--diff]
+        files: ^(cola)/
+        types_or: [ python, pyi ]
+      # format codes
+      - id: ruff-format
+        args: []
         files: ^(cola)/
         types_or: [ python, pyi ]
