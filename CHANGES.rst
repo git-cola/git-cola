@@ -16,6 +16,11 @@ Usability, bells and whistles
   (`#1561 <https://github.com/git-cola/git-cola/issues/1561>`_)
   (`#1563 <https://github.com/git-cola/git-cola/pull/1563>`_)
 
+Fixes
+-----
+* Right-clicking in an empty area in the DAG was causing a crash and has been fixed.
+  (`#1572 <https://github.com/git-cola/git-cola/issues/1572>`_)
+  (`#1574 <https://github.com/git-cola/git-cola/pull/1574>`_)
 
 .. _v4.18.2:
 
