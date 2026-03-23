@@ -11,6 +11,7 @@ Thanks
 * Adrien be
 * Adil
 * AJ Bagwell
+* Akhil Presingu
 * akontsevich
 * Albert Vaca Cintora
 * Aleksey Kontsevich
