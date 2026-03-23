@@ -92,8 +92,8 @@ such as "Thanks-to:", "Based-on-patch-by:", or "Helped-by:".
 
 **Note on spell checking:** The commit message editor includes spell checking via aspell. 
 It may incorrectly flag technical terms or Git commands as misspelled. You can:
-- Right-click → "Add to dictionary" for project-specific terms
-- Or disable spell checking in git-cola Preferences → Editor
+-> Right-click → "Add to dictionary" for project-specific terms
+-> Or disable spell checking in git-cola Preferences → Editor
 
 ## Sign your work
 
