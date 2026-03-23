@@ -317,7 +317,7 @@ class ViewerMixin:
         else:
             self.clicked = commit = item.commit
 
-        has_oid = commit and commit.oid not in (dag.WORKTREE, dag.STAGE)
+        has_oid = bool(commit and commit.oid not in (dag.WORKTREE, dag.STAGE))
         has_single_selection = len(selected_items) == 1
         has_single_selection_or_clicked = bool(has_single_selection or commit)
         has_selection = bool(selected_items)
