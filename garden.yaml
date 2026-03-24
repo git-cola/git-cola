@@ -77,6 +77,8 @@ trees:
         ${activate}
         cercis --version
         cercis "$@" bin bin/git-* cola test extras/sphinxtogithub
+        isort --version
+        isort --force-single-line-imports --py=39 --no-lines-before=STDLIB "$@" bin bin/git-* cola test extras/sphinxtogithub
       html: garden html ${GARDEN_CMD_VERBOSE} docs
       install: |
         ${activate}
