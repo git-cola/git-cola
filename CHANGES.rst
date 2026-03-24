@@ -26,6 +26,10 @@ Fixes
   (`#1572 <https://github.com/git-cola/git-cola/issues/1572>`_)
   (`#1574 <https://github.com/git-cola/git-cola/pull/1574>`_)
 
+* The status widget was not focusing itself on startup. This has been fixed.
+  (`#1575 <https://github.com/git-cola/git-cola/issues/1575>`_)
+
+
 Development
 -----------
 * ``isort`` is now used for code formatting.
