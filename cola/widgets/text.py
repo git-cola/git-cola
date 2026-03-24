@@ -1002,9 +1002,7 @@ def text_dialog(context, text, title):
     widget.setWindowModality(Qt.WindowModal)
     widget.setWindowTitle(title)
 
-    scroll = QtWidgets.QScrollArea()
-    scroll.setWidget(label)
-
+    scroll = qtutils.scroll_area(label)
     layout = qtutils.hbox(defs.margin, defs.spacing, scroll)
     widget.setLayout(layout)
 

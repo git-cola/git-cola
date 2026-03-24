@@ -1514,6 +1514,15 @@ def get_scrollbar_values(widget: QtWidgets.QWidget) -> tuple[Any, Any]:
     return (hscroll_value, vscroll_value)
 
 
+def scroll_area(widget: QtWidgets.QWidget) -> QtWidgets.QScrollArea:
+    """Create a scroll area widget"""
+    scroll_widget = QtWidgets.QScrollArea()
+    scroll_widget.setWidget(widget)
+    scroll_widget.setWidgetResizable(True)
+    scroll_widget.setContentsMargins(0, 0, 0, 0)
+    return scroll_widget
+
+
 def scroll_to_item(widget: QtWidgets.QWidget, item: Any) -> None:
     """Scroll to an item while retaining the horizontal scroll position"""
     hscroll = None
