@@ -1,30 +1,30 @@
 import shlex
 import shutil
 
-from qtpy.QtCore import Qt
-from qtpy.QtCore import Signal
 from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
+from qtpy.QtCore import Signal
 
-from ..models.browse import GitRepoModel
-from ..models.browse import GitRepoNameItem
-from ..models.selection import State
-from ..i18n import N_
-from ..models import dag
-from ..interaction import Interaction
 from .. import cmds
 from .. import core
 from .. import difftool
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
-from .. import utils
 from .. import qtutils
-from .selectcommits import select_commits
+from .. import utils
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import dag
+from ..models.browse import GitRepoModel
+from ..models.browse import GitRepoNameItem
+from ..models.selection import State
 from . import common
 from . import defs
 from . import standard
+from .selectcommits import select_commits
 
 
 def worktree_browser(context, parent=None, update=True, show=True):

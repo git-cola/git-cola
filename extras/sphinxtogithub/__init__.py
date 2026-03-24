@@ -10,19 +10,17 @@ __contact__ = 'http://github.com/michaeljones'
 __homepage__ = 'http://github.com/michaeljones/sphinx-to-github'
 __docformat__ = 'restructuredtext'
 
-from .sphinxtogithub import (
-    setup,
-    sphinx_extension,
-    LayoutFactory,
-    Layout,
-    DirectoryHandler,
-    VerboseRename,
-    ForceRename,
-    Remover,
-    FileHandler,
-    Replacer,
-    DirHelper,
-    FileSystemHelper,
-    OperationsFactory,
-    HandlerFactory,
-)
+from .sphinxtogithub import DirectoryHandler
+from .sphinxtogithub import DirHelper
+from .sphinxtogithub import FileHandler
+from .sphinxtogithub import FileSystemHelper
+from .sphinxtogithub import ForceRename
+from .sphinxtogithub import HandlerFactory
+from .sphinxtogithub import Layout
+from .sphinxtogithub import LayoutFactory
+from .sphinxtogithub import OperationsFactory
+from .sphinxtogithub import Remover
+from .sphinxtogithub import Replacer
+from .sphinxtogithub import VerboseRename
+from .sphinxtogithub import setup
+from .sphinxtogithub import sphinx_extension

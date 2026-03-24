@@ -14,21 +14,23 @@ from .. import display
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
-from .. import textwrap
 from .. import qtutils
 from .. import spellcheck
+from .. import textwrap
 from .. import utils
-from ..interaction import Interaction
 from ..gitcmds import commit_message_path
 from ..i18n import N_
+from ..interaction import Interaction
 from ..models import dag
 from ..models import prefs
 from ..qtutils import get
 from . import defs
 from . import standard
 from .selectcommits import select_commits
-from .spellcheck import SpellCheckLineEdit, SpellCheckTextEdit
-from .text import event_anchor_mode, is_shift_pressed
+from .spellcheck import SpellCheckLineEdit
+from .spellcheck import SpellCheckTextEdit
+from .text import event_anchor_mode
+from .text import is_shift_pressed
 
 
 class CommitMessageEditor(QtWidgets.QFrame):

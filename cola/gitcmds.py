@@ -1,11 +1,12 @@
 """Git commands and queries for Git"""
 from __future__ import annotations
-from collections.abc import Iterator
 import json
 import os
 import re
+from collections.abc import Iterator
 from io import StringIO
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from typing import Any
 
 from . import core
 from . import textwrap

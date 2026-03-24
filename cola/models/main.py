@@ -1,19 +1,22 @@
 """The central cola model"""
 from __future__ import annotations
 import os
-from typing import Any, Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Callable
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
 
 from .. import core
 from .. import git
-from .. import gitcmds
 from .. import gitcfg
+from .. import gitcmds
 from .. import version
-from ..git import STDOUT, transform_kwargs
-from ..interaction import Interaction
+from ..git import STDOUT
+from ..git import transform_kwargs
 from ..i18n import N_
+from ..interaction import Interaction
 from . import prefs
 
 if TYPE_CHECKING:

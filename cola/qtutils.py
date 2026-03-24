@@ -1,12 +1,16 @@
 """Miscellaneous Qt utility functions."""
 from __future__ import annotations
 import os
-from typing import Any, Callable, TYPE_CHECKING, TypeAlias, Union
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Callable
+from typing import TypeAlias
+from typing import Union
 
-from qtpy import compat
-from qtpy import QtGui
 from qtpy import QtCore
+from qtpy import QtGui
 from qtpy import QtWidgets
+from qtpy import compat
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
@@ -14,9 +18,9 @@ from . import core
 from . import hotkeys
 from . import icons
 from . import utils
-from .i18n import N_
 from .compat import int_types
 from .compat import ustr
+from .i18n import N_
 from .models import prefs
 from .widgets import defs
 

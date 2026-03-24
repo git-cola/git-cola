@@ -8,7 +8,6 @@ from qtpy.QtCore import Signal
 
 from .main import MainModel
 
-
 State = collections.namedtuple('State', 'staged unmerged modified untracked')
 
 

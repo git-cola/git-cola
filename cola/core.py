@@ -12,16 +12,20 @@ import os
 import platform
 import subprocess
 import sys
-from typing import Any, Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from typing import Any
+from typing import Callable
 
-from .decorators import interruptable
-from .compat import ustr
 from .compat import PY2
 from .compat import PY3
 from .compat import WIN32
+from .compat import ustr
+from .decorators import interruptable
 
 if TYPE_CHECKING:
-    from io import BufferedReader, BufferedWriter, TextIOWrapper
+    from io import BufferedReader
+    from io import BufferedWriter
+    from io import TextIOWrapper
 
 # /usr/include/stdlib.h
 # #define EXIT_SUCCESS    0   /* Successful exit status.  */

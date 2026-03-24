@@ -9,8 +9,8 @@ from .. import core
 from .. import qtutils
 from ..i18n import N_
 from . import defs
-from . import text
 from . import standard
+from . import text
 
 
 class LogWidget(QtWidgets.QFrame):

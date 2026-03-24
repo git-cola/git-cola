@@ -1,14 +1,14 @@
 """Widgets for manipulating git stashes"""
 from qtpy.QtCore import Qt
 
-from ..i18n import N_
-from ..interaction import Interaction
-from ..models import stash
-from ..qtutils import get
 from .. import cmds
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
+from ..i18n import N_
+from ..interaction import Interaction
+from ..models import stash
+from ..qtutils import get
 from . import defs
 from . import diff
 from . import standard

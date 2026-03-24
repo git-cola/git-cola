@@ -13,7 +13,6 @@ from . import resources
 from .compat import ustr
 from .i18n import N_
 
-
 KNOWN_FILE_MIME_TYPES = [
     ('text', 'file-code.svg'),
     ('image', 'file-media.svg'),

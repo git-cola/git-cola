@@ -2,7 +2,8 @@
 from __future__ import annotations
 import argparse
 import sys
-from typing import Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from typing import Callable
 
 from . import app
 from . import cmds
