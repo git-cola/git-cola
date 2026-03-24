@@ -22,6 +22,13 @@ Fixes
   (`#1572 <https://github.com/git-cola/git-cola/issues/1572>`_)
   (`#1574 <https://github.com/git-cola/git-cola/pull/1574>`_)
 
+Development
+-----------
+* ``isort`` is now used for code formatting.
+  (`#1567 <https://github.com/git-cola/git-cola/issues/1567>`_)
+  (`#1568 <https://github.com/git-cola/git-cola/pull/1568>`_)
+
+
 .. _v4.18.2:
 
 v4.18.2
