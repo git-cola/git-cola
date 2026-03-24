@@ -675,8 +675,6 @@ class PreferencesView(standard.Dialog):
         if parent is not None:
             self.setWindowModality(QtCore.Qt.WindowModal)
 
-        self.resize(600, 360)
-
         self.tab_bar = QtWidgets.QTabBar()
         self.tab_bar.setDrawBase(False)
         self.tab_bar.addTab(N_('Current Repository'))
@@ -690,11 +688,17 @@ class PreferencesView(standard.Dialog):
         self.appearance_form = AppearanceFormWidget(context, model, self)
         self.appearance = AppearanceWidget(self.appearance_form, self)
 
+        # Make the widgets scrollable
+        self.user_scroll_area = qtutils.scroll_area(self.user_form)
+        self.repo_scroll_area = qtutils.scroll_area(self.repo_form)
+        self.options_scroll_area = qtutils.scroll_area(self.options_form)
+        self.appearance_scroll_area = qtutils.scroll_area(self.appearance)
+
         self.stack_widget = QtWidgets.QStackedWidget()
-        self.stack_widget.addWidget(self.repo_form)
-        self.stack_widget.addWidget(self.user_form)
-        self.stack_widget.addWidget(self.options_form)
-        self.stack_widget.addWidget(self.appearance)
+        self.stack_widget.addWidget(self.repo_scroll_area)
+        self.stack_widget.addWidget(self.user_scroll_area)
+        self.stack_widget.addWidget(self.options_scroll_area)
+        self.stack_widget.addWidget(self.appearance_scroll_area)
 
         self.close_button = qtutils.close_button()
 
@@ -728,5 +732,5 @@ class PreferencesView(standard.Dialog):
         self.update_widget(index)
 
     def update_widget(self, idx):
-        widget = self.stack_widget.widget(idx)
+        widget = self.stack_widget.widget(idx).widget()
         widget.update_from_config()

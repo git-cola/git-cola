@@ -16,6 +16,10 @@ Usability, bells and whistles
   (`#1561 <https://github.com/git-cola/git-cola/issues/1561>`_)
   (`#1563 <https://github.com/git-cola/git-cola/pull/1563>`_)
 
+* The Preferences dialog tabs are now scrollable, which prevents issues when
+  the displaying the dialog on smaller displays.
+  (`#1569 <https://github.com/git-cola/git-cola/issues/1569>`_)
+
 Fixes
 -----
 * Right-clicking in an empty area in the DAG was causing a crash and has been fixed.
