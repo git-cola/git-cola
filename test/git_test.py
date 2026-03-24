@@ -1,11 +1,10 @@
 """Test the cola.git module"""
 import os
 import pathlib
+from unittest.mock import patch
 
 from cola import git
 from cola.git import STDOUT
-
-from .helper import patch
 
 # 16k+1 bytes to exhaust any output buffers.
 BUFFER_SIZE = (16 * 1024) + 1

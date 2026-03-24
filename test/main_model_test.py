@@ -1,4 +1,5 @@
 import os
+from unittest.mock import Mock
 
 import pytest
 
@@ -11,7 +12,6 @@ from cola.models.main import PULL
 from cola.models.main import PUSH
 
 from . import helper
-from .helper import Mock
 from .helper import app_context
 
 # prevent unused imports lint errors.

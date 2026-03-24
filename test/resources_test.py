@@ -1,7 +1,8 @@
+from unittest.mock import patch
+
 from cola import resources
 
 from . import helper
-from .helper import patch
 
 
 @patch('cola.resources.compat')
