@@ -445,13 +445,16 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.summary.set_value(summary, block=True)
         # Update description
         self.description.set_value(description, block=True)
-        # Focus the empty summary or description
-        if focus_summary:
-            self.summary.setFocus()
-        elif focus_description:
-            self.description.setFocus()
-        else:
-            self.summary.cursor_position.emit()
+        # Focus the empty summary or description, but only if the commit
+        # message editor already has focus. This prevents stealing focus from
+        # the status widget during startup or background refreshes.
+        if self.hasFocus() or self.summary.hasFocus() or self.description.hasFocus():
+            if focus_summary:
+                self.summary.setFocus()
+            elif focus_description:
+                self.description.setFocus()
+            else:
+                self.summary.cursor_position.emit()
         self.update_actions()
 
     def set_expandtab(self, value):
