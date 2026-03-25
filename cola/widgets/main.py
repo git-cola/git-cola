@@ -935,7 +935,10 @@ class MainView(standard.MainWindow):
         # Route command output here
         Interaction.log_status = self.logwidget.log_status
         Interaction.log = self.logwidget.log
-        # Focus the status widget; this must be deferred
+        self.statuswidget.setFocus()
+
+        # The Interaction error handlers are not available until the main view has been
+        # fully constructed, so we defer that initializaiton.
         QtCore.QTimer.singleShot(0, self.initialize)
 
     def initialize(self):
@@ -951,9 +954,7 @@ class MainView(standard.MainWindow):
             error_msg = N_('error: unable to execute git')
             Interaction.log(error_msg)
 
-        if ok:
-            self.statuswidget.setFocus()
-        else:
+        if not ok:
             title = N_('error: unable to execute git')
             msg = title
             details = ''
