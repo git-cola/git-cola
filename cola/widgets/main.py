@@ -936,7 +936,7 @@ class MainView(standard.MainWindow):
         Interaction.log_status = self.logwidget.log_status
         Interaction.log = self.logwidget.log
         # Focus the status widget; this must be deferred
-        QtCore.QTimer.singleShot(800, self.initialize)
+        QtCore.QTimer.singleShot(0, self.initialize)
 
     def initialize(self):
         context = self.context
