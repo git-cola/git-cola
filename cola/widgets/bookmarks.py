@@ -115,7 +115,7 @@ class BookmarksWidget(QtWidgets.QFrame):
         qtutils.connect_button(self.open_button, self.tree.open_repo)
         qtutils.connect_button(self.search_button, self.toggle_switcher_input_field)
 
-        QtCore.QTimer.singleShot(0, self.reload_bookmarks)
+        QtCore.QTimer.singleShot(0, lambda: self.reload_bookmarks(connect=True))
 
         self.tree.toggle_switcher.connect(self.enable_switcher_input_field)
         # moving key has pressed while focusing on input field
@@ -129,17 +129,16 @@ class BookmarksWidget(QtWidgets.QFrame):
         # some key except moving key has pressed while focusing on list view
         self.tree.switcher_text.connect(self.switcher_text_inputted)
 
-    def reload_bookmarks(self):
+    def reload_bookmarks(self, connect=False):
         # Called once after the GUI is initialized
         tree = self.tree
         tree.refresh()
-
-        model = tree.model()
-
-        model.dataChanged.connect(tree.item_changed)
-        selection = tree.selectionModel()
-        selection.selectionChanged.connect(tree.item_selection_changed)
-        tree.doubleClicked.connect(tree.tree_double_clicked)
+        if connect:
+            model = tree.model()
+            model.dataChanged.connect(tree.item_changed)
+            selection = tree.selectionModel()
+            selection.selectionChanged.connect(self.tree_item_selection_changed)
+            tree.doubleClicked.connect(tree.tree_double_clicked)
 
     def tree_item_selection_changed(self):
         enabled = bool(self.tree.selected_item())
