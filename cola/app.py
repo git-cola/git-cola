@@ -30,7 +30,7 @@ On a Debian/Ubuntu system you can install these modules using apt:
             err=error
         )
     )
-    sys.exit(core.EXIT_FAILURE)
+    sys.exit(1)  # core.EXIT_FAILURE
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
