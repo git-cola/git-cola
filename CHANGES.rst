@@ -28,7 +28,7 @@ Fixes
 
 * The focus behavior of the status widget was improved.
   (`#1575 <https://github.com/git-cola/git-cola/issues/1575>`_)
-  (`#1576 <https://github.com/git-cola/git-cola/issues/1576>`_)
+  (`#1576 <https://github.com/git-cola/git-cola/pull/1576>`_)
 
 Development
 -----------
