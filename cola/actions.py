@@ -12,19 +12,15 @@ from .i18n import N_
 if TYPE_CHECKING:
     from qtpy.QtGui import QIcon
     from qtpy.QtWidgets import QAction
+    from qtpy.QtWidgets import QWidget
 
     from .app import ApplicationContext
-    from .cmds import LaunchEditor
-    from .cmds import LaunchEditorAtLine
-    from .cmds import StageOrUnstage
-    from .widgets.commitmsg import CommitMessageEditor
-    from .widgets.diff import DiffEditor
-    from .widgets.status import StatusTreeWidget
+    from .cmd import Command
 
 
 def cmd_action(
-    widget: DiffEditor | CommitMessageEditor | StatusTreeWidget,
-    cmd: type[LaunchEditor] | type[LaunchEditorAtLine] | type[StageOrUnstage],
+    widget: QWidget,
+    cmd: type[Command],
     context: ApplicationContext,
     icon: QIcon,
     *shortcuts,
@@ -36,7 +32,7 @@ def cmd_action(
 
 
 def launch_editor(
-    context: ApplicationContext, widget: DiffEditor | CommitMessageEditor, *shortcuts
+    context: ApplicationContext, widget: QWidget, *shortcuts
 ) -> QAction:
     """Create a QAction to launch an editor"""
     icon = icons.edit()
@@ -47,7 +43,7 @@ def launch_editor(
 
 def launch_editor_at_line(
     context: ApplicationContext,
-    widget: DiffEditor | CommitMessageEditor | StatusTreeWidget,
+    widget: QWidget,
     *shortcuts,
 ) -> QAction:
     """Create a QAction to launch an editor at the current line"""
@@ -57,9 +53,7 @@ def launch_editor_at_line(
     )
 
 
-def launch_difftool(
-    context: ApplicationContext, widget: DiffEditor | CommitMessageEditor
-) -> QAction:
+def launch_difftool(context: ApplicationContext, widget: QWidget) -> QAction:
     """Create a QAction to launch git-difftool(1)"""
     icon = icons.diff()
     cmd = difftool.LaunchDifftool
@@ -70,9 +64,7 @@ def launch_difftool(
     return action
 
 
-def stage_or_unstage(
-    context: ApplicationContext, widget: DiffEditor | CommitMessageEditor
-) -> QAction:
+def stage_or_unstage(context: ApplicationContext, widget: QWidget) -> QAction:
     """Create a QAction to stage or unstage the selection"""
     icon = icons.add()
     return cmd_action(
@@ -80,7 +72,7 @@ def stage_or_unstage(
     )
 
 
-def move_down(widget: DiffEditor | CommitMessageEditor) -> QAction:
+def move_down(widget: QWidget) -> QAction:
     """Create a QAction to select the next item"""
     action = qtutils.add_action(
         widget, N_('Next File'), widget.down.emit, hotkeys.MOVE_DOWN_SECONDARY
@@ -89,7 +81,7 @@ def move_down(widget: DiffEditor | CommitMessageEditor) -> QAction:
     return action
 
 
-def move_up(widget: DiffEditor | CommitMessageEditor) -> QAction:
+def move_up(widget: QWidget) -> QAction:
     """Create a QAction to select the previous/above item"""
     action = qtutils.add_action(
         widget, N_('Previous File'), widget.up.emit, hotkeys.MOVE_UP_SECONDARY
