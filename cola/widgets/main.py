@@ -960,7 +960,7 @@ class MainView(standard.MainWindow):
             if WIN32:
                 details = git.win32_git_error_hint()
             Interaction.critical(title, message=msg, details=details)
-            self.context.app.exit(2)
+            self.context.app.exit(core.EXIT_UNAVAILABLE)
 
     def set_initial_size(self):
         # Default size; this is thrown out when save/restore is used
