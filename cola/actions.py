@@ -31,9 +31,7 @@ def cmd_action(
     return action
 
 
-def launch_editor(
-    context: ApplicationContext, widget: QWidget, *shortcuts
-) -> QAction:
+def launch_editor(context: ApplicationContext, widget: QWidget, *shortcuts) -> QAction:
     """Create a QAction to launch an editor"""
     icon = icons.edit()
     return cmd_action(
