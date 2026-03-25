@@ -440,8 +440,6 @@ class CommitMessageEditor(QtWidgets.QFrame):
                 description_lines = lines[2:]
             description = '\n'.join(description_lines)
 
-        focus_summary = not summary
-        focus_description = not description
         # Update summary
         self.summary.set_value(summary, block=True)
         # Update description
