@@ -30,6 +30,10 @@ Fixes
   (`#1575 <https://github.com/git-cola/git-cola/issues/1575>`_)
   (`#1576 <https://github.com/git-cola/git-cola/pull/1576>`_)
 
+* The action buttons for the Recent and Favorite widgets now correctly enable
+  themselves when items are selected.
+  (`#1566 <https://github.com/git-cola/git-cola/issues/1566>`_)
+
 Development
 -----------
 * ``isort`` is now used for code formatting.

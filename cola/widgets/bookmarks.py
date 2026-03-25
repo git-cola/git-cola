@@ -140,9 +140,10 @@ class BookmarksWidget(QtWidgets.QFrame):
             selection.selectionChanged.connect(self.tree_item_selection_changed)
             tree.doubleClicked.connect(tree.tree_double_clicked)
 
-    def tree_item_selection_changed(self):
+    def tree_item_selection_changed(self, selected, deselected):
         enabled = bool(self.tree.selected_item())
         self.button_group.setEnabled(enabled)
+        self.tree.item_selection_changed(selected, deselected)
 
     def connect_to(self, other):
         self.tree.default_changed.connect(other.tree.refresh)
