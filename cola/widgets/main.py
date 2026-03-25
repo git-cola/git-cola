@@ -935,8 +935,11 @@ class MainView(standard.MainWindow):
         # Route command output here
         Interaction.log_status = self.logwidget.log_status
         Interaction.log = self.logwidget.log
-        # Focus the status widget; this must be deferred
-        QtCore.QTimer.singleShot(800, self.initialize)
+        self.statuswidget.setFocus()
+
+        # The Interaction error handlers are not available until the main view has been
+        # fully constructed, so we defer that initializaiton.
+        QtCore.QTimer.singleShot(0, self.initialize)
 
     def initialize(self):
         context = self.context
@@ -951,16 +954,14 @@ class MainView(standard.MainWindow):
             error_msg = N_('error: unable to execute git')
             Interaction.log(error_msg)
 
-        if ok:
-            self.statuswidget.setFocus()
-        else:
+        if not ok:
             title = N_('error: unable to execute git')
             msg = title
             details = ''
             if WIN32:
                 details = git.win32_git_error_hint()
             Interaction.critical(title, message=msg, details=details)
-            self.context.app.exit(2)
+            self.context.app.exit(core.EXIT_UNAVAILABLE)
 
     def set_initial_size(self):
         # Default size; this is thrown out when save/restore is used

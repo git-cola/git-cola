@@ -118,6 +118,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
             self,
             disable=(self.commit_button, self.summary, self.description),
         )
+        self.commit_progress_bar.setFocusPolicy(Qt.NoFocus)
 
         # make the position label fixed size to avoid layout issues
         font = qtutils.default_monospace_font()
@@ -445,13 +446,12 @@ class CommitMessageEditor(QtWidgets.QFrame):
         self.summary.set_value(summary, block=True)
         # Update description
         self.description.set_value(description, block=True)
-        # Focus the empty summary or description
-        if focus_summary:
-            self.summary.setFocus()
-        elif focus_description:
-            self.description.setFocus()
+
+        if self.description.hasFocus():
+            self.description.cursor_position.emit()
         else:
             self.summary.cursor_position.emit()
+
         self.update_actions()
 
     def set_expandtab(self, value):
@@ -637,13 +637,14 @@ class CommitMessageEditor(QtWidgets.QFrame):
         title = N_('Commit failed')
         status, out, err = task.result
         Interaction.command(title, 'git commit', status, out, err)
-        self.bypass_commit_hooks_action.setChecked(False)
         # Author and date settings are not cleared unless the commit operation succeeds.
         # These settings are consumed when a commit is produced with their values.
         if status == 0:
+            self.bypass_commit_hooks_action.setChecked(False)
             self.set_commit_author(False, update=False)
             self.set_commit_date(False, update=True)
-        self.setFocus()
+            self.focus_summary()
+            self.summary.cursor_position.emit()
 
     def build_fixup_menu(self):
         count = prefs.fixup_commit_count(self.context)

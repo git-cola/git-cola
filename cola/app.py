@@ -30,7 +30,7 @@ On a Debian/Ubuntu system you can install these modules using apt:
             err=error
         )
     )
-    sys.exit(1)
+    sys.exit(core.EXIT_FAILURE)
 
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -474,7 +474,7 @@ def enforce_single_instance(context: ApplicationContext) -> None:
             N_('%(app_name)s is already running in %(dirname)s (--single-instance).')
             % format_vars,
         )
-        sys.exit(1)
+        sys.exit(core.EXIT_FAILURE)
 
 
 def application_run(

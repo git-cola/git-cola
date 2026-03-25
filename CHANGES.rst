@@ -26,9 +26,9 @@ Fixes
   (`#1572 <https://github.com/git-cola/git-cola/issues/1572>`_)
   (`#1574 <https://github.com/git-cola/git-cola/pull/1574>`_)
 
-* The status widget was not focusing itself on startup. This has been fixed.
+* The focus behavior of the status widget was improved.
   (`#1575 <https://github.com/git-cola/git-cola/issues/1575>`_)
-
+  (`#1576 <https://github.com/git-cola/git-cola/issues/1576>`_)
 
 Development
 -----------
