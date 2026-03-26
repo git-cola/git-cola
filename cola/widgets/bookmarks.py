@@ -59,8 +59,15 @@ class BookmarksWidget(QtWidgets.QFrame):
         self.quick_switcher = switcher.switcher_outer_view(
             context, model, place_holder=place_holder
         )
+        self.quick_switcher.proxy_model.setSourceModel(self.model)
+
         self.tree = BookmarksTreeView(
-            context, style, self.set_items_to_models, parent=self
+            context,
+            style,
+            self.items,
+            self.model,
+            self.quick_switcher.proxy_model,
+            parent=self,
         )
 
         self.add_button = qtutils.create_action_button(
@@ -113,10 +120,12 @@ class BookmarksWidget(QtWidgets.QFrame):
         qtutils.connect_button(self.open_button, self.tree.open_repo)
         qtutils.connect_button(self.search_button, self.toggle_switcher_input_field)
 
-        QtCore.QTimer.singleShot(0, lambda: self.reload_bookmarks(connect=True))
-
+        self.tree.selectionModel().selectionChanged.connect(
+            self.tree_item_selection_changed
+        )
         self.tree.toggle_switcher.connect(self.enable_switcher_input_field)
-        # moving key has pressed while focusing on input field
+
+        # A movement key was pressed while the input field was focused.
         self.quick_switcher.filter_input.switcher_selection_move.connect(
             self.tree.keyPressEvent
         )
@@ -126,39 +135,20 @@ class BookmarksWidget(QtWidgets.QFrame):
         )
         # A non-movement key was pressed while the treeview was focused.
         self.tree.switcher_text.connect(self.switcher_text_inputted)
+        # Defer loading of bookmarks until the Qt event loop is ready.
+        QtCore.QTimer.singleShot(0, self.reload_bookmarks)
 
     def reload_bookmarks(self, connect=False):
-        # Called once after the GUI is initialized
-        tree = self.tree
-        tree.refresh()
-        if connect:
-            model = tree.model()
-            model.dataChanged.connect(tree.item_changed)
-            selection = tree.selectionModel()
-            selection.selectionChanged.connect(self.tree_item_selection_changed)
-            tree.doubleClicked.connect(tree.tree_double_clicked)
+        self.tree.refresh()
 
     def tree_item_selection_changed(self, selected, deselected):
         """Update widget-level controls when the tree selection changes."""
         enabled = bool(self.tree.selected_item())
         self.button_group.setEnabled(enabled)
-        self.tree.item_selection_changed(selected, deselected)
 
     def connect_to(self, other):
         self.tree.default_changed.connect(other.tree.refresh)
         other.tree.default_changed.connect(self.tree.refresh)
-
-    def set_items_to_models(self, items):
-        model = self.model
-        self.items.clear()
-        model.clear()
-
-        for item in items:
-            self.items.append(item)
-            model.appendRow(item)
-
-        self.quick_switcher.proxy_model.setSourceModel(model)
-        self.tree.setModel(self.quick_switcher.proxy_model)
 
     def toggle_switcher_input_field(self):
         visible = self.quick_switcher.filter_input.isVisible()
@@ -198,11 +188,13 @@ class BookmarksTreeView(standard.TreeView):
     # this signal will be emitted when some key pressed while focusing on tree view
     switcher_text = Signal(QtGui.QKeyEvent)
 
-    def __init__(self, context, style, set_model, parent=None):
+    def __init__(self, context, style, items, root_model, proxy_model, parent=None):
         standard.TreeView.__init__(self, parent=parent)
         self.context = context
         self.style = style
-        self.set_model = set_model
+        self.items = items
+        self.root_model = root_model
+        self.setModel(proxy_model)
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.setHeaderHidden(True)
@@ -275,6 +267,10 @@ class BookmarksTreeView(standard.TreeView):
         self.clear_default_repo_action.setEnabled(False)
 
         # Connections
+        self.doubleClicked.connect(self.item_double_clicked)
+        proxy_model.dataChanged.connect(self.item_changed)
+        self.selectionModel().selectionChanged.connect(self.item_selection_changed)
+
         if style == RECENT_REPOS:
             context.model.worktree_changed.connect(
                 self.refresh, type=Qt.QueuedConnection
@@ -317,7 +313,11 @@ class BookmarksTreeView(standard.TreeView):
         if self.style == BOOKMARKS and prefs.sort_bookmarks(context):
             items.sort(key=lambda x: x.name.lower())
 
-        self.set_model(items)
+        self.items.clear()
+        self.root_model.clear()
+        for item in items:
+            self.items.append(item)
+            self.root_model.appendRow(item)
 
     def contextMenuEvent(self, event):
         menu = qtutils.create_menu(N_('Actions'), self)
@@ -352,7 +352,7 @@ class BookmarksTreeView(standard.TreeView):
             self.set_default_repo_action.setEnabled(not is_default)
             self.clear_default_repo_action.setEnabled(is_default)
 
-    def tree_double_clicked(self, _index):
+    def item_double_clicked(self, _index):
         context = self.context
         item = self.selected_item()
         cmds.do(cmds.OpenRepo, context, item.path)
