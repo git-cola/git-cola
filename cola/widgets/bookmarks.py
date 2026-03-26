@@ -39,16 +39,14 @@ class BookmarksWidget(QtWidgets.QFrame):
 
         self.context = context
         self.style = style
-
         self.items = items = []
         self.model = model = QtGui.QStandardItemModel()
 
         settings = context.settings
         builder = BuildItem(context)
-        # bookmarks
+
         if self.style == BOOKMARKS:
             entries = settings.bookmarks
-        # recent items
         elif self.style == RECENT_REPOS:
             entries = settings.recent
 
@@ -122,11 +120,11 @@ class BookmarksWidget(QtWidgets.QFrame):
         self.quick_switcher.filter_input.switcher_selection_move.connect(
             self.tree.keyPressEvent
         )
-        # escape key has pressed while focusing on input field
+        # The Esc key was pressed while the input field was focused.
         self.quick_switcher.filter_input.switcher_escape.connect(
             self.close_switcher_input_field
         )
-        # some key except moving key has pressed while focusing on list view
+        # A non-movement key was pressed while the treeview was focused.
         self.tree.switcher_text.connect(self.switcher_text_inputted)
 
     def reload_bookmarks(self, connect=False):
@@ -141,6 +139,7 @@ class BookmarksWidget(QtWidgets.QFrame):
             tree.doubleClicked.connect(tree.tree_double_clicked)
 
     def tree_item_selection_changed(self, selected, deselected):
+        """Update widget-level controls when the tree selection changes."""
         enabled = bool(self.tree.selected_item())
         self.button_group.setEnabled(enabled)
         self.tree.item_selection_changed(selected, deselected)
@@ -428,7 +427,7 @@ class BookmarksTreeView(standard.TreeView):
         self.toggle_switcher.emit(False)
 
     def accept_item(self, _item):
-        if self.state() & self.EditingState:
+        if self.state() == QtWidgets.QAbstractItemView.State.EditingState:
             current_index = self.currentIndex()
             widget = self.indexWidget(current_index)
             if widget:
