@@ -39,8 +39,8 @@ class BookmarksWidget(QtWidgets.QFrame):
 
         self.context = context
         self.style = style
-        self.items = items = []
-        self.model = model = QtGui.QStandardItemModel()
+        self.item_values = item_values = []
+        self.item_model = item_model = QtGui.QStandardItemModel()
 
         settings = context.settings
         builder = BuildItem(context)
@@ -52,20 +52,20 @@ class BookmarksWidget(QtWidgets.QFrame):
 
         for entry in entries:
             item = builder.get(entry['path'], entry['name'])
-            items.append(item)
-            model.appendRow(item)
+            item_values.append(item)
+            item_model.appendRow(item)
 
         place_holder = N_('Search repositories by name...')
         self.quick_switcher = switcher.switcher_outer_view(
-            context, model, place_holder=place_holder
+            context, item_model, place_holder=place_holder
         )
-        self.quick_switcher.proxy_model.setSourceModel(self.model)
+        self.quick_switcher.proxy_model.setSourceModel(self.item_model)
 
         self.tree = BookmarksTreeView(
             context,
             style,
-            self.items,
-            self.model,
+            item_values,
+            item_model,
             self.quick_switcher.proxy_model,
             parent=self,
         )
@@ -194,6 +194,7 @@ class BookmarksTreeView(standard.TreeView):
         self.style = style
         self.items = items
         self.root_model = root_model
+        self.proxy_model = proxy_model
         self.setModel(proxy_model)
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
