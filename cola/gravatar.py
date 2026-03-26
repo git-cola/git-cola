@@ -102,6 +102,7 @@ class GravatarLabel(QtWidgets.QLabel):
         if self._default_pixmap_bytes is None:
             xres = self.imgsize
             pixmap = icons.cola().pixmap(xres)
+            pixmap = pixmap.scaled(xres, xres)
             byte_array = QtCore.QByteArray()
             buf = QtCore.QBuffer(byte_array)
             buf.open(QtCore.QIODevice.WriteOnly)
