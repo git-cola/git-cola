@@ -18,6 +18,7 @@ from typing import Any
 
 from typing_extensions import Self
 
+from . import operations
 from .compat import PY2
 from .compat import PY3
 from .compat import WIN32
@@ -310,7 +311,12 @@ def run_command(cmd: list[UStr | str], *args, **kwargs) -> tuple[int, UStr, UStr
 
 
 @interruptable
-def _fork_posix(args: list[str], cwd: str | None = None, shell: bool = False) -> int:
+def _fork_posix(
+    args: list[str],
+    cwd: str | None = None,
+    shell: bool = False,
+    ops: operations.IOperations | None = None,
+) -> int:
     """Launch a process in the background."""
     encoded_args = [encode(arg) for arg in args]
     return subprocess.Popen(encoded_args, cwd=cwd, shell=shell).pid
@@ -320,6 +326,7 @@ def _fork_win32(
     args,
     cwd: str | None = None,
     shell: bool = False,
+    ops: operations.IOperations = None,
 ) -> int:
     """Launch a background process using crazy win32 voodoo."""
     # This is probably wrong, but it works.  Windows.. Wow.
@@ -328,7 +335,7 @@ def _fork_win32(
         args = [sys.executable] + args
 
     if not shell:
-        args[0] = _win32_find_exe(args[0])
+        args[0] = _win32_find_exe(args[0], ops)
 
     if PY3:
         # see comment in start_command()
@@ -342,7 +349,7 @@ def _fork_win32(
     ).pid
 
 
-def _win32_find_exe(exe: Any) -> Any:
+def _win32_find_exe(exe: Any, ops: operations.IOperations) -> Any:
     """Find the actual file for a Windows executable.
 
     This function goes through the same process that the Windows shell uses to
@@ -505,10 +512,10 @@ def _find_executable(executable: UStr, path: str | None = None) -> str | None:
     if (sys.platform == 'win32') and (ext != '.exe'):
         executable = executable + '.exe'
 
-    if not os.path.isfile(executable):
+    if not isfile(executable):
         for dirname in paths:
             filename = os.path.join(dirname, executable)
-            if os.path.isfile(filename):
+            if isfile(filename):
                 # the file exists, we have a shot at spawn working
                 return filename
         return None
