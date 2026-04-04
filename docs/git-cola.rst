@@ -1136,6 +1136,7 @@ cola.resizebrowsercolumns
 
 `git cola` will automatically resize the file browser columns as folders are
 expanded/collapsed when ``cola.resizebrowsercolumns`` is set to `true`.
+Defaults to `false`.
 
 cola.patchesdirectory
 ---------------------
