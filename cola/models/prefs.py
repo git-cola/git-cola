@@ -59,7 +59,6 @@ REFRESH_ON_FOCUS = 'cola.refreshonfocus'
 RESIZE_BROWSER_COLUMNS = 'cola.resizebrowsercolumns'
 SAFE_MODE = 'cola.safemode'
 SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
-SHOW_INLINE_GRAPH = 'cola.showinlinegraph'
 SHOW_PATH = 'cola.showpath'
 SORT_BOOKMARKS = 'cola.sortbookmarks'
 SPELL_CHECK = 'cola.spellcheck'
@@ -178,7 +177,6 @@ class Defaults:
     save_window_settings = True
     safe_mode = False
     autocomplete_paths = True
-    show_inline_graph = False
     show_path = True
     sort_bookmarks = True
     spellcheck = False
@@ -412,11 +410,6 @@ def expandtab(context) -> bool:
 def patches_directory(context) -> str:
     """Return the patches output directory"""
     return context.cfg.get(PATCHES_DIRECTORY, default=Defaults.patches_directory)
-
-
-def show_inline_graph(context) -> bool:
-    """Should the inline graph column be shown in the DAG commit list?"""
-    return context.cfg.get(SHOW_INLINE_GRAPH, default=Defaults.show_inline_graph)
 
 
 def sort_bookmarks(context) -> bool:

@@ -307,7 +307,6 @@ class SettingsFormWidget(FormWidget):
         self.linebreak = qtutils.checkbox()
         self.mouse_zoom = qtutils.checkbox()
         self.keep_merge_backups = qtutils.checkbox()
-        self.show_inline_graph = qtutils.checkbox()
         self.sort_bookmarks = qtutils.checkbox()
         self.save_window_settings = qtutils.checkbox()
         tooltip = N_('Detect conflict markers in unmerged files')
@@ -361,7 +360,6 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Save GUI Settings'), self.save_window_settings)
         self.add_row(N_('Ctrl + MouseWheel to Zoom'), self.mouse_zoom)
         self.add_row(N_('Refresh on Focus'), self.refresh_on_focus)
-        self.add_row(N_('Show Inline Graph in DAG'), self.show_inline_graph)
         self.add_row(N_('Sort Bookmarks Alphabetically'), self.sort_bookmarks)
         self.add_row(N_('Resize File Browser columns'), self.resize_browser_columns)
 
@@ -425,10 +423,6 @@ class SettingsFormWidget(FormWidget):
                 Defaults.resize_browser_columns,
             ),
             prefs.SAFE_MODE: (self.safe_mode, Defaults.safe_mode),
-            prefs.SHOW_INLINE_GRAPH: (
-                self.show_inline_graph,
-                Defaults.show_inline_graph,
-            ),
             prefs.SPELL_CHECK: (self.check_spelling, Defaults.spellcheck),
             prefs.MOUSE_ZOOM: (self.mouse_zoom, Defaults.mouse_zoom),
             prefs.NOTIFY_ON_PUSH: (self.notifyonpush, Defaults.notifyonpush),

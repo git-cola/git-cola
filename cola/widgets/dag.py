@@ -971,7 +971,12 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
                 self.oidmap[tag] = item
         self.insertTopLevelItems(0, items)
 
-    def apply_graph_result(self, graph_result):
+        graph_result = build_graph(
+            [(c.oid, [p.oid for p in c.parents]) for c in commits]
+        )
+        self.apply_graph_result(graph_result)
+
+    def apply_graph_result(self, graph_result) -> None:
         oid_to_index: dict[str, int] = {}
         for i, row in enumerate(graph_result.rows):
             oid_to_index[row.commit_oid] = i
@@ -1073,9 +1078,6 @@ class GitDAG(standard.MainWindow):
         self.filewidget = filelist.FileWidget(context, self)
         self.graphview = GraphView(context, self)
 
-        self.show_inline_graph = False
-        self._update_show_inline_graph()
-
         self.treewidget.commits_selected.connect(
             self.commits_selected, type=Qt.QueuedConnection
         )
@@ -1174,8 +1176,11 @@ class GitDAG(standard.MainWindow):
         graph_titlebar = self.graphview_dock.titleBarWidget()
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
+        self.display_inline_graph_action = qtutils.add_action_bool(
+            self, N_('Display Inline Graph'), self._display_inline_graph, False
+        )
         self.display_status_action = qtutils.add_action_bool(
-            self, N_('Display Worktree Status'), self._enable_worktree_status, False
+            self, N_('Display Worktree Status'), self._display_worktree_status, False
         )
         self.lock_layout_action = qtutils.add_action_bool(
             self, N_('Lock Layout'), self.set_lock_layout, False
@@ -1192,6 +1197,7 @@ class GitDAG(standard.MainWindow):
         # View Menu
         self.view_menu = qtutils.add_menu(N_('View'), self.menubar)
         self.view_menu.addAction(self.refresh_action)
+        self.view_menu.addAction(self.display_inline_graph_action)
         self.view_menu.addAction(self.display_status_action)
         self.view_menu.addSeparator()
         self.view_menu.addAction(self.log_dock.toggleViewAction())
@@ -1266,12 +1272,6 @@ class GitDAG(standard.MainWindow):
         self.thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
         self.thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
 
-    def _update_show_inline_graph(self) -> None:
-        self.show_inline_graph = prefs.show_inline_graph(self.context)
-        self.treewidget.setColumnHidden(
-            CommitTreeWidgetItem.GRAPH, not self.show_inline_graph
-        )
-
     def _stop_reader_thread(self):
         """Stop the reader thread if it is currently running"""
         if self.thread is not None and self.thread.isRunning():
@@ -1279,7 +1279,11 @@ class GitDAG(standard.MainWindow):
             QtCore.QThread.currentThread().yieldCurrentThread()
             self.thread.wait(100)
 
-    def _enable_worktree_status(self, enabled):
+    def _display_inline_graph(self, enabled):
+        """Enable and disable the display of inline graph in the commit list"""
+        self.treewidget.setColumnHidden(CommitTreeWidgetItem.GRAPH, not enabled)
+
+    def _display_worktree_status(self, enabled):
         """Enable and disable the display of the WORKTREE and STAGE pseudo-commits"""
         self.params.display_status = enabled
         self.display()
@@ -1319,6 +1323,7 @@ class GitDAG(standard.MainWindow):
         """Store persistent GUI state"""
         state = standard.MainWindow.export_state(self)
         state['count'] = self.params.count
+        state['display_inline_graph'] = self.display_inline_graph_action.isChecked()
         state['display_status'] = self.params.display_status
         state['log'] = self.treewidget.export_state()
         state['word_wrap'] = self.diffwidget.options.enable_word_wrapping.isChecked()
@@ -1344,6 +1349,11 @@ class GitDAG(standard.MainWindow):
         self.params.set_display_status(display_status)
         with qtutils.BlockSignals(self.display_status_action):
             self.display_status_action.setChecked(display_status)
+
+        display_inline_graph = state.get('display_inline_graph', True)
+        self._display_inline_graph(display_inline_graph)
+        with qtutils.BlockSignals(self.display_inline_graph_action):
+            self.display_inline_graph_action.setChecked(display_inline_graph)
 
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
         self.diffwidget.set_word_wrapping(state.get('word_wrap', False), update=True)
@@ -1462,12 +1472,6 @@ class GitDAG(standard.MainWindow):
     def thread_end(self):
         """The reader thread has completed"""
         self.graphview.add_commits(self.commit_list)
-
-        if self.show_inline_graph and self.commit_list:
-            graph_result = build_graph(
-                [(c.oid, [p.oid for p in c.parents]) for c in self.commit_list]
-            )
-            self.treewidget.apply_graph_result(graph_result)
         self.restore_selection()
 
     def thread_status(self, successful):
@@ -1576,7 +1580,6 @@ class GitDAG(standard.MainWindow):
     def showEvent(self, event):
         """Resize widgets once their sizes are known"""
         standard.MainWindow.showEvent(self, event)
-        self._update_show_inline_graph()
         if not self._widgets_initialized:
             self._widgets_initialized = True
             self.maxresults.setMinimumHeight(self.revtext.height())
