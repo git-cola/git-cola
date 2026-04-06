@@ -337,12 +337,12 @@ class Git:
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if out or err:
-                core.print_stderr(
+                ops.print_stderr(
                     "# %.3fs: %s -> %d: '%s' '%s'"
                     % (elapsed_time, ' '.join(command), status, out, err)
                 )
             else:
-                core.print_stderr(
+                ops.print_stderr(
                     '# %.3fs: %s -> %d' % (elapsed_time, ' '.join(command), status)
                 )
         elif cola_trace:

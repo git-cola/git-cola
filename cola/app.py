@@ -388,12 +388,16 @@ class ColaQApplication(QtWidgets.QApplication):
         sid = session_mgr.sessionId()
         skey = session_mgr.sessionKey()
         session_id = f'{sid}_{skey}'
-        session = Session(session_id, repo=core.getcwd())
+        session = Session(session_id, repo=self.context.ops.getcwd())
         session.update()
         view.save_state(settings=session)
 
 
-def process_args(args: argparse.Namespace, ops, setup_repo: bool = False) -> None:
+def process_args(
+    ops: operations.IOperations,
+    args: argparse.Namespace,
+    setup_repo: bool = False,
+) -> None:
     """Process and verify command-line arguments"""
     if args.version:
         # Accept 'git cola --version' or 'git cola version'
@@ -401,7 +405,7 @@ def process_args(args: argparse.Namespace, ops, setup_repo: bool = False) -> Non
         sys.exit(core.EXIT_SUCCESS)
 
     # Handle session management
-    restore_session(args)
+    restore_session(ops, args)
 
     # Initialize args.repo. If a repository was specified as a
     # positional argument then we will use that value.
@@ -425,17 +429,17 @@ def process_args(args: argparse.Namespace, ops, setup_repo: bool = False) -> Non
             )
             % repo
         )
-        core.print_stderr(errmsg)
+        ops.print_stderr(errmsg)
         sys.exit(core.EXIT_USAGE)
 
 
-def restore_session(args: argparse.Namespace) -> None:
+def restore_session(ops: operations.IOperations, args: argparse.Namespace) -> None:
     """Load a session based on the window-manager provided arguments"""
     # args.settings is provided when restoring from a session.
     args.settings = None
     if args.session is None:
         return
-    session = Session(args.session)
+    session = Session(args.session, ops)
     if session.load():
         args.settings = session
         args.repo = session.repo
@@ -901,7 +905,7 @@ class Notifier(QtCore.QObject):
         self.emit_log(f'[git] {message}')
 
 
-def find_git(ops) -> str | None:
+def find_git(ops: operations.IOperations) -> str | None:
     """Return the path of git.exe, or None if we can't find it."""
     if not utils.is_win32():
         return None  # UNIX systems have git in their $PATH
