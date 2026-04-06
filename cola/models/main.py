@@ -20,7 +20,9 @@ from ..interaction import Interaction
 from . import prefs
 
 if TYPE_CHECKING:
+    from ..app import ApplicationContext
     from ..types import TextType
+
 
 FETCH = 'fetch'
 FETCH_HEAD = 'FETCH_HEAD'
@@ -715,13 +717,13 @@ def autodetect_proxy(context, kwargs: dict[Any, Any]) -> None:
         return
     # This function has the side-effect of updating the kwargs dict.
     # The "_add_env" parameter gets forwarded to the __getattr__ git function's
-    # _add_env option which forwards to core.run_command()'s add_env option.
-    add_env = autodetect_proxy_environ()
+    # _add_env option which forwards to ops.run_command()'s add_env option.
+    add_env = autodetect_proxy_environ(context)
     if add_env:
         kwargs['_add_env'] = add_env
 
 
-def autodetect_proxy_environ() -> dict[Any, Any]:
+def autodetect_proxy_environ(ops) -> dict[Any, Any]:
     """Return the environment variables used for configuring proxies"""
     add_env = {}
     xdg_current_desktop = core.getenv('XDG_CURRENT_DESKTOP', default='')
@@ -731,16 +733,16 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     http_proxy: TextType | None = None
     https_proxy: TextType | None = None
     if xdg_current_desktop == 'KDE' or xdg_current_desktop.endswith(':KDE'):
-        kreadconfig = core.find_executable('kreadconfig5')
+        kreadconfig = context.ops.find_executable('kreadconfig5')
         if kreadconfig:
-            http_proxy = autodetect_proxy_kde(kreadconfig, 'http')
-            https_proxy = autodetect_proxy_kde(kreadconfig, 'https')
+            http_proxy = autodetect_proxy_kde(context, kreadconfig, 'http')
+            https_proxy = autodetect_proxy_kde(context, kreadconfig, 'https')
     elif xdg_current_desktop:
         # If we're not on KDE then we'll fallback to GNOME / gsettings.
-        gsettings = core.find_executable('gsettings')
-        if gsettings and autodetect_proxy_gnome_is_enabled(gsettings):
-            http_proxy = autodetect_proxy_gnome(gsettings, 'http')
-            https_proxy = autodetect_proxy_gnome(gsettings, 'https')
+        gsettings = context.ops.find_executable('gsettings')
+        if gsettings and autodetect_proxy_gnome_is_enabled(context, gsettings):
+            http_proxy = autodetect_proxy_gnome(context, gsettings, 'http')
+            https_proxy = autodetect_proxy_gnome(context, gsettings, 'https')
 
     if os.environ.get('http_proxy'):
         Interaction.log(
@@ -767,24 +769,28 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     return add_env
 
 
-def autodetect_proxy_gnome_is_enabled(gsettings: str) -> bool:
+def autodetect_proxy_gnome_is_enabled(
+    context: ApplicationContext, gsettings: str
+) -> bool:
     """Is the proxy manually configured on Gnome?"""
-    status, out, _ = core.run_command(
+    status, out, _ = context.ops.run_command(
         [gsettings, 'get', 'org.gnome.system.proxy', 'mode']
     )
     return status == 0 and out.strip().strip("'") == 'manual'
 
 
-def autodetect_proxy_gnome(gsettings: str, scheme: str) -> str | None:
+def autodetect_proxy_gnome(
+    context: ApplicationContext, gsettings: str, scheme: str
+) -> str | None:
     """Return the configured HTTP proxy for Gnome"""
-    status, out, _ = core.run_command(
+    status, out, _ = context.ops.run_command(
         [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'host']
     )
     if status != 0:
         return None
     host = out.strip().strip("'")
     port = ''
-    status, out, _ = core.run_command(
+    status, out, _ = context.ops.run_command(
         [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'port']
     )
     if status == 0:
@@ -793,7 +799,9 @@ def autodetect_proxy_gnome(gsettings: str, scheme: str) -> str | None:
     return proxy
 
 
-def autodetect_proxy_kde(kreadconfig: str, scheme: str) -> str | None:
+def autodetect_proxy_kde(
+    context: ApplicationContext, kreadconfig: str, scheme: str
+) -> str | None:
     """Return the configured HTTP proxy for KDE"""
     cmd = [
         kreadconfig,
@@ -804,7 +812,7 @@ def autodetect_proxy_kde(kreadconfig: str, scheme: str) -> str | None:
         '--key',
         'ProxyType',
     ]
-    status, out, err = core.run_command(cmd)
+    status, out, err = context.ops.run_command(cmd)
     if status == 0 and out.strip() == '1':
         cmd = [
             kreadconfig,
@@ -815,7 +823,7 @@ def autodetect_proxy_kde(kreadconfig: str, scheme: str) -> str | None:
             '--key',
             f'{scheme}Proxy',
         ]
-        status, out, err = core.run_command(cmd)
+        status, out, err = context.ops.run_command(cmd)
         if status == 0:
             proxy = out.strip().replace(' ', ':')
             return proxy

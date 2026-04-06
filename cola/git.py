@@ -309,7 +309,7 @@ class Git:
         if not _readonly:
             _index_lock.acquire()
         try:
-            status, out, err = core.run_command(
+            status, out, err = ops.run_command(
                 command,
                 add_env=_add_env,
                 cwd=_cwd,
@@ -388,7 +388,7 @@ class Git:
         call.extend(args)
         try:
             result: tuple[int, TextType, TextType] = self.execute(
-                call, **_kwargs  # type: ignore[arg-type]
+                call, self.ops, **_kwargs  # type: ignore[arg-type]
             )
         except OSError as exc:
             if WIN32 and exc.errno == errno.ENOENT:

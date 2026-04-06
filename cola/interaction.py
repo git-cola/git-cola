@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from typing import Callable
 
 from . import core
+from . import operations
 from .i18n import N_
 
 if TYPE_CHECKING:
@@ -144,11 +145,11 @@ class Interaction:
 
     @classmethod
     def run_command(
-        cls, title: str, cmd: list[str]
+        cls, ops: operations.IOperations, title: str, cmd: list[str]
     ) -> tuple[int, core.UStr, core.UStr]:
         cls.log('# ' + title)
         cls.log('$ ' + core.list2cmdline(cmd))
-        status, out, err = core.run_command(cmd)
+        status, out, err = ops.run_command(cmd)
         cls.log_status(status, out, err)
         return status, out, err
 

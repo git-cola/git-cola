@@ -1256,7 +1256,7 @@ def mimedata_from_paths(
     Older versions of gnome-terminal expected a UTF-16 encoding, but that
     behavior is no longer needed.
     """  # noqa
-    abspaths = [core.abspath(path) for path in paths]
+    abspaths = [context.ops.abspath(path) for path in paths]
     paths_text = core.list2cmdline(abspaths)
 
     # The text/x-moz-list format is always included by Qt, and doing

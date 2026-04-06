@@ -157,8 +157,8 @@ def _get_askpass(ops: operations.IOperations) -> TextType:
     if sys.platform == 'darwin':
         return resources.package_command('ssh-askpass-darwin')
 
-    kde_askpass = core.find_executable('ksshaskpass')
-    gnome_askpass = core.find_executable('gnome-ssh-askpass')
+    kde_askpass = ops.find_executable('ksshaskpass')
+    gnome_askpass = ops.find_executable('gnome-ssh-askpass')
     if gnome_askpass is None:
         gnome_askpass = '/usr/lib/openssh/gnome-ssh-askpass'
 

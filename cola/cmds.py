@@ -876,7 +876,7 @@ class Commit(ResetMode):
             'NO_COLOR': '1',
             'TERM': 'dumb',
         }
-        add_env.update(main.autodetect_proxy_environ())
+        add_env.update(main.autodetect_proxy_environ(self.context))
         kwargs = {}
         # Override the commit date.
         if self.date:
@@ -1858,7 +1858,7 @@ class LaunchTerminal(ContextCommand):
             command = '/bin/sh'
             shells = ('zsh', 'fish', 'bash', 'sh')
             for basename in shells:
-                executable = core.find_executable(basename)
+                executable = self.context.ops.find_executable(basename)
                 if executable:
                     command = executable
                     break
@@ -1992,11 +1992,11 @@ class PrepareCommitMessageHook(ContextCommand):
                 cmd = [bash, hook_rep, filename_rep]
 
                 Interaction.log("running 'prepare-commit-msg': %s" % str(cmd))
-                status, out, err = core.run_command(cmd)
+                status, out, err = self.context.ops.run_command(cmd)
             else:
                 # On *nix:
                 # The hook script is executed directly using the given path.
-                status, out, err = core.run_command([hook, filename])
+                status, out, err = self.context.ops.run_command([hook, filename])
 
             if status == 0:
                 result = core.read(filename)
@@ -2318,6 +2318,7 @@ class SequenceEditorEnvironment:
             'GIT_SEQUENCE_EDITOR': sequence_editor(),
         }
         self.env.update(kwargs)
+        self.context = context
 
     def __enter__(self) -> SequenceEditorEnvironment:
         for var, value in self.env.items():
@@ -2731,9 +2732,9 @@ class RunConfigAction(ContextCommand):
             core.fork(cmd)
             status, out, err = (0, '', '')
         elif opts.get('noconsole'):
-            status, out, err = core.run_command(cmd)
+            status, out, err = self.context.ops.run_command(cmd)
         else:
-            status, out, err = Interaction.run_command(title, cmd)
+            status, out, err = Interaction.run_command(self.context.ops, title, cmd)
 
         if not opts.get('background') and not opts.get('norescan'):
             self.model.update_status()
@@ -3210,7 +3211,7 @@ class Tag(ContextCommand):
                 cmd_args = ['git', 'tag']
                 cmd_args.extend(transform_kwargs(**opts))
                 cmd_args.extend((tag_name, revision))
-                self.context.notifier.git_cmd(self.context.ops.list2cmdline(cmd_args))
+                self.context.notifier.git_cmd(core.list2cmdline(cmd_args))
             status, out, err = self.git.tag(tag_name, revision, **opts)
         finally:
             if tmp_file:
@@ -3374,7 +3375,7 @@ class VisualizeAll(ContextCommand):
     def do(self) -> None:
         context = self.context
         browser = utils.shell_split(prefs.history_browser(context))
-        launch_history_browser(browser + ['--all'])
+        launch_history_browser(context, browser + ['--all'])
 
 
 class VisualizeCurrent(ContextCommand):
@@ -3383,7 +3384,7 @@ class VisualizeCurrent(ContextCommand):
     def do(self) -> None:
         context = self.context
         browser = utils.shell_split(prefs.history_browser(context))
-        launch_history_browser(browser + [self.model.currentbranch] + ['--'])
+        launch_history_browser(context, browser + [self.model.currentbranch] + ['--'])
 
 
 class VisualizePaths(ContextCommand):
@@ -3399,7 +3400,7 @@ class VisualizePaths(ContextCommand):
             self.argv = browser
 
     def do(self) -> None:
-        launch_history_browser(self.argv)
+        launch_history_browser(self.context, self.argv)
 
 
 class VisualizeRevision(ContextCommand):
@@ -3420,7 +3421,7 @@ class VisualizeRevision(ContextCommand):
         if self.paths:
             argv.append('--')
             argv.extend(self.paths)
-        launch_history_browser(argv)
+        launch_history_browser(context, argv)
 
 
 class SubmoduleAdd(ConfirmAction):
@@ -3553,7 +3554,7 @@ class SubmodulesUpdate(ConfirmAction):
         return cmd
 
 
-def launch_history_browser(argv: list[str]) -> None:
+def launch_history_browser(context: ApplicationContext, argv: list[str]) -> None:
     """Launch the configured history browser"""
     try:
         core.fork(argv)

@@ -194,7 +194,7 @@ def all_files(context: ApplicationContext, *args) -> list[str]:
 class CurrentBranchCache:
     """Cache for current_branch()"""
 
-    key = None
+    key: float | None = None
     value = None
 
 

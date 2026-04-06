@@ -705,8 +705,8 @@ class MainView(standard.MainWindow):
         self.patches_menu.addAction(self.apply_patches_abort_action)
 
         # Git Annex / Git LFS
-        annex = core.find_executable('git-annex')
-        lfs = core.find_executable('git-lfs')
+        annex = self.context.ops.find_executable('git-annex')
+        lfs = self.context.ops.find_executable('git-lfs')
         if annex or lfs:
             self.file_menu.addSeparator()
         if annex:
