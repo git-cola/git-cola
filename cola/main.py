@@ -9,6 +9,7 @@ from . import app
 from . import cmds
 from . import compat
 from . import core
+from . import server
 from . import version
 from .widgets.main import MainView
 

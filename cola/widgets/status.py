@@ -10,7 +10,6 @@ from qtpy.QtCore import Qt
 
 from .. import actions
 from .. import cmds
-from .. import core
 from .. import difftool
 from .. import fields
 from .. import hotkeys
@@ -946,7 +945,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if all_exist and s.untracked:
             # Git Annex / Git LFS
             annex = self._model.annex
-            lfs = core.find_executable('git-lfs')
+            lfs = self.context.ops.find_executable('git-lfs')
             if annex or lfs:
                 menu.addSeparator()
             if annex:

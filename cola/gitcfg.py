@@ -467,7 +467,7 @@ class GitConfig(QtCore.QObject):
             ('xterm', 'xterm -e'),
         )
         for executable, command in terminals:
-            if core.find_executable(executable):
+            if self.context.ops.find_executable(executable):
                 return command
         return None
 
