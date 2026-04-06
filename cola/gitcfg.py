@@ -36,7 +36,9 @@ def create(context: ApplicationContext) -> GitConfig:
     return GitConfig(context)
 
 
-def _cache_key_from_paths(paths: list[Any | str]) -> list[float] | None:
+def _cache_key_from_paths(
+    context: ApplicationContext, paths: list[Any | str]
+) -> list[float] | None:
     """Return a stat cache from the given paths"""
     if not paths:
         return None
@@ -146,7 +148,7 @@ class GitConfig(QtCore.QObject):
         Updates the cache and returns False when the cache does not match.
 
         """
-        cache_key = _cache_key_from_paths(self._cache_paths)
+        cache_key = _cache_key_from_paths(self.context, self._cache_paths)
         return self._cache_key and cache_key == self._cache_key  # type: ignore[return-value]
 
     def update(self) -> None:
@@ -202,7 +204,7 @@ class GitConfig(QtCore.QObject):
 
         # Update the cache
         self._cache_paths = sorted(cache_paths)
-        self._cache_key = _cache_key_from_paths(self._cache_paths)
+        self._cache_key = _cache_key_from_paths(self.context, self._cache_paths)
 
         # Send a notification that the configuration has been updated.
         self.updated.emit()
@@ -348,7 +350,8 @@ class GitConfig(QtCore.QObject):
 
     def is_per_file_attrs_enabled(self) -> bool:
         return self.get(
-            'cola.fileattributes', func=lambda: os.path.exists('.gitattributes')
+            'cola.fileattributes',
+            func=lambda: self.context.ops.exists('.gitattributes'),
         )
 
     def is_binary(self, path) -> bool:
@@ -447,7 +450,7 @@ class GitConfig(QtCore.QObject):
 
             for p in [pf64, pf32, pf, 'C:\\']:
                 candidate = os.path.join(p, r'Git\bin\sh.exe')
-                if os.path.isfile(candidate):
+                if self.context.ops.isfile(candidate):
                     return candidate
             return None
 
@@ -627,7 +630,7 @@ def _read_config_fallback(
     includes = version.check_git(context, 'config-includes')
 
     current_path = '/etc/gitconfig'
-    if os.path.exists(current_path):
+    if context.ops.exists(current_path):
         cache_paths.add(current_path)
         status, config_output, _ = context.git.config(
             z=True,
@@ -643,9 +646,9 @@ def _read_config_fallback(
     gitconfig_home = core.expanduser(os.path.join('~', '.gitconfig'))
     gitconfig_xdg = resources.xdg_config_home('git', 'config')
 
-    if os.path.exists(gitconfig_home):
+    if context.ops.exists(gitconfig_home):
         gitconfig = gitconfig_home
-    elif os.path.exists(gitconfig_xdg):
+    elif context.ops.exists(gitconfig_xdg):
         gitconfig = gitconfig_xdg
     else:
         gitconfig = None
@@ -661,7 +664,7 @@ def _read_config_fallback(
                 yield global_scope, key, value, False
 
     local_config = context.git.git_path('config')
-    if local_config and os.path.exists(local_config):
+    if local_config and context.ops.exists(local_config):
         cache_paths.add(gitconfig)
         status, config_output, _ = context.git.config(
             z=True,

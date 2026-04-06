@@ -179,7 +179,7 @@ class MainModel(QtCore.QObject):
             cwd = self.git.getcwd()
             self.project = os.path.basename(cwd)
             self.set_directory(cwd)
-            core.chdir(cwd)
+            self.context.ops.chdir(cwd)
             self.update_config(reset=reset)
 
             # Detect the "git init" scenario by checking for branches.
@@ -188,7 +188,9 @@ class MainModel(QtCore.QObject):
                 has_branches = bool(gitcmds.branch_list(self.context))
             else:
                 refs = self.git.git_path('refs', 'heads')
-                has_branches = core.exists(refs) and bool(core.listdir(refs))
+                has_branches = self.context.ops.exists(refs) and bool(
+                    self.context.ops.listdir(refs)
+                )
             # "git rev-parse" exits with a non-zero exit status when the
             # safe.directory protection is active.
             if has_branches:
@@ -218,9 +220,9 @@ class MainModel(QtCore.QObject):
         return (
             lfs_filter
             and lfs_dir
-            and core.exists(lfs_dir)
+            and self.context.ops.exists(lfs_dir)
             and lfs_hook
-            and core.exists(lfs_hook)
+            and self.context.ops.exists(lfs_hook)
         )
 
     def set_commitmsg(self, msg: str, notify: bool = True) -> None:
@@ -239,7 +241,7 @@ class MainModel(QtCore.QObject):
         try:
             if not msg.endswith('\n'):
                 msg += '\n'
-            core.write(path, msg)
+            self.context.ops.write_file(path, msg)
         except OSError:
             pass
         return path
@@ -422,10 +424,12 @@ class MainModel(QtCore.QObject):
         merge_head = self.git.git_path('MERGE_HEAD')
         rebase_merge = self.git.git_path('rebase-merge')
         rebase_apply = self.git.git_path('rebase-apply', 'applying')
-        self.is_cherry_picking = cherry_pick_head and core.exists(cherry_pick_head)
-        self.is_merging = merge_head and core.exists(merge_head)
-        self.is_rebasing = rebase_merge and core.exists(rebase_merge)
-        self.is_applying_patch = rebase_apply and core.exists(rebase_apply)
+        self.is_cherry_picking = cherry_pick_head and self.context.ops.exists(
+            cherry_pick_head
+        )
+        self.is_merging = merge_head and self.context.ops.exists(merge_head)
+        self.is_rebasing = rebase_merge and self.context.ops.exists(rebase_merge)
+        self.is_applying_patch = rebase_apply and self.context.ops.exists(rebase_apply)
         if self.mode == self.mode_amend and (
             self.is_merging or self.is_cherry_picking or self.is_applying_patch
         ):
@@ -550,7 +554,7 @@ class MainModel(QtCore.QObject):
         """If we've chosen a directory then use it, otherwise use current"""
         if self.directory:
             return self.directory
-        return core.getcwd()
+        return self.context.ops.getcwd()
 
     def cycle_ref_sort(self) -> None:
         """Choose the next ref sort type (version, reverse-chronological)"""

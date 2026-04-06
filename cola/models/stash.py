@@ -3,7 +3,6 @@ import re
 from .. import cmds
 from .. import core
 from .. import gitcmds
-from .. import utils
 from ..git import STDOUT
 from ..i18n import N_
 from ..interaction import Interaction
@@ -209,7 +208,7 @@ class StashIndex(cmds.ContextCommand):
         # stash ref, so now we have to remove the staged changes from the
         # worktree.  We do this by applying a reverse diff of the staged
         # changes.  The diff from stash->HEAD is a reverse diff of the stash.
-        patch = utils.tmp_filename('stash')
+        patch = self.context.ops.tmp_filename('stash')
         with core.xopen(patch, mode='wb') as patch_fd:
             status, out, err = git.diff_tree(
                 'refs/stash', 'HEAD', '--', binary=True, _stdout=patch_fd
@@ -220,7 +219,7 @@ class StashIndex(cmds.ContextCommand):
 
         # Apply the patch
         status, out, err = git.apply(patch)
-        core.unlink(patch)
+        self.context.ops.unlink(patch)
         ok = status == 0
         if ok:
             # Finally, clear the index we just stashed

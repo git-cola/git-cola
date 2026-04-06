@@ -79,7 +79,7 @@ def edit_patch(
     reverse: bool,
     apply_to_worktree: bool
 ):
-    patch_file_path = utils.tmp_filename('edit', '.patch')
+    patch_file_path = context.ops.tmp_filename('edit', '.patch')
     try:
         content_parts = [
             patch_edit_header(
@@ -88,8 +88,10 @@ def edit_patch(
             patch.as_text(file_headers=False),
             patch_edit_footer(context),
         ]
-        core.write(patch_file_path, ''.join(content_parts), encoding=encoding)
-        status, _, _ = core.run_command(
+        context.ops.write_file(
+            patch_file_path, ''.join(content_parts), encoding=encoding
+        )
+        status, _, _ = context.ops.run_command(
             [*utils.shell_split(prefs.editor(context)), patch_file_path]
         )
         if status == 0:
@@ -103,4 +105,4 @@ def edit_patch(
             patch_text = ''
         return diffparse.Patch.parse(patch.filename, patch_text)
     finally:
-        core.unlink(patch_file_path)
+        context.ops.unlink(patch_file_path)

@@ -1,6 +1,8 @@
+from __future__ import annotations
 import itertools
 import os
 from functools import partial
+from typing import TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy import QtWidgets
@@ -27,6 +29,10 @@ from . import completion
 from . import defs
 from . import diff
 from . import text
+
+if TYPE_CHECKING:
+    from ..app import ApplicationContext
+
 
 # Top-level status widget item indexes.
 HEADER_IDX = -1
@@ -652,7 +658,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _set_unmerged(self, items):
         """Adds items to the 'Unmerged' sub-tree."""
-        deleted_set = {path for path in items if not core.exists(path)}
+        deleted_set = {path for path in items if not self.context.ops.exists(path)}
         with qtutils.BlockSignals(self):
             self._set_subtree(
                 items, UNMERGED_IDX, N_('Unmerged'), deleted_set=deleted_set
@@ -679,7 +685,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         for item in items:
             deleted = deleted_set is not None and item in deleted_set
             treeitem = qtutils.create_treeitem(
-                item, staged=staged, deleted=deleted, untracked=untracked
+                item,
+                staged=staged,
+                deleted=deleted,
+                untracked=untracked,
             )
             parent.addChild(treeitem)
         self._expand_items(idx, items)
@@ -846,7 +855,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # Do all of the selected items exist?
         all_exist = all(
-            i not in self._model.staged_deleted and core.exists(i)
+            i not in self._model.staged_deleted and self.context.ops.exists(i)
             for i in self.staged()
         )
 
@@ -862,7 +871,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _create_staged_submodule_context_menu(self, menu, s):
         context = self.context
-        path = core.abspath(s.staged[0])
+        path = self.context.ops.abspath(s.staged[0])
         if len(self.staged()) == 1:
             menu.addAction(
                 icons.cola(),
@@ -923,7 +932,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
         # Do all of the selected items exist?
         all_exist = all(
-            i not in self._model.unstaged_deleted and core.exists(i)
+            i not in self._model.unstaged_deleted and self.context.ops.exists(i)
             for i in self.staged()
         )
 
@@ -963,7 +972,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
 
     def _create_modified_submodule_context_menu(self, menu, s):
         context = self.context
-        path = core.abspath(s.modified[0])
+        path = self.context.ops.abspath(s.modified[0])
         if len(self.unstaged()) == 1:
             menu.addAction(
                 icons.cola(),
@@ -1276,7 +1285,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def mimeData(self, items):
         """Return a list of absolute-path URLs"""
         context = self.context
-        paths = qtutils.paths_from_items(items, item_filter=_item_filter)
+        paths = qtutils.paths_from_items(context, items, item_filter=_item_filter)
         include_urls = not self._alt_drag
         return qtutils.mimedata_from_paths(context, paths, include_urls=include_urls)
 
@@ -1285,9 +1294,9 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return qtutils.path_mimetypes(include_urls=not self._alt_drag)
 
 
-def _item_filter(item):
+def _item_filter(context: ApplicationContext, item):
     """Filter items down to just those that exist on disk"""
-    return not item.deleted and core.exists(item.path)
+    return not item.deleted and context.ops.exists(item.path)
 
 
 def view_blame(context):
@@ -1306,7 +1315,7 @@ def copy_path(context, absolute=True):
     if not filenames:
         return
     if absolute:
-        filenames = [core.abspath(f) for f in filenames]
+        filenames = [context.ops.abspath(f) for f in filenames]
     qtutils.set_clipboard('\n'.join(filenames))
 
 
@@ -1352,7 +1361,7 @@ def copy_format(context, fmt):
     for path in filenames:
         values = {}
         values['path'] = path
-        values['abspath'] = abspath = os.path.abspath(path)
+        values['abspath'] = abspath = context.ops.abspath(path)
         values['absdirname'] = os.path.dirname(abspath)
         values['dirname'] = os.path.dirname(path)
         values['filename'] = os.path.basename(path)

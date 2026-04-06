@@ -99,12 +99,12 @@ def get_filename_for_locale(name: str | None) -> str | None:
     name: str = name.split('.', 1)[0]  # foo_BAR.UTF-8 -> foo_BAR
 
     filename = resources.i18n('%s.po' % name)
-    if os.path.exists(filename):
+    if core.exists(filename):
         return filename
 
     short_name = name.split('_', 1)[0]
     filename = resources.i18n('%s.po' % short_name)
-    if os.path.exists(filename):
+    if core.exists(filename):
         return filename
     return None
 

@@ -57,6 +57,7 @@ from . import guicmds
 from . import hidpi
 from . import i18n
 from . import icons
+from . import operations
 from . import qtcompat
 from . import qtutils
 from . import resources
@@ -108,7 +109,7 @@ def setup_environment() -> None:
     compat.setenv('GIT_PAGER', '')
 
     # Setup the openssh askpass credentials helper.
-    askpass = _get_askpass()
+    askpass = _get_askpass(operations.LocalOperations())
     compat.setenv('GIT_ASKPASS', askpass)
     compat.setenv('SSH_ASKPASS', askpass)
 
@@ -145,7 +146,7 @@ def setup_environment() -> None:
     compat.setenv('GIT_MERGE_AUTOEDIT', 'no')
 
 
-def _get_askpass() -> TextType:
+def _get_askpass(ops: operations.IOperations) -> TextType:
     """Get a default askpass program appropriate for the current environment"""
     git_askpass = core.getenv('GIT_ASKPASS')
     ssh_askpass = core.getenv('SSH_ASKPASS')
@@ -168,7 +169,7 @@ def _get_askpass() -> TextType:
         order = (kde_askpass, gnome_askpass)
 
     for askpass in order:
-        if askpass and os.path.exists(askpass):
+        if askpass and ops.exists(askpass):
             return askpass
 
     return resources.package_command('ssh-askpass')
@@ -390,7 +391,7 @@ class ColaQApplication(QtWidgets.QApplication):
         view.save_state(settings=session)
 
 
-def process_args(args: argparse.Namespace, setup_repo: bool = False) -> None:
+def process_args(args: argparse.Namespace, ops, setup_repo: bool = False) -> None:
     """Process and verify command-line arguments"""
     if args.version:
         # Accept 'git cola --version' or 'git cola version'
@@ -398,23 +399,23 @@ def process_args(args: argparse.Namespace, setup_repo: bool = False) -> None:
         sys.exit(core.EXIT_SUCCESS)
 
     # Handle session management
-    restore_session(args)
+    restore_session(ops, args)
 
     # Initialize args.repo. If a repository was specified as a
     # positional argument then we will use that value.
     # If unspecified, the current directory is used.
     if setup_repo and not args.repo:
-        if args.args and git.is_git_repository(args.args[0]):
+        if args.args and git.is_git_repository(ops, args.args[0]):
             args.repo = args.args.pop(0)
     if not args.repo:
-        args.repo = core.getcwd()
+        args.repo = ops.getcwd()
 
     # Bail out if --repo is not a directory
     repo: TextType = core.decode(args.repo)
     if repo.startswith('file:'):
         repo = repo[len('file:') :]
-    repo = core.realpath(repo)
-    if not core.isdir(repo):
+    repo = ops.realpath(repo)
+    if not ops.isdir(repo):
         errmsg = (
             N_(
                 'fatal: "%s" is not a directory.  '
@@ -426,7 +427,7 @@ def process_args(args: argparse.Namespace, setup_repo: bool = False) -> None:
         sys.exit(core.EXIT_USAGE)
 
 
-def restore_session(args: argparse.Namespace) -> None:
+def restore_session(ops, args: argparse.Namespace) -> None:
     """Load a session based on the window-manager provided arguments"""
     # args.settings is provided when restoring from a session.
     args.settings = None
@@ -448,10 +449,12 @@ def application_init(
     """Parses the command-line arguments and starts git-cola"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
-    setup_environment()
-    process_args(args, setup_repo=setup_repo)
+    ops = operations.LocalOperations()
 
-    context = new_context(args, app_name=app_name)
+    setup_environment()
+    process_args(ops, args, setup_repo=setup_repo)
+
+    context = new_context(ops, args, app_name=app_name)
     enforce_single_instance(context)
 
     timer = context.timer
@@ -469,13 +472,16 @@ def application_init(
 
 
 def new_context(
-    args: argparse.Namespace, app_name: str = 'Git Cola'
+    ops: operations.IOperations,
+    args: argparse.Namespace,
+    app_name: str = 'Git Cola',
 ) -> ApplicationContext:
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
     context.timestamp = time.time()
     context.settings = args.settings or Settings.read()
-    context.git = git.create()
+    context.ops = ops
+    context.git = git.create(context.ops)
     context.cfg = gitcfg.create(context)
     context.fsmonitor = fsmonitor.create(context)
     context.selection = selection.create()
@@ -489,8 +495,9 @@ def new_context(
 
 def create_context() -> ApplicationContext:
     """Create a one-off context from the current directory"""
-    args = null_args()
-    return new_context(args)  # type: ignore[arg-type]
+    ops = operations._create_ops()
+    args = null_args(ops)
+    return new_context(ops, args)  # type: ignore[arg-type]
 
 
 def enforce_single_instance(context: ApplicationContext) -> None:
@@ -507,7 +514,7 @@ def enforce_single_instance(context: ApplicationContext) -> None:
     # the app from within their repository and we will prevent multiple instances
     # from being launched from within that same repository.
     shared_mem_id = window_id + '-'
-    current_dir_hash = utils.sha256hex(os.getcwd())
+    current_dir_hash = utils.sha256hex(context.ops.getcwd())
     # Shared memory IDs can be max 30 characters on macOS.
     remaining_bytes = 30 - len(shared_mem_id)
     shared_mem_id += current_dir_hash[:-remaining_bytes]
@@ -533,7 +540,7 @@ def enforce_single_instance(context: ApplicationContext) -> None:
     if is_running:
         format_vars = {
             'app_name': context.app_name,
-            'dirname': os.getcwd(),
+            'dirname': context.ops.getcwd(),
         }
         QtWidgets.QMessageBox.warning(
             None,
@@ -679,7 +686,7 @@ def new_worktree(context: ApplicationContext, repo: str, prompt: bool) -> None:
         if not gitdir:
             sys.exit(core.EXIT_NOINPUT)
 
-        if not core.exists(os.path.join(gitdir, '.git')):
+        if not context.ops.exists(os.path.join(gitdir, '.git')):
             offer_to_create_repo(context, gitdir)
             valid = model.set_worktree(gitdir)
             continue
@@ -736,7 +743,8 @@ def initialize() -> str:
     """System-level initialization"""
     # We support ~/.config/git-cola/git-bindir on Windows for configuring
     # a custom location for finding the "git" executable.
-    git_path = find_git()
+    ops: operations.IOperations = operations.LocalOperations()
+    git_path = find_git(ops)
     if git_path:
         prepend_path(git_path)
 
@@ -745,14 +753,14 @@ def initialize() -> str:
     # directory tree and retrying.
     #
     # This is needed because  because Python throws exceptions in lots of
-    # stdlib functions when in this situation, e.g. os.path.abspath() and
+    # stdlib functions when in this situation, e.g. ops.abspath() and
     # os.path.realpath(), so it's simpler to mitigate the damage by changing
     # the current directory to one that actually exists.
     while True:
         try:
-            return core.getcwd()
+            return ops.getcwd()
         except OSError:
-            os.chdir('..')
+            ops.chdir('..')
 
 
 class Timer:
@@ -786,26 +794,27 @@ class Timer:
 class NullArgs:
     """Stub arguments for interactive API use"""
 
-    def __init__(self) -> None:
+    def __init__(self, ops: operations.IOperations) -> None:
         self.icon_themes = []
         self.perf = False
         self.prompt = False
-        self.repo = core.getcwd()
+        self.repo = ops.getcwd()
         self.session = None
         self.settings = None
         self.theme = None
         self.version = False
 
 
-def null_args() -> NullArgs:
+def null_args(ops: operations.IOperations) -> NullArgs:
     """Create a new instance of application arguments"""
-    return NullArgs()
+    return NullArgs(ops)
 
 
 class ApplicationContext:
     """Context for performing operations on Git and related data models"""
 
     def __init__(self, args: argparse.Namespace) -> None:
+        self.ops: operations.IOperations = None
         self.args = args
         self.app: ColaApplication | None = None  # ColaApplication
         self.shared_memory = None  # QSharedMemory
@@ -890,7 +899,7 @@ class Notifier(QtCore.QObject):
         self.emit_log(f'[git] {message}')
 
 
-def find_git() -> str | None:
+def find_git(ops) -> str | None:
     """Return the path of git.exe, or None if we can't find it."""
     if not utils.is_win32():
         return None  # UNIX systems have git in their $PATH
@@ -898,10 +907,10 @@ def find_git() -> str | None:
     # If the user wants to use a Git/bin/ directory from a non-standard
     # directory then they can write its location into
     # ~/.config/git-cola/git-bindir
-    git_bindir = resources.config_home('git-bindir')
-    if core.exists(git_bindir):
+    git_bindir = resources.config_home(ops, 'git-bindir')
+    if ops.exists(git_bindir):
         custom_path = core.read(git_bindir).strip()
-        if custom_path and core.exists(custom_path):
+        if custom_path and ops.exists(custom_path):
             return custom_path
 
     # Try to find Git's bin/ directory in one of the typical locations

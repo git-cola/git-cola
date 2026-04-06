@@ -245,9 +245,9 @@ def current_branch(context: ApplicationContext) -> core.UStr:
 def _read_git_head(context: ApplicationContext, head, default: str = 'main') -> str:
     """Pure-python .git/HEAD reader"""
     # Common .git/HEAD "ref: refs/heads/main" files
-    islink = core.islink(head)
-    if core.isfile(head) and not islink:
-        data = core.read(head).rstrip()
+    islink = context.ops.islink(head)
+    if context.ops.isfile(head) and not islink:
+        data = context.ops.file_read(head).rstrip()
         ref_prefix = 'ref: '
         if data.startswith(ref_prefix):
             return data[len(ref_prefix) :]
@@ -255,8 +255,8 @@ def _read_git_head(context: ApplicationContext, head, default: str = 'main') -> 
         return data
     # Legacy .git/HEAD symlinks
     if islink:
-        refs_heads = core.realpath(context.git.git_path('refs', 'heads'))
-        path = core.abspath(head).replace('\\', '/')
+        refs_heads = context.ops.realpath(context.git.git_path('refs', 'heads'))
+        path = context.ops.abspath(head).replace('\\', '/')
         if path.startswith(refs_heads + '/'):
             return path[len(refs_heads) + 1 :]
 
@@ -984,7 +984,7 @@ def rev_list_range(context: ApplicationContext, start, end) -> list[tuple[str, s
 def commit_message_path(context: ApplicationContext) -> str:
     """Return the path to .git/GIT_COLA_MSG"""
     path = context.git.git_path('GIT_COLA_MSG')
-    if core.exists(path):
+    if context.ops.exists(path):
         return path
     return None
 
@@ -993,7 +993,7 @@ def merge_message_path(context: ApplicationContext) -> str | None:
     """Return the path to .git/MERGE_MSG or .git/SQUASH_MSG."""
     for basename in ('MERGE_MSG', 'SQUASH_MSG'):
         path = context.git.git_path(basename)
-        if core.exists(path):
+        if context.ops.exists(path):
             return path
     return None
 
@@ -1156,7 +1156,7 @@ def cat_file(context: ApplicationContext, filename: str, *args, **kwargs) -> str
     # has the correct extension, and so that it resembles the original name.
     basename = os.path.basename(filename)
     suffix = '-' + basename  # ensures the correct filename extension
-    path = utils.tmp_filename('blob', suffix=suffix)
+    path = context.ops.tmp_filename('blob', suffix=suffix)
     with open(path, 'wb') as tmp_file:
         status, out, err = context.git.cat_file(
             _raw=True, _readonly=True, _stdout=tmp_file, *args, **kwargs
@@ -1165,7 +1165,7 @@ def cat_file(context: ApplicationContext, filename: str, *args, **kwargs) -> str
         if status == 0:
             result = path
     if not result:
-        core.unlink(path)
+        context.ops.unlink(path)
     return result
 
 
@@ -1206,7 +1206,7 @@ def annex_path(context: ApplicationContext, head: str, filename: str):
     key = annex_info.get('key', '')
     if key:
         status, out, _ = context.git.annex('contentlocation', key, _readonly=True)
-        if status == 0 and os.path.exists(out):
+        if status == 0 and context.ops.exists(out):
             path = out
 
     return path

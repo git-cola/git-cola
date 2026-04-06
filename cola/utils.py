@@ -18,10 +18,12 @@ from typing import TypeVar
 
 from . import compat
 from . import core
+from . import operations
 
 if TYPE_CHECKING:
     from qtpy.QtWidgets import QAction
 
+    from .app import ApplicationContext
     from .types import TextType
 
 _SSH_REGEX = re.compile(r'^(?P<user>[^@]+)@(?P<hostname>[^:]+):(?P<path>.+)')
@@ -243,16 +245,16 @@ def pathset(path: str) -> list[str]:
     return result
 
 
-def select_directory(paths: list[str]) -> str:
+def select_directory(ops: operations.IOperations, paths: list[str]) -> str:
     """Return the first directory in a list of paths"""
     if not paths:
-        return core.getcwd()
+        return ops.getcwd()
 
     for path in paths:
-        if core.isdir(path):
+        if ops.isdir(path):
             return path
 
-    return os.path.dirname(paths[0]) or core.getcwd()
+    return os.path.dirname(paths[0]) or ops.getcwd()
 
 
 def strip_prefix(prefix, string: str) -> str:
@@ -310,7 +312,7 @@ def tmp_filename(label: str, suffix: str = '') -> str:
         return handle.name
 
 
-def find_bash_exe() -> str | None:
+def find_bash_exe(ops: operations.IOperations) -> str | None:
     """
     Locate bash.exe bundled with Git for Windows.
 
@@ -324,7 +326,7 @@ def find_bash_exe() -> str | None:
         return None
 
     # Estimate Git root directory (e.g., C:\Program Files\Git)
-    cmd_dir = os.path.dirname(os.path.abspath(git_path))
+    cmd_dir = os.path.dirname(ops.abspath(git_path))
     git_root = os.path.dirname(cmd_dir)
 
     # Typical relative locations for bash.exe under Git for Windows
@@ -333,7 +335,7 @@ def find_bash_exe() -> str | None:
     # Search and return the first match
     for rel in candidates:
         bash = os.path.join(git_root, rel, 'bash.exe')
-        if os.path.exists(bash):
+        if ops.exists(bash):
             return bash.replace('\\', '/')
 
     return None
@@ -346,7 +348,7 @@ def is_linux() -> bool:
 
 def is_debian() -> bool:
     """Is this a Debian/Linux machine?"""
-    return os.path.exists('/usr/bin/apt-get')
+    return core.exists('/usr/bin/apt-get')
 
 
 def is_darwin() -> bool:
@@ -359,12 +361,12 @@ def is_win32() -> bool:
     return sys.platform in {'win32', 'cygwin'}
 
 
-def launch_default_app(paths) -> None:
+def launch_default_app(context: ApplicationContext, paths) -> None:
     """Execute the default application on the specified paths"""
     if is_win32():
         for path in paths:
             if hasattr(os, 'startfile'):
-                os.startfile(os.path.abspath(path))
+                os.startfile(context.ops.abspath(path))
         return
 
     if is_darwin():

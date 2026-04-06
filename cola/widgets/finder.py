@@ -8,7 +8,6 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from .. import cmds
-from .. import core
 from .. import gitcmds
 from .. import hotkeys
 from .. import icons
@@ -132,13 +131,13 @@ class Finder(standard.Dialog):
         if ref is None:
             ref = 'HEAD'
         self.ref = ref
-        label = os.path.basename(core.getcwd()) + '/'
+        label = os.path.basename(self.context.ops.getcwd()) + '/'
         self.input_label = QtWidgets.QLabel(label)
         self.input_txt = completion.GitPathsFromRefLineEdit(
             context, ref, hint=N_('<path> ...')
         )
 
-        self.tree = filetree.FileTree(parent=self)
+        self.tree = filetree.FileTree(self.context, parent=self)
         self.browser = text.VimTextBrowser(context, parent=self)
         self.filename = None
 

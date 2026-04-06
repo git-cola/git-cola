@@ -185,7 +185,7 @@ if AVAILABLE == 'inotify':
             git = context.git
             worktree = git.worktree()
             if worktree is not None:
-                worktree = core.abspath(worktree)
+                worktree = self.context.ops.abspath(worktree)
             self._worktree = worktree
             self._git_dir = git.git_path()
             self._lock = Lock()
@@ -468,13 +468,14 @@ if AVAILABLE == 'pywin32':
             git = context.git
             worktree = git.worktree()
             if worktree is not None:
-                worktree = self._transform_path(core.abspath(worktree))
+                worktree = self._transform_path(context.ops.abspath(worktree))
             self._worktree = worktree
             self._worktree_watch: _Win32Watch | None = None
-            self._git_dir = self._transform_path(core.abspath(git.git_path()))
+            self._git_dir = self._transform_path(context.ops.abspath(git.git_path()))
             self._git_dir_watch: _Win32Watch | None = None
             self._stop_event_lock = Lock()
             self._stop_event = None
+            self.context = context
 
         @staticmethod
         def _transform_path(path: str) -> str:
@@ -537,7 +538,7 @@ if AVAILABLE == 'pywin32':
                     if (
                         path != self._git_dir
                         and not path.startswith(self._git_dir + '/')
-                        and not os.path.isdir(path)
+                        and not self.context.ops.isdir(path)
                     ):
                         if self._use_check_ignore:
                             self._file_paths.add(path)

@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 from typing import Any
 
 from . import core
+from . import server
+from . import utils
 
 if TYPE_CHECKING:
     from io import BufferedWriter
@@ -34,7 +36,7 @@ class IOperations(ABC):
         pass
 
     @abstractmethod
-    def file_read(self, path, text: str, encoding: str | None = None) -> str:
+    def file_read(self, path, encoding: str | None = None) -> str:
         pass
 
     @abstractmethod
@@ -121,7 +123,7 @@ class IOperations(ABC):
         pass
 
     @abstractmethod
-    def abspath(self, s: str) -> str:
+    def abspath(self, s: core.UStr | str) -> str:
         pass
 
     @abstractmethod
@@ -200,6 +202,10 @@ class IOperations(ABC):
     def unsetenv(self, name: str) -> None:
         pass
 
+    @abstractmethod
+    def tmp_filename(self, label: str, suffix: str = '') -> str:
+        pass
+
 
 class LocalOperations(IOperations):
     def is_remote(self) -> bool:
@@ -215,7 +221,7 @@ class LocalOperations(IOperations):
         with core.open_append(path, encoding) as file:
             file.write(text)
 
-    def file_read(self, path, text: str, encoding: str | None = None) -> str:
+    def file_read(self, path, encoding: str | None = None) -> str:
         with core.open_read(path, encoding) as file:
             return file.read()
 
@@ -287,7 +293,7 @@ class LocalOperations(IOperations):
     def exists(self, path: str) -> bool:
         return core.exists(path)
 
-    def abspath(self, s: str) -> str:
+    def abspath(self, s: core.UStr | str) -> str:
         return core.abspath(s)
 
     def unlink(self, s: str) -> None:
@@ -348,6 +354,9 @@ class LocalOperations(IOperations):
     def unsetenv(self, name: str) -> None:
         return os.unsetenv(name)
 
+    def tmp_filename(self, label: str, suffix: str = '') -> str:
+        return utils.tmp_filename(label, suffix)
+
 
 class RemoteOperations(IOperations):
     def is_remote(self) -> bool:
@@ -363,7 +372,7 @@ class RemoteOperations(IOperations):
         """Open a file for appending in UTF-8 text mode"""
         raise NotImplementedError('Not implemented')
 
-    def file_read(self, path, text: str, encoding: str | None = None) -> str:
+    def file_read(self, path, encoding: str | None = None) -> str:
         raise NotImplementedError('Not implemented')
 
     def file_write(self, path: str, text: str, encoding: str | None = None) -> None:
@@ -430,7 +439,7 @@ class RemoteOperations(IOperations):
     def exists(self, path: str) -> bool:
         raise NotImplementedError('Not implemented')
 
-    def abspath(self, s: str) -> str:
+    def abspath(self, s: core.UStr | str) -> str:
         raise NotImplementedError('Not implemented')
 
     def unlink(self, s: str) -> None:

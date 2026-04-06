@@ -39,6 +39,8 @@ if TYPE_CHECKING:
     from qtpy.QtCore import QEvent
     from qtpy.QtCore import QMimeData
 
+    from .app import ApplicationContext
+
 STRETCH = object()
 SKIPPED = object()
 
@@ -539,24 +541,35 @@ class TreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
 
 def paths_from_indexes(
-    model: Any, indexes: list[int], item_type=TreeWidgetItem.TYPE, item_filter=None
+    context: ApplicationContext,
+    model: Any,
+    indexes: list[int],
+    item_type=TreeWidgetItem.TYPE,
+    item_filter=None,
 ):
     """Return paths from a list of QStandardItemModel indexes"""
     items = [model.itemFromIndex(i) for i in indexes]
-    return paths_from_items(items, item_type=item_type, item_filter=item_filter)
+    return paths_from_items(
+        context, items, item_type=item_type, item_filter=item_filter
+    )
 
 
-def _true_filter(_value) -> bool:
+def _true_filter(context: ApplicationContext, _value) -> bool:
     return True
 
 
 def paths_from_items(
-    items: Any, item_type=TreeWidgetItem.TYPE, item_filter: Any = None
+    context: ApplicationContext,
+    items: Any,
+    item_type=TreeWidgetItem.TYPE,
+    item_filter: Any = None,
 ):
     """Return a list of paths from a list of items"""
     if item_filter is None:
         item_filter = _true_filter
-    return [i.path for i in items if i.type() == item_type and item_filter(i)]
+    return [
+        i.path for i in items if i.type() == item_type and item_filter(i, context.ops)
+    ]
 
 
 def tree_selection(tree_item: QtWidgets.QTreeWidgetItem, items: list[Any]) -> list[Any]:
@@ -663,12 +676,14 @@ def existing_file(directory: Any, title: str = 'Open File...') -> tuple[Any, Any
     return result[0]
 
 
-def copy_path(filename: str, absolute: bool = True) -> None:
+def copy_path(
+    context: ApplicationContext, filename: str, absolute: bool = True
+) -> None:
     """Copy a filename to the clipboard"""
     if filename is None:
         return
     if absolute:
-        filename = core.abspath(filename)
+        filename = context.ops.abspath(filename)
     set_clipboard(filename)
 
 

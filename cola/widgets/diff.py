@@ -1,8 +1,9 @@
+from __future__ import annotations
 import os
 import re
 import time
 from functools import partial
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -37,6 +38,9 @@ from .text import TextDecorator
 from .text import TextSearchWidget
 from .text import VimHintedPlainTextEdit
 from .text import label_selection_timer
+
+if TYPE_CHECKING:
+    from ..app import ApplicationContext
 
 ENABLE_INTRALINE_DIFF = True
 
@@ -400,7 +404,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
 
     def _build_intraline_diff_config(
         self,
-    ) -> Optional[intraline_diff.IntralineDiffConfig]:
+    ) -> intraline_diff.IntralineDiffConfig | None:
         """Build the intra-line diff config for the current preset."""
         preset_item = diff_intraline.intraline_diff_preset_item(
             self._intraline_diff_preset
@@ -441,7 +445,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     ) -> tuple[
         intraline_diff.SpansByLineIndex,
         float,
-        Optional[intraline_diff.IntralineDiffResult],
+        intraline_diff.IntralineDiffResult | None,
     ]:
         """Try to compute intra-line spans and return output details."""
         intraline_spans = {}
@@ -787,7 +791,7 @@ class Viewer(QtWidgets.QFrame):
     def dragEnterEvent(self, event):
         """Accepts drops if the mimedata contains patches"""
         super().dragEnterEvent(event)
-        patches = get_patches_from_mimedata(event.mimeData())
+        patches = get_patches_from_mimedata(self.context, event.mimeData())
         if patches:
             event.acceptProposedAction()
             self._drag_has_patches = True
@@ -810,7 +814,7 @@ class Viewer(QtWidgets.QFrame):
         super().dropEvent(event)
         self._drag_has_patches = False
 
-        patches = get_patches_from_mimedata(event.mimeData())
+        patches = get_patches_from_mimedata(self.context, event.mimeData())
         if patches:
             apply_patches(self.context, patches=patches)
 
@@ -944,8 +948,8 @@ class Viewer(QtWidgets.QFrame):
 
     def cleanup(self):
         for image, unlink in self.images:
-            if unlink and core.exists(image):
-                os.unlink(image)
+            if unlink and self.context.ops.exists(image):
+                self.context.ops.unlink(image)
         self.images = []
 
     def set_images(self, images):
@@ -1477,7 +1481,7 @@ class DiffEditor(DiffTextEdit):
         if model.is_partially_stageable():
             item = s.modified[0] if s.modified else None
             if item in model.submodules:
-                path = core.abspath(item)
+                path = self.context.ops.abspath(item)
                 action = qtutils.add_action_with_icon(
                     menu,
                     icons.add(),
@@ -1523,7 +1527,7 @@ class DiffEditor(DiffTextEdit):
                 add_action(self.action_revert_unstaged_edits)
                 # Do not show the "edit" action when the file does not exist.
                 add_action(qtutils.menu_separator(menu))
-                if filename and core.exists(filename):
+                if filename and self.context.ops.exists(filename):
                     add_action(self.launch_editor)
                 # Removed files can still be diffed.
                 add_action(self.launch_difftool)
@@ -1540,7 +1544,7 @@ class DiffEditor(DiffTextEdit):
         if s.staged and model.is_unstageable():
             item = s.staged[0]
             if item in model.submodules:
-                path = core.abspath(item)
+                path = self.context.ops.abspath(item)
                 action = qtutils.add_action_with_icon(
                     menu,
                     icons.remove(),
@@ -1565,7 +1569,7 @@ class DiffEditor(DiffTextEdit):
             elif item not in model.staged_deleted:
                 # Do not show the "edit" action when the file does not exist.
                 add_action(qtutils.menu_separator(menu))
-                if filename and core.exists(filename):
+                if filename and self.context.ops.exists(filename):
                     add_action(self.launch_editor)
                 # Removed files can still be diffed.
                 add_action(self.launch_difftool)
@@ -1584,7 +1588,7 @@ class DiffEditor(DiffTextEdit):
             add_action(qtutils.menu_separator(menu))
             # Do not show the "edit" action when the file does not exist.
             # Untracked files exist by definition.
-            if filename and core.exists(filename):
+            if filename and self.context.ops.exists(filename):
                 add_action(self.launch_editor)
 
             # Removed files can still be diffed.
@@ -1782,13 +1786,13 @@ def _build_patch_append_menu(widget, context, menu):
     path = prefs.patches_directory(context)
     patches = get_patches_from_dir(path)
     for patch in patches:
-        relpath = os.path.relpath(patch, start=path)
+        relpath = context.ops.relpath(patch, start=path)
         sub_menu = _add_patch_subdirs(menu, subdir_menus, relpath)
         patch_basename = os.path.basename(relpath)
         append_action = qtutils.add_action(
             sub_menu,
             patch_basename,
-            lambda patch_file=patch: _append_patch(widget, patch_file),
+            lambda patch_file=patch: _append_patch(context, widget, patch_file),
         )
         append_action.setIcon(icons.save())
         sub_menu.addAction(append_action)
@@ -1830,25 +1834,27 @@ def _export_patch(diff_editor, context, append=False):
         filename = qtutils.save_as(default_filename)
     if not filename:
         return
-    _write_patch_to_file(diff_editor, patch, filename, append=append)
+    _write_patch_to_file(context, diff_editor, patch, filename, append=append)
 
 
-def _append_patch(diff_editor, filename):
+def _append_patch(context: ApplicationContext, diff_editor, filename):
     """Append diffs to the specified patch file"""
     if diff_editor.selection_model.is_empty():
         return
     patch = diff_editor.extract_patch(reverse=False)
     if not patch.has_changes():
         return
-    _write_patch_to_file(diff_editor, patch, filename, append=True)
+    _write_patch_to_file(context, diff_editor, patch, filename, append=True)
 
 
-def _write_patch_to_file(diff_editor, patch, filename, append=False):
+def _write_patch_to_file(
+    context: ApplicationContext, diff_editor, patch, filename, append=False
+):
     """Write diffs from the Diff Editor to the specified patch file"""
     encoding = diff_editor.patch_encoding()
     content = patch.as_text()
     try:
-        core.write(filename, content, encoding=encoding, append=append)
+        context.ops.write_file(filename, content, encoding=encoding, append=append)
     except OSError as exc:
         _, details = utils.format_exception(exc)
         title = N_('Error writing patch')
@@ -2236,24 +2242,26 @@ def new_apply_patches(context, patches=None, parent=None):
     return dlg
 
 
-def get_patches_from_paths(paths):
+def get_patches_from_paths(context: ApplicationContext, paths):
     """Returns all patches beneath a given path"""
     paths = [core.decode(p) for p in paths]
-    patches = [p for p in paths if core.isfile(p) and p.endswith(('.patch', '.mbox'))]
-    dirs = [p for p in paths if core.isdir(p)]
+    patches = [
+        p for p in paths if context.ops.isfile(p) and p.endswith(('.patch', '.mbox'))
+    ]
+    dirs = [p for p in paths if context.ops.isdir(p)]  # TODO Batch this to improve efficiency in RemoteOperations mode.
     dirs.sort()
     for d in dirs:
         patches.extend(get_patches_from_dir(d))
     return patches
 
 
-def get_patches_from_mimedata(mimedata):
+def get_patches_from_mimedata(context: ApplicationContext, mimedata):
     """Extract path files from a QMimeData payload"""
     urls = mimedata.urls()
     if not urls:
         return []
     paths = [x.path() for x in urls]
-    return get_patches_from_paths(paths)
+    return get_patches_from_paths(context, paths)
 
 
 def get_patches_from_dir(path):
@@ -2274,7 +2282,7 @@ class ApplyPatches(standard.Dialog):
         if parent is not None:
             self.setWindowModality(Qt.WindowModal)
 
-        self.curdir = core.getcwd()
+        self.curdir = self.context.ops.getcwd()
         self.inner_drag = False
 
         self.usage = QtWidgets.QLabel()
@@ -2375,25 +2383,25 @@ class ApplyPatches(standard.Dialog):
         if not files:
             return
         self.curdir = os.path.dirname(files[0])
-        self.add_paths([core.relpath(f) for f in files])
+        self.add_paths([self.context.ops.relpath(f) for f in files])  # TODO Batch this to improve efficiency in RemoteOperations mode.
 
     def dragEnterEvent(self, event):
         """Accepts drops if the mimedata contains patches"""
         super().dragEnterEvent(event)
-        patches = get_patches_from_mimedata(event.mimeData())
+        patches = get_patches_from_mimedata(self.context, event.mimeData())
         if patches:
             event.acceptProposedAction()
 
     def dropEvent(self, event):
         """Add dropped patches"""
         event.accept()
-        patches = get_patches_from_mimedata(event.mimeData())
+        patches = get_patches_from_mimedata(self.context, event.mimeData())
         if not patches:
             return
         self.add_paths(patches)
 
     def add_paths(self, paths):
-        self.tree.add_paths(paths)
+        self.tree.add_paths(self.context, paths)
 
     def _tree_selection_changed(self):
         items = self.tree.selected_items()
@@ -2401,7 +2409,7 @@ class ApplyPatches(standard.Dialog):
             return
         item = items[-1]  # take the last item
         path = item.data(0, Qt.UserRole)
-        if not core.exists(path):
+        if not self.context.ops.exists(path):
             return
         commit = parse_patch(path)
         self.diffwidget.set_details(
@@ -2426,8 +2434,8 @@ class ApplyPatches(standard.Dialog):
 
 
 class PatchTreeWidget(standard.DraggableTreeWidget):
-    def add_paths(self, paths):
-        patches = get_patches_from_paths(paths)
+    def add_paths(self, context: ApplicationContext, paths):
+        patches = get_patches_from_paths(context, paths)
         if not patches:
             return
         items = []
