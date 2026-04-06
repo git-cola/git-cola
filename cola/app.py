@@ -92,10 +92,12 @@ def setup_environment() -> None:
     # Spoof an X11 display for SSH
     os.environ.setdefault('DISPLAY', ':0')
 
+    ops = operations.LocalOperations()
+
     if not core.getenv('SHELL', ''):
         for shell in ('/bin/zsh', '/bin/bash', '/bin/sh'):
             if os.path.exists(shell):
-                compat.setenv('SHELL', shell)
+                compat.setenv(ops, 'SHELL', shell)
                 break
 
     # Setup the path so that git finds us when we run 'git cola'
@@ -103,15 +105,15 @@ def setup_environment() -> None:
     bindir = core.decode(os.path.dirname(sys_argv0))
     path_entries.append(bindir)
     path = os.pathsep.join(path_entries)
-    compat.setenv('PATH', path)
+    compat.setenv(ops, 'PATH', path)
 
     # We don't ever want a pager
-    compat.setenv('GIT_PAGER', '')
+    compat.setenv(ops, 'GIT_PAGER', '')
 
     # Setup the openssh askpass credentials helper.
-    askpass = _get_askpass(operations.LocalOperations())
-    compat.setenv('GIT_ASKPASS', askpass)
-    compat.setenv('SSH_ASKPASS', askpass)
+    askpass = _get_askpass(ops)
+    compat.setenv(ops, 'GIT_ASKPASS', askpass)
+    compat.setenv(ops, 'SSH_ASKPASS', askpass)
 
     # --- >8 --- >8 ---
     # Git v1.7.10 Release Notes
@@ -143,7 +145,7 @@ def setup_environment() -> None:
     # --- >8 --- >8 ---
     # Longer-term: Use `git merge --no-commit` so that we always
     # have a chance to explain our merges.
-    compat.setenv('GIT_MERGE_AUTOEDIT', 'no')
+    compat.setenv(ops, 'GIT_MERGE_AUTOEDIT', 'no')
 
 
 def _get_askpass(ops: operations.IOperations) -> TextType:
@@ -157,8 +159,8 @@ def _get_askpass(ops: operations.IOperations) -> TextType:
     if sys.platform == 'darwin':
         return resources.package_command('ssh-askpass-darwin')
 
-    kde_askpass = ops.find_executable('ksshaskpass')
-    gnome_askpass = ops.find_executable('gnome-ssh-askpass')
+    kde_askpass = core.find_executable('ksshaskpass')
+    gnome_askpass = core.find_executable('gnome-ssh-askpass')
     if gnome_askpass is None:
         gnome_askpass = '/usr/lib/openssh/gnome-ssh-askpass'
 
@@ -399,7 +401,7 @@ def process_args(args: argparse.Namespace, ops, setup_repo: bool = False) -> Non
         sys.exit(core.EXIT_SUCCESS)
 
     # Handle session management
-    restore_session(ops, args)
+    restore_session(args)
 
     # Initialize args.repo. If a repository was specified as a
     # positional argument then we will use that value.
@@ -427,7 +429,7 @@ def process_args(args: argparse.Namespace, ops, setup_repo: bool = False) -> Non
         sys.exit(core.EXIT_USAGE)
 
 
-def restore_session(ops, args: argparse.Namespace) -> None:
+def restore_session(args: argparse.Namespace) -> None:
     """Load a session based on the window-manager provided arguments"""
     # args.settings is provided when restoring from a session.
     args.settings = None
@@ -746,7 +748,7 @@ def initialize() -> str:
     ops: operations.IOperations = operations.LocalOperations()
     git_path = find_git(ops)
     if git_path:
-        prepend_path(git_path)
+        prepend_path(ops, git_path)
 
     # The current directory may have been deleted while we are still
     # in that directory.  We rectify this situation by walking up the
@@ -925,13 +927,13 @@ def find_git(ops) -> str | None:
     return None
 
 
-def prepend_path(path) -> None:
+def prepend_path(path, ops) -> None:
     """Adds git to the PATH.  This is needed on Windows."""
     path = core.decode(path)
     path_entries = core.getenv('PATH', '').split(os.pathsep)
     if path not in path_entries:
         path_entries.insert(0, path)
-        compat.setenv('PATH', os.pathsep.join(path_entries))
+        compat.setenv(ops, 'PATH', os.pathsep.join(path_entries))
 
 
 def detect_system_theme() -> str:

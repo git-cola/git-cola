@@ -363,7 +363,7 @@ def _win32_find_exe(exe: Any, ops: operations.IOperations) -> Any:
     # if argument does not have an extension, also try it with each of the
     # extensions specified in PATHEXT
     if '.' not in exe:
-        extensions = getenv('PATHEXT', '').split(os.pathsep)
+        extensions = ops.getenv('PATHEXT', '').split(os.pathsep)
         candidates.extend([(exe + ext) for ext in extensions if ext.startswith('.')])
     # search the current directory first
     for candidate in candidates:
@@ -372,7 +372,7 @@ def _win32_find_exe(exe: Any, ops: operations.IOperations) -> Any:
     # if the argument does not include a path separator, search each of the
     # directories on the PATH
     if not os.path.dirname(exe):
-        for path in getenv('PATH').split(os.pathsep):
+        for path in ops.getenv('PATH').split(os.pathsep):
             if path:
                 for candidate in candidates:
                     full_path = os.path.join(path, candidate)

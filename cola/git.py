@@ -128,7 +128,7 @@ class Paths:
         """Search for git worktrees and bare repositories"""
         if not self.git_dir or not self.worktree:
             ceiling_dirs = set()
-            ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
+            ceiling = self.ops.getenv('GIT_CEILING_DIRECTORIES')
             if ceiling:
                 ceiling_dirs.update([x for x in ceiling.split(os.pathsep) if x])
             if path:

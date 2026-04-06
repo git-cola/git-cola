@@ -1862,7 +1862,7 @@ class LaunchTerminal(ContextCommand):
                 if executable:
                     command = executable
                     break
-            argv.append(os.getenv('SHELL', command))
+            argv.append(self.context.ops.getenv('SHELL', command))
             shell = False
 
         core.fork(argv, cwd=self.path, shell=shell)
@@ -2322,7 +2322,7 @@ class SequenceEditorEnvironment:
 
     def __enter__(self) -> SequenceEditorEnvironment:
         for var, value in self.env.items():
-            compat.setenv(var, value)
+            compat.setenv(self.context.ops, var, value)
         return self
 
     def __exit__(
@@ -2332,7 +2332,7 @@ class SequenceEditorEnvironment:
         exc_tb: None,
     ) -> None:
         for var in self.env:
-            compat.unsetenv(var)
+            compat.unsetenv(self.context.ops, var)
 
 
 class Rebase(ContextCommand):
@@ -2673,7 +2673,7 @@ class RunConfigAction(ContextCommand):
         """Run the user-configured action"""
         for env in ('ARGS', 'DIRNAME', 'FILENAME', 'REVISION'):
             try:
-                compat.unsetenv(env)
+                compat.unsetenv(self.context.ops, env)
             except KeyError:
                 pass
         rev = None
@@ -2698,8 +2698,8 @@ class RunConfigAction(ContextCommand):
                 )
                 return False
             dirname = utils.dirname(filename, current_dir='.')
-            compat.setenv('FILENAME', filename)
-            compat.setenv('DIRNAME', dirname)
+            compat.setenv(self.context.ops, 'FILENAME', filename)
+            compat.setenv(self.context.ops, 'DIRNAME', dirname)
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
@@ -2721,9 +2721,9 @@ class RunConfigAction(ContextCommand):
             if not Interaction.question(title, prompt):
                 return False
         if rev:
-            compat.setenv('REVISION', rev)
+            compat.setenv(self.context.ops, 'REVISION', rev)
         if args:
-            compat.setenv('ARGS', args)
+            compat.setenv(self.context.ops, 'ARGS', args)
         title = os.path.expandvars(cmd)
         Interaction.log(N_('Running command: %s') % title)
         cmd = ['sh', '-c', cmd]
