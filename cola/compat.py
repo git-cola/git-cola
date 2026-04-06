@@ -1,5 +1,7 @@
+from __future__ import annotations
 import os
 import sys
+from typing import TYPE_CHECKING
 from typing import Any
 
 try:
@@ -8,6 +10,8 @@ except ImportError:
     # Python 3
     from urllib import parse  # noqa
 
+if TYPE_CHECKING:
+    from .ops import IOperations
 
 PY_VERSION = sys.version_info[:2]  # (2, 7)
 PY_VERSION_MAJOR = PY_VERSION[0]
@@ -48,22 +52,24 @@ else:
 maxint = (2**31) - 1
 
 
-def setenv(key: str, value: str) -> None:
+def setenv(ops: IOperations, key: str, value: str) -> None:
     """Compatibility wrapper for setting environment variables
 
     Windows requires putenv(). Unix only requires os.environ.
     """
+
     if not PY3 and isinstance(value, ustr):
         value = value.encode(ENCODING, 'replace')
-    os.environ[key] = value
-    os.putenv(key, value)
+    ops.environ_setvalue(key, value)
+    ops.putenv(key, value)
 
 
-def unsetenv(key: str) -> None:
+def unsetenv(ops: IOperations, key: str) -> None:
     """Compatibility wrapper for clearing environment variables"""
-    os.environ.pop(key, None)
+
+    ops.environ_pop(key, None)
     if hasattr(os, 'unsetenv'):
-        os.unsetenv(key)
+        ops.unsetenv(key)
 
 
 def no_op(value: Any) -> Any:

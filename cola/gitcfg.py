@@ -444,9 +444,13 @@ class GitConfig(QtCore.QObject):
         if utils.is_win32():
             # Try to find Git's sh.exe directory in
             # one of the typical locations
-            pf = os.environ.get('ProgramFiles', r'C:\Program Files')
-            pf32 = os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)')
-            pf64 = os.environ.get('ProgramW6432', r'C:\Program Files')
+            pf = self.context.ops.get_environ().get('ProgramFiles', r'C:\Program Files')
+            pf32 = self.context.ops.get_environ().get(
+                'ProgramFiles(x86)', r'C:\Program Files (x86)'
+            )
+            pf64 = self.context.ops.get_environ().get(
+                'ProgramW6432', r'C:\Program Files'
+            )
 
             for p in [pf64, pf32, pf, 'C:\\']:
                 candidate = os.path.join(p, r'Git\bin\sh.exe')

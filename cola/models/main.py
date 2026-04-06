@@ -723,10 +723,10 @@ def autodetect_proxy(context, kwargs: dict[Any, Any]) -> None:
         kwargs['_add_env'] = add_env
 
 
-def autodetect_proxy_environ(ops) -> dict[Any, Any]:
+def autodetect_proxy_environ(context: ApplicationContext) -> dict[Any, Any]:
     """Return the environment variables used for configuring proxies"""
     add_env = {}
-    xdg_current_desktop = core.getenv('XDG_CURRENT_DESKTOP', default='')
+    xdg_current_desktop = context.ops.getenv('XDG_CURRENT_DESKTOP', default='')
     if not xdg_current_desktop:
         return add_env
 
@@ -744,7 +744,7 @@ def autodetect_proxy_environ(ops) -> dict[Any, Any]:
             http_proxy = autodetect_proxy_gnome(context, gsettings, 'http')
             https_proxy = autodetect_proxy_gnome(context, gsettings, 'https')
 
-    if os.environ.get('http_proxy'):
+    if context.ops.get_environ().get('http_proxy'):
         Interaction.log(
             N_('http proxy configured by the "http_proxy" environment variable')
         )
@@ -755,7 +755,7 @@ def autodetect_proxy_environ(ops) -> dict[Any, Any]:
         )
         add_env['http_proxy'] = http_proxy
 
-    if os.environ.get('https_proxy', None):
+    if context.ops.get_environ().get('https_proxy', None):
         Interaction.log(
             N_('https proxy configured by the "https_proxy" environment variable')
         )
