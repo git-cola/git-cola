@@ -45,7 +45,7 @@ def _cache_key_from_paths(
     mtimes = []
     for path in sorted(paths):
         try:
-            mtimes.append(core.stat(path).st_mtime)
+            mtimes.append(context.ops.stat(path).st_mtime)
         except OSError:
             continue
     if mtimes:

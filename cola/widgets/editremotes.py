@@ -513,6 +513,6 @@ class RemoteWidget(QtWidgets.QWidget):
     def open_repo(self):
         """Set the URL from a repository on disk"""
         git = self.context.git
-        repo = qtutils.opendir_dialog(N_('Open Git Repository'), core.getcwd())
+        repo = qtutils.opendir_dialog(N_('Open Git Repository'), core.getcwd())  # TODO make this work on remote
         if repo and git.is_git_repository(repo):
             self.url = repo
