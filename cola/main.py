@@ -517,7 +517,7 @@ def cmd_cola(
 
     status_filter = args.status_filter
     if status_filter:
-        status_filter = core.abspath(status_filter)
+        status_filter = context.ops.abspath(status_filter)
 
     if context is None:
         context = app.application_init(args)
@@ -528,7 +528,7 @@ def cmd_cola(
         cmds.do(cmds.AmendMode, context, amend=True)
 
     if status_filter:
-        view.set_filter(core.relpath(status_filter))
+        view.set_filter(context.ops.relpath(status_filter))
 
     context.timer.stop('view')
     if args.perf:

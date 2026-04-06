@@ -1,5 +1,4 @@
 """Main UI for authoring commits and other Git Cola interactions"""
-import os
 from functools import partial
 
 from qtpy import QtCore
@@ -1126,7 +1125,7 @@ class MainView(standard.MainWindow):
         is_cherry_picking = self.model.is_rebasing
 
         try:
-            curdir = core.getcwd()
+            curdir = self.context.ops.getcwd()
         except FileNotFoundError:
             return
         msg = N_('Repository: %s') % curdir
@@ -1232,7 +1231,7 @@ class MainView(standard.MainWindow):
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists
         hook = gitcmds.prepare_commit_message_hook(self.context)
-        enabled = os.path.exists(hook)
+        enabled = self.context.ops.exists(hook)
         self.prepare_commitmsg_hook_action.setEnabled(enabled)
 
     def export_state(self):

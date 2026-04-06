@@ -136,7 +136,9 @@ class RepoFormWidget(FormWidget):
             'Absolute path are used as-is.'
         )
         patches_directory = prefs.patches_directory(context)
-        self.patches_directory = standard.DirectoryPathLineEdit(patches_directory, self)
+        self.patches_directory = standard.DirectoryPathLineEdit(
+            context, patches_directory, self
+        )
         self.patches_directory.setToolTip(tooltip)
 
         tooltip = N_(

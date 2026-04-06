@@ -1,6 +1,5 @@
 """Widgets for Fetch, Push, and Pull"""
 import fnmatch
-import os
 import time
 
 from qtpy import QtCore
@@ -948,7 +947,7 @@ class RemoteActionDialog(standard.Dialog):
         """Prune stale worktrees from the persistent selected_remotes_by_worktree"""
         worktrees = list(self.selected_remotes_by_worktree.keys())
         for worktree in worktrees:
-            if not os.path.exists(worktree):
+            if not self.context.ops.exists(worktree):  # TODO this is loop with guts that could be batched to minimize network request round trips.
                 self.selected_remotes_by_worktree.pop(worktree, None)
 
 

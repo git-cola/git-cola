@@ -14,7 +14,6 @@ from __future__ import annotations
 import array
 import codecs
 import io
-import os
 import re
 import struct
 import sys
@@ -25,6 +24,7 @@ from io import TextIOWrapper
 from typing import Any
 
 from . import compat
+from . import core
 
 __author__ = 'David Jean Louis <izimobil@gmail.com>'
 __version__ = '1.1.1'
@@ -93,7 +93,7 @@ def _pofile_or_mofile(f, filetype, **kwargs) -> MOFile | POFile:
 
 def _is_file(filename_or_contents: str) -> bool:
     """
-    Safely returns the value of os.path.exists(filename_or_contents).
+    Safely returns the value of core.exists(filename_or_contents).
 
     Arguments:
 
@@ -102,7 +102,7 @@ def _is_file(filename_or_contents: str) -> bool:
         In the latter case, this function will always return False.
     """
     try:
-        return os.path.isfile(filename_or_contents)
+        return core.isfile(filename_or_contents)
     except (TypeError, ValueError, UnicodeEncodeError):
         return False
 

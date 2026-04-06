@@ -83,7 +83,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def mimeData(self, indexes: list[QModelIndex]) -> QMimeData:
         paths = qtutils.paths_from_indexes(
-            self, indexes, item_type=GitRepoNameItem.TYPE
+            self.context, self, indexes, item_type=GitRepoNameItem.TYPE
         )
         return qtutils.mimedata_from_paths(self.context, paths)
 

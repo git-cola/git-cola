@@ -100,7 +100,7 @@ class Difftool(standard.Dialog):
         if expr is None or hide_expr:
             self.expr.hide()
 
-        self.tree = filetree.FileTree(parent=self)
+        self.tree = filetree.FileTree(self.context, parent=self)
 
         self.diff_button = qtutils.create_button(
             text=N_('Compare'), icon=icons.diff(), enabled=False, default=True

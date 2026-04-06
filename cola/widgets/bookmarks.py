@@ -8,7 +8,6 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from .. import cmds
-from .. import core
 from .. import git
 from .. import hotkeys
 from .. import icons
@@ -464,18 +463,18 @@ class BookmarksTreeView(standard.TreeView):
         self.toggle_switcher.emit(False)
 
     def add_bookmark(self):
-        normpath = utils.expandpath(core.getcwd())
+        normpath = utils.expandpath(self.context.ops.getcwd())
         name = os.path.basename(normpath)
         prompt = (
             (N_('Name'), name),
-            (N_('Path'), core.getcwd()),
+            (N_('Path'), self.context.ops.getcwd()),
         )
         ok, values = qtutils.prompt_n(N_('Add Favorite'), prompt)
         if not ok:
             return
         name, path = values
         normpath = utils.expandpath(path)
-        if git.is_git_worktree(normpath):
+        if git.is_git_worktree(self.context.ops, normpath):
             settings = self.context.settings
             settings.load()
             settings.add_bookmark(normpath, name)

@@ -67,6 +67,7 @@ class Browser(standard.Widget):
         self.setLayout(self.mainlayout)
 
         self.model = context.model
+        self.context = context
         self.model.updated.connect(self._updated_callback, type=Qt.QueuedConnection)
         if parent is None:
             qtutils.add_close_action(self)
@@ -85,7 +86,7 @@ class Browser(standard.Widget):
 
     def _updated_callback(self):
         branch = self.model.currentbranch
-        curdir = core.getcwd()
+        curdir = self.context.ops.getcwd()
         msg = N_('Repository: %s') % curdir
         msg += '\n'
         msg += N_('Branch: %s') % branch
@@ -473,7 +474,7 @@ class RepoTreeView(standard.TreeView):
 
     def paths_from_indexes(self, indexes):
         return qtutils.paths_from_indexes(
-            self.model(), indexes, item_type=GitRepoNameItem.TYPE
+            self.context, self.model(), indexes, item_type=GitRepoNameItem.TYPE
         )
 
     def selected_paths(self):

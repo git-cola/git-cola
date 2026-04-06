@@ -11,6 +11,7 @@ from cola import core
 from cola import git
 from cola import gitcfg
 from cola import gitcmds
+from cola import operations
 from cola.models import main
 
 # prevent unused imports lint errors.
@@ -90,7 +91,8 @@ def app_context():
 
     initialize_repo()
     context = Mock()
-    context.git = git.create()
+    context.ops = operations.LocalOperations()
+    context.git = git.create(context.ops)
     context.git.set_worktree(core.getcwd())
     context.cfg = gitcfg.create(context)
     context.model = main.create(context)
