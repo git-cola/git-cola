@@ -89,7 +89,7 @@ def decode_maybe(value, encoding, errors: str = 'strict') -> Any:
 
 def decode(
     value: bytes | str | UStr | None,
-    encoding: None = None,
+    encoding: str | None = None,
     errors: str = 'strict',
 ) -> UStr | None:
     """decode(encoded_string) returns an un-encoded Unicode string"""
@@ -130,7 +130,7 @@ def encode(string: str | UStr, encoding: str | None = None) -> bytes:
     return string.encode(encoding or ENCODING, 'replace')
 
 
-def mkpath(path: str | UStr, encoding: None = None) -> bytes | UStr:
+def mkpath(path: str | UStr, encoding: str | None = None) -> bytes | UStr:
     # The Windows API requires Unicode strings regardless of python version
     if WIN32:
         return decode(path, encoding=encoding)
@@ -308,13 +308,17 @@ def run_command(cmd: list[UStr | str], *args, **kwargs) -> tuple[int, UStr, UStr
 
 
 @interruptable
-def _fork_posix(args: list[str], cwd: None = None, shell: bool = False) -> int:
+def _fork_posix(args: list[str], cwd: str | None = None, shell: bool = False) -> int:
     """Launch a process in the background."""
     encoded_args = [encode(arg) for arg in args]
     return subprocess.Popen(encoded_args, cwd=cwd, shell=shell).pid
 
 
-def _fork_win32(args, cwd=None, shell: bool = False) -> int:
+def _fork_win32(
+    args,
+    cwd: str | None = None,
+    shell: bool = False,
+) -> int:
     """Launch a background process using crazy win32 voodoo."""
     # This is probably wrong, but it works.  Windows.. Wow.
     if args[0] == 'git-dag':
@@ -422,7 +426,7 @@ def guess_mimetype(filename: str) -> str | None:
     return mimetype
 
 
-def xopen(path: str, mode: str = 'r', encoding: None = None) -> Any:
+def xopen(path: str, mode: str = 'r', encoding: str | None = None) -> Any:
     """Open a file with the specified mode and encoding
 
     The path is decoded into Unicode on Windows and encoded into bytes on Unix.
@@ -430,17 +434,17 @@ def xopen(path: str, mode: str = 'r', encoding: None = None) -> Any:
     return open(mkpath(path, encoding=encoding), mode)
 
 
-def open_append(path, encoding=None) -> TextIOWrapper:
+def open_append(path, encoding: str | None = None) -> TextIOWrapper:
     """Open a file for appending in UTF-8 text mode"""
     return open(mkpath(path, encoding=encoding), 'a', encoding='utf-8')
 
 
-def open_read(path: str, encoding: None = None) -> TextIOWrapper:
+def open_read(path: str, encoding: str | None = None) -> TextIOWrapper:
     """Open a file for reading in UTF-8 text mode"""
     return open(mkpath(path, encoding=encoding), encoding='utf-8')
 
 
-def open_write(path: str, encoding: None = None) -> TextIOWrapper:
+def open_write(path: str, encoding: str | None = None) -> TextIOWrapper:
     """Open a file for writing in UTF-8 text mode"""
     return open(mkpath(path, encoding=encoding), 'w', encoding='utf-8')
 

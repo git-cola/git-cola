@@ -160,7 +160,7 @@ class Editor(QtWidgets.QWidget):
     cancel = Signal()
     rebase = Signal()
 
-    def __init__(self, context, filename: str, parent=None) -> None:
+    def __init__(self, context: ApplicationContext, filename: str, parent=None) -> None:
         super().__init__(parent)
 
         self.widget_version = 1
