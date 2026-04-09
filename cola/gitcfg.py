@@ -38,14 +38,14 @@ def create(context: ApplicationContext) -> GitConfig:
 
 def _cache_key_from_paths(
     context: ApplicationContext, paths: list[Any | str]
-) -> list[float] | None:
+) -> list[float]:
     """Return a stat cache from the given paths"""
     if not paths:
         return None
-    mtimes = []
+    mtimes: list[float] = []
     for path in sorted(paths):
         try:
-            mtimes.append(context.ops.stat(path).st_mtime)
+            mtimes.append(context.ops.stat(path).get('st_mtime'))
         except OSError:
             continue
     if mtimes:
