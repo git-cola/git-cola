@@ -213,7 +213,7 @@ def current_branch(context: ApplicationContext) -> core.UStr:
     else:
         stat_file = context.git.git_path('HEAD')
     try:
-        key = context.ops.stat(stat_file).st_mtime
+        key = context.ops.stat(stat_file).get('st_mtime')
         if CurrentBranchCache.key == key:
             return CurrentBranchCache.value
     except OSError:

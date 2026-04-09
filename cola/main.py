@@ -67,6 +67,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     add_remote_command(subparser)
     add_search_command(subparser)
     add_stash_command(subparser)
+    add_connect_command(subparser)
     add_tag_command(subparser)
     add_version_command(subparser)
 
@@ -475,6 +476,13 @@ def add_stash_command(subparser: argparse._SubParsersAction) -> None:
     add_command(subparser, 'stash', 'stash and unstash changes', cmd_stash)
 
 
+def add_connect_command(subparser: argparse._SubParsersAction):
+    parser = add_command(subparser, 'connect', 'connect to the server', cmd_connect)
+    parser.add_argument('address', help='IP:PORT')
+    parser.add_argument('repo', help='/path/to/repo')
+    _add_cola_options(parser)
+
+
 def add_tag_command(subparser: argparse._SubParsersAction) -> None:
     """Add the "git cola tag" command for creating tags"""
     parser = add_command(subparser, 'tag', 'create tags', cmd_tag)
@@ -664,10 +672,12 @@ def cmd_merge(args: argparse.Namespace) -> int:
     return app.application_start(context, view)
 
 
-def cmd_open(args: argparse.Namespace) -> int:
+def cmd_open(
+    args: argparse.Namespace, socket: server.SocketClient | None = None
+) -> int:
     from . import guicmds
 
-    context = app.application_init(args, setup_worktree=False)
+    context = app.application_init(args, socket=socket, setup_worktree=False)
     quick_open = guicmds.open_quick_repo_search(context, open_repo=False, parent=None)
     worktree = quick_open.worktree()
     if worktree:
@@ -787,6 +797,14 @@ def cmd_tag(args: argparse.Namespace) -> int:
     context.model.update_status()
     view = new_create_tag(context, name=args.name, ref=args.ref, sign=args.sign)
     return app.application_start(context, view)
+
+
+def cmd_connect(args: argparse.Namespace):
+    splitdata = args.address.split(':')
+    socket_client = server.SocketClient(ip=splitdata[0], port=int(splitdata[1]))
+
+    context = app.application_init(args, socket=socket_client)
+    return cmd_cola(args=args, context=context)
 
 
 # Windows shortcut launch features:

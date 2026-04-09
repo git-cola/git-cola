@@ -76,6 +76,7 @@ from .widgets import standard
 from .widgets import startup
 
 if TYPE_CHECKING:
+    from . import server
     from .types import TextType
     from .types import ViewType
 
@@ -447,6 +448,7 @@ def restore_session(ops: operations.IOperations, args: argparse.Namespace) -> No
 
 def application_init(
     args: argparse.Namespace,
+    socket: server.SocketClient | None = None,
     update: bool = False,
     app_name: str = 'Git Cola',
     setup_worktree: bool = True,
@@ -455,7 +457,10 @@ def application_init(
     """Parses the command-line arguments and starts git-cola"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
-    ops = operations.LocalOperations()
+    if socket:
+        ops: operations.IOperations = operations.RemoteOperations(socket)
+    else:
+        ops: operations.IOperations = operations.LocalOperations()
 
     setup_environment()
     process_args(ops, args, setup_repo=setup_repo)
@@ -501,7 +506,7 @@ def new_context(
 
 def create_context() -> ApplicationContext:
     """Create a one-off context from the current directory"""
-    ops = operations._create_ops()
+    ops = operations.LocalOperations()
     args = null_args(ops)
     return new_context(ops, args)  # type: ignore[arg-type]
 
@@ -745,11 +750,15 @@ def startup_message() -> None:
         Interaction.log(msg2)
 
 
-def initialize() -> str:
+def initialize(socket: server.SocketClient | None = None) -> str:
     """System-level initialization"""
     # We support ~/.config/git-cola/git-bindir on Windows for configuring
     # a custom location for finding the "git" executable.
-    ops: operations.IOperations = operations.LocalOperations()
+    if socket:
+        ops: operations.IOperations = operations.RemoteOperations(socket)
+    else:
+        ops: operations.IOperations = operations.LocalOperations()
+
     git_path = find_git(ops)
     if git_path:
         prepend_path(ops, git_path)
@@ -931,7 +940,7 @@ def find_git(ops: operations.IOperations) -> str | None:
     return None
 
 
-def prepend_path(path, ops) -> None:
+def prepend_path(ops: operations.IOperations, path) -> None:
     """Adds git to the PATH.  This is needed on Windows."""
     path = core.decode(path)
     path_entries = core.getenv('PATH', '').split(os.pathsep)
