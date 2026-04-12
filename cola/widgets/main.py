@@ -905,6 +905,9 @@ class MainView(standard.MainWindow):
         )
 
         prefs_model.config_updated.connect(self._config_updated)
+        self.model.worktree_changed.connect(
+            self._worktree_changed_refresh_appearance, type=Qt.QueuedConnection
+        )
         self.commit_menu.aboutToShow.connect(self.update_menu_actions)
         self.open_recent_menu.aboutToShow.connect(self.build_recent_menu)
 
@@ -1062,6 +1065,12 @@ class MainView(standard.MainWindow):
     # Accessors
     mode = property(lambda self: self.model.mode)
 
+    def _worktree_changed_refresh_appearance(self):
+        """Apply merged theme for the new repository (local override may be gone)."""
+        app = self.context.app
+        if app is not None:
+            app.refresh_appearance()
+
     def _config_updated(self, _source, config, value):
         if config == prefs.FONTDIFF:
             # The diff font
@@ -1104,6 +1113,11 @@ class MainView(standard.MainWindow):
         elif config == prefs.SHOW_PATH:
             # the path in the window title was toggled
             self.refresh_window_title()
+
+        elif config in (prefs.THEME, prefs.ICON_THEME, prefs.BOLD_FONTS):
+            app = self.context.app
+            if app is not None:
+                app.refresh_appearance()
 
     def start(self, context):
         """Do the expensive "get_config_actions()" call in the background"""

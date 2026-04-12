@@ -32,6 +32,7 @@ On a Debian/Ubuntu system you can install these modules using apt:
     )
     sys.exit(1)  # core.EXIT_FAILURE
 
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -66,6 +67,7 @@ from .cmd import CommandBus
 from .i18n import N_
 from .interaction import Interaction
 from .models import main
+from .models import prefs
 from .models import selection
 from .settings import Session
 from .settings import Settings
@@ -182,11 +184,17 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
 
     icon_themes_env = core.getenv('GIT_COLA_ICON_THEME')
     if icon_themes_env:
-        result.extend([x for x in icon_themes_env.split(':') if x])
+        for x in icon_themes_env.split(':'):
+            x = x.strip()
+            if x:
+                result.append(x)
 
     icon_themes_cfg = list(reversed(context.cfg.get_all('cola.icontheme')))
-    if icon_themes_cfg:
-        result.extend(icon_themes_cfg)
+    for entry in icon_themes_cfg:
+        if isinstance(entry, str):
+            s = entry.strip()
+            if s:
+                result.append(s)
 
     if not result:
         result.append('light')
@@ -199,6 +207,12 @@ class ColaApplication:
     """The main cola application
 
     ColaApplication handles i18n of user-visible data
+
+    Process model: one OS process owns a single :class:`QtWidgets.QApplication`.
+    Each shell invocation of ``git cola`` (or ``git cola --repo …``) is therefore
+    isolated from other processes. Per-repository ``cola.theme`` only affects
+    that process while its Git worktree points at that repository; switching
+    repos in the same window reapplies the merged config for the new worktree.
     """
 
     def __init__(
@@ -207,7 +221,6 @@ class ColaApplication:
         argv: list[str],
         locale: None = None,
         icon_themes: list[Any] | None = None,
-        gui_theme: None = None,
     ) -> None:
         cfgactions.install()
         i18n.install(locale)
@@ -220,26 +233,46 @@ class ColaApplication:
         self.theme: themes.Theme | None = None
         self._install_hidpi_config()
         self._app = ColaQApplication(context, list(argv))
+        # Captured before any custom palette so hot-reload can return to the system theme.
+        self._baseline_palette = QtGui.QPalette(self._app.palette())
         self._app.setWindowIcon(icons.cola())
         self._app.setDesktopFileName('git-cola')
-        self._install_style(gui_theme)
+        self._install_style()
 
-    def _install_style(self, theme_str: None) -> None:
+    def refresh_appearance(self) -> None:
+        """Re-read icon theme list and QSS/palette from config (e.g. after prefs change)."""
+        # In normal operation this is the only QApplication; tests may replace it.
+        inst = QtWidgets.QApplication.instance()
+        if inst is not None and inst is not self._app:
+            return
+        icons.clear_icon_cache()
+        icons.install(get_icon_themes(self.context))
+        self._install_style()
+
+    def _install_style(self, theme_str: str | None = None) -> None:
         """Generate and apply a stylesheet to the app"""
         if theme_str is None:
-            theme_str = self.context.cfg.get('cola.theme', default='default')
+            argv_theme = self.context.args.theme
+            if argv_theme is not None:
+                theme_str = themes.coerce_gui_theme_name(argv_theme)
+            else:
+                theme_str = prefs.gui_theme(self.context)
+        else:
+            theme_str = themes.coerce_gui_theme_name(theme_str)
         theme = themes.find_theme(theme_str)
         self.theme = theme
-
-        bold_fonts = self.context.cfg.get('cola.boldfonts', default=False)
-        theme_stylesheet = theme.build_style_sheet(self._app.palette(), bold_fonts)
-        self._app.setStyleSheet(theme_stylesheet)
 
         is_macos_theme = theme_str.startswith('macos-')
         if is_macos_theme:
             themes.apply_platform_theme(theme_str)
         elif theme_str != 'default':
             self._app.setPalette(theme.build_palette(self._app.palette()))
+        else:
+            self._app.setPalette(QtGui.QPalette(self._baseline_palette))
+
+        bold_fonts = self.context.cfg.get('cola.boldfonts', default=False)
+        theme_stylesheet = theme.build_style_sheet(self._app.palette(), bold_fonts)
+        self._app.setStyleSheet(theme_stylesheet)
 
     def _install_hidpi_config(self) -> None:
         """Sets QT HiDPI scaling (requires Qt 5.6)"""
@@ -394,6 +427,10 @@ def application_init(
         new_worktree(context, args.repo, args.prompt)
         if update:
             context.model.update_status()
+        # Worktree (and thus local git config) was finalized after ColaApplication
+        # construction; re-apply theme so repo-specific cola.theme is not missed.
+        if context.app:
+            context.app.refresh_appearance()
 
     timer.stop('init')
     if args.perf:
@@ -581,9 +618,7 @@ def new_application(
     context: ApplicationContext, args: argparse.Namespace
 ) -> ColaApplication:
     """Create a new ColaApplication"""
-    return ColaApplication(
-        context, sys.argv, icon_themes=args.icon_themes, gui_theme=args.theme
-    )
+    return ColaApplication(context, sys.argv, icon_themes=args.icon_themes)
 
 
 def new_worktree(context: ApplicationContext, repo: str, prompt: bool) -> None:
