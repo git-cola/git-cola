@@ -55,9 +55,7 @@ def test_gui_theme_reads_cfg_and_coerces():
     context.cfg = Mock()
     context.cfg.get = Mock(return_value='not-a-real-theme')
     assert prefs.gui_theme(context) == 'default'
-    context.cfg.get.assert_called_once_with(
-        prefs.THEME, default=prefs.Defaults.theme
-    )
+    context.cfg.get.assert_called_once_with(prefs.THEME, default=prefs.Defaults.theme)
 
 
 def test_gui_theme_preserves_valid_name():
