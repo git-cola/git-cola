@@ -2,6 +2,7 @@ import collections
 import itertools
 import math
 from functools import partial
+from typing import Optional
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -693,6 +694,7 @@ class GitDagLineEdit(completion.GitLogLineEdit):  # type: ignore[misc, valid-typ
 
 GRAPH_ROW_ROLE = Qt.UserRole + 1
 GRAPH_PREV_ROW_ROLE = Qt.UserRole + 2
+COMMIT_ROLE = Qt.UserRole + 3
 
 
 class GraphDelegate(QtWidgets.QStyledItemDelegate):
@@ -704,6 +706,22 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
     outline_pen = QtGui.QPen()
     outline_pen.setWidth(2)
     outline_pen.setColor(QtGui.QColor(Qt.white).darker())
+
+    head_color = QtGui.QColor(Qt.green)
+    other_color = QtGui.QColor(Qt.white)
+    remote_color = QtGui.QColor(Qt.yellow)
+
+    text_pen = QtGui.QPen()
+    text_pen.setColor(QtGui.QColor(Qt.black))
+    text_pen.setWidth(1)
+
+    head_pen = QtGui.QPen()
+    head_pen.setColor(QtGui.QColor(Qt.black))
+    head_pen.setWidth(1)
+
+    LABEL_BORDER = 3
+    LABEL_SPACING = 4
+    LABEL_TEXT_OFFSET = 3
 
     def paint(self, painter, option, index):
         row = index.data(GRAPH_ROW_ROLE)
@@ -775,10 +793,21 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
                     QtCore.QPointF(cx, mid_y), self.DOT_RADIUS, self.DOT_RADIUS
                 )
 
-        # Draw the text (summary) after the graph area.
+        commit = index.data(COMMIT_ROLE)
+
+        label_x = rect.left() + self._graph_width(row, prev_row) + 8
+        labels_width = 0
+
+        if commit and commit.tags:
+            painter.setFont(option.font)
+            labels_width = self._draw_labels(
+                painter, mid_y, commit.tags, label_x, option.fontMetrics
+            )
+
         text = index.data(Qt.DisplayRole)
         if text:
-            text_rect = rect.adjusted(self._graph_width(row, prev_row) + 8, 0, 0, 0)
+            text_x = int(label_x + labels_width + 8)
+            text_rect = rect.adjusted(text_x - rect.left(), 0, 0, 0)
             painter.setPen(option.palette.text().color())
             painter.drawText(
                 text_rect,
@@ -787,6 +816,71 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             )
 
         painter.restore()
+
+    def _draw_labels(
+        self,
+        painter: Optional[QtGui.QPainter],
+        y: int,
+        tags: list[str],
+        start_x: int,
+        font_metrics: QtGui.QFontMetrics,
+    ):
+        """Draw branch/tag labels and return total width used."""
+        HEAD = 'HEAD'
+        remotes_prefix = 'remotes/'
+        tags_prefix = 'tags/'
+        heads_prefix = 'heads/'
+        remotes_len = len(remotes_prefix)
+        tags_len = len(tags_prefix)
+        heads_len = len(heads_prefix)
+
+        current_x = start_x
+        x_offset = self.LABEL_TEXT_OFFSET
+        y_offset = 0
+
+        for tag in tags:
+            pen = self.text_pen
+            brush = self.other_color
+            display_tag = tag
+
+            if tag == HEAD:
+                display_tag = tag
+                brush = self.remote_color
+            elif tag.startswith(remotes_prefix):
+                display_tag = tag[remotes_len:]
+            elif tag.startswith(tags_prefix):
+                display_tag = tag[tags_len:]
+                brush = self.remote_color
+            elif tag.startswith(heads_prefix):
+                display_tag = tag[heads_len:]
+                pen = self.head_pen
+                brush = self.head_color
+
+            if painter is not None:
+                painter.setPen(pen)
+                painter.setBrush(brush)
+
+            # Calculate text width using font metrics for consistency
+            text_width = font_metrics.horizontalAdvance(display_tag)
+            text_height = font_metrics.height()
+
+            text_rect = QtCore.QRectF(
+                current_x, y - text_height / 2, text_width, text_height
+            )
+
+            box_rect = text_rect.adjusted(-x_offset, -y_offset, x_offset, y_offset)
+
+            if painter is not None:
+                painter.drawRoundedRect(box_rect, self.LABEL_BORDER, self.LABEL_BORDER)
+                painter.drawText(text_rect, Qt.AlignCenter, display_tag)
+
+            current_x += text_width + x_offset * 2 + self.LABEL_SPACING
+
+        return current_x - start_x
+
+    def _labels_width(self, font_metrics: QtGui.QFontMetrics, tags: list[str]):
+        """Calculate total width needed for all labels."""
+        return self._draw_labels(None, 0, tags, 0, font_metrics)
 
     def _graph_width(self, row, prev_row):
         """Calculate the width needed for the graph."""
@@ -806,15 +900,25 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         graph_row = index.data(GRAPH_ROW_ROLE)
         prev_row = index.data(GRAPH_PREV_ROW_ROLE)
         graph_width = self._graph_width(graph_row, prev_row)
+
+        commit = index.data(COMMIT_ROLE)
+
+        labels_width = 0
+        if commit and commit.tags:
+            labels_width = self._labels_width(option.fontMetrics, commit.tags)
+
         # Add space for text if present.
         text = index.data(Qt.DisplayRole)
         if text:
             text_width = option.fontMetrics.horizontalAdvance(text) + 16
         else:
             text_width = 0
-        width = max(graph_width + text_width, self.LANE_WIDTH)
+
+        total_width = graph_width + 8 + labels_width + 8 + text_width
+        if total_width < self.LANE_WIDTH * 4:
+            total_width = self.LANE_WIDTH * 4
         height = option.fontMetrics.height() + 4
-        return QtCore.QSize(width, height)
+        return QtCore.QSize(total_width, height)
 
 
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
@@ -905,9 +1009,10 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if not self._columns_initialized:
             self._columns_initialized = True
             width = self.header().width()
+            one_half = width // 2
             one_quarter = width // 4
-            # Let the SUMMARY column size to its contents (graph + text).
-            self.resizeColumnToContents(CommitTreeWidgetItem.SUMMARY)
+            # Set initial SUMMARY column width; it will be adjusted when graph loads.
+            self.setColumnWidth(CommitTreeWidgetItem.SUMMARY, one_half)
             self.setColumnWidth(CommitTreeWidgetItem.AUTHOR, one_quarter)
 
     # ViewerMixin
@@ -1008,12 +1113,15 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             if row_idx is None:
                 continue
             item.setData(CommitTreeWidgetItem.SUMMARY, GRAPH_ROW_ROLE, rows[row_idx])
+            item.setData(CommitTreeWidgetItem.SUMMARY, COMMIT_ROLE, item.commit)
             if row_idx > 0:
                 item.setData(
                     CommitTreeWidgetItem.SUMMARY,
                     GRAPH_PREV_ROW_ROLE,
                     rows[row_idx - 1],
                 )
+        # Resize column to fit content after graph data is loaded.
+        self.resizeColumnToContents(CommitTreeWidgetItem.SUMMARY)
 
     def create_patch(self):
         """Export a patch from the selected items"""
