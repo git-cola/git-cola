@@ -4,8 +4,11 @@ import os
 from typing import TYPE_CHECKING
 from typing import Any
 from typing import Callable
-from typing import TypeAlias
 from typing import Union
+try:
+    from typing import TypeAlias
+except ImportError:
+    TypeAlias = Union
 
 from qtpy import QtCore
 from qtpy import QtGui
