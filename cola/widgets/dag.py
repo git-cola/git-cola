@@ -2,6 +2,7 @@ import collections
 import itertools
 import math
 from functools import partial
+from typing import Optional
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -693,6 +694,7 @@ class GitDagLineEdit(completion.GitLogLineEdit):  # type: ignore[misc, valid-typ
 
 GRAPH_ROW_ROLE = Qt.UserRole + 1
 GRAPH_PREV_ROW_ROLE = Qt.UserRole + 2
+COMMIT_ROLE = Qt.UserRole + 3
 
 
 class GraphDelegate(QtWidgets.QStyledItemDelegate):
@@ -705,11 +707,25 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
     outline_pen.setWidth(2)
     outline_pen.setColor(QtGui.QColor(Qt.white).darker())
 
+    head_color = QtGui.QColor(Qt.green)
+    other_color = QtGui.QColor(Qt.white)
+    remote_color = QtGui.QColor(Qt.yellow)
+
+    text_pen = QtGui.QPen()
+    text_pen.setColor(QtGui.QColor(Qt.black))
+    text_pen.setWidth(1)
+
+    head_pen = QtGui.QPen()
+    head_pen.setColor(QtGui.QColor(Qt.black))
+    head_pen.setWidth(1)
+
+    LABEL_BORDER = 3
+    LABEL_SPACING = 4
+    LABEL_TEXT_OFFSET = 3
+
     def paint(self, painter, option, index):
         row = index.data(GRAPH_ROW_ROLE)
         prev_row = index.data(GRAPH_PREV_ROW_ROLE)
-        if row is None and prev_row is None:
-            return
 
         painter.save()
         painter.setRenderHint(QtGui.QPainter.Antialiasing)
@@ -724,81 +740,193 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         if option.state & QtWidgets.QStyle.State_Selected:
             painter.fillRect(rect, option.palette.highlight())
 
-        pen = QtGui.QPen()
-        pen.setWidth(self.EDGE_WIDTH)
+        # Draw the graph if we have graph data.
+        if row is not None or prev_row is not None:
+            pen = QtGui.QPen()
+            pen.setWidth(self.EDGE_WIDTH)
 
-        # Top half: edges from the previous row arrive vertically.
-        if prev_row is not None:
-            for edge in prev_row.edges_to_parent:
-                color = EdgeColor.colors[edge.color_index % len(EdgeColor.colors)]
-                pen.setColor(color)
-                painter.setPen(pen)
-                to_x = rect.left() + edge.to_column * lane_w + lane_w // 2
-                painter.drawLine(to_x, top_y, to_x, mid_y)
+            # Top half: edges from the previous row arrive vertically.
+            if prev_row is not None:
+                for edge in prev_row.edges_to_parent:
+                    color = EdgeColor.colors[edge.color_index % len(EdgeColor.colors)]
+                    pen.setColor(color)
+                    painter.setPen(pen)
+                    to_x = rect.left() + edge.to_column * lane_w + lane_w // 2
+                    painter.drawLine(to_x, top_y, to_x, mid_y)
 
-        # Bottom half: straight or spline depending on diagonal.
-        if row is not None:
-            for edge in row.edges_to_parent:
-                color = EdgeColor.colors[edge.color_index % len(EdgeColor.colors)]
-                pen.setColor(color)
-                painter.setPen(pen)
-                from_x = rect.left() + edge.from_column * lane_w + lane_w // 2
-                to_x = rect.left() + edge.to_column * lane_w + lane_w // 2
-                if edge.from_column == edge.to_column:
-                    painter.drawLine(from_x, mid_y, to_x, bottom_y)
-                else:
-                    path = QtGui.QPainterPath()
-                    path.moveTo(from_x, mid_y)
-                    path.cubicTo(
-                        from_x,
-                        bottom_y,
-                        to_x,
-                        mid_y,
-                        to_x,
-                        bottom_y,
+            # Bottom half: straight or spline depending on diagonal.
+            if row is not None:
+                for edge in row.edges_to_parent:
+                    color = EdgeColor.colors[edge.color_index % len(EdgeColor.colors)]
+                    pen.setColor(color)
+                    painter.setPen(pen)
+                    from_x = rect.left() + edge.from_column * lane_w + lane_w // 2
+                    to_x = rect.left() + edge.to_column * lane_w + lane_w // 2
+                    if edge.from_column == edge.to_column:
+                        painter.drawLine(from_x, mid_y, to_x, bottom_y)
+                    else:
+                        path = QtGui.QPainterPath()
+                        path.moveTo(from_x, mid_y)
+                        path.cubicTo(
+                            from_x,
+                            bottom_y,
+                            to_x,
+                            mid_y,
+                            to_x,
+                            bottom_y,
+                        )
+                        painter.drawPath(path)
+
+            if row is not None:
+                cx = rect.left() + row.commit_column * lane_w + lane_w // 2
+                is_merge = (
+                    sum(
+                        1
+                        for e in row.edges_to_parent
+                        if e.from_column == row.commit_column
                     )
-                    painter.drawPath(path)
-
-        if row is not None:
-            cx = rect.left() + row.commit_column * lane_w + lane_w // 2
-            is_merge = (
-                sum(
-                    1 for e in row.edges_to_parent if e.from_column == row.commit_column
+                    > 1
                 )
-                > 1
+                painter.setPen(self.outline_pen)
+                painter.setBrush(self.merge_color if is_merge else self.commit_color)
+                painter.drawEllipse(
+                    QtCore.QPointF(cx, mid_y), self.DOT_RADIUS, self.DOT_RADIUS
+                )
+
+        commit = index.data(COMMIT_ROLE)
+
+        label_x = rect.left() + self._graph_width(row, prev_row) + 8
+        labels_width = 0
+
+        if commit and commit.tags:
+            painter.setFont(option.font)
+            labels_width = self._draw_labels(
+                painter, mid_y, commit.tags, label_x, option.fontMetrics
             )
-            painter.setPen(self.outline_pen)
-            painter.setBrush(self.merge_color if is_merge else self.commit_color)
-            painter.drawEllipse(
-                QtCore.QPointF(cx, mid_y), self.DOT_RADIUS, self.DOT_RADIUS
+
+        text = index.data(Qt.DisplayRole)
+        if text:
+            text_x = int(label_x + labels_width + 8)
+            text_rect = rect.adjusted(text_x - rect.left(), 0, 0, 0)
+            painter.setPen(option.palette.text().color())
+            painter.drawText(
+                text_rect,
+                Qt.AlignLeft | Qt.AlignVCenter,
+                text,
             )
 
         painter.restore()
 
+    def _draw_labels(
+        self,
+        painter: Optional[QtGui.QPainter],
+        y: int,
+        tags: list[str],
+        start_x: int,
+        font_metrics: QtGui.QFontMetrics,
+    ):
+        """Draw branch/tag labels and return total width used."""
+        HEAD = 'HEAD'
+        remotes_prefix = 'remotes/'
+        tags_prefix = 'tags/'
+        heads_prefix = 'heads/'
+        remotes_len = len(remotes_prefix)
+        tags_len = len(tags_prefix)
+        heads_len = len(heads_prefix)
+
+        current_x = start_x
+        x_offset = self.LABEL_TEXT_OFFSET
+        y_offset = 0
+
+        for tag in tags:
+            pen = self.text_pen
+            brush = self.other_color
+            display_tag = tag
+
+            if tag == HEAD:
+                display_tag = tag
+                brush = self.remote_color
+            elif tag.startswith(remotes_prefix):
+                display_tag = tag[remotes_len:]
+            elif tag.startswith(tags_prefix):
+                display_tag = tag[tags_len:]
+                brush = self.remote_color
+            elif tag.startswith(heads_prefix):
+                display_tag = tag[heads_len:]
+                pen = self.head_pen
+                brush = self.head_color
+
+            if painter is not None:
+                painter.setPen(pen)
+                painter.setBrush(brush)
+
+            # Calculate text width using font metrics for consistency
+            text_width = font_metrics.horizontalAdvance(display_tag)
+            text_height = font_metrics.height()
+
+            text_rect = QtCore.QRectF(
+                current_x, y - text_height / 2, text_width, text_height
+            )
+
+            box_rect = text_rect.adjusted(-x_offset, -y_offset, x_offset, y_offset)
+
+            if painter is not None:
+                painter.drawRoundedRect(box_rect, self.LABEL_BORDER, self.LABEL_BORDER)
+                painter.drawText(text_rect, Qt.AlignCenter, display_tag)
+
+            current_x += text_width + x_offset * 2 + self.LABEL_SPACING
+
+        return current_x - start_x
+
+    def _labels_width(self, font_metrics: QtGui.QFontMetrics, tags: list[str]):
+        """Calculate total width needed for all labels."""
+        return self._draw_labels(None, 0, tags, 0, font_metrics)
+
+    def _graph_width(self, row, prev_row):
+        """Calculate the width needed for the graph."""
+        if row is None and prev_row is None:
+            return 0
+        max_col = 0
+        if row is not None:
+            max_col = max(max_col, row.commit_column)
+            for edge in row.edges_to_parent:
+                max_col = max(max_col, edge.from_column, edge.to_column)
+        if prev_row is not None:
+            for edge in prev_row.edges_to_parent:
+                max_col = max(max_col, edge.from_column, edge.to_column)
+        return (max_col + 1) * self.LANE_WIDTH
+
     def sizeHint(self, option, index):
         graph_row = index.data(GRAPH_ROW_ROLE)
-        if graph_row is None:
-            width = self.LANE_WIDTH
+        prev_row = index.data(GRAPH_PREV_ROW_ROLE)
+        graph_width = self._graph_width(graph_row, prev_row)
+
+        commit = index.data(COMMIT_ROLE)
+
+        labels_width = 0
+        if commit and commit.tags:
+            labels_width = self._labels_width(option.fontMetrics, commit.tags)
+
+        # Add space for text if present.
+        text = index.data(Qt.DisplayRole)
+        if text:
+            text_width = option.fontMetrics.horizontalAdvance(text) + 16
         else:
-            max_col = graph_row.commit_column
-            for edge in graph_row.edges_to_parent:
-                max_col = max(max_col, edge.from_column, edge.to_column)
-            prev_row = index.data(GRAPH_PREV_ROW_ROLE)
-            if prev_row is not None:
-                for edge in prev_row.edges_to_parent:
-                    max_col = max(max_col, edge.from_column, edge.to_column)
-            width = (max_col + 1) * self.LANE_WIDTH
+            text_width = 0
+
+        total_width = graph_width + 8 + labels_width + 8 + text_width
+        if total_width < self.LANE_WIDTH * 4:
+            total_width = self.LANE_WIDTH * 4
         height = option.fontMetrics.height() + 4
-        return QtCore.QSize(width, height)
+        return QtCore.QSize(total_width, height)
 
 
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     """Custom TreeWidgetItem used in to build the commit tree widget"""
 
-    GRAPH = 0
-    SUMMARY = 1
-    AUTHOR = 2
-    DATE = 3
+    SUMMARY = 0
+    AUTHOR = 1
+    DATE = 2
 
     def __init__(self, commit, parent=None):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
@@ -821,15 +949,13 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         ViewerMixin.__init__(self)
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self.setHeaderLabels(
-            [N_('Graph'), N_('Summary'), N_('Author'), N_('Date, Time')]
-        )
+        self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
         self.header().setSectionResizeMode(
             CommitTreeWidgetItem.DATE, QtWidgets.QHeaderView.Stretch
         )
 
         self.graph_delegate = GraphDelegate(self)
-        self.setItemDelegateForColumn(CommitTreeWidgetItem.GRAPH, self.graph_delegate)
+        self.setItemDelegateForColumn(CommitTreeWidgetItem.SUMMARY, self.graph_delegate)
 
         self.context = context
         self.oidmap = {}
@@ -868,9 +994,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         except (KeyError, ValueError):
             column_widths = None
         if column_widths:
-            # We only care about the first three columns. This allows the final
+            # We only care about the first two columns. This allows the final
             # column to stretch and shrink.
-            self.set_column_widths(column_widths[:3])
+            self.set_column_widths(column_widths[:2])
             self._columns_initialized = True
         return True
 
@@ -883,11 +1009,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if not self._columns_initialized:
             self._columns_initialized = True
             width = self.header().width()
-            graph_width = GraphDelegate.LANE_WIDTH * 4
-            remaining = width - graph_width
-            one_half = remaining // 2
-            one_quarter = remaining // 4
-            self.setColumnWidth(CommitTreeWidgetItem.GRAPH, graph_width)
+            one_half = width // 2
+            one_quarter = width // 4
+            # Set initial SUMMARY column width; it will be adjusted when graph loads.
             self.setColumnWidth(CommitTreeWidgetItem.SUMMARY, one_half)
             self.setColumnWidth(CommitTreeWidgetItem.AUTHOR, one_quarter)
 
@@ -980,12 +1104,6 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         oid_to_index: dict[str, int] = {}
         for i, row in enumerate(graph_result.rows):
             oid_to_index[row.commit_oid] = i
-        max_lanes = graph_result.max_columns
-        graph_width = max(
-            GraphDelegate.LANE_WIDTH * 2,
-            max_lanes * GraphDelegate.LANE_WIDTH,
-        )
-        self.setColumnWidth(CommitTreeWidgetItem.GRAPH, graph_width)
         rows = graph_result.rows
         for i in range(self.topLevelItemCount()):
             item = self.topLevelItem(i)
@@ -994,13 +1112,16 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             row_idx = oid_to_index.get(item.commit.oid)
             if row_idx is None:
                 continue
-            item.setData(CommitTreeWidgetItem.GRAPH, GRAPH_ROW_ROLE, rows[row_idx])
+            item.setData(CommitTreeWidgetItem.SUMMARY, GRAPH_ROW_ROLE, rows[row_idx])
+            item.setData(CommitTreeWidgetItem.SUMMARY, COMMIT_ROLE, item.commit)
             if row_idx > 0:
                 item.setData(
-                    CommitTreeWidgetItem.GRAPH,
+                    CommitTreeWidgetItem.SUMMARY,
                     GRAPH_PREV_ROW_ROLE,
                     rows[row_idx - 1],
                 )
+        # Resize column to fit content after graph data is loaded.
+        self.resizeColumnToContents(CommitTreeWidgetItem.SUMMARY)
 
     def create_patch(self):
         """Export a patch from the selected items"""
@@ -1281,7 +1402,7 @@ class GitDAG(standard.MainWindow):
 
     def _display_inline_graph(self, enabled):
         """Enable and disable the display of inline graph in the commit list"""
-        self.treewidget.setColumnHidden(CommitTreeWidgetItem.GRAPH, not enabled)
+        self.treewidget.setColumnHidden(CommitTreeWidgetItem.SUMMARY, not enabled)
 
     def _display_worktree_status(self, enabled):
         """Enable and disable the display of the WORKTREE and STAGE pseudo-commits"""
