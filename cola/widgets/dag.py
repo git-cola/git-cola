@@ -456,6 +456,7 @@ def _diff_expression(context, widget, oid, is_root_commit):
 
 class ColumnInitState:
     """State machine states for initialization of column widths"""
+
     NONE = 0
     SHOW_EVENT = 1
     GRAPH = 2
@@ -963,8 +964,6 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         )
 
         self.graph_delegate = GraphDelegate(self)
-        self.setItemDelegateForColumn(CommitTreeWidgetItem.SUMMARY, self.graph_delegate)
-
         self.context = context
         self.oidmap = {}
         self.menu_actions = None
@@ -1022,6 +1021,14 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             # Set initial SUMMARY column width; it will be adjusted when graph loads.
             self.setColumnWidth(CommitTreeWidgetItem.SUMMARY, one_half)
             self.setColumnWidth(CommitTreeWidgetItem.AUTHOR, one_quarter)
+
+    def display_inline_graph(self, enabled):
+        """Enable and disable the display of inline graph in the commit list"""
+        if enabled:
+            delegate = self.graph_delegate
+        else:
+            delegate = None
+        self.setItemDelegateForColumn(CommitTreeWidgetItem.SUMMARY, delegate)
 
     # ViewerMixin
     def go_up(self):
@@ -1308,7 +1315,10 @@ class GitDAG(standard.MainWindow):
         graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
         self.display_inline_graph_action = qtutils.add_action_bool(
-            self, N_('Display Inline Graph'), self._display_inline_graph, False
+            self,
+            N_('Display Inline Graph'),
+            self.treewidget.display_inline_graph,
+            False,
         )
         self.display_status_action = qtutils.add_action_bool(
             self, N_('Display Worktree Status'), self._display_worktree_status, False
@@ -1410,10 +1420,6 @@ class GitDAG(standard.MainWindow):
             QtCore.QThread.currentThread().yieldCurrentThread()
             self.thread.wait(100)
 
-    def _display_inline_graph(self, enabled):
-        """Enable and disable the display of inline graph in the commit list"""
-        self.treewidget.setColumnHidden(CommitTreeWidgetItem.SUMMARY, not enabled)
-
     def _display_worktree_status(self, enabled):
         """Enable and disable the display of the WORKTREE and STAGE pseudo-commits"""
         self.params.display_status = enabled
@@ -1482,7 +1488,7 @@ class GitDAG(standard.MainWindow):
             self.display_status_action.setChecked(display_status)
 
         display_inline_graph = state.get('display_inline_graph', True)
-        self._display_inline_graph(display_inline_graph)
+        self.treewidget.display_inline_graph(display_inline_graph)
         with qtutils.BlockSignals(self.display_inline_graph_action):
             self.display_inline_graph_action.setChecked(display_inline_graph)
 
