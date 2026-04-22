@@ -454,6 +454,14 @@ def _diff_expression(context, widget, oid, is_root_commit):
     )
 
 
+class ColumnInitState:
+    """State machine states for initialization of column widths"""
+    NONE = 0
+    SHOW_EVENT = 1
+    GRAPH = 2
+    COMPLETE = 3
+
+
 def _save_blob_from_parent(context, oid):
     """Save a browse dialog to grab a file from the parent commit"""
     if oid in (dag.STAGE, dag.WORKTREE):
@@ -962,7 +970,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.menu_actions = None
         self.selecting = False
         self.commits = []
-        self._columns_initialized = False
+        self._column_init_state = ColumnInitState.NONE
         self.action_up = qtutils.add_action(
             self, N_('Go Up'), self.go_up, hotkeys.MOVE_UP
         )
@@ -997,7 +1005,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             # We only care about the first two columns. This allows the final
             # column to stretch and shrink.
             self.set_column_widths(column_widths[:2])
-            self._columns_initialized = True
+            self._column_init_state = ColumnInitState.SHOW_EVENT
         return True
 
     # Qt overrides
@@ -1006,8 +1014,8 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         standard.TreeWidget.showEvent(self, event)
         # Defer resizing columns until the widget has been shown so that width() returns
         # the correct value.
-        if not self._columns_initialized:
-            self._columns_initialized = True
+        if self._column_init_state < ColumnInitState.SHOW_EVENT:
+            self._column_init_state = ColumnInitState.SHOW_EVENT
             width = self.header().width()
             one_half = width // 2
             one_quarter = width // 4
@@ -1121,7 +1129,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
                     rows[row_idx - 1],
                 )
         # Resize column to fit content after graph data is loaded.
-        self.resizeColumnToContents(CommitTreeWidgetItem.SUMMARY)
+        if self._column_init_state < ColumnInitState.GRAPH:
+            self._column_init_state = ColumnInitState.GRAPH
+            self.resizeColumnToContents(CommitTreeWidgetItem.SUMMARY)
 
     def create_patch(self):
         """Export a patch from the selected items"""
@@ -2934,5 +2944,7 @@ def sort_by_generation(commits):
 
 # Glossary
 # ========
+# oid -- Git objects IDs (i.e. SHA-1 / SHA-256 IDs)
+# ref -- Git references that resolve to a commit-ish (HEAD, branches, tags)
 # oid -- Git objects IDs (i.e. SHA-1 / SHA-256 IDs)
 # ref -- Git references that resolve to a commit-ish (HEAD, branches, tags)
