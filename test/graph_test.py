@@ -1,7 +1,13 @@
 from __future__ import annotations
 
 from cola.models.graph import GraphResult
+from cola.models.graph import GraphRowColor
 from cola.models.graph import build_graph
+
+
+def assert_colors(result: GraphResult, expected: list[GraphRowColor]) -> None:
+    actual = [r.color for r in result.rows]
+    assert actual == expected
 
 
 def assert_rows(result: GraphResult, expected: list[tuple[str, int]]) -> None:
@@ -98,6 +104,9 @@ def test_two_way_merge():
     assert result.max_columns == 2
     edges = result.rows[0].edges_to_parent
     assert edges[0].color_index != edges[1].color_index
+    assert_colors(
+        result, [GraphRowColor.MERGE, GraphRowColor.NORMAL, GraphRowColor.NORMAL]
+    )
 
 
 def test_three_way_merge():
@@ -126,6 +135,15 @@ def test_three_way_merge():
         ],
     )
     assert result.max_columns == 3
+    assert_colors(
+        result,
+        [
+            GraphRowColor.MERGE,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+        ],
+    )
 
 
 def test_fork_and_merge_diamond():
@@ -156,6 +174,15 @@ def test_fork_and_merge_diamond():
         ],
     )
     assert result.max_columns == 2
+    assert_colors(
+        result,
+        [
+            GraphRowColor.MERGE,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+        ],
+    )
 
 
 def test_branch_and_merge_back():
@@ -196,6 +223,17 @@ def test_branch_and_merge_back():
         ],
     )
     assert result.max_columns == 2
+    assert_colors(
+        result,
+        [
+            GraphRowColor.NORMAL,
+            GraphRowColor.MERGE,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+        ],
+    )
 
 
 def test_two_independent_histories():
@@ -255,6 +293,16 @@ def test_three_way_merge_then_continue():
         ],
     )
     assert result.max_columns == 3
+    assert_colors(
+        result,
+        [
+            GraphRowColor.NORMAL,
+            GraphRowColor.MERGE,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+        ],
+    )
 
 
 def test_nested_merge_with_shared_ancestor():
@@ -290,6 +338,17 @@ def test_nested_merge_with_shared_ancestor():
             [(0, 0), (1, 1), (2, 1)],
             [(1, 1), (0, 1)],
             [],
+        ],
+    )
+    assert_colors(
+        result,
+        [
+            GraphRowColor.MERGE,
+            GraphRowColor.NORMAL,
+            GraphRowColor.MERGE,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
         ],
     )
 
@@ -330,4 +389,51 @@ def test_shifted_double_diamond():
             [(0, 0), (1, 0)],
             [],
         ],
+    )
+    assert_colors(
+        result,
+        [
+            GraphRowColor.MERGE,
+            GraphRowColor.NORMAL,
+            GraphRowColor.MERGE,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+            GraphRowColor.NORMAL,
+        ],
+    )
+
+
+def test_head_color():
+    # C
+    # |
+    # B (head)
+    # |
+    # A
+    commits = [
+        ('C', []),
+        ('B', ['C']),
+        ('A', ['B']),
+    ]
+    result = build_graph(commits, head_oid='B')
+    assert_rows(result, [('A', 0), ('B', 0), ('C', 0)])
+    assert_colors(
+        result,
+        [GraphRowColor.NORMAL, GraphRowColor.HEAD, GraphRowColor.NORMAL],
+    )
+
+
+def test_head_color_overrides_merge():
+    # C (head)
+    # |\
+    # A B
+    commits = [
+        ('A', []),
+        ('B', []),
+        ('C', ['A', 'B']),
+    ]
+    result = build_graph(commits, head_oid='C')
+    assert_rows(result, [('C', 0), ('B', 1), ('A', 0)])
+    assert_colors(
+        result,
+        [GraphRowColor.HEAD, GraphRowColor.NORMAL, GraphRowColor.NORMAL],
     )

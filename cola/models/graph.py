@@ -7,6 +7,7 @@ from enum import Enum
 class GraphRowColor(Enum):
     NORMAL = 0
     MERGE = 1
+    HEAD = 2
 
 
 @dataclass
@@ -30,7 +31,10 @@ class GraphResult:
     max_columns: int
 
 
-def build_graph(commits: list[tuple[str, list[str]]]) -> GraphResult:
+def build_graph(
+    commits: list[tuple[str, list[str]]],
+    head_oid: str | None = None,
+) -> GraphResult:
     """Build a row-based graph representation from a list of commits.
 
     Commits are received in topo order from RepoReader (oldest first).
@@ -122,7 +126,9 @@ def build_graph(commits: list[tuple[str, list[str]]]) -> GraphResult:
         while active_lanes and active_lanes[-1] is None:
             active_lanes.pop()
 
-        if len(parent_oids) > 1:
+        if head_oid is not None and oid == head_oid:
+            color = GraphRowColor.HEAD
+        elif len(parent_oids) > 1:
             color = GraphRowColor.MERGE
         else:
             color = GraphRowColor.NORMAL
