@@ -1103,19 +1103,22 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         items = []
         head = 'HEAD'
         head_oid = None
-        for c in reversed(commits):
-            item = CommitTreeWidgetItem(c)
+        for commit in reversed(commits):
+            item = CommitTreeWidgetItem(commit)
             items.append(item)
-            self.oidmap[c.oid] = item
-            for tag in c.tags:
+            self.oidmap[commit.oid] = item
+            for tag in commit.tags:
                 self.oidmap[tag] = item
                 if tag == head:
-                    head_oid = c.oid
+                    head_oid = commit.oid
 
         self.insertTopLevelItems(0, items)
 
         graph_result = build_graph(
-            [(c.oid, [p.oid for p in c.parents]) for c in commits],
+            [
+                (commit.oid, [parent.oid for parent in commit.parents])
+                for commit in commits
+            ],
             head_oid=head_oid,
         )
         self.apply_graph_result(graph_result)
