@@ -1101,6 +1101,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         """Add commits to the tree"""
         self.commits.extend(commits)
         items = []
+        head = 'HEAD'
         head_oid = None
         for c in reversed(commits):
             item = CommitTreeWidgetItem(c)
@@ -1108,8 +1109,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             self.oidmap[c.oid] = item
             for tag in c.tags:
                 self.oidmap[tag] = item
-            if 'HEAD' in c.tags:
-                head_oid = c.oid
+                if tag == head:
+                    head_oid = c.oid
+
         self.insertTopLevelItems(0, items)
 
         graph_result = build_graph(
