@@ -122,7 +122,7 @@ class Paths:
         self.worktree = worktree
         self.common_dir = common_dir
 
-    def get(self, path: core.UStr) -> Paths:
+    def get(self, path: core.UStr | str) -> Paths:
         """Search for git worktrees and bare repositories"""
         if not self.git_dir or not self.worktree:
             ceiling_dirs = set()
