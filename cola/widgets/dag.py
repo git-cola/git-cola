@@ -25,6 +25,7 @@ from ..i18n import N_
 from ..models import dag
 from ..models import main
 from ..models import prefs
+from ..models.graph import GraphRowColor
 from ..models.graph import build_graph
 from ..qtutils import get
 from . import archive
@@ -712,11 +713,12 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
     EDGE_WIDTH = 3
     commit_color = QtGui.QColor(Qt.white)
     merge_color = QtGui.QColor(Qt.lightGray)
+    head_color = QtGui.QColor(Qt.green)
+    current_head_color = QtGui.QColor(255, 215, 0)  # Gold color. Plain yellow is too close to white
     outline_pen = QtGui.QPen()
     outline_pen.setWidth(2)
     outline_pen.setColor(QtGui.QColor(Qt.white).darker())
 
-    head_color = QtGui.QColor(Qt.green)
     other_color = QtGui.QColor(Qt.white)
     remote_color = QtGui.QColor(Qt.yellow)
 
@@ -788,16 +790,13 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
             if row is not None:
                 cx = rect.left() + row.commit_column * lane_w + lane_w // 2
-                is_merge = (
-                    sum(
-                        1
-                        for e in row.edges_to_parent
-                        if e.from_column == row.commit_column
-                    )
-                    > 1
-                )
+                color_map = {
+                    GraphRowColor.NORMAL: self.commit_color,
+                    GraphRowColor.MERGE: self.merge_color,
+                    GraphRowColor.HEAD: self.current_head_color,
+                }
                 painter.setPen(self.outline_pen)
-                painter.setBrush(self.merge_color if is_merge else self.commit_color)
+                painter.setBrush(color_map[row.color])
                 painter.drawEllipse(
                     QtCore.QPointF(cx, mid_y), self.DOT_RADIUS, self.DOT_RADIUS
                 )
@@ -848,14 +847,14 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         y_offset = 0
 
         for tag in tags:
+            if tag == HEAD:
+                continue
+
             pen = self.text_pen
             brush = self.other_color
             display_tag = tag
 
-            if tag == HEAD:
-                display_tag = tag
-                brush = self.remote_color
-            elif tag.startswith(remotes_prefix):
+            if tag.startswith(remotes_prefix):
                 display_tag = tag[remotes_len:]
             elif tag.startswith(tags_prefix):
                 display_tag = tag[tags_len:]
@@ -1102,16 +1101,20 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         """Add commits to the tree"""
         self.commits.extend(commits)
         items = []
+        head_oid = None
         for c in reversed(commits):
             item = CommitTreeWidgetItem(c)
             items.append(item)
             self.oidmap[c.oid] = item
             for tag in c.tags:
                 self.oidmap[tag] = item
+            if 'HEAD' in c.tags:
+                head_oid = c.oid
         self.insertTopLevelItems(0, items)
 
         graph_result = build_graph(
-            [(c.oid, [p.oid for p in c.parents]) for c in commits]
+            [(c.oid, [p.oid for p in c.parents]) for c in commits],
+            head_oid=head_oid,
         )
         self.apply_graph_result(graph_result)
 
