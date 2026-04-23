@@ -1361,6 +1361,9 @@ class DiffEditor(DiffTextEdit):
         qtutils.connect_button(options.toggle_image_diff, self.toggle_diff_type)
         self.options.max_diff_spinbox.valueChanged.connect(self.set_max_diff_size)
 
+        # Update actions when the diff text selection changes.
+        self.selectionChanged.connect(self._update_actions_for_selected_text)
+
     def set_max_diff_size(self, value):
         """Set the max diff state on the diff widget"""
         self.max_diff_size = value
@@ -1379,6 +1382,12 @@ class DiffEditor(DiffTextEdit):
             elif item not in model.unstaged_deleted:
                 enabled = True
         self.action_revert_selection.setEnabled(enabled)
+
+    def _update_actions_for_selected_text(self):
+        """Update actions that are dependent on the selected diff text."""
+        enabled = not bool(self.selected_text())
+        self.action_revert_unstaged_edits.setEnabled(enabled)
+        self.stage_or_unstage.setEnabled(enabled)
 
     def set_line_numbers(self, enabled, update=False):
         """Enable/disable the diff line number display"""
@@ -1433,6 +1442,8 @@ class DiffEditor(DiffTextEdit):
                     cmds.run(cmds.Stage, context, s.modified),
                     hotkeys.STAGE_SELECTION,
                 )
+                enabled = not bool(self.selected_text())
+                action.setEnabled(enabled)
                 add_action(action)
                 stage_action_added = self._add_stage_or_unstage_action(
                     menu, add_action, stage_action_added
