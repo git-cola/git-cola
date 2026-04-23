@@ -9,6 +9,8 @@ Usability, bells and whistles
   Show and hide the graph using the "Display Inline Graph" option in the View menu.
   (`#1486 <https://github.com/git-cola/git-cola/issues/1486>`_)
   (`#1571 <https://github.com/git-cola/git-cola/pull/1571>`_)
+  (`#1581 <https://github.com/git-cola/git-cola/pull/1581>`_)
+  (`#1585 <https://github.com/git-cola/git-cola/pull/1585>`_)
 
 * Git Cola now detects changes to the `.git/GIT_COLA_MSG` file and will
   reload its contents on ``Ctrl + R`` refresh when the file is edited
@@ -24,6 +26,11 @@ Usability, bells and whistles
 * The Preferences dialog tabs are now scrollable, which prevents issues when
   the displaying the dialog on smaller displays.
   (`#1569 <https://github.com/git-cola/git-cola/issues/1569>`_)
+
+* The diff editor's right-click context menu now disables the `Stage`, `Unstage`, and
+  `Revert Unstaged Edits` actions when diff text is selected. This prevents
+  these potentially dangerous actions from getting triggered accidentally.
+  (`#1582 <https://github.com/git-cola/git-cola/issues/1582>`_)
 
 Fixes
 -----
