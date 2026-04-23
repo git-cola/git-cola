@@ -1155,7 +1155,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             return
         context = self.context
         oids = [item.commit.oid for item in reversed(items)]
-        all_oids = [c.oid for c in self.commits]
+        all_oids = [commit.oid for commit in self.commits]
         cmds.do(cmds.FormatPatch, context, oids, all_oids)
 
     # Qt overrides
@@ -1633,8 +1633,8 @@ class GitDAG(standard.MainWindow):
             # No commits, exist, early-out
             return
 
-        new_commits = [self.commits.get(s.oid, None) for s in selection]
-        new_commits = [c for c in new_commits if c is not None]
+        raw_commits = [self.commits.get(commit.oid, None) for commit in selection]
+        new_commits = [commit for commit in raw_commits if commit is not None]
         if new_commits:
             # The old selection exists in the new state
             self.commits_selected.emit(sort_by_generation(new_commits))
@@ -2335,8 +2335,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             return
         context = self.context
         selected_commits = sort_by_generation([n.commit for n in items])
-        oids = [c.oid for c in selected_commits]
-        all_oids = [c.oid for c in sort_by_generation(self.commits)]
+        oids = [commit.oid for commit in selected_commits]
+        all_oids = [commit.oid for commit in sort_by_generation(self.commits)]
         cmds.do(cmds.FormatPatch, context, oids, all_oids)
 
     def _select_parent(self):
@@ -2735,30 +2735,30 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         columns = self.columns
         # First, look for free column by moving from desired column to graph
         # center (column 0).
-        for c in range(column, 0, -1 if column > 0 else 1):
-            if c not in columns:
-                if c > self.max_column:
-                    self.max_column = c
-                elif c < self.min_column:
-                    self.min_column = c
+        for col in range(column, 0, -1 if column > 0 else 1):
+            if col not in columns:
+                if col > self.max_column:
+                    self.max_column = col
+                elif col < self.min_column:
+                    self.min_column = col
                 break
         else:
             # If no free column was found between graph center and desired
             # column then look for free one by moving from center along both
             # directions simultaneously.
-            for c in itertools.count(0):
-                if c not in columns:
-                    if c > self.max_column:
-                        self.max_column = c
+            for col in itertools.count(0):
+                if col not in columns:
+                    if col > self.max_column:
+                        self.max_column = col
                     break
-                c = -c
-                if c not in columns:
-                    if c < self.min_column:
-                        self.min_column = c
+                col = -col
+                if col not in columns:
+                    if col < self.min_column:
+                        self.min_column = col
                     break
-        self.declare_column(c)
-        columns[c] = 1
-        return c
+        self.declare_column(col)
+        columns[col] = 1
+        return col
 
     def alloc_cell(self, column, tags):
         # Get empty cell from frontier.

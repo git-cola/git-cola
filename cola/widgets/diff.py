@@ -1370,10 +1370,10 @@ class DiffEditor(DiffTextEdit):
 
     def update_actions(self):
         enabled = False
-        s = self.selection_model.selection()
         model = self.model
+        selection = self.selection_model.selection()
         if model.is_partially_stageable():
-            item = s.modified[0] if s.modified else None
+            item = selection.modified[0] if selection.modified else None
             if item in model.submodules:
                 pass
             elif item not in model.unstaged_deleted:
