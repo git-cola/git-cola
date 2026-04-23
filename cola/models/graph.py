@@ -1,6 +1,12 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from dataclasses import field
+from enum import Enum
+
+
+class GraphRowColor(Enum):
+    NORMAL = 0
+    MERGE = 1
 
 
 @dataclass
@@ -15,6 +21,7 @@ class GraphRow:
     commit_oid: str
     commit_column: int
     edges_to_parent: list[EdgeSegment] = field(default_factory=list)
+    color: GraphRowColor = GraphRowColor.NORMAL
 
 
 @dataclass
@@ -115,10 +122,16 @@ def build_graph(commits: list[tuple[str, list[str]]]) -> GraphResult:
         while active_lanes and active_lanes[-1] is None:
             active_lanes.pop()
 
+        if len(parent_oids) > 1:
+            color = GraphRowColor.MERGE
+        else:
+            color = GraphRowColor.NORMAL
+
         row = GraphRow(
             commit_oid=oid,
             commit_column=commit_column,
             edges_to_parent=edges,
+            color=color,
         )
         rows.append(row)
 

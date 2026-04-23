@@ -25,6 +25,7 @@ from ..i18n import N_
 from ..models import dag
 from ..models import main
 from ..models import prefs
+from ..models.graph import GraphRowColor
 from ..models.graph import build_graph
 from ..qtutils import get
 from . import archive
@@ -788,16 +789,12 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
             if row is not None:
                 cx = rect.left() + row.commit_column * lane_w + lane_w // 2
-                is_merge = (
-                    sum(
-                        1
-                        for e in row.edges_to_parent
-                        if e.from_column == row.commit_column
-                    )
-                    > 1
-                )
+                color_map = {
+                    GraphRowColor.NORMAL: self.commit_color,
+                    GraphRowColor.MERGE: self.merge_color,
+                }
                 painter.setPen(self.outline_pen)
-                painter.setBrush(self.merge_color if is_merge else self.commit_color)
+                painter.setBrush(color_map[row.color])
                 painter.drawEllipse(
                     QtCore.QPointF(cx, mid_y), self.DOT_RADIUS, self.DOT_RADIUS
                 )
