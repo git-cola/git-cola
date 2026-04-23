@@ -436,7 +436,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     # ^^^ inline-diff highlight end ^^^
 
     def set_intraline_diff_preset(self, preset_id: str, update: bool = False) -> None:
-        """(DiffTextEdit) Store the editor preset and recompute intra-line highlighting."""
+        """(DiffTextEdit) Store the editor preset and recompute inline diffs."""
         self._intraline_diff_preset = diff_intraline.sanitize_intraline_diff_preset_id(
             preset_id
         )
