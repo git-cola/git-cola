@@ -745,7 +745,8 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         rect = option.rect
         mid_y = rect.center().y()
         top_y = rect.top()
-        bottom_y = rect.bottom()
+        # +1 to connect to the next row (FlatCap ends lines exactly at the endpoint)
+        bottom_y = rect.bottom() + 1
         lane_w = self.LANE_WIDTH
 
         if option.state & QtWidgets.QStyle.State_Selected:
@@ -755,6 +756,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         if row is not None or prev_row is not None:
             pen = QtGui.QPen()
             pen.setWidth(self.EDGE_WIDTH)
+            pen.setCapStyle(Qt.FlatCap)
 
             # Top half: edges from the previous row arrive vertically.
             if prev_row is not None:
