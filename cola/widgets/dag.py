@@ -919,6 +919,11 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
         painter.restore()
 
+    def _get_spacing(self, condensed_text: str | None) -> int:
+        if condensed_text is not None:
+            return 0
+        return self.LABEL_SPACING
+
     def _draw_labels(
         self,
         painter: QtGui.QPainter | None,
@@ -969,7 +974,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
                 painter.drawText(text_rect, Qt.AlignLeft | Qt.AlignVCenter, shown)
                 painter.restore()
 
-            current_x += text_width + x_offset * 2 + self.LABEL_SPACING
+            current_x += text_width + x_offset * 2 + self._get_spacing(condensed_text)
 
         return current_x - start_x
 
@@ -1065,7 +1070,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             box_bottom = mid_y + text_height / 2
             if box_left <= pos.x() <= box_right and box_top <= pos.y() <= box_bottom:
                 return i, condensed_text is not None
-            current_x += text_width + x_offset * 2 + self.LABEL_SPACING
+            current_x += text_width + x_offset * 2 + self._get_spacing(condensed_text)
         return -1, False
 
     def update_label_hover(
