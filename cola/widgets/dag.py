@@ -809,20 +809,43 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
     LABEL_BORDER = 3
     LABEL_SPACING = 4
     LABEL_TEXT_OFFSET = 3
+    ANIMATION_DURATION = 50
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self._hover_item: object | None = None
         self._hover_label_idx: int = -1
+        self._expand_progress: float = 0.0
+        self._animation = QtCore.QVariantAnimation(self)
+        self._animation.setDuration(self.ANIMATION_DURATION)
+        self._animation.valueChanged.connect(self._on_animation_value)
+        self._animation.finished.connect(self._on_animation_finished)
+
+    def _on_animation_value(self, value):
+        self._expand_progress = value
+        parent = self.parent()
+        if parent is not None:
+            parent.viewport().update()
+
+    def _on_animation_finished(self) -> None:
+        if self._expand_progress == 0.0:
+            self._hover_item = None
+            self._hover_label_idx = -1
 
     def set_hover(self, item: object | None, label_idx: int) -> None:
         if item == self._hover_item and label_idx == self._hover_label_idx:
             return
-        self._hover_item = item
-        self._hover_label_idx = label_idx
-        parent = self.parent()
-        if parent is not None:
-            parent.viewport().update()
+        self._animation.stop()
+        if label_idx >= 0 and item is not None:
+            self._hover_item = item
+            self._hover_label_idx = label_idx
+            self._animation.setStartValue(0.0)
+            self._animation.setEndValue(1.0)
+            self._animation.start()
+        else:
+            self._animation.setStartValue(self._expand_progress)
+            self._animation.setEndValue(0.0)
+            self._animation.start()
 
     def paint(self, painter, option, index):
         row = index.data(GRAPH_ROW_ROLE)
@@ -998,9 +1021,12 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             and item is self._hover_item
             and label_idx == self._hover_label_idx
         )
-        if not is_hovered:
+        if not is_hovered or self._expand_progress == 0.0:
             return condensed_text, font_metrics.horizontalAdvance(condensed_text)
-        return display_text, font_metrics.horizontalAdvance(display_text)
+        condensed_w = font_metrics.horizontalAdvance(condensed_text)
+        full_w = font_metrics.horizontalAdvance(display_text)
+        width = condensed_w + (full_w - condensed_w) * self._expand_progress
+        return display_text, width
 
     def _graph_width(self, row, prev_row):
         """Calculate the width needed for the graph."""
