@@ -1,8 +1,9 @@
+from __future__ import annotations
 import collections
+import enum
 import itertools
 import math
 from functools import partial
-from typing import Optional
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -706,6 +707,81 @@ GRAPH_ROW_ROLE = Qt.UserRole + 1
 GRAPH_PREV_ROW_ROLE = Qt.UserRole + 2
 COMMIT_ROLE = Qt.UserRole + 3
 
+_REMOTES_PREFIX = 'remotes/'
+_TAGS_PREFIX = 'tags/'
+_HEADS_PREFIX = 'heads/'
+
+
+class RefType(enum.Enum):
+    LOCAL = 'local'
+    REMOTE = 'remote'
+    TAG = 'tag'
+    OTHER = 'other'
+
+
+def _parse_ref(ref: str) -> tuple[str, str | None, str | None, RefType]:
+    """Return display properties for a decorated ref:
+
+    - display_text - full text to display
+    - condensed_text - what will be displayed in condensed mode (optional)
+    - branch_name - the branch or tag name ref refers to (optional)
+    - ref_type - RefType enum
+    """
+    if ref.startswith(_REMOTES_PREFIX):
+        display_text = ref[len(_REMOTES_PREFIX) :]
+        slash = display_text.find('/')
+        remote_name = display_text[:slash]
+        branch_name = display_text[slash + 1 :] if slash >= 0 else None
+        return display_text, f'{remote_name}/\u2026', branch_name, RefType.REMOTE
+    if ref.startswith(_TAGS_PREFIX):
+        name = ref[len(_TAGS_PREFIX) :]
+        return name, name, name, RefType.TAG
+    if ref.startswith(_HEADS_PREFIX):
+        name = ref[len(_HEADS_PREFIX) :]
+        return name, name, name, RefType.LOCAL
+    return ref, ref, None, RefType.OTHER
+
+
+def _prepare_labels(refs: list[str]) -> list[tuple[str, str, str | None]]:
+    """Decide which labels to condense and return (ref, display_text, condensed_text).
+
+    Refs are grouped into groups with the same branch name. Local branch (if any)
+    is placed last. All refs within the group except the last are condensed to
+    "remote/\u2026" (horizontal ellipsis).
+    """
+
+    # branch name -> (ref, is_local, display, condensed)
+    groups: dict[
+        str, list[tuple[str, bool, str, str | None]]
+    ] = collections.defaultdict(list)
+
+    non_group: list[tuple[str, str]] = []
+    for ref in refs:
+        if ref == 'HEAD':
+            continue
+
+        display, condensed, branch_name, ref_type = _parse_ref(ref)
+        if ref_type in (RefType.OTHER, RefType.TAG) or branch_name is None:
+            non_group.append((ref, display))
+            continue
+        groups[branch_name].append((ref, ref_type == RefType.LOCAL, display, condensed))
+
+    # non grouped special refs go first
+    result: list[tuple[str, str, str | None]] = []
+    for ref, display in non_group:
+        result.append((ref, display, None))
+
+    for branch_name in sorted(groups.keys()):
+        remotes = groups.get(branch_name, [])
+        # sort by is_local, display -> local branch will always be last
+        remotes.sort(key=lambda item: (item[1], item[2]))
+        condense_count = len(remotes) - 1
+
+        for i, (ref, _, display, condensed) in enumerate(remotes):
+            result.append((ref, display, condensed if i < condense_count else None))
+
+    return result
+
 
 class GraphDelegate(QtWidgets.QStyledItemDelegate):
     LANE_WIDTH = 16
@@ -733,6 +809,20 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
     LABEL_BORDER = 3
     LABEL_SPACING = 4
     LABEL_TEXT_OFFSET = 3
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._hover_item: object | None = None
+        self._hover_label_idx: int = -1
+
+    def set_hover(self, item: object | None, label_idx: int) -> None:
+        if item == self._hover_item and label_idx == self._hover_label_idx:
+            return
+        self._hover_item = item
+        self._hover_label_idx = label_idx
+        parent = self.parent()
+        if parent is not None:
+            parent.viewport().update()
 
     def paint(self, painter, option, index):
         row = index.data(GRAPH_ROW_ROLE)
@@ -810,8 +900,10 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
         if commit and commit.tags:
             painter.setFont(option.font)
+            tree = self.parent()
+            item = tree.itemFromIndex(index) if tree else None
             labels_width = self._draw_labels(
-                painter, mid_y, commit.tags, label_x, option.fontMetrics
+                painter, mid_y, commit.tags, label_x, option.fontMetrics, item
             )
 
         text = index.data(Qt.DisplayRole)
@@ -829,40 +921,29 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
     def _draw_labels(
         self,
-        painter: Optional[QtGui.QPainter],
+        painter: QtGui.QPainter | None,
         y: int,
         tags: list[str],
         start_x: int,
         font_metrics: QtGui.QFontMetrics,
+        item: object | None,
     ):
         """Draw branch/tag labels and return total width used."""
-        HEAD = 'HEAD'
-        remotes_prefix = 'remotes/'
-        tags_prefix = 'tags/'
-        heads_prefix = 'heads/'
-        remotes_len = len(remotes_prefix)
-        tags_len = len(tags_prefix)
-        heads_len = len(heads_prefix)
-
         current_x = start_x
         x_offset = self.LABEL_TEXT_OFFSET
         y_offset = 0
 
-        for tag in tags:
-            if tag == HEAD:
-                continue
-
+        for i, (tag, display_text, condensed_text) in enumerate(_prepare_labels(tags)):
             pen = self.text_pen
             brush = self.other_color
-            display_tag = tag
 
-            if tag.startswith(remotes_prefix):
-                display_tag = tag[remotes_len:]
-            elif tag.startswith(tags_prefix):
-                display_tag = tag[tags_len:]
+            if tag == 'HEAD':
                 brush = self.remote_color
-            elif tag.startswith(heads_prefix):
-                display_tag = tag[heads_len:]
+            elif tag.startswith(_REMOTES_PREFIX):
+                pass
+            elif tag.startswith(_TAGS_PREFIX):
+                brush = self.remote_color
+            elif tag.startswith(_HEADS_PREFIX):
                 pen = self.head_pen
                 brush = self.head_color
 
@@ -870,8 +951,9 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
                 painter.setPen(pen)
                 painter.setBrush(brush)
 
-            # Calculate text width using font metrics for consistency
-            text_width = font_metrics.horizontalAdvance(display_tag)
+            shown, text_width = self._label_shown_text(
+                condensed_text, display_text, font_metrics, item, i
+            )
             text_height = font_metrics.height()
 
             text_rect = QtCore.QRectF(
@@ -882,7 +964,10 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
             if painter is not None:
                 painter.drawRoundedRect(box_rect, self.LABEL_BORDER, self.LABEL_BORDER)
-                painter.drawText(text_rect, Qt.AlignCenter, display_tag)
+                painter.save()
+                painter.setClipRect(box_rect)
+                painter.drawText(text_rect, Qt.AlignLeft | Qt.AlignVCenter, shown)
+                painter.restore()
 
             current_x += text_width + x_offset * 2 + self.LABEL_SPACING
 
@@ -890,7 +975,27 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
     def _labels_width(self, font_metrics: QtGui.QFontMetrics, tags: list[str]):
         """Calculate total width needed for all labels."""
-        return self._draw_labels(None, 0, tags, 0, font_metrics)
+        return self._draw_labels(None, 0, tags, 0, font_metrics, None)
+
+    def _label_shown_text(
+        self,
+        condensed_text: str | None,
+        display_text: str,
+        font_metrics: QtGui.QFontMetrics,
+        item: object | None,
+        label_idx: int,
+    ) -> tuple[str, int]:
+        """Return (text_to_draw, pixel_width) for a label"""
+        if not condensed_text:
+            return display_text, font_metrics.horizontalAdvance(display_text)
+        is_hovered = (
+            item is not None
+            and item is self._hover_item
+            and label_idx == self._hover_label_idx
+        )
+        if not is_hovered:
+            return condensed_text, font_metrics.horizontalAdvance(condensed_text)
+        return display_text, font_metrics.horizontalAdvance(display_text)
 
     def _graph_width(self, row, prev_row):
         """Calculate the width needed for the graph."""
@@ -929,6 +1034,58 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             total_width = self.LANE_WIDTH * 4
         height = option.fontMetrics.height() + 4
         return QtCore.QSize(total_width, height)
+
+    def _label_hit_test(
+        self,
+        pos,
+        rect: QtCore.QRectF,
+        font_metrics: QtGui.QFontMetrics,
+        index: int,
+        item: object | None,
+    ) -> tuple[int, bool]:
+        """Return (index, is_condensed) if pos is over a label, else (-1, False)."""
+        commit = index.data(COMMIT_ROLE)
+        if not commit or not commit.tags:
+            return -1, False
+        row = index.data(GRAPH_ROW_ROLE)
+        prev_row = index.data(GRAPH_PREV_ROW_ROLE)
+        x_offset = self.LABEL_TEXT_OFFSET
+        current_x = rect.left() + self._graph_width(row, prev_row) + 8
+        mid_y = rect.center().y()
+        text_height = font_metrics.height()
+        for i, (_, display_text, condensed_text) in enumerate(
+            _prepare_labels(commit.tags)
+        ):
+            _, text_width = self._label_shown_text(
+                condensed_text, display_text, font_metrics, item, i
+            )
+            box_left = current_x - x_offset
+            box_right = current_x + text_width + x_offset
+            box_top = mid_y - text_height / 2
+            box_bottom = mid_y + text_height / 2
+            if box_left <= pos.x() <= box_right and box_top <= pos.y() <= box_bottom:
+                return i, condensed_text is not None
+            current_x += text_width + x_offset * 2 + self.LABEL_SPACING
+        return -1, False
+
+    def update_label_hover(
+        self,
+        pos,
+        rect: QtCore.QRectF,
+        font_metrics: QtGui.QFontMetrics,
+        index: int,
+        item: object | None,
+    ) -> None:
+        if item is None:
+            self.set_hover(None, -1)
+            return
+        label_idx, is_condensed = self._label_hit_test(
+            pos, rect, font_metrics, index, item
+        )
+        if label_idx >= 0 and is_condensed is not None:
+            self.set_hover(item, label_idx)
+        else:
+            self.set_hover(None, -1)
 
 
 class CommitTreeWidgetItem(QtWidgets.QTreeWidgetItem):
@@ -982,6 +1139,9 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.zoom_to_fit_action = qtutils.add_action(
             self, N_('Zoom to Fit'), self.zoom_to_fit.emit, hotkeys.FIT
         )
+
+        self.setMouseTracking(True)
+        self.viewport().setMouseTracking(True)
 
         self.itemSelectionChanged.connect(
             self.selection_changed, type=Qt.QueuedConnection
@@ -1176,6 +1336,24 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             event.accept()
             return
         QtWidgets.QTreeWidget.mousePressEvent(self, event)
+
+    def mouseMoveEvent(self, event: QtGui.QMouseEvent):
+        pos = event.pos()
+        item = self.itemAt(pos)
+        rect = self.visualItemRect(item) if item is not None else QtCore.QRectF()
+        index = (
+            self.indexFromItem(item, CommitTreeWidgetItem.SUMMARY)
+            if item is not None
+            else -1
+        )
+        self.graph_delegate.update_label_hover(
+            pos, rect, self.fontMetrics(), index, item
+        )
+        QtWidgets.QTreeWidget.mouseMoveEvent(self, event)
+
+    def leaveEvent(self, event):
+        self.graph_delegate.set_hover(None, -1)
+        QtWidgets.QTreeWidget.leaveEvent(self, event)
 
 
 class GitDAG(standard.MainWindow):
