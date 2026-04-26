@@ -732,7 +732,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
     LABEL_BORDER = 3
     LABEL_SPACING = 4
-    LABEL_TEXT_OFFSET = 3
+    LABEL_TEXT_OFFSET = 2
 
     def paint(self, painter, option, index):
         row = index.data(GRAPH_ROW_ROLE)
