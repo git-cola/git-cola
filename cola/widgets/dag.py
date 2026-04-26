@@ -872,7 +872,8 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
             # Calculate text width using font metrics for consistency
             text_width = font_metrics.horizontalAdvance(display_tag)
-            text_height = font_metrics.height()
+            # Use 80% of font height for tighter vertical fit
+            text_height = font_metrics.height() * 0.8
 
             text_rect = QtCore.QRectF(
                 current_x, y - text_height / 2, text_width, text_height
