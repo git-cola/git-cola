@@ -928,7 +928,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         total_width = graph_width + 8 + labels_width + 8 + text_width
         if total_width < self.LANE_WIDTH * 4:
             total_width = self.LANE_WIDTH * 4
-        height = option.fontMetrics.height() + 4
+        height = option.fontMetrics.height()
         return QtCore.QSize(total_width, height)
 
 
