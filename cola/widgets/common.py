@@ -82,4 +82,8 @@ def terminal_action(context, parent, func=None, hotkey=None):
         action.setIcon(icons.terminal())
         if hotkey is not None:
             action.setShortcut(hotkey)
+
+        if context.ops.is_remote():
+            action.setEnabled(False)
+
     return action

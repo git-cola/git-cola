@@ -625,7 +625,9 @@ class MainView(standard.MainWindow):
         # We can do this because can_rebase == not is_rebasing
         self.rebase_start_action_proxy = utils.Proxy(
             self.rebase_start_action,
-            setEnabled=lambda x: self.rebase_start_action.setEnabled(not x),
+            setEnabled=lambda x: self.rebase_start_action.setEnabled(
+                False if context.ops.is_remote() else not x
+            ),
         )
 
         self.rebase_group = utils.Group(
@@ -681,6 +683,7 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.quick_repository_search)
         # File->Open Recent menu
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
+
         self.open_recent_menu.setIcon(icons.folder())
         self.file_menu.addAction(self.open_repo_action)
         self.file_menu.addAction(self.open_repo_new_action)
@@ -703,6 +706,18 @@ class MainView(standard.MainWindow):
         self.patches_menu.addAction(self.apply_patches_continue_action)
         self.patches_menu.addAction(self.apply_patches_skip_action)
         self.patches_menu.addAction(self.apply_patches_abort_action)
+
+        if context.ops.is_remote():
+            self.quick_repository_search.setEnabled(False)
+            self.open_recent_menu.setEnabled(False)
+            self.open_repo_action.setEnabled(False)
+            self.open_repo_new_action.setEnabled(False)
+            self.new_repository_action.setEnabled(False)
+            self.new_bare_repository_action.setEnabled(False)
+            self.clone_repo_action.setEnabled(False)
+            self.rebase_start_action_proxy.setEnabled(True)
+            self.save_tarball_action.setEnabled(False)
+            self.patches_menu.setEnabled(False)
 
         # Git Annex / Git LFS
         annex = self.context.ops.find_executable('git-annex')
