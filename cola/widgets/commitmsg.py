@@ -78,6 +78,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         self.launch_editor = actions.launch_editor_at_line(context, self)
         self.launch_difftool = actions.launch_difftool(context, self)
+        if context.ops.is_remote():
+            self.launch_editor.setEnabled(False)
+            self.launch_difftool.setEnabled(False)
 
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)
