@@ -34,6 +34,7 @@ Usability, bells and whistles
   (`#1582 <https://github.com/git-cola/git-cola/issues/1582>`_)
 
 * Reduced extra spacing in commit list to improve information density.
+  (`#1589 <https://github.com/git-cola/git-cola/pull/1589>`_)
 
 Fixes
 -----
