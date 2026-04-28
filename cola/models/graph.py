@@ -48,9 +48,9 @@ def build_graph(
     # The graph is built top-to-bottom (newest first), so the input is reversed.
     for oid, parent_oids in reversed(commits):
         # Find the commit in active_lanes or allocate a new lane.
-        if oid in active_lanes:
+        try:
             commit_column = active_lanes.index(oid)
-        else:
+        except ValueError:
             commit_column = len(active_lanes)
             active_lanes.append(oid)
 
@@ -90,12 +90,12 @@ def build_graph(
                         next_color += 1
                     color_map[parent_oid] = parent_color
 
-                if parent_oid in active_lanes:
+                try:
                     parent_col = active_lanes.index(parent_oid)
                     if i == 0:
                         # First parent means commit no longer uses its column
                         active_lanes[commit_column] = None
-                else:
+                except ValueError:
                     if i == 0:
                         # First parent takes the commit's lane.
                         active_lanes[commit_column] = parent_oid
