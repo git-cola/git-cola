@@ -11,6 +11,7 @@ Usability, bells and whistles
   (`#1571 <https://github.com/git-cola/git-cola/pull/1571>`_)
   (`#1581 <https://github.com/git-cola/git-cola/pull/1581>`_)
   (`#1585 <https://github.com/git-cola/git-cola/pull/1585>`_)
+  (`#1588 <https://github.com/git-cola/git-cola/pull/1588>`_)
 
 * Git Cola now detects changes to the `.git/GIT_COLA_MSG` file and will
   reload its contents on ``Ctrl + R`` refresh when the file is edited
