@@ -33,6 +33,8 @@ Usability, bells and whistles
   these potentially dangerous actions from getting triggered accidentally.
   (`#1582 <https://github.com/git-cola/git-cola/issues/1582>`_)
 
+* Reduced extra spacing in commit list to improve information density.
+
 Fixes
 -----
 * The DAG's gravatar icon size was improved when using hi-DPI displays.

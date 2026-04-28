@@ -808,7 +808,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
 
     LABEL_BORDER = 3
     LABEL_SPACING = 4
-    LABEL_TEXT_OFFSET = 3
+    LABEL_TEXT_OFFSET = 2
     ANIMATION_DURATION = 50
 
     def __init__(self, parent=None):
@@ -982,7 +982,8 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             shown, text_width = self._label_shown_text(
                 condensed_text, display_text, font_metrics, item, i
             )
-            text_height = font_metrics.height()
+            # Use 80% of font height for tighter vertical fit
+            text_height = font_metrics.height() * 0.8
 
             text_rect = QtCore.QRectF(
                 current_x, y - text_height / 2, text_width, text_height
@@ -1063,7 +1064,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         total_width = graph_width + 8 + labels_width + 8 + text_width
         if total_width < self.LANE_WIDTH * 4:
             total_width = self.LANE_WIDTH * 4
-        height = option.fontMetrics.height() + 4
+        height = option.fontMetrics.height()
         return QtCore.QSize(total_width, height)
 
     def _label_hit_test(
