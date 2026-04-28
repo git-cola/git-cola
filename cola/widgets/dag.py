@@ -811,7 +811,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
     LABEL_TEXT_OFFSET = 2
     ANIMATION_DURATION = 50
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._hover_item: object | None = None
         self._hover_label_idx: int = -1
