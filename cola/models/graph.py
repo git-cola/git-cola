@@ -45,14 +45,23 @@ def build_graph(
     rows: list[GraphRow] = []
     max_columns = 0
 
+    all_oids = {commit_and_parents[0] for commit_and_parents in commits}
+
     # The graph is built top-to-bottom (newest first), so the input is reversed.
     for oid, parent_oids in reversed(commits):
+        # Is this a terminal commit without any parents?
+        terminal_commit = False
         # Find the commit in active_lanes or allocate a new lane.
         try:
             commit_column = active_lanes.index(oid)
         except ValueError:
-            commit_column = len(active_lanes)
-            active_lanes.append(oid)
+            if parent_oids and not all_oids.intersection(parent_oids):
+                terminal_commit = True
+                active_lanes = [None]
+                commit_column = 0
+            else:
+                commit_column = len(active_lanes)
+                active_lanes.append(oid)
 
         # Assign a color for this commit's lane.
         commit_color = color_map.get(oid, None)
@@ -77,7 +86,7 @@ def build_graph(
                     )
                 )
 
-        if parent_oids:
+        if parent_oids and not terminal_commit:
             for i, parent_oid in enumerate(parent_oids):
                 # Select color if not selected: first parent gets commit color,
                 # others get next color
