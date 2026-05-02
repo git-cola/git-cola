@@ -53,6 +53,11 @@ def install(themes: list[str]) -> None:
         qtcompat.add_search_path('icons', icon_dir)
 
 
+def clear_icon_cache() -> None:
+    """Drop memoized QIcons after :func:`install` changes search paths."""
+    from_name.cache.clear()
+
+
 def icon_themes() -> tuple[tuple[str, str], tuple[str, str], tuple[str, str]]:
     return (
         (N_('Default'), 'default'),

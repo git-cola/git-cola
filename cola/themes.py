@@ -811,9 +811,37 @@ def options(themes: list[Theme] | None = None):
     return [(theme.title, theme.name) for theme in themes]
 
 
+def registered_theme_names() -> frozenset[str]:
+    """Set of theme ``name`` values from built-ins and user ``*.qss`` files."""
+    return frozenset(t.name for t in get_all_themes())
+
+
+def coerce_gui_theme_name(raw: Any) -> str:
+    """Map config or CLI input to a registered theme name.
+
+    Git config parsing can yield non-strings; users may typo theme names or
+    delete custom ``*.qss`` files. Always fall back to ``default`` so the app
+    keeps a valid palette/stylesheet after repo overrides are removed.
+    """
+    if raw is None:
+        return 'default'
+    if isinstance(raw, bool):
+        return 'default'
+    name = str(raw).strip()
+    if not name:
+        return 'default'
+    if name in registered_theme_names():
+        return name
+    return 'default'
+
+
 def find_theme(name: str) -> Theme:
-    themes = get_all_themes()
-    for item in themes:
-        if item.name == name:
+    key = coerce_gui_theme_name(name)
+    themes_list = get_all_themes()
+    for item in themes_list:
+        if item.name == key:
             return item
-    return themes[0]
+    for item in themes_list:
+        if item.name == 'default':
+            return item
+    return themes_list[0]
