@@ -19,6 +19,11 @@ from qtpy import compat
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+try:
+    import AppKit
+except ImportError:
+    AppKit = None
+
 from . import core
 from . import hotkeys
 from . import icons
@@ -675,10 +680,30 @@ def set_clipboard(text: str) -> None:
     clipboard.setText(text, QtGui.QClipboard.Clipboard)
     if not utils.is_darwin() and not utils.is_win32():
         clipboard.setText(text, QtGui.QClipboard.Selection)
-    persist_clipboard()
+    persist_clipboard(text)
 
 
-def persist_clipboard() -> None:
+def persist_clipboard_macos(text: str) -> None:
+    """Write text to the macOS NSPasteboard so it survives app exit.
+
+    Qt's QClipboard on macOS does not always hand a persistent copy of the
+    string to the system pasteboard, so the clipboard contents can be lost
+    when git-cola exits. Writing through AppKit's NSPasteboard ensures the
+    pasteboard server retains its own copy.
+
+    C.f. https://developer.apple.com/documentation/appkit/nspasteboard
+    """
+    if AppKit is None:
+        return
+    try:
+        pasteboard = AppKit.NSPasteboard.generalPasteboard()
+        pasteboard.clearContents()
+        pasteboard.setString_forType_(text, AppKit.NSPasteboardTypeString)
+    except Exception:  # noqa: BLE001 -- never let clipboard errors crash the UI
+        pass
+
+
+def persist_clipboard(text: str | None = None) -> None:
     """Persist the clipboard
 
     X11 stores only a reference to the clipboard data.
@@ -686,9 +711,17 @@ def persist_clipboard() -> None:
     This ensures that the clipboard is present after git-cola exits.
     Otherwise, the reference is destroyed on exit.
 
+    On MacOS, Qt does not always hand a persistent copy of the clipboard
+    to the system pasteboard, so we write through AppKit's NSPasteboard
+    when `text` is provided.
+
     C.f. https://stackoverflow.com/questions/2007103/how-can-i-disable-clear-of-clipboard-on-exit-of-pyqt4-application
 
     """  # noqa
+    if utils.is_darwin():
+        if text is not None:
+            persist_clipboard_macos(text)
+        return
     clipboard = QtWidgets.QApplication.clipboard()
     event = QtCore.QEvent(QtCore.QEvent.Clipboard)
     QtWidgets.QApplication.sendEvent(clipboard, event)
