@@ -36,6 +36,9 @@ Usability, bells and whistles
 * Reduced extra spacing in commit list to improve information density.
   (`#1589 <https://github.com/git-cola/git-cola/pull/1589>`_)
 
+* The copy/paste buffer on macOS is now retained after the application shuts down.
+  (`#1596 <https://github.com/git-cola/git-cola/pull/1596>`_)
+
 Fixes
 -----
 * Closing the main window after opening a DAG window was causing errors
