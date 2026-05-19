@@ -1283,9 +1283,13 @@ def view_history(context):
 
 
 def copy_path(context, absolute=True):
-    """Copy a selected path to the clipboard"""
-    filename = context.selection.filename()
-    qtutils.copy_path(filename, absolute=absolute)
+    """Copy selected path(s) to the clipboard"""
+    filenames = context.selection.group()
+    if not filenames:
+        return
+    if absolute:
+        filenames = [core.abspath(f) for f in filenames]
+    qtutils.set_clipboard('\n'.join(filenames))
 
 
 def copy_relpath(context):
@@ -1294,30 +1298,49 @@ def copy_relpath(context):
 
 
 def copy_basename(context):
-    filename = os.path.basename(context.selection.filename())
-    basename, _ = os.path.splitext(filename)
-    qtutils.copy_path(basename, absolute=False)
+    filenames = context.selection.group()
+    if not filenames:
+        return
+    basenames = []
+    for f in filenames:
+        basename, _ = os.path.splitext(os.path.basename(f))
+        basenames.append(basename)
+    qtutils.set_clipboard('\n'.join(basenames))
 
 
 def copy_leading_path(context, strip_components):
-    """Peal off trailing path components and copy the current path to the clipboard"""
-    filename = context.selection.filename()
-    value = filename
-    for _ in range(strip_components):
-        value = os.path.dirname(value)
-    qtutils.copy_path(value, absolute=False)
+    """Peel off trailing path components and copy the current path(s) to the clipboard"""
+    filenames = context.selection.group()
+    if not filenames:
+        return
+    seen = set()
+    values = []
+    for filename in filenames:
+        value = filename
+        for _ in range(strip_components):
+            value = os.path.dirname(value)
+        if value not in seen:
+            seen.add(value)
+            values.append(value)
+    qtutils.set_clipboard('\n'.join(values))
 
 
 def copy_format(context, fmt):
     """Add variables usable in the custom Copy format strings"""
-    values = {}
-    values['path'] = path = context.selection.filename()
-    values['abspath'] = abspath = os.path.abspath(path)
-    values['absdirname'] = os.path.dirname(abspath)
-    values['dirname'] = os.path.dirname(path)
-    values['filename'] = os.path.basename(path)
-    values['basename'], values['ext'] = os.path.splitext(os.path.basename(path))
-    qtutils.set_clipboard(fmt % values)
+    filenames = context.selection.group()
+    if not filenames:
+        return
+    lines = []
+    for path in filenames:
+        values = {}
+        values['path'] = path
+        values['abspath'] = abspath = os.path.abspath(path)
+        values['absdirname'] = os.path.dirname(abspath)
+        values['dirname'] = os.path.dirname(path)
+        values['filename'] = os.path.basename(path)
+        values['basename'], values['ext'] = os.path.splitext(os.path.basename(path))
+        lines.append(fmt % values)
+    qtutils.set_clipboard('\n'.join(lines))
 
 
 def show_help(context):
