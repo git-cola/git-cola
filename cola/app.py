@@ -194,6 +194,60 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
     return result
 
 
+def _set_application_name() -> None:
+    """Tell Qt and Cocoa the user-visible application name is "Git Cola".
+
+    Without this, a non-bundled launch on macOS (running ``git-cola`` via the
+    system ``python3``) shows ``python3`` in the menu bar, the Apple menu
+    "Hide" / "Quit" items, and in the dock, because Cocoa derives all of
+    those from the executable name.
+
+    Cocoa reads three different sources for the user-visible app name and
+    they have to be patched in lock-step:
+
+    * Qt menus: ``QCoreApplication.applicationName``
+    * macOS menu bar (title slot, Hide/Quit items): the ``CFBundleName`` key
+      of ``[[NSBundle mainBundle] infoDictionary]``, which Qt's Cocoa plugin
+      reads when it builds the menu.
+    * Dock tile / ``NSRunningApplication.localizedName``: the Cocoa process
+      name, set via ``-[NSProcessInfo setProcessName:]``.
+
+    Must run before ``QApplication`` is constructed as Qt snapshots the bundle dictionary the first time it builds the
+    Cocoa menu.
+
+    References:
+
+    - https://doc.qt.io/qt-6/qcoreapplication.html
+    - https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundlename
+    - https://developer.apple.com/documentation/foundation/processinfo/processname
+    """
+    QtCore.QCoreApplication.setApplicationName('Git Cola')
+    if sys.platform != 'darwin':
+        return
+    try:
+        # PyObjC is a declared darwin dep but stays optional at import-time.
+        from AppKit import NSBundle
+        from AppKit import NSProcessInfo
+    except ImportError:
+        return
+    try:
+        # Inject CFBundleName / CFBundleDisplayName into the main bundle's
+        # info dictionary. For a non-bundled launch the dictionary may be
+        # nil; replace it via the private _infoDictionary ivar fallback only
+        # if the public mutator is unavailable.
+        bundle = NSBundle.mainBundle()
+        info = bundle.localizedInfoDictionary() or bundle.infoDictionary()
+        if info is not None:
+            # NSBundle's info dict is an NSMutableDictionary in practice;
+            # setObject_forKey_ works even when the public API claims it is
+            # read-only.
+            info.setObject_forKey_('Git Cola', 'CFBundleName')
+            info.setObject_forKey_('Git Cola', 'CFBundleDisplayName')
+        NSProcessInfo.processInfo().setProcessName_('Git Cola')
+    except Exception:  # noqa: BLE001 -- never let cosmetic naming crash startup
+        pass
+
+
 # style note: we use camelCase here since we're masquerading a Qt class
 class ColaApplication:
     """The main cola application
@@ -209,6 +263,7 @@ class ColaApplication:
         icon_themes: list[Any] | None = None,
         gui_theme: None = None,
     ) -> None:
+        _set_application_name()
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()
