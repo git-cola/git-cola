@@ -145,6 +145,14 @@ class GravatarLabel(QtWidgets.QLabel):
         if url == reply.url().toString():
             self.pixmaps[email] = pixmap
 
+        # Schedule reply destruction on the next event-loop tick. Without this,
+        # Qt eventually tears the SSL socket down while the QNetworkReply is
+        # still attached, producing a "QIODevice::read (QSslSocket): device
+        # not open" warning. Qt docs explicitly say not to delete the reply
+        # inside the finished slot -- use deleteLater() instead.
+        # https://doc.qt.io/qt-6/qnetworkaccessmanager.html#finished
+        reply.deleteLater()
+
     def set_pixmap_from_response(self) -> QPixmap:
         if self.response is None:
             self.response = self.default_pixmap_as_bytes()
