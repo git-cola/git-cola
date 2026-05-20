@@ -61,6 +61,10 @@ Fixes
   themselves when items are selected.
   (`#1566 <https://github.com/git-cola/git-cola/issues/1566>`_)
 
+* Git DAG no longer emits ``QIODevice::read (QSslSocket): device not open`` messages
+  to the shell.
+  (`#1597 <https://github.com/git-cola/git-cola/pull/1597>`_)
+
 Development
 -----------
 * ``isort`` is now used for code formatting.
