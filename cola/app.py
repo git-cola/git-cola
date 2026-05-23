@@ -176,6 +176,36 @@ def _get_askpass() -> TextType:
     return resources.package_command('ssh-askpass')
 
 
+def _detect_system_theme() -> str:
+    """Detect if the system is using a dark or light theme.
+
+    Uses Qt 6.5+ colorScheme() if available, falls back to
+    QPalette lightness comparison for older Qt versions.
+    """
+    from qtpy.QtWidgets import QApplication
+    from qtpy.QtGui import QPalette
+
+    app = QApplication.instance()
+    if app is not None:
+        try:
+            from qtpy.QtCore import Qt
+            scheme = app.styleHints().colorScheme()
+            if scheme == Qt.ColorScheme.Dark:
+                return 'dark'
+            if scheme == Qt.ColorScheme.Light:
+                return 'light'
+        except AttributeError:
+            pass
+
+        palette = app.palette()
+        window_text = palette.color(QPalette.ColorRole.WindowText).lightness()
+        window = palette.color(QPalette.ColorRole.Window).lightness()
+        if window_text > window:
+            return 'dark'
+
+    return 'light'
+
+
 def get_icon_themes(context: ApplicationContext) -> list[str]:
     """Return the default icon theme names"""
     result = []
@@ -189,9 +219,58 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
         result.extend(icon_themes_cfg)
 
     if not result:
-        result.append('light')
+        result.append(_detect_system_theme())  # auto-detect instead of hardcoding 'light'
 
     return result
+
+def _detect_system_theme() -> str:
+    """Detect if the system is using a dark or light theme."""
+    from qtpy.QtWidgets import QApplication
+    from qtpy.QtGui import QPalette
+
+    app = QApplication.instance()
+    if app is not None:
+        # Qt 6.5+ method (works well on KDE/Windows/macOS)
+        try:
+            from qtpy.QtCore import Qt
+            scheme = app.styleHints().colorScheme()
+            if scheme == Qt.ColorScheme.Dark:
+                return 'dark'
+            if scheme == Qt.ColorScheme.Light:
+                return 'light'
+            # Qt.ColorScheme.Unknown falls through to next check
+        except AttributeError:
+            pass
+
+        # GNOME fallback: read gsettings directly
+        try:
+            import subprocess
+            result = subprocess.run(
+                ['gsettings', 'get',
+                 'org.gnome.desktop.interface', 'color-scheme'],
+                capture_output=True, text=True, timeout=2
+            )
+            if 'dark' in result.stdout.lower():
+                return 'dark'
+            if result.returncode == 0:
+                return 'light'
+        except Exception:
+            pass
+
+        # GTK_THEME environment variable fallback
+        import os
+        gtk_theme = os.environ.get('GTK_THEME', '')
+        if 'dark' in gtk_theme.lower():
+            return 'dark'
+
+        # Last resort: QPalette lightness (reliable on KDE, not GNOME)
+        palette = app.palette()
+        window_text = palette.color(QPalette.ColorRole.WindowText).lightness()
+        window = palette.color(QPalette.ColorRole.Window).lightness()
+        if window_text > window:
+            return 'dark'
+
+    return 'light'
 
 
 # style note: we use camelCase here since we're masquerading a Qt class
