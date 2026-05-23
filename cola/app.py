@@ -189,6 +189,7 @@ def _detect_system_theme() -> str:
     if app is not None:
         try:
             from qtpy.QtCore import Qt
+
             scheme = app.styleHints().colorScheme()
             if scheme == Qt.ColorScheme.Dark:
                 return 'dark'
@@ -223,6 +224,7 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
 
     return result
 
+
 def _detect_system_theme() -> str:
     """Detect if the system is using a dark or light theme."""
     from qtpy.QtWidgets import QApplication
@@ -233,6 +235,7 @@ def _detect_system_theme() -> str:
         # Qt 6.5+ method (works well on KDE/Windows/macOS)
         try:
             from qtpy.QtCore import Qt
+
             scheme = app.styleHints().colorScheme()
             if scheme == Qt.ColorScheme.Dark:
                 return 'dark'
@@ -245,10 +248,12 @@ def _detect_system_theme() -> str:
         # GNOME fallback: read gsettings directly
         try:
             import subprocess
+
             result = subprocess.run(
-                ['gsettings', 'get',
-                 'org.gnome.desktop.interface', 'color-scheme'],
-                capture_output=True, text=True, timeout=2
+                ['gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'],
+                capture_output=True,
+                text=True,
+                timeout=2,
             )
             if 'dark' in result.stdout.lower():
                 return 'dark'
@@ -259,6 +264,7 @@ def _detect_system_theme() -> str:
 
         # GTK_THEME environment variable fallback
         import os
+
         gtk_theme = os.environ.get('GTK_THEME', '')
         if 'dark' in gtk_theme.lower():
             return 'dark'
