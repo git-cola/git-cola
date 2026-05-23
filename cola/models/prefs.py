@@ -247,6 +247,24 @@ def bold_headers(context) -> bool:
     return context.cfg.get(BOLD_HEADERS, default=Defaults.bold_headers)
 
 
+def gui_theme(context) -> str:
+    """Effective GUI theme after merging system, global, and local git config.
+
+    Use :func:`GitConfig.get_repo` with ``THEME`` when you need the value stored
+    only in the current repository (missing key means no repo override).
+    Use :meth:`GitConfig.get_user_or_system` for the user/system default without
+    a repo-specific entry.
+
+    Unknown or mistyped values are coerced to a registered name so removing a
+    repo-specific ``cola.theme`` or deleting a custom theme file cannot leave the
+    UI without a valid stylesheet.
+    """
+    from .. import themes
+
+    raw = context.cfg.get(THEME, default=Defaults.theme)
+    return themes.coerce_gui_theme_name(raw)
+
+
 def check_conflicts(context) -> bool:
     """Should we check for merge conflict markers in unmerged files?"""
     return context.cfg.get(CHECK_CONFLICTS, default=Defaults.check_conflicts)
@@ -470,7 +488,7 @@ class PreferencesModel(QtCore.QObject):
         if source == 'local':
             value = self.config.get_repo(config)
         else:
-            value = self.config.get(config)
+            value = self.config.get_user_or_system(config)
         return value
 
 

@@ -26,6 +26,25 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
 
 * [Contributing guidelines](CONTRIBUTING.md)
 
+## Themes and appearance
+
+The GUI theme is read from the git config entry `cola.theme`. Set a default under
+**Preferences → Appearance** (stored in your user config), or override it for one
+repository only via **Preferences → Current Repository** or with
+`git config cola.theme <theme-name>` inside that repository (local `.git/config`).
+Git applies the usual config precedence, so a repository value overrides your global
+default when both are set.
+
+Passing **`git cola --theme <theme-name>`** (or **`git cola gui --theme ...`**) forces
+that theme for the entire process; preference changes cannot override it until you
+exit and restart without `--theme`.
+
+Icon themes are assembled from the `GIT_COLA_ICON_THEME` environment variable
+(`:`-separated list, if set) and from one or more `cola.icontheme` config entries;
+see `get_icon_themes()` in `cola/app.py` for details. In the main Git Cola window,
+GUI theme, icon theme, and bold-fonts preference changes apply immediately; font
+family, font size, and high DPI still require a restart.
+
 
 # Requirements
 

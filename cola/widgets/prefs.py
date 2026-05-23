@@ -16,6 +16,24 @@ from . import defs
 from . import standard
 
 
+def sync_icon_theme_to_gui_theme(themes_list, theme_idx, icon_theme_widget):
+    """Align icon theme with light/dark when the GUI theme changes (shared by prefs forms)."""
+    try:
+        theme = themes_list[theme_idx]
+    except IndexError:
+        return
+    icon_theme = icon_theme_widget.value()
+    if theme.name == 'default':
+        if icon_theme in ('light', 'dark'):
+            icon_theme_widget.set_value('default')
+    elif theme.is_dark:
+        if icon_theme in ('default', 'light'):
+            icon_theme_widget.set_value('dark')
+    elif not theme.is_dark:
+        if icon_theme in ('default', 'dark'):
+            icon_theme_widget.set_value('light')
+
+
 def preferences(context, model=None, parent=None):
     if model is None:
         model = prefs.PreferencesModel(context)
@@ -201,6 +219,19 @@ scissors
         tooltip = N_('Enable detection and configuration of HTTP proxy settings')
         self.autodetect_proxy = qtutils.checkbox(checked=True, tooltip=tooltip)
 
+        if source == 'local':
+            self.themes = themes.get_all_themes()
+            self.theme = qtutils.combo_mapped(themes.options(themes=self.themes))
+            self.icon_theme = qtutils.combo_mapped(icons.icon_themes())
+            repo_theme_tip = N_(
+                'Override appearance for this repository only. '
+                'Matches the effective theme until you change it here. '
+                'GUI and icon themes apply immediately in the main window. '
+                'The command-line --theme option overrides all config when set.'
+            )
+            self.theme.setToolTip(repo_theme_tip)
+            self.icon_theme.setToolTip(repo_theme_tip)
+
         self.add_row(N_('Name'), self.name)
         self.add_row(N_('Email'), self.email)
 
@@ -243,7 +274,21 @@ scissors
         )
         self.add_row(N_('HTTP Proxy URL'), self.http_proxy)
 
+        if source == 'local':
+            self.add_row('', QtWidgets.QLabel())
+            self.add_row(N_('GUI theme (this repository)'), self.theme)
+            self.add_row(N_('Icon theme (this repository)'), self.icon_theme)
+            self.theme.currentIndexChanged.connect(self._repo_theme_changed)
+
+        repo_config = {}
+        if source == 'local':
+            repo_config = {
+                prefs.THEME: (self.theme, Defaults.theme),
+                prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
+            }
+
         self.set_config({
+            **repo_config,
             prefs.AUTOTEMPLATE: (self.autotemplate, Defaults.autotemplate),
             prefs.AUTOCOMPLETE_PATHS: (
                 self.autocomplete_paths,
@@ -281,6 +326,11 @@ scissors
             prefs.USER_EMAIL: (self.email, ''),
             prefs.UPDATE_INDEX: (self.update_index, Defaults.update_index),
         })
+
+    def _repo_theme_changed(self, theme_idx):
+        if not hasattr(self, 'themes'):
+            return
+        sync_icon_theme_to_gui_theme(self.themes, theme_idx, self.icon_theme)
 
 
 class SettingsFormWidget(FormWidget):
@@ -497,21 +547,7 @@ class AppearanceFormWidget(FormWidget):
 
     def _theme_changed(self, theme_idx):
         """Set the icon theme to dark/light when the main theme changes"""
-        # Set the icon theme to a theme that corresponds to the main settings.
-        try:
-            theme = self.themes[theme_idx]
-        except IndexError:
-            return
-        icon_theme = self.icon_theme.value()
-        if theme.name == 'default':
-            if icon_theme in ('light', 'dark'):
-                self.icon_theme.set_value('default')
-        elif theme.is_dark:
-            if icon_theme in ('default', 'light'):
-                self.icon_theme.set_value('dark')
-        elif not theme.is_dark:
-            if icon_theme in ('default', 'dark'):
-                self.icon_theme.set_value('light')
+        sync_icon_theme_to_gui_theme(self.themes, theme_idx, self.icon_theme)
 
     def update_from_config(self):
         """Update widgets to the current config values"""
@@ -546,7 +582,13 @@ class AppearanceWidget(QtWidgets.QWidget):
         self.form = form
         self.label = QtWidgets.QLabel(
             '<center><b>'
-            + N_('Restart the application after changing appearance settings.')
+            + N_(
+                'GUI theme, icon theme, and bold-fonts apply immediately. '
+                'Restart after changing fonts, font size, or high DPI. '
+                'Per-repository GUI and icon themes are under '
+                'Preferences → Current Repository. '
+                'The --theme command-line flag overrides all theme config when used.'
+            )
             + '</b></center>'
         )
         layout = qtutils.vbox(
