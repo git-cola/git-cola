@@ -1248,15 +1248,15 @@ class MainView(standard.MainWindow):
 
     def apply_state(self, state):
         """Apply persistent UI state on startup"""
+        toolbars = state.get('toolbars', [])
+        self.toolbar_state.apply_state(toolbars)
+
         base_ok = standard.MainWindow.apply_state(self, state)
         lock_layout = state.get('lock_layout', False)
         self.lock_layout_action.setChecked(lock_layout)
 
         show_status_filter = state.get('show_status_filter', False)
         self.statuswidget.filter_widget.setVisible(show_status_filter)
-
-        toolbars = state.get('toolbars', [])
-        self.toolbar_state.apply_state(toolbars)
 
         sort_key = state.get('ref_sort', 0)
         self.model.set_ref_sort(sort_key)
