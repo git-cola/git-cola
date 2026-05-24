@@ -39,6 +39,18 @@ Usability, bells and whistles
 * The copy/paste buffer on macOS is now retained after the application shuts down.
   (`#1596 <https://github.com/git-cola/git-cola/pull/1596>`_)
 
+* Git DAG now honors the ``gui.encoding`` when displaying diffs.
+  (`#1591 <https://github.com/git-cola/git-cola/issues/1591>`_)
+  (`#1595 <https://github.com/git-cola/git-cola/pull/1595>`_)
+
+* The application menu on macOS now displays "Git Cola" and "Git DAG"
+  when the AppKit python modules are available.
+  (`#1599 <https://github.com/git-cola/git-cola/pull/1599>`_)
+
+* The window restoration behavior when restarting the application was improved when
+  the application is put into fullscreen mode on macOS.
+  (`#1600 <https://github.com/git-cola/git-cola/pull/1600>`_)
+
 Fixes
 -----
 * Closing the main window after opening a DAG window was causing errors
