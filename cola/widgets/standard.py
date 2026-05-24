@@ -132,6 +132,7 @@ class WidgetMixin:
         if geometry:
             from_base64 = QtCore.QByteArray.fromBase64
             geometry_bytes = from_base64(core.encode(geometry))
+            was_maximized = False
             # On macOS 15, calling restoreGeometry() with a blob whose
             # "maximized" flag is set sends Qt into a layout-feedback loop on
             # relaunch -- the window grinds creating and destroying tab bars
@@ -146,9 +147,10 @@ class WidgetMixin:
             # maximized state.
             #
             # Cf. https://bugreports.qt.io/browse/QTBUG-123335
-            geometry_bytes, was_maximized = _strip_maximized_geometry_flag(
-                geometry_bytes
-            )
+            if utils.is_darwin():
+                geometry_bytes, was_maximized = _strip_maximized_geometry_flag(
+                    geometry_bytes
+                )
             result = self.restoreGeometry(geometry_bytes)
             if was_maximized:
                 QtCore.QTimer.singleShot(
