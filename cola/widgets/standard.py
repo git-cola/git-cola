@@ -22,6 +22,40 @@ from ..settings import Settings
 from ..settings import mklist
 from . import defs
 
+# Magic header emitted by QWidget::saveGeometry() (Qt 5/6).
+_QWIDGET_GEOMETRY_MAGIC = b'\x01\xd9\xd0\xcb'
+# Offset of the "maximized" flag byte inside a saveGeometry() blob:
+#   4 magic + 2 major + 2 minor + 16 frame QRect + 16 normal QRect + 4 screen
+_QWIDGET_GEOMETRY_MAXIMIZED_OFFSET = 44
+
+
+def _strip_maximized_geometry_flag(blob):
+    """Return (blob_without_maximized_flag, was_maximized).
+
+    QWidget::saveGeometry() encodes the maximized state as a single byte at a
+    well-known offset. Strip it so restoreGeometry() does not re-apply the
+    maximized state during widget construction; the caller is responsible for
+    re-applying it after show() has been called.
+
+    Cf. https://doc.qt.io/qt-6/qwidget.html#saveGeometry
+    """
+    # The QByteArray returned by fromBase64 supports the bytes-like protocol,
+    # so bytes(blob) gives us a plain Python bytes object we can index into.
+    raw = bytes(blob)
+    if len(raw) <= _QWIDGET_GEOMETRY_MAXIMIZED_OFFSET or not raw.startswith(
+        _QWIDGET_GEOMETRY_MAGIC
+    ):
+        return blob, False
+    was_maximized = bool(raw[_QWIDGET_GEOMETRY_MAXIMIZED_OFFSET])
+    if not was_maximized:
+        return blob, False
+    patched = (
+        raw[:_QWIDGET_GEOMETRY_MAXIMIZED_OFFSET]
+        + b'\x00'
+        + raw[_QWIDGET_GEOMETRY_MAXIMIZED_OFFSET + 1 :]
+    )
+    return QtCore.QByteArray(patched), True
+
 
 class WidgetMixin:
     """Mix-in for common utilities and serialization of widget state"""
@@ -97,7 +131,29 @@ class WidgetMixin:
         geometry = state.get('geometry', '')
         if geometry:
             from_base64 = QtCore.QByteArray.fromBase64
-            result = self.restoreGeometry(from_base64(core.encode(geometry)))
+            geometry_bytes = from_base64(core.encode(geometry))
+            # On macOS 15, calling restoreGeometry() with a blob whose
+            # "maximized" flag is set sends Qt into a layout-feedback loop on
+            # relaunch -- the window grinds creating and destroying tab bars
+            # and dock-widget children until it eventually settles or hangs.
+            # This is the latest in a series of recurring upstream reports;
+            # the chain is QTBUG-4397 -> QTBUG-21371 -> QTBUG-106678 ->
+            # QTBUG-123335 (still open as of Qt 6.11).
+            #
+            # Strip the maximized flag from the blob and re-apply it via
+            # setWindowState() after the event loop is running, which gives
+            # Cocoa a chance to place the window before we ask for the
+            # maximized state.
+            #
+            # Cf. https://bugreports.qt.io/browse/QTBUG-123335
+            geometry_bytes, was_maximized = _strip_maximized_geometry_flag(
+                geometry_bytes
+            )
+            result = self.restoreGeometry(geometry_bytes)
+            if was_maximized:
+                QtCore.QTimer.singleShot(
+                    0, lambda: self.setWindowState(Qt.WindowMaximized)
+                )
         elif width and height:
             # Users migrating from older versions won't have 'geometry'.
             # They'll be upgraded to the new format on shutdown.
