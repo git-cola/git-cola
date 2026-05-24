@@ -194,8 +194,8 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
     return result
 
 
-def _set_application_name() -> None:
-    """Tell Qt and Cocoa the user-visible application name is "Git Cola".
+def set_application_name(app_name) -> None:
+    """Tell Qt and Cocoa the user-visible application name.
 
     Without this, a non-bundled launch on macOS (running ``git-cola`` via the
     system ``python3``) shows ``python3`` in the menu bar, the Apple menu
@@ -212,8 +212,8 @@ def _set_application_name() -> None:
     * Dock tile / ``NSRunningApplication.localizedName``: the Cocoa process
       name, set via ``-[NSProcessInfo setProcessName:]``.
 
-    Must run before ``QApplication`` is constructed as Qt snapshots the bundle dictionary the first time it builds the
-    Cocoa menu.
+    Must run before ``QApplication`` is constructed as Qt snapshots the bundle
+    dictionary the first time it builds the Cocoa menu.
 
     References:
 
@@ -221,8 +221,8 @@ def _set_application_name() -> None:
     - https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundlename
     - https://developer.apple.com/documentation/foundation/processinfo/processname
     """
-    QtCore.QCoreApplication.setApplicationName('Git Cola')
-    if sys.platform != 'darwin':
+    QtCore.QCoreApplication.setApplicationName(app_name)
+    if not utils.is_darwin():
         return
     try:
         # PyObjC is a declared darwin dep but stays optional at import-time.
@@ -241,9 +241,9 @@ def _set_application_name() -> None:
             # NSBundle's info dict is an NSMutableDictionary in practice;
             # setObject_forKey_ works even when the public API claims it is
             # read-only.
-            info.setObject_forKey_('Git Cola', 'CFBundleName')
-            info.setObject_forKey_('Git Cola', 'CFBundleDisplayName')
-        NSProcessInfo.processInfo().setProcessName_('Git Cola')
+            info.setObject_forKey_(app_name, 'CFBundleName')
+            info.setObject_forKey_(app_name, 'CFBundleDisplayName')
+        NSProcessInfo.processInfo().setProcessName_(app_name)
     except Exception:  # noqa: BLE001 -- never let cosmetic naming crash startup
         pass
 
@@ -263,7 +263,7 @@ class ColaApplication:
         icon_themes: list[Any] | None = None,
         gui_theme: None = None,
     ) -> None:
-        _set_application_name()
+        set_application_name(context.app_name)
         cfgactions.install()
         i18n.install(locale)
         qtcompat.install()

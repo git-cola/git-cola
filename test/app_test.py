@@ -22,8 +22,8 @@ def test_add_common_arguments():
 
 def test_set_application_name_sets_qt_application_name():
     """The Qt application name is set unconditionally on every platform."""
-    app._set_application_name()
-    assert QtCore.QCoreApplication.applicationName() == 'Git Cola'
+    app.set_application_name('Test App')
+    assert QtCore.QCoreApplication.applicationName() == 'Test App'
 
 
 class _ExplodingAppKit(types.ModuleType):
@@ -46,8 +46,8 @@ def test_set_application_name_is_a_noop_on_non_darwin(monkeypatch):
     monkeypatch.setitem(sys.modules, 'AppKit', _ExplodingAppKit())
 
     # Must not raise, must not touch AppKit.
-    app._set_application_name()
-    assert QtCore.QCoreApplication.applicationName() == 'Git Cola'
+    app.set_application_name('Test App')
+    assert QtCore.QCoreApplication.applicationName() == 'Test App'
 
 
 def test_set_application_name_survives_missing_appkit(monkeypatch):
@@ -58,8 +58,8 @@ def test_set_application_name_survives_missing_appkit(monkeypatch):
     monkeypatch.setitem(sys.modules, 'AppKit', None)
 
     # Must not raise.
-    app._set_application_name()
-    assert QtCore.QCoreApplication.applicationName() == 'Git Cola'
+    app.set_application_name('Test App')
+    assert QtCore.QCoreApplication.applicationName() == 'Test App'
 
 
 def _make_fake_appkit():
@@ -93,13 +93,13 @@ def test_set_application_name_patches_cocoa_surfaces_on_darwin(monkeypatch):
     fake_appkit, captured_info, process_info_instance = _make_fake_appkit()
     monkeypatch.setitem(sys.modules, 'AppKit', fake_appkit)
 
-    app._set_application_name()
+    app.set_application_name('Test App')
 
     assert captured_info == {
-        'CFBundleName': 'Git Cola',
-        'CFBundleDisplayName': 'Git Cola',
+        'CFBundleName': 'Test App',
+        'CFBundleDisplayName': 'Test App',
     }
-    process_info_instance.setProcessName_.assert_called_once_with('Git Cola')
+    process_info_instance.setProcessName_.assert_called_once_with('Test App')
 
 
 def test_set_application_name_swallows_cocoa_exceptions(monkeypatch):
@@ -116,6 +116,6 @@ def test_set_application_name_swallows_cocoa_exceptions(monkeypatch):
     monkeypatch.setitem(sys.modules, 'AppKit', fake_appkit)
 
     # Must not raise.
-    app._set_application_name()
+    app.set_application_name('Test App')
     # Qt-side name still got set despite the AppKit explosion.
-    assert QtCore.QCoreApplication.applicationName() == 'Git Cola'
+    assert QtCore.QCoreApplication.applicationName() == 'Test App'
