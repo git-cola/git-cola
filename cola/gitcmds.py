@@ -457,7 +457,13 @@ def oid_diff_range(
             args = [start]
     else:
         args = [start, end]
+    if filename:
+        encoding = context.cfg.file_encoding(filename)
+    else:
+        encoding = context.cfg.gui_encoding()
     opts = common_diff_opts(context)
+    if encoding:
+        opts['_encoding'] = encoding
     _add_filename(args, filename)
     status, out, _ = context.git.diff(*args, **opts)
     if status != 0:
@@ -525,7 +531,7 @@ def diff_helper(
     elif head and amending and cached:
         argv.append(head)
 
-    encoding = None
+    encoding = cfg.gui_encoding()
     if untracked:
         argv.append('--no-index')
         argv.append(os.devnull)
@@ -534,6 +540,10 @@ def diff_helper(
         argv.append('--')
         if isinstance(filename, (list, tuple)):
             argv.extend(filename)
+            for fname in filename:
+                encoding = cfg.file_encoding(fname)
+                if encoding:
+                    break
         else:
             argv.append(filename)
             encoding = cfg.file_encoding(filename)
