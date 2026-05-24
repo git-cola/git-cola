@@ -391,7 +391,7 @@ variables:
   mandir: ${prefix}/share/man/man1
   metainfodir: ${datadir}/metainfo
   cola-app: ${TREE_PATH}/git-cola.app
-  cola-app-resources: ${cola_app}/Contents/Resources
+  cola-app-resources: ${cola-app}/Contents/Resources
   is-virtualenv: |
     $ ${PYTHON} -c '
     import os, sys
