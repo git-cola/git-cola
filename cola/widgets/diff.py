@@ -66,9 +66,12 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
         # block_number -> per-line intra-line spans
         self._intraline_spans: intraline_diff.SpansByLineIndex = {}
 
+        self._configure_colors(context, qtutils.current_palette())
+        self.setCurrentBlockState(self.INITIAL_STATE)
+
+    def _configure_colors(self, context, palette) -> None:
         QPalette = QtGui.QPalette
         cfg = context.cfg
-        palette = QPalette()
         disabled = palette.color(QPalette.Disabled, QPalette.Text)
         header = qtutils.rgb_hex(disabled)
 
@@ -105,7 +108,10 @@ class DiffSyntaxHighlighter(QtGui.QSyntaxHighlighter):
             )
         )
 
-        self.setCurrentBlockState(self.INITIAL_STATE)
+    def refresh_palette(self, context) -> None:
+        """Update syntax colors to match the current application palette."""
+        self._configure_colors(context, qtutils.current_palette())
+        self.rehighlight()
 
     def set_intraline_spans(self, spans):
         """Set the per-line spans used for intra-line diff highlighting."""
@@ -274,6 +280,17 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.cursorPositionChanged.connect(self._cursor_changed)
         self.selectionChanged.connect(self._selection_changed)
         self.mouse_zoomed.connect(self.update_block_cursor)
+
+    def refresh_appearance(self) -> None:
+        """Update palette-derived colors after a system appearance change."""
+        self.highlighter.refresh_palette(self.context)
+        if self.numbers:
+            self.numbers.refresh_palette()
+
+    def changeEvent(self, event):
+        if event.type() == QtCore.QEvent.PaletteChange:
+            self.refresh_appearance()
+        super().changeEvent(event)
 
     def setFont(self, font):
         """Override setFont() so that we can use a custom "block" cursor"""
@@ -553,14 +570,19 @@ class DiffLineNumbers(TextDecorator):
         self.setFont(font)
         self._char_width = qtutils.text_width(font, 'M')
 
+        self.refresh_palette()
+
+    def refresh_palette(self) -> None:
+        """Update line number colors to match the current palette."""
         QPalette = QtGui.QPalette
-        self._palette = palette = self.palette()
+        palette = self.palette()
         self._base = palette.color(QtGui.QPalette.Base)
         self._highlight = palette.color(QPalette.Highlight)
         self._highlight.setAlphaF(0.3)
         self._highlight_text = palette.color(QPalette.HighlightedText)
         self._window = palette.color(QPalette.Window)
         self._disabled = palette.color(QPalette.Disabled, QPalette.Text)
+        self.update()
 
     def set_diff(self, diff, lines=None):
         """Update to a new diff display"""

@@ -2473,6 +2473,19 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             self, N_('Select Newest Child'), self._select_newest_child, hotkeys.MOVE_UP
         )
 
+    def refresh_appearance(self) -> None:
+        """Update palette-derived colors after a system appearance change."""
+        background_color = qtutils.css_color(
+            self.context.app.theme.background_color_rgb()
+        )
+        self.setBackgroundBrush(background_color)
+        self.viewport().update()
+
+    def changeEvent(self, event):
+        if event.type() == QtCore.QEvent.PaletteChange:
+            self.refresh_appearance()
+        super().changeEvent(event)
+
     def clear(self):
         EdgeColor.reset()
         self.scene().clear()
