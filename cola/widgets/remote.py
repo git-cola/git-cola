@@ -181,7 +181,11 @@ class RemoteActionDialog(standard.Dialog):
         if action == PUSH:
             mode = QtWidgets.QAbstractItemView.ExtendedSelection
             self.remotes.setSelectionMode(mode)
-        self.remotes.addItems(model.remotes)
+        displayed_remotes = []
+        for remote_name in model.remotes:
+            url = model.remote_url(remote_name, action)
+            displayed_remotes.append(f'{remote_name} ({url})')
+        self.remotes.addItems(displayed_remotes)
 
         self.remote_branch_label = QtWidgets.QLabel()
         self.remote_branch_label.setText(N_('Remote Branch'))
