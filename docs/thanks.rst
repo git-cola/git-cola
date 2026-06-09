@@ -273,6 +273,7 @@ Thanks
 * Sean Allred
 * Sebastian Brass
 * Sebastian Oliva
+* senique @senique
 * Sergei Dyshel
 * Sergey Leschina
 * Shun Sakai
@@ -284,6 +285,7 @@ Thanks
 * Steffen Prohaska
 * Stéphane Cerveau
 * Stephen Groat
+* Suchismita Biswal
 * Suyandi
 * Sven Claussner
 * Szymon Judasz
