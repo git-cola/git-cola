@@ -450,7 +450,8 @@ class RemoteActionDialog(standard.Dialog):
 
     def update_command_display(self):
         """Display the git commands that will be run"""
-        commands = ['']
+        commands = []
+        remote_details = []
         for remote in self.selected_remotes:
             cmd = ['git', self.action]
             _, kwargs = self.common_args()
@@ -458,6 +459,15 @@ class RemoteActionDialog(standard.Dialog):
             cmd.extend(git.transform_kwargs(**kwargs))
             cmd.extend(args)
             commands.append(core.list2cmdline(cmd))
+
+            url = self.model.remote_url(remote, self.action)
+            remote_details.append(f'# {remote} ({url})')
+
+        if remote_details:
+            commands.append('')
+            commands.append('# Remotes')
+            commands.extend(remote_details)
+
         self.command_display.set_output('\n'.join(commands))
 
     def local_branch_text_changed(self, value):
