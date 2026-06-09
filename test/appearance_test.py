@@ -49,7 +49,7 @@ def test_refresh_system_appearance_rebuilds_default_theme():
     cola.context.cfg.get.return_value = 'default'
     cola._install_style = MagicMock()
 
-    cola._refresh_system_appearance()
+    cola.refresh_system_appearance()
 
     cola._install_style.assert_called_once_with(None)
 
@@ -61,7 +61,7 @@ def test_refresh_system_appearance_skips_non_default_theme():
     cola.context.cfg.get.return_value = 'flat-dark-blue'
     cola._install_style = MagicMock()
 
-    cola._refresh_system_appearance()
+    cola.refresh_system_appearance()
 
     cola._install_style.assert_not_called()
 

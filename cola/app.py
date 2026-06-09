@@ -74,9 +74,6 @@ from .widgets import standard
 from .widgets import startup
 
 if TYPE_CHECKING:
-    from qtpy.QtCore import QEvent
-    from qtpy.QtGui import QPalette
-
     from .types import TextType
     from .types import ViewType
 
@@ -296,7 +293,7 @@ class ColaApplication:
         elif theme_str != 'default':
             self._app.setPalette(theme.build_palette(self._app.palette()))
 
-    def _refresh_system_appearance(self) -> None:
+    def refresh_system_appearance(self) -> None:
         """Rebuild styles that follow the system palette."""
         theme_str = self.context.cfg.get('cola.theme', default='default')
         if theme_str != 'default':
@@ -313,7 +310,7 @@ class ColaApplication:
         """QApplication::activeWindow() pass-through"""
         return self._app.activeWindow()
 
-    def palette(self) -> QPalette:
+    def palette(self) -> QtGui.QPalette:
         """QApplication::palette() pass-through"""
         return self._app.palette()
 
@@ -359,13 +356,13 @@ class ColaQApplication(QtWidgets.QApplication):
         if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
             self.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
-    def event(self, e: QEvent) -> bool:
+    def event(self, e: QtCore.QEvent) -> bool:
         """Respond to focus events for the cola.refreshonfocus feature"""
         if hasattr(QtCore.QEvent, 'ApplicationPaletteChange'):
             if e.type() == QtCore.QEvent.ApplicationPaletteChange:
                 cola_app = getattr(self.context, 'app', None)
                 if cola_app:
-                    QtCore.QTimer.singleShot(0, cola_app._refresh_system_appearance)
+                    QtCore.QTimer.singleShot(0, cola_app.refresh_system_appearance)
         if e.type() == QtCore.QEvent.ApplicationActivate:
             context = self.context
             if context:
