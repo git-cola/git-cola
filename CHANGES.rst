@@ -57,6 +57,14 @@ Usability, bells and whistles
   (`#1602 <https://github.com/git-cola/git-cola/issues/1602>`_)
   (`#1604 <https://github.com/git-cola/git-cola/pull/1604>`_)
 
+* The icon theme will now automatically adapt to the system theme
+  when the icon theme is set to value `default`.
+  (`#1602 <https://github.com/git-cola/git-cola/issues/1593>`_)
+
+* The theme now refreshes itself when the system light/dark
+  mode changes on macOS.
+  (`#1603 <https://github.com/git-cola/git-cola/pull/1603>`_)
+
 Fixes
 -----
 * Closing the main window after opening a DAG window was causing errors
