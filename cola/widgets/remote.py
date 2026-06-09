@@ -496,12 +496,16 @@ class RemoteActionDialog(standard.Dialog):
 
     def select_remote(self, idx, make_current=True):
         """Select a remote by index"""
+        try:
+            remote_name = self.model.remotes[idx]
+        except IndexError:
+            return False
         item = self.remotes.item(idx)
         if item:
             item.setSelected(True)
             if make_current:
                 self.remotes.setCurrentItem(item)
-                self.set_remote_name(item.text())
+                self.set_remote_name(remote_name)
             result = True
         else:
             result = False
