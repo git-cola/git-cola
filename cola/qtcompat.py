@@ -33,6 +33,11 @@ def add_search_path(prefix: str, path: str) -> None:
         QtCore.QDir.addSearchPath(prefix, path)
 
 
+def set_search_paths(prefix: str, paths: list[str]) -> None:
+    if hasattr(QtCore.QDir, 'setSearchPaths'):
+        QtCore.QDir.setSearchPaths(prefix, paths)
+
+
 def set_common_dock_options(window) -> None:
     if not hasattr(window, 'setDockOptions'):
         return
