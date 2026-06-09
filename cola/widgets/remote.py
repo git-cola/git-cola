@@ -3,6 +3,7 @@ import fnmatch
 import os
 import time
 
+from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
@@ -138,6 +139,40 @@ def _emit_push_notification(
     )
 
 
+class RemoteList(QtWidgets.QListWidget):
+    """Interact with a list of remotes"""
+
+    def __init__(self, context, action, parent=None):
+        super().__init__(parent)
+        self.context = context
+        self.values = context.model.remotes
+        if action == PUSH:
+            mode = QtWidgets.QAbstractItemView.ExtendedSelection
+            self.setSelectionMode(mode)
+        self.addItems(self.values)
+
+    def event(self, event):
+        """Display remote details in a tooltip"""
+        if event.type() == QtCore.QEvent.ToolTip:
+            pos = event.pos()
+            item = self.itemAt(pos)
+            if item:
+                idx = self.row(item)
+                if idx < len(self.values):
+                    remote = self.values[idx]
+                    status, remote_details, _ = self.context.git.remote(
+                        'show', '-n', remote
+                    )
+                    if status == 0:
+                        QtWidgets.QToolTip.showText(
+                            event.globalPos(), remote_details, self
+                        )
+            else:
+                QtWidgets.QToolTip.hideText()
+            return True
+        return super().event(event)
+
+
 class RemoteActionDialog(standard.Dialog):
     """Interface for performing remote operations"""
 
@@ -177,12 +212,7 @@ class RemoteActionDialog(standard.Dialog):
         self.remote_name.editingFinished.connect(self.remote_name_edited)
         self.remote_name.textEdited.connect(lambda _: self.remote_name_edited())
 
-        self.remotes = QtWidgets.QListWidget()
-        if action == PUSH:
-            mode = QtWidgets.QAbstractItemView.ExtendedSelection
-            self.remotes.setSelectionMode(mode)
-        self.remotes.addItems(model.remotes)
-
+        self.remotes = RemoteList(context, action)
         self.remote_branch_label = QtWidgets.QLabel()
         self.remote_branch_label.setText(N_('Remote Branch'))
 
