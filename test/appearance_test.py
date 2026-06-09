@@ -3,11 +3,11 @@ import sys
 from unittest.mock import MagicMock
 
 import pytest
-from qtpy import QtGui
-from qtpy import QtWidgets
 
 from cola import app as cola_app
 from cola.widgets.diff import DiffSyntaxHighlighter
+from qtpy import QtGui
+from qtpy import QtWidgets
 
 
 @pytest.fixture(scope='module')
