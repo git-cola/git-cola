@@ -51,6 +51,12 @@ Usability, bells and whistles
   the application is put into fullscreen mode on macOS.
   (`#1600 <https://github.com/git-cola/git-cola/pull/1600>`_)
 
+* The Fetch, Pull and Push dialogs now display the remote URL details in the command
+  display.  Tooltips were added with ``git remote show $remote`` details when hovering
+  over a remote in the Remotes list.
+  (`#1602 <https://github.com/git-cola/git-cola/issues/1602>`_)
+  (`#1604 <https://github.com/git-cola/git-cola/pull/1604>`_)
+
 Fixes
 -----
 * Closing the main window after opening a DAG window was causing errors
