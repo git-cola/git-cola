@@ -32,6 +32,7 @@ On a Debian/Ubuntu system you can install these modules using apt:
     )
     sys.exit(1)  # core.EXIT_FAILURE
 
+from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -182,11 +183,11 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
         result.extend([x for x in icon_themes_env.split(':') if x])
 
     icon_themes_cfg = list(reversed(context.cfg.get_all('cola.icontheme')))
+    if not icon_themes_cfg or icon_themes_cfg[0] == 'default':
+        result.append(detect_system_theme())
+
     if icon_themes_cfg:
         result.extend(icon_themes_cfg)
-
-    if not result:
-        result.append('light')
 
     return result
 
@@ -266,12 +267,13 @@ class ColaApplication:
         qtcompat.install()
         guicmds.install()
         standard.install()
-        icons.install(icon_themes or get_icon_themes(context))
 
         self.context = context
         self.theme: themes.Theme | None = None
         self._install_hidpi_config()
         self._app = ColaQApplication(context, list(argv))
+        icons.install(icon_themes or get_icon_themes(context))
+        # Icons must be installed before setting icons.
         self._app.setWindowIcon(icons.cola())
         self._app.setDesktopFileName('git-cola')
         self._install_style(gui_theme)
@@ -921,3 +923,24 @@ def prepend_path(path) -> None:
     if path not in path_entries:
         path_entries.insert(0, path)
         compat.setenv('PATH', os.pathsep.join(path_entries))
+
+
+def detect_system_theme() -> str:
+    """Detect the current application theme"""
+    # Use colorScheme() when available.  Fallback to QPalette probing.
+    app = qtutils.app()
+    hints = app.styleHints()
+    if hasattr(hints, 'colorScheme'):
+        scheme = hints.colorScheme()
+        if scheme == Qt.ColorScheme.Dark:
+            return 'dark'
+        if scheme == Qt.ColorScheme.Light:
+            return 'light'
+
+    palette = app.palette()
+    window_text = palette.color(QtGui.QPalette.ColorRole.WindowText).lightness()
+    window = palette.color(QtGui.QPalette.ColorRole.Window).lightness()
+    if window_text > window:
+        return 'dark'
+
+    return 'light'
