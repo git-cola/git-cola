@@ -186,10 +186,11 @@ class BranchesTreeWidget(standard.TreeWidget):
         local_tree.basename = N_('Local')
         local = create_toplevel_item(local_tree, icon=icons.branch(), ellipsis=ellipsis)
 
+        tootles = self.get_remote_tootles(model)
         remote_tree = create_tree_entries(model.remote_branches, self._name_filter)
         remote_tree.basename = N_('Remote')
         remote = create_toplevel_item(
-            remote_tree, icon=icons.branch(), ellipsis=ellipsis
+            remote_tree, icon=icons.branch(), ellipsis=ellipsis, tootles=tootles
         )
 
         tags_tree = create_tree_entries(model.tags, self._name_filter)
@@ -204,6 +205,16 @@ class BranchesTreeWidget(standard.TreeWidget):
             self._tree_states = None
 
         self._update_branches()
+
+    def get_remote_tootles(self, model):
+        tootles = {}
+        for remote_name in model.remotes:
+            status, remote_details, _ = self.context.git.remote(
+                'show', '-n', remote_name
+            )
+            if status == 0:
+                tootles[remote_name] = remote_details
+        return tootles
 
     def showEvent(self, event):
         """Defer updating widgets until the widget is visible"""
@@ -556,12 +567,14 @@ class BranchDetailsTask(qtutils.Task):
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-    def __init__(self, name, refname=None, icon=None):
+    def __init__(self, name, refname=None, icon=None, tootle=None):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.name = name
         self.refname = refname
         self.setText(0, name)
         self.setToolTip(0, name)
+        if tootle is not None:
+          self.setToolTip(0, tootle)
         if icon is not None:
             self.setIcon(0, icon)
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
@@ -663,21 +676,24 @@ def create_name_dict(names):
     return tree_names
 
 
-def create_toplevel_item(tree, icon=None, ellipsis=None):
+def create_toplevel_item(tree, icon=None, ellipsis=None, tootles=None):
     """Create a top-level BranchTreeWidgetItem and its children"""
 
     item = BranchTreeWidgetItem(tree.basename, icon=ellipsis)
-    children = create_tree_items(tree.children, icon=icon, ellipsis=ellipsis)
+    children = create_tree_items(tree.children, icon=icon, ellipsis=ellipsis, tootles=tootles)
     if children:
         item.addChildren(children)
     return item
 
 
-def create_tree_items(entries, icon=None, ellipsis=None):
+def create_tree_items(entries, icon=None, ellipsis=None, tootles=None):
     """Create children items for a tree item"""
     result = []
     for tree in entries:
-        item = BranchTreeWidgetItem(tree.basename, refname=tree.refname, icon=icon)
+        if tootles is not None:
+          item = BranchTreeWidgetItem(tree.basename, refname=tree.refname, icon=icon, tootle=tootles[tree.basename])
+        else:
+            item = BranchTreeWidgetItem(tree.basename, refname=tree.refname, icon=icon)
         children = create_tree_items(tree.children, icon=icon, ellipsis=ellipsis)
         if children:
             item.addChildren(children)
