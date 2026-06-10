@@ -574,7 +574,7 @@ class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         self.setText(0, name)
         self.setToolTip(0, name)
         if tootle is not None:
-          self.setToolTip(0, tootle)
+            self.setToolTip(0, tootle)
         if icon is not None:
             self.setIcon(0, icon)
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
@@ -680,7 +680,9 @@ def create_toplevel_item(tree, icon=None, ellipsis=None, tootles=None):
     """Create a top-level BranchTreeWidgetItem and its children"""
 
     item = BranchTreeWidgetItem(tree.basename, icon=ellipsis)
-    children = create_tree_items(tree.children, icon=icon, ellipsis=ellipsis, tootles=tootles)
+    children = create_tree_items(
+        tree.children, icon=icon, ellipsis=ellipsis, tootles=tootles
+    )
     if children:
         item.addChildren(children)
     return item
@@ -691,7 +693,12 @@ def create_tree_items(entries, icon=None, ellipsis=None, tootles=None):
     result = []
     for tree in entries:
         if tootles is not None:
-          item = BranchTreeWidgetItem(tree.basename, refname=tree.refname, icon=icon, tootle=tootles[tree.basename])
+            item = BranchTreeWidgetItem(
+                tree.basename,
+                refname=tree.refname,
+                icon=icon,
+                tootle=tootles[tree.basename],
+            )
         else:
             item = BranchTreeWidgetItem(tree.basename, refname=tree.refname, icon=icon)
         children = create_tree_items(tree.children, icon=icon, ellipsis=ellipsis)
