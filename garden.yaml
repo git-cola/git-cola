@@ -223,6 +223,7 @@ trees:
       quintusfelix: "${gh-https}/quintusfelix/git-cola.git"
       rafaelreuber: "${gh-https}/rafaelreuber/git-cola.git"
       scop: "${gh-https}/scop/git-cola.git"
+      senique: "${gh-https}/senique/git-cola.git"
       sergei-dyshel: "${gh-https}/sergei-dyshel/git-cola.git"
       skunkwerks: "${gh-https}/skunkwerks/git-cola.git"
       sthalik: "${gh-https}/sthalik/git-cola.git"
