@@ -25,7 +25,7 @@ Usability, bells and whistles
   (`#1563 <https://github.com/git-cola/git-cola/pull/1563>`_)
 
 * The Preferences dialog tabs are now scrollable, which prevents issues when
-  the displaying the dialog on smaller displays.
+  displaying the dialog on smaller displays.
   (`#1569 <https://github.com/git-cola/git-cola/issues/1569>`_)
 
 * The diff editor's right-click context menu now disables the `Stage`, `Unstage`, and
@@ -59,7 +59,7 @@ Usability, bells and whistles
 
 * The icon theme will now automatically adapt to the system theme
   when the icon theme is set to value `default`.
-  (`#1602 <https://github.com/git-cola/git-cola/issues/1593>`_)
+  (`#1593 <https://github.com/git-cola/git-cola/issues/1593>`_)
 
 * The theme now refreshes itself when the system light/dark
   mode changes on macOS.
@@ -310,7 +310,7 @@ Usability, bells and whistles
 
 * `git dag` will now open a repository when it is specified on the command-line.
   Previously, the `--repo` option was required in order to specify a repository.
-  The `git dag` positional arguments will now used when `--repo` is unspecified.
+  The `git dag` positional arguments will now be used when `--repo` is unspecified.
 
 * `git dag` now special-cases the root commit when interacting with difftool
   so that diffs are performed against git's builtin empty tree.
@@ -497,7 +497,7 @@ v4.11.0
 
 Usability, bells and whistles
 -----------------------------
-* The DAG viewer will now copy text into the your clipboard when any of the commit ID,
+* The DAG viewer will now copy text into your clipboard when any of the commit ID,
   author, date or summary fields are clicked in the commit diff view.
   (`#1456 <https://github.com/git-cola/git-cola/issues/1456>`_)
 
@@ -531,7 +531,7 @@ Fixes
 
 .. _v4.10.1:
 
-V4.10.1
+v4.10.1
 =======
 
 Fixes
@@ -690,7 +690,7 @@ v4.8.1
 
 Usability, bells and whistles
 -----------------------------
-* The clone dialog now defaults to cloning into the parent directory by default.
+* The clone dialog now defaults to cloning into the parent directory.
   (`#1402 <https://github.com/git-cola/git-cola/issues/1402>`_)
 
 Fixes
@@ -725,7 +725,7 @@ Usability, bells and whistles
 * The `Unstage Selected` action was added to the context menu for unmerged files.
   (`#1397 <https://github.com/git-cola/git-cola/pull/1397>`_)
 
-* ``git cola rebase`` now provides  a ``--rebase-merges`` option and passes the
+* ``git cola rebase`` now provides a ``--rebase-merges`` option and passes the
   same option to ``git rebase`` when `Git v1.18.0` or newer is detected.
 
 Development
@@ -741,7 +741,7 @@ v4.7.1
 
 Packaging
 ---------
-* The `importlib_metadata` dependency which was restored for Python 3.8 and earlier
+* The `importlib_metadata` dependency was restored for Python 3.8 and earlier
   to retain Python 3.7 support. The use of `setuptools_scm` 8.0 and newer to generate
   the `cola/_scm_version.py` version file has been deferred to prevent the need to
   upgrade Python.
@@ -783,7 +783,7 @@ Fixes
   (`#1391 <https://github.com/git-cola/git-cola/pull/1391>`_)
 
 * The `git-cola-sequence-editor` Rebase Editor will now be found correctly
-  in more situatios on Windows.
+  in more situations on Windows.
   (`#1385 <https://github.com/git-cola/git-cola/issues/1385>`_)
   (`#1388 <https://github.com/git-cola/git-cola/pull/1388>`_)
 
@@ -3333,7 +3333,7 @@ Usability, bells and whistles
 Fixes
 -----
 * `git dag` was triggering a traceback on Fedora when parsing Git logs.
-  (`bz #181676 <https://bugzilla.redhat.com/show_bug.cgi?id=1181686>`_)
+  (`bz #1181686 <https://bugzilla.redhat.com/show_bug.cgi?id=1181686>`_)
 
 * inotify expects Unicode paths on Python3.
   (`#393 <https://github.com/git-cola/git-cola/pull/393>`_)
@@ -3986,8 +3986,6 @@ Fixes
 * Fixed the Alt+D Diffstat shortcut.
   (`#159 <https://github.com/git-cola/git-cola/issues/159>`_)
 
-Fixes
------
 * Better error handling when cloning repositories.
 
   We were not handling the case where a git URL has
@@ -4532,7 +4530,7 @@ Fixes
 -----
 * Fixed an error when trying to use "Get Commit Message Template"
   with an undefined "commit.template" git config variable.
-  (`bz #67521 <https://bugzilla.redhat.com/show_bug.cgi?id=675721>`_)
+  (`bz #675721 <https://bugzilla.redhat.com/show_bug.cgi?id=675721>`_)
   (`#72 <https://github.com/git-cola/git-cola/issues/72>`_)
 
 * Properly raise the main window on Mac OS X.
@@ -4756,7 +4754,7 @@ Fixes
 * ``yes`` and ``no`` are now supported as valid booleans
   by the `git config` parser.
 
-* Better defaults are used for `fetch`, `push`, and `pull`..
+* Better defaults are used for `fetch`, `push`, and `pull`.
   (`#43 <https://github.com/git-cola/git-cola/issues/43>`_)
 
 Packaging
