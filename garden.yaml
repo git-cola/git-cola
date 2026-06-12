@@ -157,7 +157,10 @@ trees:
       release: ${activate} ./todo/release --all
       run: ${activate} ./bin/git-cola "$@"
       run/qt6: ${activate} QT_API=PyQt6 ./bin/git-cola "$@"
-      test: ${activate} ${PYTEST} "$@" cola test
+      test: |
+        ${activate}
+        export QT_QPA_PLATFORM=offscreen
+        ${PYTEST} "$@" cola test
       tox: tox run "$@"
       tox/check: tox run -e check "$@"
       version/bump: ./todo/set-version "${version-next}"
