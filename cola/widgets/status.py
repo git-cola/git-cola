@@ -1102,6 +1102,10 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
     def untracked_items(self):
         return qtutils.get_selected_items(self, UNTRACKED_IDX)
 
+    def copy(self):
+        """Called by FocusProxy when Cmd+C / Ctrl+C is pressed."""
+        copy_path(self.context)
+
     def show_selection(self):
         """Show the selected item."""
         context = self.context
