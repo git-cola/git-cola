@@ -38,12 +38,12 @@ msgstr "erreur fatale : « %s » n'est pas un répertoire. Veuillez sélecti
 #: cola/app.py:451
 #, python-format
 msgid "%(app_name)s is already running"
-msgstr ""
+msgstr "%(app_name)s est déja en cours..."
 
 #: cola/app.py:452
 #, python-format
 msgid "%(app_name)s is already running in %(dirname)s (--single-instance)."
-msgstr ""
+msgstr "%(app_name)s est déjà en cours d'éxécution dans %(dirname)s (--single-instance)."
 
 #: cola/app.py:595
 msgid "Error Opening Repository"
@@ -77,7 +77,7 @@ msgstr "Erreur lors de la création du dépôt"
 
 #: cola/cmds.py:143
 msgid "Abort Applying Patch..."
-msgstr ""
+msgstr "Annuler de l'application du correctif..."
 
 #: cola/cmds.py:144
 msgid "Aborting applying the current patch?"
@@ -161,7 +161,7 @@ msgstr ""
 
 #: cola/cmds.py:388
 msgid "Patch failed to apply"
-msgstr ""
+msgstr "Échec de l'application du correctif"
 
 #: cola/cmds.py:400
 msgid "Patch(es) Applied"
@@ -182,11 +182,11 @@ msgstr ""
 
 #: cola/cmds.py:496
 msgid "Checkout files from their branch (MERGE_HEAD)"
-msgstr ""
+msgstr "Récupérer les fichiers depuis leur branche (MERGE_HEAD)"
 
 #: cola/cmds.py:500
 msgid "Checkout files from their branch?"
-msgstr ""
+msgstr "Récupérer les fichiers depuis leur branche?"
 
 #: cola/cmds.py:502
 msgid ""
@@ -229,7 +229,7 @@ msgstr "Impossible d'exécuter « %s » : veuillez configurer un visionneur d
 
 #: cola/cmds.py:614
 msgid "Cherry-pick failed"
-msgstr ""
+msgstr "Échec de la copie"
 
 #: cola/cmds.py:628
 msgid "Revert failed"
@@ -406,29 +406,29 @@ msgstr "Impossible de mettre l'URL de « %(name)s » pour « %(url)s »"
 
 #: cola/cmds.py:1083
 msgid "Sync failed"
-msgstr ""
+msgstr "Échec de la synchronisation"
 
 #: cola/cmds.py:1086
 msgid "Sync complete"
-msgstr ""
+msgstr "Synchronisation terminée"
 
 #: cola/cmds.py:1098 cola/cmds.py:1104 cola/cmds.py:1110 cola/cmds.py:1122
 msgid "Sync out failed"
-msgstr ""
+msgstr "Échec de la synchronisation sortante"
 
 #: cola/cmds.py:1099
 msgid "No current branch"
-msgstr ""
+msgstr "Aucune branche active"
 
 #: cola/cmds.py:1105
 #, python-format
 msgid "No tracking branch configured for %s"
-msgstr ""
+msgstr "Aucune branche suivie configurée pour %s"
 
 #: cola/cmds.py:1111
 #, python-format
 msgid "Invalid tracking branch: %s"
-msgstr ""
+msgstr "Branche suivie invalide %s"
 
 #: cola/cmds.py:1125
 msgid "Sync out complete"
@@ -1876,19 +1876,19 @@ msgstr ""
 
 #: cola/widgets/action.py:76
 msgid "Sync"
-msgstr ""
+msgstr "synchronisation"
 
 #: cola/widgets/action.py:78
 msgid "Integrate changes from tracking branches using \"git pull\""
-msgstr ""
+msgstr "Intégrer les modifications des branches de suivi à l'aide de \"git pull\""
 
 #: cola/widgets/action.py:81
 msgid "Sync out"
-msgstr ""
+msgstr "Synchronisation sortante"
 
 #: cola/widgets/action.py:83
 msgid "Push changes to tracking branch using \"git push\""
-msgstr ""
+msgstr "Envoyer les modifications vers la branche de suivi avec \"git push\""
 
 #: cola/widgets/action.py:86 cola/widgets/main.py:408
 msgid "Stash..."
@@ -3589,7 +3589,7 @@ msgstr ""
 
 #: cola/widgets/main.py:1189
 msgid "Cherry-picking"
-msgstr ""
+msgstr "Copiage de commits"
 
 #: cola/widgets/main.py:1191
 msgid "Merging"
