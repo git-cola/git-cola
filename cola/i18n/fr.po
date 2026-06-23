@@ -38,12 +38,12 @@ msgstr "erreur fatale : « %s » n'est pas un répertoire. Veuillez sélecti
 #: cola/app.py:451
 #, python-format
 msgid "%(app_name)s is already running"
-msgstr "%(app_name)s est déja en cours..."
+msgstr "%(app_name)s est déjà en cours..."
 
 #: cola/app.py:452
 #, python-format
 msgid "%(app_name)s is already running in %(dirname)s (--single-instance)."
-msgstr "%(app_name)s est déjà en cours d'éxécution dans %(dirname)s (--single-instance)."
+msgstr "%(app_name)s est déjà en cours d'exécution dans %(dirname)s (--single-instance)."
 
 #: cola/app.py:595
 msgid "Error Opening Repository"
@@ -77,7 +77,7 @@ msgstr "Erreur lors de la création du dépôt"
 
 #: cola/cmds.py:143
 msgid "Abort Applying Patch..."
-msgstr "Annuler de l'application du correctif..."
+msgstr "Annulation de l'application du correctif..."
 
 #: cola/cmds.py:144
 msgid "Aborting applying the current patch?"
@@ -197,15 +197,15 @@ msgstr ""
 
 #: cola/cmds.py:507 cola/cmds.py:545
 msgid "Checkout Files"
-msgstr ""
+msgstr "Récupérer les fichiers"
 
 #: cola/cmds.py:534
 msgid "Checkout files from our branch (HEAD)"
-msgstr ""
+msgstr " Récupérer les fichiers depuis notre branche (HEAD)"
 
 #: cola/cmds.py:538
 msgid "Checkout files from our branch?"
-msgstr ""
+msgstr "Récupérer les fichiers depuis notre branche?"
 
 #: cola/cmds.py:540
 msgid ""
@@ -233,7 +233,7 @@ msgstr "Échec de la copie"
 
 #: cola/cmds.py:628
 msgid "Revert failed"
-msgstr ""
+msgstr "Échec de l'annulation"
 
 #: cola/cmds.py:679
 #, python-format
@@ -414,7 +414,7 @@ msgstr "Synchronisation terminée"
 
 #: cola/cmds.py:1098 cola/cmds.py:1104 cola/cmds.py:1110 cola/cmds.py:1122
 msgid "Sync out failed"
-msgstr "Échec de la synchronisation sortante"
+msgstr "Échec de la Synchronisation sortante"
 
 #: cola/cmds.py:1099
 msgid "No current branch"
@@ -2758,7 +2758,7 @@ msgstr "Graphe"
 
 #: cola/widgets/dag.py:1031
 msgid "Display Worktree Status"
-msgstr ""
+msgstr "État de l'arbre de travail"
 
 #: cola/widgets/dag.py:1034 cola/widgets/main.py:650
 msgid "Lock Layout"
@@ -2779,11 +2779,11 @@ msgstr " - DAG"
 
 #: cola/widgets/dag.py:1337
 msgid "Trace Evolution of Line Range"
-msgstr ""
+msgstr "Suivi de l'évolution d'une plage de lignes"
 
 #: cola/widgets/dag.py:1338
 msgid "Select Line Range"
-msgstr ""
+msgstr "Sélectionner une plage de lignes"
 
 #: cola/widgets/dag.py:1917
 msgid "Select Parent"
@@ -2803,11 +2803,11 @@ msgstr "Sélectionner l'enfant le plus récent"
 
 #: cola/widgets/diff.py:211
 msgid "Copy Diff"
-msgstr ""
+msgstr "Copier le diff"
 
 #: cola/widgets/diff.py:576 cola/widgets/diff.py:1785
 msgid "Search in Diff"
-msgstr ""
+msgstr "Rechercher dans le diff"
 
 #: cola/widgets/diff.py:584
 msgid "Loading..."
@@ -2835,23 +2835,23 @@ msgstr "Afficher le numéro des lignes"
 
 #: cola/widgets/diff.py:867
 msgid "Show filenames"
-msgstr ""
+msgstr "Afficher les noms de fichiers"
 
 #: cola/widgets/diff.py:869
 msgid "Enable word wrapping"
-msgstr ""
+msgstr "Activer le retour automatique à la ligne"
 
 #: cola/widgets/diff.py:872
 msgid "Maximum diff size in megabytes (MB)"
-msgstr ""
+msgstr "Taille maximale du diff en mégaoctets (MB)"
 
 #: cola/widgets/diff.py:879
 msgid "The maximum diff size in megabytes (MB)"
-msgstr ""
+msgstr "La taille maximale du diff en mégaoctets (MB)"
 
 #: cola/widgets/diff.py:882
 msgid "Unlimited"
-msgstr ""
+msgstr "Illimité"
 
 #: cola/widgets/diff.py:896 cola/widgets/diff.py:920
 msgid "Diff Options"
@@ -2904,15 +2904,15 @@ msgstr "Appliquer"
 
 #: cola/widgets/diff.py:1029 cola/widgets/diff.py:1339
 msgid "Revert Selected Lines"
-msgstr "Inverser les lignes sélectionnées"
+msgstr "Annuler les lignes sélectionnées"
 
 #: cola/widgets/diff.py:1045
 msgid "Edit and Apply"
-msgstr ""
+msgstr "Éditer et appliquer"
 
 #: cola/widgets/diff.py:1052
 msgid "Edit and Revert"
-msgstr ""
+msgstr "Éditer et annuler"
 
 #: cola/widgets/diff.py:1130
 msgid "Unstage Selected Lines"
@@ -2933,51 +2933,51 @@ msgstr "Pré-commiter lignes sélectionnées"
 
 #: cola/widgets/diff.py:1166
 msgid "Edit Selected Lines to Stage..."
-msgstr ""
+msgstr "Éditer et ajouter les lignes sélectionnées à l'index..."
 
 #: cola/widgets/diff.py:1167
 msgid "Revert Selected Lines..."
-msgstr "Inverser les lignes sélectionnées..."
+msgstr "Annuler les lignes sélectionnées..."
 
 #: cola/widgets/diff.py:1168
 msgid "Edit Selected Lines to Revert..."
-msgstr ""
+msgstr "Éditer les lignes sélectionnées pour annuler..."
 
 #: cola/widgets/diff.py:1170
 msgid "Stage Diff Hunk"
-msgstr "Pré-commiter cette section"
+msgstr "Préparer cette section pour le commit"
 
 #: cola/widgets/diff.py:1171
 msgid "Edit Diff Hunk to Stage..."
-msgstr ""
+msgstr "Éditer le diff pour indexer..."
 
 #: cola/widgets/diff.py:1172
 msgid "Revert Diff Hunk..."
-msgstr "Rétablir la section de différences..."
+msgstr "Annuler la section de différences..."
 
 #: cola/widgets/diff.py:1173
 msgid "Edit Diff Hunk to Revert..."
-msgstr ""
+msgstr "Éditer le bloc du diff pour annuler..."
 
 #: cola/widgets/diff.py:1237
 msgid "Edit Selected Lines to Unstage..."
-msgstr ""
+msgstr "Éditer les lignes sélectionnées pour désindexer..."
 
 #: cola/widgets/diff.py:1239
 msgid "Edit Diff Hunk to Unstage..."
-msgstr ""
+msgstr "Éditer le bloc du diff pour désindexer..."
 
 #: cola/widgets/diff.py:1338
 msgid "Revert Selected Lines?"
-msgstr "Inverser les lignes sélectionnées ?"
+msgstr "Annuler les lignes sélectionnées ?"
 
 #: cola/widgets/diff.py:1341
 msgid "Revert Diff Hunk?"
-msgstr "Rétablir la section de différences ?"
+msgstr "Annuler la section de différences ?"
 
 #: cola/widgets/diff.py:1342
 msgid "Revert Diff Hunk"
-msgstr "Rétablir la section de différences"
+msgstr "Annuler la section de différences"
 
 #: cola/widgets/diff.py:1347
 msgid ""
@@ -3589,7 +3589,7 @@ msgstr ""
 
 #: cola/widgets/main.py:1189
 msgid "Cherry-picking"
-msgstr "Copiage de commits"
+msgstr "Cherry-pick en cours..."
 
 #: cola/widgets/main.py:1191
 msgid "Merging"
