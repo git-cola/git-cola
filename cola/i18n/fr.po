@@ -81,7 +81,7 @@ msgstr "Annulation de l'application du correctif..."
 
 #: cola/cmds.py:144
 msgid "Aborting applying the current patch?"
-msgstr ""
+msgstr "Abandonner l'application du correctif en cours ?"
 
 #: cola/cmds.py:146
 msgid ""
@@ -91,7 +91,7 @@ msgstr ""
 
 #: cola/cmds.py:149
 msgid "Abort Applying Patch"
-msgstr ""
+msgstr "Abandonner l'application du correctif"
 
 #: cola/cmds.py:163 cola/cmds.py:193 cola/cmds.py:224 cola/cmds.py:308
 #: cola/cmds.py:317 cola/cmds.py:332 cola/cmds.py:342 cola/cmds.py:487
@@ -107,11 +107,11 @@ msgstr "Erreur"
 
 #: cola/cmds.py:173 cola/widgets/main.py:313
 msgid "Abort Cherry-Pick..."
-msgstr ""
+msgstr "Abandonner le cherry-pick..."
 
 #: cola/cmds.py:174
 msgid "Aborting the current cherry-pick?"
-msgstr ""
+msgstr "Abandonner le cherry-pick en cours ?"
 
 #: cola/cmds.py:176
 msgid ""
@@ -121,7 +121,7 @@ msgstr ""
 
 #: cola/cmds.py:179
 msgid "Abort Cherry-Pick"
-msgstr ""
+msgstr "Abandonner le cherry-pick"
 
 #: cola/cmds.py:203 cola/widgets/main.py:349
 msgid "Abort Merge..."
@@ -174,11 +174,11 @@ msgstr "%d patch(s) appliqué(s)."
 
 #: cola/cmds.py:412
 msgid "Failed to commit and continue applying patches"
-msgstr ""
+msgstr "Échec du commit et de la poursuite de l'application des correctifs"
 
 #: cola/cmds.py:428
 msgid "Failed to continue applying patches after skipping the current patch"
-msgstr ""
+msgstr "Échec de la poursuite de l'application des correctifs après avoir ignoré le correctif en cours"
 
 #: cola/cmds.py:496
 msgid "Checkout files from their branch (MERGE_HEAD)"
@@ -432,7 +432,7 @@ msgstr "Branche suivie invalide %s"
 
 #: cola/cmds.py:1125
 msgid "Sync out complete"
-msgstr ""
+msgstr "Synchronisation sortante terminée"
 
 #: cola/cmds.py:1164
 msgid "Delete Bookmark?"
@@ -586,7 +586,7 @@ msgstr "Ouvrir en utilisant l'application par défaut"
 
 #: cola/cmds.py:2060
 msgid "Open Directory"
-msgstr ""
+msgstr "Ouvrir le dossier"
 
 #: cola/cmds.py:2080
 msgid "Open Parent Directory"
@@ -594,11 +594,11 @@ msgstr "Ouvrir le répertoire parent"
 
 #: cola/cmds.py:2093
 msgid "Open Worktree"
-msgstr ""
+msgstr "Ouvrir l'arborescence de travail"
 
 #: cola/cmds.py:2316 cola/cmds.py:2323
 msgid "Update stacked branches when rebasing?"
-msgstr ""
+msgstr "Mettre à jour les branches empilées lors du rebase ?"
 
 #: cola/cmds.py:2318
 msgid ""
@@ -609,14 +609,20 @@ msgid ""
 "\n"
 "Using this feature is helpful for \"stacked\" branch workflows."
 msgstr ""
+"\"git rebase --update-refs\" met automatiquement à jour, de force,\n"
+"toutes les branches qui pointent vers des commits en cours de rebase.\n"
+"\n"
+"Les breanches ouvertes dans une arborescence de travail ne sont pas mises à jour.\n"
+"\n"
+"Cette fonctionnalité est utile pour les flux de travail avec des branches \"empilées\"."
 
 #: cola/cmds.py:2324
 msgid "Update stacked branches"
-msgstr ""
+msgstr "Mettre à jour les branches empilées"
 
 #: cola/cmds.py:2325
 msgid "Do not update stacked branches"
-msgstr ""
+msgstr "Ne pas mettre à jour les branches empilées"
 
 #: cola/cmds.py:2353
 msgid "Unable to rebase"
@@ -950,7 +956,7 @@ msgstr "Lancer l'outil de différence"
 
 #: cola/difftool.py:86
 msgid "git cola diff"
-msgstr ""
+msgstr "git cola diff"
 
 #: cola/difftool.py:101 cola/widgets/compare.py:69
 msgid "Compare"
@@ -966,41 +972,41 @@ msgstr "Difftool"
 
 #: cola/editpatch.py:34
 msgid "Edit the following patch, which will then be applied to the worktree to revert the changes:"
-msgstr ""
+msgstr "Modifiez le patch suivant, qui sera ensuite appliqué à l'arborescence de travail pour annuler les changements :"
 
 #: cola/editpatch.py:40
 msgid "Edit the following patch, which will then be applied to the staging area to unstage the changes:"
-msgstr ""
+msgstr "Modifiez le patch suivant, qui sera ensuite appliqué à la zone d'index pour retirer les changements de l'index :"
 
 #: cola/editpatch.py:45
 msgid "Edit the following patch, which will then be applied to the staging area to stage the changes:"
-msgstr ""
+msgstr "Modifiez le patch suivant, qui sera ensuite appliqué à la zone d'index pour indexer les changements :"
 
 #: cola/editpatch.py:55
 msgid "To avoid applying removal lines ('-'), change them to context lines (' ')."
-msgstr ""
+msgstr "Pour éviter d'appliquer les lignes de suppression ('-'), remplacez-les par des lignes de contexte (' ')."
 
 #: cola/editpatch.py:57
 msgid "To avoid applying addition lines ('+'), delete them."
-msgstr ""
+msgstr "Pour éviter d'appliquer les lignes d'ajout ('+'), supprimez-les."
 
 #: cola/editpatch.py:58
 msgid "To abort applying this patch, remove all lines."
-msgstr ""
+msgstr "Pour annuler l'application de ce patch, supprimez toutes les lignes."
 
 #: cola/editpatch.py:59
 #, python-format
 msgid "Lines starting with '%s' will be ignored."
-msgstr ""
+msgstr "Les lignes commençant par '%s' seront ignorées."
 
 #: cola/editpatch.py:61
 msgid "It is not necessary to update the hunk header lines as they will be regenerated automatically."
-msgstr ""
+msgstr "Il n'est pas nécessaire de mettre à jour les lignes d'en-tête des hunks, car elles seront régénérées automatiquement."
 
 #: cola/editpatch.py:88
 #, python-format
 msgid "Editor returned %s exit code.  Not applying patch."
-msgstr ""
+msgstr "L'éditeur a renvoyé le code de sortie %s. Patch non appliqué."
 
 #: cola/fsmonitor.py:152
 msgid "File system change monitoring: enabled.\n"
@@ -1034,7 +1040,7 @@ msgstr "Il n'y a rien à faire"
 
 #: cola/gitcmds.py:939
 msgid "Hint: The \"Actions > Abort Cherry-Pick\" menu action can be used to cancel the current cherry-pick."
-msgstr ""
+msgstr "Astuce : l'action de menu « Actions > Abandonner le cherry-pick » peut être utilisée pour annuler le cherry-pick en cours."
 
 #: cola/guicmds.py:42 cola/widgets/branch.py:292
 msgid "Delete Remote Branch"
@@ -1087,7 +1093,7 @@ msgstr "Exporter les patchs"
 
 #: cola/guicmds.py:192
 msgid "Diff Against Commit"
-msgstr ""
+msgstr "Diff par rapport au commit"
 
 #: cola/guicmds.py:192 cola/widgets/dag.py:1005 cola/widgets/diff.py:905
 #: cola/widgets/main.py:166 cola/widgets/main.py:815
@@ -1101,11 +1107,11 @@ msgstr "Ouvrir un dépôt Git"
 
 #: cola/guicmds.py:259
 msgid "Quick Open Repository"
-msgstr ""
+msgstr "Ouverture rapide d'un dépôt"
 
 #: cola/guicmds.py:260 cola/widgets/bookmarks.py:61
 msgid "Search repositories by name..."
-msgstr ""
+msgstr "Rechercher les dépôts par nom..."
 
 #: cola/guicmds.py:280
 msgid "Load Commit Message"
@@ -1146,7 +1152,7 @@ msgstr "Tout réinitialiser (Garder les modifications non pré-commitées)"
 
 #: cola/guicmds.py:467 cola/widgets/main.py:661
 msgid "Load Layout"
-msgstr ""
+msgstr "Charger la disposition"
 
 #: cola/hidpi.py:41
 msgid "Auto"
@@ -1162,7 +1168,7 @@ msgstr "1x"
 
 #: cola/hidpi.py:44
 msgid "x 1.25"
-msgstr ""
+msgstr "1,25x"
 
 #: cola/hidpi.py:45
 msgid "x 1.5"
@@ -1295,7 +1301,7 @@ msgstr "Commit"
 
 #: cola/sequenceeditor.py:397
 msgid "Remarks"
-msgstr ""
+msgstr "Remarques"
 
 #: cola/sequenceeditor.py:398 cola/widgets/dag.py:716
 msgid "Summary"
@@ -1349,7 +1355,7 @@ msgstr "Actions"
 
 #: cola/sequenceeditor.py:653
 msgid "Toggle Remark"
-msgstr ""
+msgstr "Basculer la remarque"
 
 #: cola/sequenceeditor.py:927
 msgid ""
@@ -1434,19 +1440,19 @@ msgstr "Simple vert foncé"
 
 #: cola/themes.py:778
 msgid "MacOS Aqua light"
-msgstr ""
+msgstr "MacOS Aqua clair"
 
 #: cola/themes.py:782
 msgid "MacOS Aqua dark"
-msgstr ""
+msgstr "MacOS Aqua sombre"
 
 #: cola/themes.py:788
 msgid "MacOS Vibrant light"
-msgstr ""
+msgstr "MacOS Vibrant clair"
 
 #: cola/themes.py:794
 msgid "MacOS Vibrant dark"
-msgstr ""
+msgstr "MacOS Vibrant sombre"
 
 #: cola/models/browse.py:32 cola/widgets/bookmarks.py:471
 #: cola/widgets/createtag.py:59 cola/widgets/editremotes.py:493
@@ -1511,29 +1517,29 @@ msgstr "Source modifiée"
 
 #: cola/models/dag.py:342
 msgid "STAGE: changes ready to commit"
-msgstr ""
+msgstr "INDEX : changements prêts à être validés"
 
 #: cola/models/dag.py:343
 msgid "WORKTREE: unstaged changes"
-msgstr ""
+msgstr "ARBORESCENCE DE TRAVAIL : changements non indexés"
 
 #: cola/models/main.py:655
 #, python-format
 msgid "http proxy configured by \"git config http.proxy %(url)s\""
-msgstr ""
+msgstr "proxy HTTP configuré par \"git config http.proxy %(url)s\""
 
 #: cola/models/main.py:690
 msgid "http proxy configured by the \"http_proxy\" environment variable"
-msgstr ""
+msgstr "proxy HTTP configuré par la variable d'environnement \"http_proxy\""
 
 #: cola/models/main.py:694 cola/models/main.py:705
 #, python-format
 msgid "%(scheme)s proxy configured from %(desktop)s settings: %(url)s"
-msgstr ""
+msgstr "proxy %(scheme)s configuré à partir des paramètres de %(desktop)s : %(url)s"
 
 #: cola/models/main.py:701
 msgid "https proxy configured by the \"https_proxy\" environment variable"
-msgstr ""
+msgstr "proxy HTTPS configuré par la variable d'environnement \"https_proxy\""
 
 #: cola/models/stash.py:144
 msgid "Error Renaming Stash"
@@ -1844,11 +1850,11 @@ msgstr "Raccourcis"
 
 #: cola/widgets/action.py:58
 msgid "Stage changes using \"git add\""
-msgstr ""
+msgstr "Indexer les changements avec \"git add\""
 
 #: cola/widgets/action.py:61
 msgid "Unstage changes using \"git reset\""
-msgstr ""
+msgstr "Retirer les changements de l'index avec \"git reset\""
 
 #: cola/widgets/action.py:65 cola/widgets/main.py:369
 msgid "Fetch..."
@@ -1856,7 +1862,7 @@ msgstr "Récupérer..."
 
 #: cola/widgets/action.py:67 cola/widgets/main.py:370
 msgid "Fetch from one or more remotes using \"git fetch\""
-msgstr ""
+msgstr "Récupérer depuis un ou plusieurs dépôts distants avec \"git fetch\""
 
 #: cola/widgets/action.py:70 cola/widgets/main.py:378
 msgid "Push..."
@@ -1864,7 +1870,7 @@ msgstr "Pousser..."
 
 #: cola/widgets/action.py:70 cola/widgets/main.py:379
 msgid "Push to one or more remotes using \"git push\""
-msgstr ""
+msgstr "Poussser vers un ou plusieurs dépôts distants avec \"git push\""
 
 #: cola/widgets/action.py:73 cola/widgets/main.py:387
 msgid "Pull..."
@@ -1872,7 +1878,7 @@ msgstr "Tirer..."
 
 #: cola/widgets/action.py:73 cola/widgets/main.py:388
 msgid "Integrate changes using \"git pull\""
-msgstr ""
+msgstr "Intégrer les changements avec \"git pull\""
 
 #: cola/widgets/action.py:76
 msgid "Sync"
@@ -1896,15 +1902,15 @@ msgstr "Cacher..."
 
 #: cola/widgets/action.py:88 cola/widgets/main.py:409
 msgid "Temporarily stash away uncommitted changes using \"git stash\""
-msgstr ""
+msgstr "Mettre temporairement de côté les changements non validés avec \"git stash\""
 
 #: cola/widgets/action.py:91
 msgid "Exit Diff"
-msgstr ""
+msgstr "Quitter le diff"
 
 #: cola/widgets/action.py:91
 msgid "Exit Diff mode"
-msgstr ""
+msgstr "Quitter le mode diff"
 
 #: cola/widgets/archive.py:111
 msgid "Save Archive"
@@ -2170,7 +2176,7 @@ msgstr "Sélectionner la version précédente"
 
 #: cola/widgets/browse.py:587 cola/widgets/browse.py:604
 msgid "Error Saving File"
-msgstr ""
+msgstr "Erreur lors de l'enregistrement du fichier"
 
 #: cola/widgets/browse.py:609
 #, python-format
@@ -2316,11 +2322,11 @@ msgstr "Corriger le dernier commit"
 
 #: cola/widgets/commitmsg.py:153 cola/widgets/commitmsg.py:917
 msgid "Set Commit Date"
-msgstr ""
+msgstr "Définir la date du commit"
 
 #: cola/widgets/commitmsg.py:159 cola/widgets/commitmsg.py:1107
 msgid "Set Commit Author"
-msgstr ""
+msgstr "Définir l'auteur du commit"
 
 #: cola/widgets/commitmsg.py:166
 msgid "Bypass Commit Hooks"
@@ -2348,19 +2354,19 @@ msgstr "Réparer le commit précédent"
 
 #: cola/widgets/commitmsg.py:202
 msgid "Cancel the commit author override."
-msgstr ""
+msgstr "Annuler la modification forcée de l'auteur du commit."
 
 #: cola/widgets/commitmsg.py:204
 msgid "A commit will be recorded with this author"
-msgstr ""
+msgstr "Un commit sera enregistré avec cet auteur"
 
 #: cola/widgets/commitmsg.py:209
 msgid "A commit will be recorded with this date and time"
-msgstr ""
+msgstr "Un commit sera enregistré avec cette date et cette heure"
 
 #: cola/widgets/commitmsg.py:214
 msgid "Cancel the commit date override."
-msgstr ""
+msgstr "Annuler la modification forcée de la date du commit."
 
 #: cola/widgets/commitmsg.py:399
 msgid "Clear commit message?"
@@ -2449,52 +2455,52 @@ msgstr "Sélectionner commit"
 #: cola/widgets/commitmsg.py:771
 #, python-format
 msgid "Setting commit date to %s"
-msgstr ""
+msgstr "Définition de la date du commit à %s"
 
 #: cola/widgets/commitmsg.py:800
 #, python-format
 msgid "Setting commit author to %s"
-msgstr ""
+msgstr "Définition de l'auteur du commit à %s"
 
 #: cola/widgets/commitmsg.py:861 cola/widgets/commitmsg.py:930
 msgid "Decrement"
-msgstr ""
+msgstr "Diminuer"
 
 #: cola/widgets/commitmsg.py:868 cola/widgets/commitmsg.py:927
 msgid "Increment"
-msgstr ""
+msgstr "Augmenter"
 
 #: cola/widgets/commitmsg.py:875
 msgid "Reset time to latest commit"
-msgstr ""
+msgstr "Réinitialiser l'heure sur le dernier commit"
 
 #: cola/widgets/commitmsg.py:881
 msgid "Reset time to current time"
-msgstr ""
+msgstr "Réinitialiser l'heure sur l'heure actuelle"
 
 #: cola/widgets/commitmsg.py:887
 msgid "Set Date and Time"
-msgstr ""
+msgstr "Définir la date et l'heure"
 
 #: cola/widgets/commitmsg.py:1050
 msgid "Override the commit author when authoring commits"
-msgstr ""
+msgstr "Remplacer l'auteur du commit lors de la création des commits"
 
 #: cola/widgets/commitmsg.py:1060
 msgid "Set author to match the latest commit"
-msgstr ""
+msgstr "Définir l'auteur pour correspondre au dernier commit"
 
 #: cola/widgets/commitmsg.py:1066
 msgid "Reset author to the current author"
-msgstr ""
+msgstr "Réinitialiser l'auteur sur l'auteur actuel"
 
 #: cola/widgets/commitmsg.py:1072
 msgid "Reset to default author"
-msgstr ""
+msgstr "Réinitialiser l'auteur par défaut"
 
 #: cola/widgets/commitmsg.py:1078
 msgid "Set Author"
-msgstr ""
+msgstr "Définir l'auteur"
 
 #: cola/widgets/commitmsg.py:1165
 msgid "Commit summary"
@@ -2677,7 +2683,7 @@ msgstr "Emprunter le HEAD détaché"
 
 #: cola/widgets/dag.py:534
 msgid "Rebase to this commit"
-msgstr ""
+msgstr "Rebase sur ce commit"
 
 #: cola/widgets/dag.py:551
 msgid "Restore Worktree and Reset All (Keep Unstaged Edits)"
@@ -2689,35 +2695,35 @@ msgstr "Maintenir le fichier..."
 
 #: cola/widgets/dag.py:583 cola/widgets/filelist.py:42
 msgid "Grab File from Parent Commit..."
-msgstr ""
+msgstr "Récupérer le fichier depuis le commit parent..."
 
 #: cola/widgets/dag.py:591 cola/widgets/filelist.py:45
 msgid "Trace Evolution of Line Range..."
-msgstr ""
+msgstr "Tracer l'évolution d'une plage de lignes..."
 
 #: cola/widgets/dag.py:608 cola/widgets/diff.py:1533
 msgid "Copy Commit (Short)"
-msgstr ""
+msgstr "Copier le commit (court)"
 
 #: cola/widgets/dag.py:622
 msgid "Commits authored by me"
-msgstr ""
+msgstr "Commits dont je suis l'auteur"
 
 #: cola/widgets/dag.py:625
 msgid "Pickaxe search for changes containing text"
-msgstr ""
+msgstr "Recherche pickaxe des changements contenant du texte"
 
 #: cola/widgets/dag.py:629
 msgid "Search commit messages"
-msgstr ""
+msgstr "Rechercher dans les messages de commit"
 
 #: cola/widgets/dag.py:633
 msgid "Ignore merge commits"
-msgstr ""
+msgstr "Ignorer les commits de fusion"
 
 #: cola/widgets/dag.py:636
 msgid "Filter commits by line range"
-msgstr ""
+msgstr "Filtrer les commits par plage de lignes"
 
 #: cola/widgets/dag.py:716
 msgid "Date, Time"
@@ -2989,48 +2995,48 @@ msgstr ""
 
 #: cola/widgets/diff.py:1408 cola/widgets/main.py:701
 msgid "Patches"
-msgstr ""
+msgstr "Patchs"
 
 #: cola/widgets/diff.py:1412
 msgid "Export Patch"
-msgstr ""
+msgstr "Exporter le patch"
 
 #: cola/widgets/diff.py:1419
 msgid "Append Patch"
-msgstr ""
+msgstr "Ajouter un patch"
 
 #: cola/widgets/diff.py:1436
 msgid "Choose Patch..."
-msgstr ""
+msgstr "Choisir un patch..."
 
 #: cola/widgets/diff.py:1488
 msgid "Append Patch..."
-msgstr ""
+msgstr "Ajouter un patch..."
 
 #: cola/widgets/diff.py:1515
 msgid "Error writing patch"
-msgstr ""
+msgstr "Erreur lors de l'écriture du patch"
 
 #: cola/widgets/diff.py:1516
 #, python-format
 msgid "Unable to write patch to \"%s\". Check permissions?"
-msgstr ""
+msgstr "Impossible d'écrire le patch dans \"%s\". Vérifier les permissions ?"
 
 #: cola/widgets/diff.py:1529
 msgid "Click to Copy"
-msgstr ""
+msgstr "Cliquer pour copier"
 
 #: cola/widgets/diff.py:1585
 msgid "Copy Name"
-msgstr ""
+msgstr "Copier le nom"
 
 #: cola/widgets/diff.py:1591
 msgid "Copy Email"
-msgstr ""
+msgstr "Copier l'e-mail"
 
 #: cola/widgets/diff.py:1596
 msgid "Send Email"
-msgstr ""
+msgstr "Envoyer l'e-mail"
 
 #: cola/widgets/diff.py:1878
 msgid "Apply Patches"
@@ -3134,7 +3140,7 @@ msgstr "Afficher l'historique"
 
 #: cola/widgets/filelist.py:172
 msgid "Toggle remark of touching commits"
-msgstr ""
+msgstr "Basculer la remarque des commits concernés"
 
 #: cola/widgets/finder.py:64
 msgid ""
@@ -3249,7 +3255,7 @@ msgstr ""
 
 #: cola/widgets/log.py:32
 msgid "Clear"
-msgstr ""
+msgstr "Effacer"
 
 #: cola/widgets/log.py:39 cola/widgets/log.py:141
 msgid "Right-click links to open:"
@@ -3266,7 +3272,7 @@ msgstr "Messages distants"
 
 #: cola/widgets/main.py:84
 msgid "Browser"
-msgstr "Parcourir"
+msgstr "Navigateur"
 
 #: cola/widgets/main.py:106
 msgid "Favorites"
@@ -3418,11 +3424,11 @@ msgstr "Obtenir un modèle de message de commit"
 
 #: cola/widgets/main.py:521
 msgid "Against Commit... (Diff Mode)"
-msgstr ""
+msgstr "Par rapport au commit... (mode diff)"
 
 #: cola/widgets/main.py:527
 msgid "Exit Diff Mode"
-msgstr ""
+msgstr "Quitter le mode diff"
 
 #: cola/widgets/main.py:532
 msgid "Expression..."
@@ -3490,11 +3496,11 @@ msgstr "Réinitialiser la mise en page"
 
 #: cola/widgets/main.py:658
 msgid "Save Layout"
-msgstr ""
+msgstr "Enregistrer la disposition"
 
 #: cola/widgets/main.py:666
 msgid "Quick Open..."
-msgstr ""
+msgstr "Ouverture rapide..."
 
 #: cola/widgets/main.py:682
 msgid "&File"
@@ -3547,7 +3553,7 @@ msgstr "Nouvelle barre d'outils"
 
 #: cola/widgets/main.py:1031
 msgid "Layouts"
-msgstr ""
+msgstr "Dispositions"
 
 #: cola/widgets/main.py:1136
 msgid ""
@@ -3585,7 +3591,7 @@ msgstr "Correction"
 
 #: cola/widgets/main.py:1187
 msgid "Diff Mode"
-msgstr ""
+msgstr "Mode diff"
 
 #: cola/widgets/main.py:1189
 msgid "Cherry-picking"
@@ -3601,7 +3607,7 @@ msgstr "Rétablir"
 
 #: cola/widgets/main.py:1195
 msgid "Applying Patch"
-msgstr ""
+msgstr "Application du correctif"
 
 #: cola/widgets/merge.py:37 cola/widgets/merge.py:40
 msgid "Revision to Merge"
@@ -3659,6 +3665,9 @@ msgid ""
 "Relative paths are relative to the current repository.\n"
 "Absolute path are used as-is."
 msgstr ""
+"Répertoire par défaut lors de l'export des patchs.\n"
+"Les chemins relatifs sont relatifs au dépôt courant.\n"
+"Les chemins absolus sont utilisés tels quels."
 
 #: cola/widgets/prefs.py:134
 msgid ""
@@ -3685,30 +3694,56 @@ msgid ""
 "\n"
 "    # ------------------------ >8 ------------------------"
 msgstr ""
+"\n"
+"Cette option détermine comment le message de commit fourni doit être\n"
+"nettoyé avant validation.\n"
+"\n"
+"Le <mode> peut être strip, whitespace, verbatim, scissors ou default.\n"
+"\n"
+"strip\n"
+"    Supprime les lignes vides initiales et finales, les espaces en fin de ligne,\n"
+"    les commentaires et compacte les lignes vides consécutives.\n"
+"\n"
+"whitespace\n"
+"    Identique à strip sauf que les #commentaires ne sont pas supprimés.\n"
+"\n"
+"verbatim\n"
+"    Ne modifie pas le message du tout.\n"
+"\n"
+"scissors\n"
+"    Identique à whitespace sauf que tout ce qui suit (et comprend) la ligne\n"
+"    indiquée ci-dessous est tronqué, si le message doit être modifié.\n"
+"    \"#\" peut être personnalisé avec core.commentChar.\n"
+"\n"
+"    # ------------------------ >8 ------------------------"
 
 #: cola/widgets/prefs.py:172
 msgid "Enable file system change monitoring using inotify on Linux and win32event on Windows"
-msgstr ""
+msgstr "Activer la surveillance des changements du système de fichiers avec inotify sur Linux et win32event sur Windows"
 
 #: cola/widgets/prefs.py:179
 msgid ""
 "Milliseconds to wait between filesystem change events.\n"
 "Hint: 5000 ms is 5 seconds. 60000 ms is one minute. 360000 ms is 1 hour."
 msgstr ""
+"Millisecondes à attendre entre les événements de changement du système de fichiers.\n"
+"Astuce : 5000 ms correspondent à 5 secondes. 60000 ms à une minute. 360000 ms à 1 heure."
 
 #: cola/widgets/prefs.py:187
 msgid ""
 "The date-time format used when displaying dates in Git DAG.\n"
 "This value is passed to git log --date=<format>"
 msgstr ""
+"Format date-heure utilisé lors de l'affichage des dates dans le DAG Git.\n"
+"Cette valeur est transmise à git log --date=<format>"
 
 #: cola/widgets/prefs.py:192
 msgid "Use gravatar.com to lookup icons for author emails"
-msgstr ""
+msgstr "Utiliser gravatar.com pour rechercher les icônes des adresses e-mail des auteurs"
 
 #: cola/widgets/prefs.py:195 cola/widgets/prefs.py:236
 msgid "Display desktop notifications using popup dialogs"
-msgstr ""
+msgstr "Afficher les notifications du bureau à l'aide de boîtes de dialogue contextuelles"
 
 #: cola/widgets/prefs.py:198
 msgid "Enable path autocompletion in tools"
@@ -3716,7 +3751,7 @@ msgstr "Activer l’auto-complétion des chemins dans les outils"
 
 #: cola/widgets/prefs.py:201
 msgid "Enable detection and configuration of HTTP proxy settings"
-msgstr ""
+msgstr "Activer la détection et la configuration des paramètres de proxy HTTP"
 
 #: cola/widgets/prefs.py:205
 msgid "Email"
@@ -3724,7 +3759,7 @@ msgstr "Email"
 
 #: cola/widgets/prefs.py:208
 msgid "Patches Directory"
-msgstr ""
+msgstr "Répertoire des patchs"
 
 #: cola/widgets/prefs.py:209
 msgid "Number of Diff Context Lines"
@@ -3732,7 +3767,7 @@ msgstr "Nombre de lignes de contexte dans les diffs"
 
 #: cola/widgets/prefs.py:210
 msgid "Log Date Format"
-msgstr ""
+msgstr "Format de date des journaux"
 
 #: cola/widgets/prefs.py:214
 msgid "Automatically Load Commit Message Template"
@@ -3740,11 +3775,11 @@ msgstr "Charger automatiquement le modèle de message de commit"
 
 #: cola/widgets/prefs.py:216
 msgid "Commit Message Cleanup"
-msgstr ""
+msgstr "Nettoyage du message de commit"
 
 #: cola/widgets/prefs.py:220
 msgid "Update stacked branches/refs when rebasing"
-msgstr ""
+msgstr "Mettre à jour les branches/refs empilées lors du rebase"
 
 #: cola/widgets/prefs.py:223
 msgid "Show Diffstat After Merge"
@@ -3764,19 +3799,19 @@ msgstr "Afficher les fichiers non suivis"
 
 #: cola/widgets/prefs.py:229
 msgid "Enable Filesystem Monitoring"
-msgstr ""
+msgstr "Activer la surveillance du système de fichiers"
 
 #: cola/widgets/prefs.py:230
 msgid "Filesystem Monitoring Event Delay"
-msgstr ""
+msgstr "Délai des événements de surveillance du système de fichiers"
 
 #: cola/widgets/prefs.py:231
 msgid "Enable Gravatar Icons"
-msgstr ""
+msgstr "Activer les icônes Gravatar"
 
 #: cola/widgets/prefs.py:232
 msgid "Update Index on Startup"
-msgstr ""
+msgstr "Mettre à jour l'index au démarrage"
 
 #: cola/widgets/prefs.py:233
 msgid "Autocomplete Paths"
@@ -3788,19 +3823,19 @@ msgstr "Afficher le chemin complet dans le titre de la fenêtre"
 
 #: cola/widgets/prefs.py:241
 msgid "Automatically Detect and Configure Proxy Settings"
-msgstr ""
+msgstr "Détecter et configurer automatiquement les paramètres du proxy"
 
 #: cola/widgets/prefs.py:244
 msgid "HTTP Proxy URL"
-msgstr ""
+msgstr "URL du proxy HTTP"
 
 #: cola/widgets/prefs.py:294
 msgid "The main GUI editor that must block until it exits"
-msgstr ""
+msgstr "L'éditeuur graphique principal qui doit rester bloquant jusqu'à sa fermeture"
 
 #: cola/widgets/prefs.py:298
 msgid "A non-blocking GUI editor that is launched in the background"
-msgstr ""
+msgstr "Un éditeur graphique non bloquant lancé en arrière-plan"
 
 #: cola/widgets/prefs.py:310
 msgid "Detect conflict markers in unmerged files"
@@ -3808,7 +3843,7 @@ msgstr "Détecter des marqueurs de conflits dans les fichiers non fusionnés"
 
 #: cola/widgets/prefs.py:312
 msgid "Insert tabs instead of spaces"
-msgstr ""
+msgstr "Insérer des tabulations au lieu d'espaces"
 
 #: cola/widgets/prefs.py:313
 msgid "Prevent \"Stage\" from staging all files when nothing is selected"
@@ -3820,23 +3855,23 @@ msgstr "Vérifier si un commit a été publié avant qu'il soit corriger"
 
 #: cola/widgets/prefs.py:318
 msgid "Refresh repository state whenever the window is focused or un-minimized"
-msgstr ""
+msgstr "Actualiser l'état du dépôt chaque fois que la fenêtre reçoit le focus ou est restaurée"
 
 #: cola/widgets/prefs.py:322
 msgid "Emit notifications when commits are pushed."
-msgstr ""
+msgstr "Émettre des notifications lorsque des commits sont poussés."
 
 #: cola/widgets/prefs.py:325
 msgid "Use \"aspell\" as the spelling dictionary source"
-msgstr ""
+msgstr "Utiliser \"aspell\" comme source du dictionnaire orthographique"
 
 #: cola/widgets/prefs.py:328
 msgid "Additional spellcheck dictionary files (requires restart)"
-msgstr ""
+msgstr "Fichiers de dictionnaire supplémentaires pour la correction orthographique (redémarrage requis)"
 
 #: cola/widgets/prefs.py:332
 msgid "Set the verbosity level to 1 or higher to log Git commands"
-msgstr ""
+msgstr "Définir le niveau de verbosité à 1 ou plus pour enregistrer les commandes Git"
 
 #: cola/widgets/prefs.py:335
 msgid "Text Width"
@@ -3856,7 +3891,7 @@ msgstr "Éditeur"
 
 #: cola/widgets/prefs.py:342
 msgid "Background Editor"
-msgstr ""
+msgstr "Éditeur en arrière-plan"
 
 #: cola/widgets/prefs.py:343
 msgid "History Browser"
@@ -3892,11 +3927,11 @@ msgstr "Sauvegarder les paramètres de l'interface"
 
 #: cola/widgets/prefs.py:355
 msgid "Ctrl + MouseWheel to Zoom"
-msgstr ""
+msgstr "Ctrl + molette de souris pour zoomer"
 
 #: cola/widgets/prefs.py:356
 msgid "Refresh on Focus"
-msgstr ""
+msgstr "Actualiser au focus"
 
 #: cola/widgets/prefs.py:357
 msgid "Sort Bookmarks Alphabetically"
@@ -3904,7 +3939,7 @@ msgstr "Trier les marque-pages par ordre alphabétique"
 
 #: cola/widgets/prefs.py:358
 msgid "Resize File Browser columns"
-msgstr ""
+msgstr "Redimensionner les colonnes du navigateur de fichiers"
 
 #: cola/widgets/prefs.py:361
 msgid "Safe Mode"
@@ -3916,27 +3951,27 @@ msgstr "Vérifier la publication d'un commit lors de sa correction"
 
 #: cola/widgets/prefs.py:365
 msgid "Notify on Push"
-msgstr ""
+msgstr "Notifier lors des pushes"
 
 #: cola/widgets/prefs.py:366
 msgid "Verbosity Level"
-msgstr ""
+msgstr "Niveau de verbosité"
 
 #: cola/widgets/prefs.py:370
 msgid "Enable \"aspell\" Spelling Dictionaries"
-msgstr ""
+msgstr "Activer les dictionnaires orthographiques \"aspell\""
 
 #: cola/widgets/prefs.py:371
 msgid "Additional Spelling Dictionaries"
-msgstr ""
+msgstr "Dictionnaires orthographiques supplémentaires"
 
 #: cola/widgets/prefs.py:429
 msgid "The font size for the fixed-width diff font"
-msgstr ""
+msgstr "La taille de police pour la police à largeur fixe des diffs"
 
 #: cola/widgets/prefs.py:432
 msgid "The font size for the main UI elements"
-msgstr ""
+msgstr "La taille de police des principaux éléments de l'interface"
 
 #: cola/widgets/prefs.py:449
 msgid "Fixed-Width Font"
@@ -3948,7 +3983,7 @@ msgstr "Taille de police"
 
 #: cola/widgets/prefs.py:451
 msgid "Font Size (UI)"
-msgstr ""
+msgstr "Taille de police (interface)"
 
 #: cola/widgets/prefs.py:452
 msgid "GUI theme"
@@ -3964,7 +3999,7 @@ msgstr "Haut DPI"
 
 #: cola/widgets/prefs.py:455
 msgid "Bold all fonts"
-msgstr ""
+msgstr "Mettre toutes les polices en gras"
 
 #: cola/widgets/prefs.py:456
 msgid "Bold on Dark Headers Instead of Italic"
@@ -3980,7 +4015,7 @@ msgstr "Indenter le chemin des statuts"
 
 #: cola/widgets/prefs.py:459
 msgid "Use a Block Cursor in Diff Editors"
-msgstr ""
+msgstr "Utiliser un curseur en bloc dans les éditeurs de diff"
 
 #: cola/widgets/prefs.py:535
 msgid "Restart the application after changing appearance settings."
@@ -3988,11 +4023,11 @@ msgstr "Redémarrez l'application pour appliquer les modifications de l'apparenc
 
 #: cola/widgets/prefs.py:559 cola/widgets/prefs.py:561
 msgid "Add Dictionary"
-msgstr ""
+msgstr "Ajouter un dictionnaire"
 
 #: cola/widgets/prefs.py:620 cola/widgets/prefs.py:650
 msgid "Select dictionary file(s)..."
-msgstr ""
+msgstr "Sélectionner le ou les fichiers de dictionnaire..."
 
 #: cola/widgets/prefs.py:668
 msgid "Current Repository"
@@ -4033,17 +4068,17 @@ msgstr "Tout réduire"
 #: cola/widgets/remote.py:120
 #, python-format
 msgid "Pushed %(count)s / %(total)s remotes"
-msgstr ""
+msgstr "%(count)s / %(total)s dépôts distants poussés"
 
 #: cola/widgets/remote.py:122
 #, python-format
 msgid "Pushed: %s"
-msgstr ""
+msgstr "Poussés : %s"
 
 #: cola/widgets/remote.py:123
 #, python-format
 msgid "Not pushed: %s"
-msgstr ""
+msgstr "Non poussés : %s"
 
 #: cola/widgets/remote.py:194
 msgid "Prompt on creation"
@@ -4055,11 +4090,11 @@ msgstr "Confirmation lorsque la poussée créée des nouvelles branches distante
 
 #: cola/widgets/remote.py:200
 msgid "Show remote messages"
-msgstr ""
+msgstr "Afficher les messages distants"
 
 #: cola/widgets/remote.py:201
 msgid "Display remote messages in a separate dialog"
-msgstr ""
+msgstr "Afficher les messages distants dans une boîte de dialogue séparée"
 
 #: cola/widgets/remote.py:206
 msgid "Fast-forward only"
@@ -4075,7 +4110,7 @@ msgstr "Pas d'avance rapide"
 
 #: cola/widgets/remote.py:218
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr "Créer un commit fusionné même quand la fusion se résout rapidement"
+msgstr "Créer un commit fusionner même quand la fusion se résout rapidement"
 
 #: cola/widgets/remote.py:224
 msgid "Force"
@@ -4111,11 +4146,11 @@ msgstr "Configurer la branche distante comme la nouvelle source"
 
 #: cola/widgets/remote.py:253
 msgid "Close on completion"
-msgstr ""
+msgstr "Fermer à la fin"
 
 #: cola/widgets/remote.py:254
 msgid "Close dialog when completed"
-msgstr ""
+msgstr "Fermer la boîte de dialogue une fois terminé"
 
 #: cola/widgets/remote.py:568
 #, python-format
@@ -4320,23 +4355,23 @@ msgstr "Recréer l'index"
 
 #: cola/widgets/stash.py:89
 msgid "Recreate the index when restoring stashes"
-msgstr ""
+msgstr "Recréer l'index lors de la restauration des remises"
 
 #: cola/widgets/stash.py:256
 msgid "Enter a new name for the stash"
-msgstr ""
+msgstr "Entrer un nouveau nom pour la remise"
 
 #: cola/widgets/stash.py:258
 msgid "Rename Stash"
-msgstr ""
+msgstr "Renommer la remise"
 
 #: cola/widgets/stash.py:265
 msgid "No change made"
-msgstr ""
+msgstr "Aucun changement effectué"
 
 #: cola/widgets/stash.py:265
 msgid "The stash has not been renamed"
-msgstr ""
+msgstr "La remise n'a pas été renommée"
 
 #: cola/widgets/stash.py:293
 msgid "Enter a name for the stash"
@@ -4494,7 +4529,7 @@ msgstr "Le texte du format"
 
 #: cola/widgets/status.py:1661
 msgid "The number of leading paths to strip"
-msgstr ""
+msgstr "Nombre de chemins initiaux à supprimer"
 
 #: cola/widgets/submodules.py:47
 msgid "Open Parent"
@@ -4547,27 +4582,27 @@ msgstr "Dépôt de référence"
 #: cola/widgets/text.py:218
 #, python-format
 msgid "Open \"%s\""
-msgstr ""
+msgstr "Ouvrir \"%s\""
 
 #: cola/widgets/text.py:398
 msgid "Find in diff"
-msgstr ""
+msgstr "Rechercher dans le diff"
 
 #: cola/widgets/text.py:401
 msgid "Find the previous occurrence of the phrase"
-msgstr ""
+msgstr "Trouver l'occurrence précédente de l'expression"
 
 #: cola/widgets/text.py:405
 msgid "Find the next occurrence of the phrase"
-msgstr ""
+msgstr "Trouver l'occurrence suivante de l'expression"
 
 #: cola/widgets/text.py:408
 msgid "Match Case"
-msgstr ""
+msgstr "Respecter la casse"
 
 #: cola/widgets/text.py:409
 msgid "Whole Words"
-msgstr ""
+msgstr "Mots entiers"
 
 #: cola/widgets/text.py:412
 msgid "Close the find bar"
@@ -4579,7 +4614,7 @@ msgstr "Rechercher l'élément suivant"
 
 #: cola/widgets/text.py:441
 msgid "Find previous item"
-msgstr ""
+msgstr "Trouver l'élément precédent"
 
 #: cola/widgets/text.py:1173
 msgid "Copy All"
