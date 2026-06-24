@@ -88,6 +88,9 @@ msgid ""
 "Aborting a patch can cause uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
+"L'abandon de l'application d'un correctif peut entraîner la perte de "
+"modifications non validées.\n"
+"Il est impossible de récupérer les modifications non validées."
 
 #: cola/cmds.py:149
 msgid "Abort Applying Patch"
@@ -118,6 +121,9 @@ msgid ""
 "Aborting a cherry-pick can cause uncommitted changes to be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
+"L'abandon d'un cherry-pick peut entraîner la perte de modifications non "
+"validées.\n"
+"Il est impossible de récupérer les modifications non validées."
 
 #: cola/cmds.py:179
 msgid "Abort Cherry-Pick"
@@ -194,6 +200,11 @@ msgid ""
 "*ALL* uncommitted changes will be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
+"Cette opération remplacera les fichiers non fusionnés sélectionnés par le "
+"contenu de la branche en cours de fusion à l'aide de \"git checkout "
+"--theirs\".\n"
+"*Toutes* les modifications non validées seront perdues.\n"
+"Il est impossible de récupérer les modifications non validées."
 
 #: cola/cmds.py:507 cola/cmds.py:545
 msgid "Checkout Files"
@@ -213,6 +224,10 @@ msgid ""
 "*ALL* uncommitted changes will be lost.\n"
 "Recovering uncommitted changes is not possible."
 msgstr ""
+"Cette opération remplacera les fichiers non fusionnés sélectionnés par le "
+"contenu de votre branche actuelle à l'aide de \"git checkout --ours\".\n"
+"*Toutes* les modifications non validées seront perdues.\n"
+"Il est impossible de récupérer les modifications non validées."
 
 #: cola/cmds.py:572 cola/widgets/status.py:288
 msgid "Blame..."
@@ -612,7 +627,7 @@ msgstr ""
 "\"git rebase --update-refs\" met automatiquement à jour, de force,\n"
 "toutes les branches qui pointent vers des commits en cours de rebase.\n"
 "\n"
-"Les breanches ouvertes dans une arborescence de travail ne sont pas mises à jour.\n"
+"Les branches ouvertes dans une arborescence de travail ne sont pas mises à jour.\n"
 "\n"
 "Cette fonctionnalité est utile pour les flux de travail avec des branches \"empilées\"."
 
@@ -910,6 +925,8 @@ msgid ""
 "The submodule will be updated using\n"
 "\"%s\""
 msgstr ""
+"Le sous-module sera mis à jour avec\n"
+"\"%s\""
 
 #: cola/cmds.py:3332
 msgid "Update Submodule"
@@ -1870,7 +1887,7 @@ msgstr "Pousser..."
 
 #: cola/widgets/action.py:70 cola/widgets/main.py:379
 msgid "Push to one or more remotes using \"git push\""
-msgstr "Poussser vers un ou plusieurs dépôts distants avec \"git push\""
+msgstr "Pousser vers un ou plusieurs dépôts distants avec \"git push\""
 
 #: cola/widgets/action.py:73 cola/widgets/main.py:387
 msgid "Pull..."
@@ -2910,7 +2927,7 @@ msgstr "Appliquer"
 
 #: cola/widgets/diff.py:1029 cola/widgets/diff.py:1339
 msgid "Revert Selected Lines"
-msgstr "Annuler les lignes sélectionnées"
+msgstr "Inverser les lignes sélectionnées"
 
 #: cola/widgets/diff.py:1045
 msgid "Edit and Apply"
@@ -2943,7 +2960,7 @@ msgstr "Éditer et ajouter les lignes sélectionnées à l'index..."
 
 #: cola/widgets/diff.py:1167
 msgid "Revert Selected Lines..."
-msgstr "Annuler les lignes sélectionnées..."
+msgstr "Inverser les lignes sélectionnées..."
 
 #: cola/widgets/diff.py:1168
 msgid "Edit Selected Lines to Revert..."
@@ -2951,7 +2968,7 @@ msgstr "Éditer les lignes sélectionnées pour annuler..."
 
 #: cola/widgets/diff.py:1170
 msgid "Stage Diff Hunk"
-msgstr "Préparer cette section pour le commit"
+msgstr "Pré-commiter cette section"
 
 #: cola/widgets/diff.py:1171
 msgid "Edit Diff Hunk to Stage..."
@@ -2959,7 +2976,7 @@ msgstr "Éditer le diff pour indexer..."
 
 #: cola/widgets/diff.py:1172
 msgid "Revert Diff Hunk..."
-msgstr "Annuler la section de différences..."
+msgstr "Rétablir la section de différences..."
 
 #: cola/widgets/diff.py:1173
 msgid "Edit Diff Hunk to Revert..."
@@ -2975,15 +2992,15 @@ msgstr "Éditer le bloc du diff pour désindexer..."
 
 #: cola/widgets/diff.py:1338
 msgid "Revert Selected Lines?"
-msgstr "Annuler les lignes sélectionnées ?"
+msgstr "Inverser les lignes sélectionnées ?"
 
 #: cola/widgets/diff.py:1341
 msgid "Revert Diff Hunk?"
-msgstr "Annuler la section de différences ?"
+msgstr "Rétablir la section de différences ?"
 
 #: cola/widgets/diff.py:1342
 msgid "Revert Diff Hunk"
-msgstr "Annuler la section de différences"
+msgstr "Rétablir la section de différences"
 
 #: cola/widgets/diff.py:1347
 msgid ""
@@ -3272,7 +3289,7 @@ msgstr "Messages distants"
 
 #: cola/widgets/main.py:84
 msgid "Browser"
-msgstr "Navigateur"
+msgstr "Parcourir"
 
 #: cola/widgets/main.py:106
 msgid "Favorites"
@@ -4114,7 +4131,7 @@ msgstr "Pas d'avance rapide"
 
 #: cola/widgets/remote.py:218
 msgid "Create a merge commit even when the merge resolves as a fast-forward"
-msgstr "Créer un commit fusionner même quand la fusion se résout rapidement"
+msgstr "Créer un commit fusionné même quand la fusion se résout rapidement"
 
 #: cola/widgets/remote.py:224
 msgid "Force"
@@ -4171,8 +4188,6 @@ msgid ""
 "Branch \"%(branch)s\" does not exist in \"%(remote)s\".\n"
 "A new remote branch will be published."
 msgstr ""
-"La branche « %(branch)s » n'existe pas dans « %(remote)s ».\n"
-"Une nouvelle branche distante sera publiée."
 "La branche « %(branch)s » n'existe pas dans « %(remote)s ».\n"
 "Une nouvelle branche distante sera publiée."
 
@@ -4512,16 +4527,6 @@ msgid ""
 "      %(basename)s  =  file basename without extension\n"
 "           %(ext)s  =  file extension\n"
 msgstr ""
-"\n"
-"        Variables de chaîne de format\n"
-"        -----------------------\n"
-"          %(path)s  =  chemin de fichier relatif\n"
-"       %(abspath)s  =  chemin de fichier absolu\n"
-"       %(dirname)s  =  chemin de répertoire relatif\n"
-"    %(absdirname)s  =  chemin de répertoire absolu\n"
-"      %(filename)s  =  nom de base du fichier\n"
-"      %(basename)s  =  nom de base du fichier sans extension\n"
-"           %(ext)s  =  extension du fichier\n"
 "\n"
 "        Format des Variables\n"
 "        -----------------------\n"
