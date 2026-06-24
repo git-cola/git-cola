@@ -1537,11 +1537,11 @@ msgstr ""
 
 #: cola/models/stash.py:144
 msgid "Error Renaming Stash"
-msgstr ""
+msgstr "Erreur de renommage du stash"
 
 #: cola/models/stash.py:145
 msgid "\"git stash drop\" did not return a ref to rename."
-msgstr ""
+msgstr "\"git stash drop\" n'a pas renvoyé de référence."
 
 #: cola/models/stash.py:233
 msgid "Error creating stash"
@@ -1549,15 +1549,15 @@ msgstr "Erreur lors de la création du stash"
 
 #: cola/models/stash.py:246 cola/widgets/stash.py:148
 msgid "All changes"
-msgstr ""
+msgstr "Toutes les modifications"
 
 #: cola/models/stash.py:246
 msgid "Stash all changes"
-msgstr ""
+msgstr "Mettre de côté toutes les modifications"
 
 #: cola/models/stash.py:247 cola/widgets/stash.py:155
 msgid "Staged only"
-msgstr ""
+msgstr "Fichiers indexés uniquement"
 
 #: cola/models/stash.py:247
 msgid "Stash staged changes only"
@@ -1565,7 +1565,7 @@ msgstr "Ne remiser que les modifications pré-commitées"
 
 #: cola/models/stash.py:249 cola/widgets/stash.py:162
 msgid "Unstaged only"
-msgstr ""
+msgstr "Fichiers non indexés uniquement"
 
 #: cola/models/stash.py:250
 msgid "Stash unstaged changes only, keeping staged changes"
@@ -3253,7 +3253,7 @@ msgstr ""
 
 #: cola/widgets/log.py:39 cola/widgets/log.py:141
 msgid "Right-click links to open:"
-msgstr ""
+msgstr "Clic droit pour ouvrir les liens:"
 
 #: cola/widgets/log.py:59
 #, python-format
@@ -3262,7 +3262,7 @@ msgstr "code de sortie %s"
 
 #: cola/widgets/log.py:107
 msgid "Remote Messages"
-msgstr ""
+msgstr "Messages distants"
 
 #: cola/widgets/main.py:84
 msgid "Browser"
@@ -3290,7 +3290,7 @@ msgstr "Terminal"
 
 #: cola/widgets/main.py:183
 msgid "Minimize Window"
-msgstr ""
+msgstr "Réduire la fenêtre"
 
 #: cola/widgets/main.py:186 cola/widgets/status.py:794
 msgid "Unstage All"
@@ -3306,19 +3306,19 @@ msgstr "Appliquer les patchs..."
 
 #: cola/widgets/main.py:228
 msgid "Abort Applying Patches..."
-msgstr ""
+msgstr "Annuler l'application des correctifs"
 
 #: cola/widgets/main.py:229
 msgid "Abort the current \"git am\" patch session"
-msgstr ""
+msgstr "Interrompre la session \"git am\" en cours"
 
 #: cola/widgets/main.py:236
 msgid "Continue Applying Patches"
-msgstr ""
+msgstr "Continuer à appliquer les correctifs"
 
 #: cola/widgets/main.py:237
 msgid "Commit the current state and continue applying patches"
-msgstr ""
+msgstr "Valider l'état actuel et poursuivre l'application des correctifs"
 
 #: cola/widgets/main.py:244 cola/widgets/main.py:616
 msgid "Skip Current Patch"
@@ -3326,7 +3326,7 @@ msgstr "Sauter le patch actuel"
 
 #: cola/widgets/main.py:245
 msgid "Skip applying the current patch and continue applying patches"
-msgstr ""
+msgstr "Ignorer le patch actuel et continuer"
 
 #: cola/widgets/main.py:252
 msgid "Export Patches..."
@@ -4231,7 +4231,7 @@ msgstr "Expression de révision :"
 
 #: cola/widgets/selectcommits.py:66
 msgid "Search:"
-msgstr ""
+msgstr "Rechercher :"
 
 #: cola/widgets/selectcommits.py:114
 msgid "No commits exist in this branch."
@@ -4259,7 +4259,7 @@ msgstr "Déplacer vers le bas"
 
 #: cola/widgets/standard.py:869 cola/widgets/standard.py:891
 msgid "Select directory"
-msgstr ""
+msgstr "Choisir un dossier"
 
 #: cola/widgets/standard.py:1225
 msgid "Yes"
@@ -4292,7 +4292,7 @@ msgstr "Remiser"
 
 #: cola/widgets/stash.py:46
 msgid "Rename the selected stash"
-msgstr ""
+msgstr "Renommer le stash sélectionné"
 
 #: cola/widgets/stash.py:51
 msgid "Apply the selected stash"
@@ -4316,7 +4316,7 @@ msgstr "Appliquer et supprimer le remisage sélectionné (git stash pop)"
 
 #: cola/widgets/stash.py:88
 msgid "Recreate Index"
-msgstr ""
+msgstr "Recréer l'index"
 
 #: cola/widgets/stash.py:89
 msgid "Recreate the index when restoring stashes"
@@ -4383,7 +4383,7 @@ msgstr "Dés/activer le filtre des chemins"
 
 #: cola/widgets/status.py:66
 msgid "Exit \"Diff\" mode"
-msgstr ""
+msgstr "Quitter le mode \"Diff\""
 
 #: cola/widgets/status.py:164 cola/widgets/status.py:651
 msgid "Untracked"
@@ -4571,11 +4571,11 @@ msgstr ""
 
 #: cola/widgets/text.py:412
 msgid "Close the find bar"
-msgstr ""
+msgstr "Fermer la barre de recherche"
 
 #: cola/widgets/text.py:435
 msgid "Find next item"
-msgstr ""
+msgstr "Rechercher l'élément suivant"
 
 #: cola/widgets/text.py:441
 msgid "Find previous item"
@@ -4583,31 +4583,31 @@ msgstr ""
 
 #: cola/widgets/text.py:1173
 msgid "Copy All"
-msgstr ""
+msgstr "Tout copier"
 
 #: cola/widgets/text.py:1179
 msgid "Copy Selection"
-msgstr ""
+msgstr "Copier la sélection"
 
 #: cola/widgets/toolbar.py:181
 msgid "Follow System Style"
-msgstr ""
+msgstr "Utiliser le style du système"
 
 #: cola/widgets/toolbar.py:182
 msgid "Icon Only"
-msgstr ""
+msgstr "Icônes uniquement"
 
 #: cola/widgets/toolbar.py:183
 msgid "Text Only"
-msgstr ""
+msgstr "Texte uniquement"
 
 #: cola/widgets/toolbar.py:184
 msgid "Text Beside Icon"
-msgstr ""
+msgstr "Texte près de l'icône"
 
 #: cola/widgets/toolbar.py:185
 msgid "Text Under Icon"
-msgstr ""
+msgstr "Texte sous l'icône"
 
 #: cola/widgets/toolbar.py:274 cola/widgets/toolbar.py:311
 msgid "Configure Toolbar"
@@ -4627,7 +4627,7 @@ msgstr "Supprimer l'élément"
 
 #: cola/widgets/toolbar.py:322
 msgid "Toolbar Style:"
-msgstr ""
+msgstr "Style de la barre d'outils :"
 
 #~ msgid "git-cola diff"
 #~ msgstr "git-cola diff"
