@@ -105,12 +105,21 @@ class SpellCheckLineEdit(SpellCheckTextEdit):
         """Select text when entering with a tab to mimic QLineEdit"""
         super().focusInEvent(event)
 
-        if event.reason() in (
+        reason = event.reason()
+        if reason in (
             Qt.BacktabFocusReason,
             Qt.ShortcutFocusReason,
             Qt.TabFocusReason,
         ):
             self.selectAll()
+        elif reason == Qt.OtherFocusReason:
+            # Programmatic setFocus(), e.g. the "Focus Commit Message" (Ctrl+L)
+            # hotkey. Always move the cursor to the end of the line. Without this
+            # the very first focus lands at the start of the line, because the
+            # cursor is only moved to the end on focus-out.
+            cursor = self.textCursor()
+            cursor.movePosition(QtGui.QTextCursor.End)
+            self.setTextCursor(cursor)
 
     def focusOutEvent(self, event):
         """De-select text when exiting with tab to mimic QLineEdit"""
