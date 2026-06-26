@@ -267,6 +267,7 @@ Thanks
 * Rolando Espinoza La fuente
 * Rustam Safin
 * Sabri Ünal
+* Samuel Amen Ague
 * Samsul Ma'arif
 * Sasha @legasik21
 * Scott Field
