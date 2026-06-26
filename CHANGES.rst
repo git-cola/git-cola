@@ -91,6 +91,11 @@ Fixes
   to the shell.
   (`#1597 <https://github.com/git-cola/git-cola/pull/1597>`_)
 
+Translations
+------------
+* Updated French translation.
+  (`#1608 <https://github.com/git-cola/git-cola/pull/1608>`_)
+
 Development
 -----------
 * ``isort`` is now used for code formatting.
