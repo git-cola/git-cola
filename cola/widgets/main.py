@@ -731,6 +731,7 @@ class MainView(standard.MainWindow):
             self.diffeditor,
             self.bookmarkswidget.tree,
             self.recentwidget.tree,
+            self.statuswidget.tree,
         )
         select_widgets = copy_widgets + (self.statuswidget.tree,)
         edit_proxy.override('copy', copy_widgets)
