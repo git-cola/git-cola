@@ -65,6 +65,10 @@ Usability, bells and whistles
   mode changes on macOS.
   (`#1603 <https://github.com/git-cola/git-cola/pull/1603>`_)
 
+* Multiple files can now be copied from the Status tool.
+  File paths are copied to the clipboard with newline separators.
+  (`#1609 <https://github.com/git-cola/git-cola/pull/1609>`_)
+
 Fixes
 -----
 * Closing the main window after opening a DAG window was causing errors
