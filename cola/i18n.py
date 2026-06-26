@@ -1,5 +1,12 @@
 """i18n and l10n support for git-cola"""
+# https://www.linux.com/news/controlling-your-locale-environment-variables/
+# and locale(1) that environment variables are checked in this order:
+#   LANGUAGE, LC_ALL, LC_MESSAGES, LANG
+#
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1140489
+# was a report where the user's LC_MESSAGES was not resetting the translations.
 from __future__ import annotations
+import ctypes
 import locale
 import os
 
@@ -7,10 +14,10 @@ try:
     import polib
 except ImportError:
     from . import polib
-import sys
 
 from . import core
 from . import resources
+from . import utils
 
 
 class NullTranslation:
@@ -51,6 +58,7 @@ class Translation:
         """Read the .po file content into memory"""
         po = polib.pofile(self.filename, encoding='utf-8')
         messages = self.messages
+        messages.clear()  # reset state to make this function reentrant.
         for entry in po.translated_entries():
             messages[entry.msgid] = entry.msgstr
 
@@ -83,7 +91,7 @@ def get_filename_for_locale(name: str | None) -> str | None:
     #   cola/i18n/<name>.po
     #   cola/i18n/<short_name>.po
     if not name:  # If no locale was specified then try the current locale.
-        name: tuple[str | None, str | None] = locale.getdefaultlocale()[0]
+        name = get_current_locale()
 
     if not name:
         return None
@@ -102,8 +110,8 @@ def get_filename_for_locale(name: str | None) -> str | None:
 
 
 def install(lang: str | None) -> str | None:
-    if sys.platform == 'win32' and not lang:
-        lang = _get_win32_default_locale()
+    if not lang:
+        lang = get_default_locale()
     lang = _install_custom_language(lang)
     State.update(lang)
 
@@ -124,24 +132,57 @@ def _install_custom_language(lang: str | None) -> str | None:
     return lang
 
 
-def _get_win32_default_locale() -> str | None:
-    """Get the default locale on Windows"""
-    for name in ('LANGUAGE', 'LC_ALL', 'LC_MESSAGES', 'LANG'):
-        lang = os.environ.get(name)
+def get_default_locale() -> str | None:
+    """Get the default locale via environment variables and other platform-specific methods"""
+    # gettext() supports LANGAUGES as a colon-separate list of locales to try.
+    lang_env = os.environ.get('LANGUAGE', '')
+    for lang in (lang for lang in lang_env.split(':') if lang):
+        if get_filename_for_locale(lang) or is_untranslated_locale(lang):
+            return lang
+
+    # From locale(7):
+    # (1)  If there is a non-null environment variable LC_ALL, the value of LC_ALL is used.
+    # (2)  If an environment variable (LC_MESSAGES) with the same name as one of the categories above
+    # exists and is non-null, its value is used for that category.
+    # (3)  If there is a non-null environment variable LANG, the value of LANG is used.
+    for name in ('LC_ALL', 'LC_MESSAGES', 'LANG'):
+        lang = os.environ.get(name, '')
         if lang:
             return lang
-    try:
-        import ctypes
-    except ImportError:
-        # use only user's default locale
-        return locale.getdefaultlocale()[0]
-    # using ctypes to determine all locales
-    lcid_user = ctypes.windll.kernel32.GetUserDefaultLCID()
-    lcid_system = ctypes.windll.kernel32.GetSystemDefaultLCID()
-    lang_user = locale.windows_locale.get(lcid_user)
-    lang_system = locale.windows_locale.get(lcid_system)
-    if lang_user:
-        lang = lang_user
-    else:
-        lang = lang_system
-    return lang
+
+    # Windows method for getting the user's locale.
+    if (
+        utils.is_win32()
+        and hasattr(ctypes, 'windll')
+        and hasattr(locale, 'windows_locale')
+    ):
+        lcid_user = ctypes.windll.kernel32.GetUserDefaultLCID()
+        lcid_system = ctypes.windll.kernel32.GetSystemDefaultLCID()
+        lang_user = locale.windows_locale.get(lcid_user)
+        lang_system = locale.windows_locale.get(lcid_system)
+        if lang_user:
+            lang = lang_user
+        else:
+            lang = lang_system
+        return lang
+
+    # Let python determine the locale.
+    current_locale = get_current_locale()
+    if get_filename_for_locale(current_locale):
+        return current_locale
+
+    # None means that the untranslated English string values will be used.
+    return None
+
+
+def get_current_locale() -> str:
+    """Forwards-compatibility wrapper for Python 3.15+"""
+    if hasattr(locale, 'getlocale'):
+        return locale.getlocale()[0]
+    # getdefaultlocale() was deprecated in Python 3.14 and will be removed in Python 3.14.
+    return locale.getdefaultlocale()[0]
+
+
+def is_untranslated_locale(lang):
+    """Accessing the default untranslated language (en) requires special handling"""
+    return lang in ('en', 'en_US', 'en_US.UTF-8')
