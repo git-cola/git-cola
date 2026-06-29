@@ -57,8 +57,8 @@ Usability, bells and whistles
   (`#1602 <https://github.com/git-cola/git-cola/issues/1602>`_)
   (`#1604 <https://github.com/git-cola/git-cola/pull/1604>`_)
 
-* The Branches tool now displays details about Remote and Tags in a tooltip when
-  hovering over items.
+* The Branches tool now displays details about Branches, Remotes, and Tags in a tooltip
+  when hovering over items.
   (`#1606 <https://github.com/git-cola/git-cola/pull/1606>`_)
 
 * The icon theme will now automatically adapt to the system theme

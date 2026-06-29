@@ -170,7 +170,7 @@ def test_create_toplevel_item():
     ]
     tree = branch.create_tree_entries(names, '')
     tree.basename = 'top'
-    top = branch.create_toplevel_item(tree, branch.ItemType.LOCAL_BRANCH)
+    top = branch.create_toplevel_item(tree, branch.ItemType.REF_NAME)
 
     expect = 'top'
     actual = top.name
@@ -310,8 +310,6 @@ def _create_top_item():
 
 
 def _create_item(name, refname, expanded):
-    item = branch.BranchTreeWidgetItem(
-        name, branch.ItemType.LOCAL_BRANCH, refname=refname
-    )
+    item = branch.BranchTreeWidgetItem(name, branch.ItemType.REF_NAME, refname=refname)
     item.isExpanded = Mock(return_value=expanded)
     return item

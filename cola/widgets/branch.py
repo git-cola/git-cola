@@ -173,10 +173,10 @@ class BranchesTreeWidget(standard.TreeWidget):
                 status, details, _ = self.context.git.remote('show', '-n', remote)
                 if status == 0:
                     QtWidgets.QToolTip.showText(event.globalPos(), details, self)
-            elif item and item.item_type == ItemType.TAG:
-                tag = item.name
+            elif item and item.item_type == ItemType.REF_NAME:
+                ref_name = item.refname
                 status, details, _ = self.context.git.show(
-                    tag, decorate=True, no_patch=True
+                    ref_name, decorate=True, no_patch=True
                 )
                 if status == 0:
                     QtWidgets.QToolTip.showText(event.globalPos(), details, self)
@@ -211,7 +211,11 @@ class BranchesTreeWidget(standard.TreeWidget):
         local_tree = create_tree_entries(model.local_branches, self._name_filter)
         local_tree.basename = N_('Local')
         local = create_toplevel_item(
-            local_tree, ItemType.LOCAL_BRANCH, icon=icons.branch(), ellipsis=ellipsis
+            local_tree,
+            ItemType.PLACEHOLDER,
+            leaf_type=ItemType.REF_NAME,
+            icon=icons.branch(),
+            ellipsis=ellipsis,
         )
 
         remote_tree = create_tree_entries(model.remote_branches, self._name_filter)
@@ -219,7 +223,8 @@ class BranchesTreeWidget(standard.TreeWidget):
         remote = create_toplevel_item(
             remote_tree,
             ItemType.REMOTE,
-            child_item_type=ItemType.REMOTE_BRANCH,
+            child_type=ItemType.PLACEHOLDER,
+            leaf_type=ItemType.REF_NAME,
             icon=icons.branch(),
             ellipsis=ellipsis,
         )
@@ -227,7 +232,11 @@ class BranchesTreeWidget(standard.TreeWidget):
         tags_tree = create_tree_entries(model.tags, self._name_filter)
         tags_tree.basename = N_('Tags')
         tags = create_toplevel_item(
-            tags_tree, ItemType.TAG, icon=icons.tag(), ellipsis=ellipsis
+            tags_tree,
+            ItemType.PLACEHOLDER,
+            leaf_type=ItemType.REF_NAME,
+            icon=icons.tag(),
+            ellipsis=ellipsis,
         )
 
         self.clear()
@@ -590,11 +599,9 @@ class BranchDetailsTask(qtutils.Task):
 
 
 class ItemType(Enum):
-    TOP_LEVEL = 0
+    PLACEHOLDER = 0
     REMOTE = 1
-    REMOTE_BRANCH = 2
-    LOCAL_BRANCH = 3
-    TAG = 4
+    REF_NAME = 2
 
 
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
@@ -706,14 +713,15 @@ def create_name_dict(names):
 
 
 def create_toplevel_item(
-    tree, item_type, child_item_type=None, icon=None, ellipsis=None
+    tree, item_type, child_type=None, leaf_type=None, icon=None, ellipsis=None
 ):
     """Create a top-level BranchTreeWidgetItem and its children"""
-    item = BranchTreeWidgetItem(tree.basename, ItemType.TOP_LEVEL, icon=ellipsis)
+    item = BranchTreeWidgetItem(tree.basename, ItemType.PLACEHOLDER, icon=ellipsis)
     children = create_tree_items(
         tree.children,
         item_type,
-        child_item_type=child_item_type,
+        child_type=child_type,
+        leaf_type=leaf_type,
         icon=icon,
         ellipsis=ellipsis,
     )
@@ -723,18 +731,35 @@ def create_toplevel_item(
 
 
 def create_tree_items(
-    entries, item_type, child_item_type=None, icon=None, ellipsis=None
+    entries,
+    item_type,
+    child_type=None,
+    leaf_type=None,
+    icon=None,
+    ellipsis=None,
 ):
     """Create children items for a tree item"""
-    if child_item_type is None:
-        child_item_type = item_type
     result = []
+
+    if child_type is None:
+        child_type = item_type
+    if leaf_type is None:
+        leaf_type = child_type
+
     for tree in entries:
-        item = BranchTreeWidgetItem(
-            tree.basename, item_type, refname=tree.refname, icon=icon
-        )
         children = create_tree_items(
-            tree.children, child_item_type, icon=icon, ellipsis=ellipsis
+            tree.children,
+            child_type,
+            leaf_type=leaf_type,
+            icon=icon,
+            ellipsis=ellipsis,
+        )
+        if tree.children:
+            current_type = item_type
+        else:
+            current_type = leaf_type
+        item = BranchTreeWidgetItem(
+            tree.basename, current_type, refname=tree.refname, icon=icon
         )
         if children:
             item.addChildren(children)
