@@ -664,7 +664,6 @@ class HintWidget(QtCore.QObject):
         self._is_error = False
         self._error_seen = False
         self._default_style = ''
-        widget.setPlaceholderText(hint)
         error_bg_color = QtGui.QColor(Qt.red).darker()
         error_fg_color = QtGui.QColor(Qt.white)
         error_bg_rgb = qtutils.rgb_css(error_bg_color)
@@ -683,6 +682,8 @@ class HintWidget(QtCore.QObject):
         """
             % env
         )
+        # Set the placeholder text.
+        self.set_value(hint)
 
     def widget(self):
         """Return the parent text widget"""
