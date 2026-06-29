@@ -26,9 +26,7 @@ if TYPE_CHECKING:
 class Gravatar:
     @staticmethod
     def url_for_email(email, imgsize) -> str:
-        email_hash = md5_hexdigest(email)
-        # Python2.6 requires byte strings for urllib2.quote() so we have
-        # to force
+        email_hash = sha256_hexdigest(email)
         default_url = 'https://git-cola.github.io/images/git-64x64.jpg'
         encoded_url = parse.quote(core.encode(default_url), core.encode(''))
         query = '?s=%d&d=%s' % (imgsize, core.decode(encoded_url))
@@ -36,28 +34,22 @@ class Gravatar:
         return url
 
 
-def md5_hexdigest(value: str) -> core.UStr | None:
-    """Return the md5 hexdigest for a value.
+def sha256_hexdigest(value: str) -> core.UStr:
+    """Return the SHA256 hexdigest of an email for the Gravatar API.
 
-    Used for implementing the gravatar API. Not used for security purposes.
+    Gravatar prefers SHA256 over MD5 and requires the email to be trimmed and
+    lower-cased before hashing. https://docs.gravatar.com/rest/hash/
+
+    SHA256 also resolves the FIPS crash that MD5 caused: on FIPS-enabled
+    systems hashlib.md5() raises ValueError and aborted git-dag (exit 134) the
+    moment a commit was viewed (https://github.com/git-cola/git-cola/issues/1157).
+    The old fix passed usedforsecurity=False to MD5, but that only exists on
+    Python 3.9+ and still asks OpenSSL to permit a FIPS-disallowed algorithm.
+    SHA256 is FIPS-approved, so the workaround is no longer needed. Do not
+    revert to MD5.
     """
-    # https://github.com/git-cola/git-cola/issues/1157
-    #  ValueError: error:060800A3:
-    #   digital envelope routines: EVP_DigestInit_ex: disabled for fips
-    #
-    # Newer versions of Python, including Centos8's patched Python3.6 and
-    # mainline Python 3.9+ have a "usedoforsecurity" parameter which allows us
-    # to continue using hashlib.md5().
-    encoded_value = core.encode(value)
-    result = ''
-    try:
-        # This could raise ValueError in theory but we always use encoded bytes
-        # so that does not happen in practice.
-        result = hashlib.md5(encoded_value, usedforsecurity=False).hexdigest()
-    except TypeError:
-        # Fallback to trying hashlib.md5 directly.
-        result = hashlib.md5(encoded_value).hexdigest()
-    return core.decode(result)
+    normalized = core.encode(value.strip().lower())
+    return core.decode(hashlib.sha256(normalized).hexdigest())
 
 
 class GravatarLabel(QtWidgets.QLabel):
