@@ -1,6 +1,8 @@
 """Provides widgets related to branches"""
+from enum import Enum
 from functools import partial
 
+from qtpy import QtCore
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -161,6 +163,30 @@ class BranchesTreeWidget(standard.TreeWidget):
         # Checkout branch when double clicked
         self.doubleClicked.connect(self.checkout_action)
 
+    def event(self, event):
+        """Display tag and remote details in a tooltip"""
+        if event.type() == QtCore.QEvent.ToolTip:
+            pos = event.pos()
+            item = self.itemAt(pos)
+            if item and item.item_type == ItemType.REMOTE:
+                remote = item.name
+                status, details, _ = self.context.git.remote('show', '-n', remote)
+                if status == 0:
+                    QtWidgets.QToolTip.showText(event.globalPos(), details, self)
+            elif item and item.item_type == ItemType.TAG:
+                tag = item.name
+                status, details, _ = self.context.git.show(
+                    tag, decorate=True, no_patch=True
+                )
+                if status == 0:
+                    QtWidgets.QToolTip.showText(event.globalPos(), details, self)
+            else:
+                QtWidgets.QToolTip.hideText()
+
+            return True
+
+        return super().event(event)
+
     def set_name_filter(self, value):
         """Update the name filter and rebuild the tree to include only matching refs"""
         self._name_filter = value
@@ -184,18 +210,25 @@ class BranchesTreeWidget(standard.TreeWidget):
 
         local_tree = create_tree_entries(model.local_branches, self._name_filter)
         local_tree.basename = N_('Local')
-        local = create_toplevel_item(local_tree, icon=icons.branch(), ellipsis=ellipsis)
+        local = create_toplevel_item(
+            local_tree, ItemType.LOCAL_BRANCH, icon=icons.branch(), ellipsis=ellipsis
+        )
 
-        tootles = self.get_remote_tootles(model)
         remote_tree = create_tree_entries(model.remote_branches, self._name_filter)
         remote_tree.basename = N_('Remote')
         remote = create_toplevel_item(
-            remote_tree, icon=icons.branch(), ellipsis=ellipsis, tootles=tootles
+            remote_tree,
+            ItemType.REMOTE,
+            child_item_type=ItemType.REMOTE_BRANCH,
+            icon=icons.branch(),
+            ellipsis=ellipsis,
         )
 
         tags_tree = create_tree_entries(model.tags, self._name_filter)
         tags_tree.basename = N_('Tags')
-        tags = create_toplevel_item(tags_tree, icon=icons.tag(), ellipsis=ellipsis)
+        tags = create_toplevel_item(
+            tags_tree, ItemType.TAG, icon=icons.tag(), ellipsis=ellipsis
+        )
 
         self.clear()
         self.addTopLevelItems([local, remote, tags])
@@ -205,16 +238,6 @@ class BranchesTreeWidget(standard.TreeWidget):
             self._tree_states = None
 
         self._update_branches()
-
-    def get_remote_tootles(self, model):
-        tootles = {}
-        for remote_name in model.remotes:
-            status, remote_details, _ = self.context.git.remote(
-                'show', '-n', remote_name
-            )
-            if status == 0:
-                tootles[remote_name] = remote_details
-        return tootles
 
     def showEvent(self, event):
         """Defer updating widgets until the widget is visible"""
@@ -566,15 +589,21 @@ class BranchDetailsTask(qtutils.Task):
         return self.current_branch, tracked_branch, ahead, behind
 
 
+class ItemType(Enum):
+    TOP_LEVEL = 0
+    REMOTE = 1
+    REMOTE_BRANCH = 2
+    LOCAL_BRANCH = 3
+    TAG = 4
+
+
 class BranchTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-    def __init__(self, name, refname=None, icon=None, tootle=None):
+    def __init__(self, name, item_type, refname=None, icon=None):
         QtWidgets.QTreeWidgetItem.__init__(self)
         self.name = name
         self.refname = refname
+        self.item_type = item_type
         self.setText(0, name)
-        self.setToolTip(0, name)
-        if tootle is not None:
-            self.setToolTip(0, tootle)
         if icon is not None:
             self.setIcon(0, icon)
         self.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
@@ -676,32 +705,31 @@ def create_name_dict(names):
     return tree_names
 
 
-def create_toplevel_item(tree, icon=None, ellipsis=None, tootles=None):
+def create_toplevel_item(
+    tree, item_type, child_item_type=None, icon=None, ellipsis=None
+):
     """Create a top-level BranchTreeWidgetItem and its children"""
-
-    item = BranchTreeWidgetItem(tree.basename, icon=ellipsis)
-    children = create_tree_items(
-        tree.children, icon=icon, ellipsis=ellipsis, tootles=tootles
-    )
+    item = BranchTreeWidgetItem(tree.basename, ItemType.TOP_LEVEL, icon=ellipsis)
+    children = create_tree_items(tree.children, item_type, icon=icon, ellipsis=ellipsis)
     if children:
         item.addChildren(children)
     return item
 
 
-def create_tree_items(entries, icon=None, ellipsis=None, tootles=None):
+def create_tree_items(
+    entries, item_type, child_item_type=None, icon=None, ellipsis=None
+):
     """Create children items for a tree item"""
+    if child_item_type is None:
+        child_item_type = item_type
     result = []
     for tree in entries:
-        if tootles is not None:
-            item = BranchTreeWidgetItem(
-                tree.basename,
-                refname=tree.refname,
-                icon=icon,
-                tootle=tootles[tree.basename],
-            )
-        else:
-            item = BranchTreeWidgetItem(tree.basename, refname=tree.refname, icon=icon)
-        children = create_tree_items(tree.children, icon=icon, ellipsis=ellipsis)
+        item = BranchTreeWidgetItem(
+            tree.basename, item_type, refname=tree.refname, icon=icon
+        )
+        children = create_tree_items(
+            tree.children, child_item_type, icon=icon, ellipsis=ellipsis
+        )
         if children:
             item.addChildren(children)
             if ellipsis is not None:
