@@ -1947,6 +1947,11 @@ class AuthorLabel(PlainTextLabel):
 class CommitDiffWidget(QtWidgets.QWidget):
     """Display commit metadata and text diffs"""
 
+    # Delay before a selected commit's diff is loaded. Holding an arrow key
+    # in the DAG steps through commits faster than this, so intermediate
+    # commits never trigger a "git diff"; only the commit we land on does.
+    DIFF_DEBOUNCE_MSEC = 100
+
     def __init__(self, context, parent, is_commit=False, options=None):
         QtWidgets.QWidget.__init__(self, parent)
 
@@ -1955,6 +1960,22 @@ class CommitDiffWidget(QtWidgets.QWidget):
         self.oid_start = None
         self.oid_end = None
         self.options = options
+
+        # Debounce diff loading so that rapidly moving the selection (e.g.
+        # holding an arrow key in the DAG) only loads the diff for the commit
+        # we settle on rather than spawning a "git diff" for every commit we
+        # pass over.
+        self._pending_diff = None
+        self._diff_timer = QtCore.QTimer(self)
+        self._diff_timer.setSingleShot(True)
+        self._diff_timer.setInterval(self.DIFF_DEBOUNCE_MSEC)
+        self._diff_timer.timeout.connect(self._load_pending_diff)
+        # Monotonic token used to discard results from superseded diff tasks.
+        # Each started task captures the current value; set_diff only applies a
+        # result when its token still matches, so a slow diff that finishes
+        # after the selection has moved on is dropped instead of stomping the
+        # view.
+        self._diff_token = 0
 
         author_font = QtGui.QFont(self.font())
         author_font.setPointSize(int(author_font.pointSize() * 1.1))
@@ -2021,7 +2042,11 @@ class CommitDiffWidget(QtWidgets.QWidget):
         """Clear the display and start a diff-gathering task"""
         self.diff.save_scrollbar()
         cmds.do(cmds.DiffLoading, self.context)
-        self.context.runtask.start(task, result=self.set_diff)
+        # Stamp the task so that a result arriving after the selection has
+        # already moved on can be discarded in set_diff().
+        self._diff_token += 1
+        token = self._diff_token
+        self.context.runtask.start(task, result=lambda diff: self.set_diff(diff, token))
 
     def set_diff_oid(self, oid, filename=None):
         """Set the diff from a single commit object ID"""
@@ -2035,6 +2060,8 @@ class CommitDiffWidget(QtWidgets.QWidget):
     def commits_selected(self, commits):
         """Display an appropriate diff when commits are selected"""
         if not commits:
+            self._diff_timer.stop()
+            self._pending_diff = None
             self.clear()
             return
         commit = commits[-1]
@@ -2043,21 +2070,41 @@ class CommitDiffWidget(QtWidgets.QWidget):
         email = commit.email or ''
         date = commit.authdate or ''
         summary = commit.summary or ''
+        # Metadata is already in hand, so update it immediately to keep the
+        # selection feeling responsive. Only the expensive diff is debounced.
         self.set_details(oid, author, email, date, summary)
         self.oid = oid
 
         if len(commits) > 1:
             start, end = commits[0], commits[-1]
-            self.set_diff_range(start.oid, end.oid)
+            self._pending_diff = ('range', start.oid, end.oid)
             self.oid_start = start
             self.oid_end = end
         else:
-            self.set_diff_oid(oid)
+            self._pending_diff = ('oid', oid)
             self.oid_start = None
             self.oid_end = None
+        # (Re)start the debounce; the diff loads once the selection settles.
+        self._diff_timer.start()
 
-    def set_diff(self, diff):
+    def _load_pending_diff(self):
+        """Load the diff for the most recently selected commit(s)"""
+        pending = self._pending_diff
+        if pending is None:
+            return
+        self._pending_diff = None
+        if pending[0] == 'range':
+            _, start, end = pending
+            self.set_diff_range(start, end)
+        else:
+            _, oid = pending
+            self.set_diff_oid(oid)
+
+    def set_diff(self, diff, token=None):
         """Set the diff text"""
+        # Drop results from superseded tasks; only the latest token applies.
+        if token is not None and token != self._diff_token:
+            return
         self.diff.set_diff(diff)
 
     def set_details(self, oid, author, email, date, summary):
