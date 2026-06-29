@@ -375,8 +375,13 @@ class Git:
             'diff.autoRefreshIndex=false',
             '-c',
             'log.showSignature=false',
-            dashify(cmd),
         ]
+        # Read-only commands must not refresh the index stat cache, which would
+        # otherwise take the optional .git/index.lock. Skipping it avoids disk
+        # I/O and lock contention with concurrent reads and any external git.
+        if _kwargs.get('_readonly'):
+            git_args.append('--no-optional-locks')
+        git_args.append(dashify(cmd))
         opt_args = transform_kwargs(**kwargs)
         call = git_args + opt_args
         call.extend(args)
