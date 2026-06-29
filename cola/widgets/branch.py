@@ -710,7 +710,13 @@ def create_toplevel_item(
 ):
     """Create a top-level BranchTreeWidgetItem and its children"""
     item = BranchTreeWidgetItem(tree.basename, ItemType.TOP_LEVEL, icon=ellipsis)
-    children = create_tree_items(tree.children, item_type, icon=icon, ellipsis=ellipsis)
+    children = create_tree_items(
+        tree.children,
+        item_type,
+        child_item_type=child_item_type,
+        icon=icon,
+        ellipsis=ellipsis,
+    )
     if children:
         item.addChildren(children)
     return item
