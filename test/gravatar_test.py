@@ -190,3 +190,64 @@ def test_disabled_gravatar_uses_default_without_network(qapp):
     label.network.get.assert_not_called()
     assert email in label.pixmaps
     assert isinstance(label.pixmaps[email], QtGui.QPixmap)
+
+
+def test_switching_to_uncached_email_shows_default_not_stale_avatar(qapp):
+    """Switching authors shows the default while loading, never the old face.
+
+    Regression: holding the previous author's avatar during the fetch made a
+    commit whose author has no gravatar display the wrong person's picture.
+    """
+    label = _make_label()
+    alice = 'alice@example.com'
+    bob = 'bob@example.com'
+
+    # Resolve alice so the label is showing alice's real avatar.
+    label.set_email(alice)
+    label.network_finished(_real_avatar_reply(label, alice))
+    alice_pixmap = label.pixmaps[alice]
+
+    painted = []
+    label.setPixmap = lambda pixmap: painted.append(pixmap)
+
+    # Switching to an uncached author must repaint the default immediately, so
+    # alice's face is not shown for bob's commit while bob's avatar loads.
+    label.set_email(bob)
+    assert len(painted) == 1
+    assert painted[0] is not alice_pixmap
+    assert painted[0] is label.default_pixmap()
+    assert label.network.get.call_count == 2  # bob is requested
+
+    # bob turns out to have no avatar -> the default stays (no stale alice).
+    label.network_finished(_missing_avatar_reply(label, bob))
+    assert painted[-1] is label.default_pixmap()
+
+
+def test_revisiting_cached_miss_shows_default_not_stale_avatar(qapp):
+    """An author with a known-missing avatar shows the default, not the prior face."""
+    label = _make_label()
+    alice = 'alice@example.com'
+    bob = 'bob@example.com'
+
+    # alice has an avatar; bob is a known miss.
+    label.set_email(alice)
+    label.network_finished(_real_avatar_reply(label, alice))
+    label.set_email(bob)
+    label.network_finished(_missing_avatar_reply(label, bob))
+
+    # Show alice again (cached avatar), then bob again (cached miss).
+    label.set_email(alice)
+    painted = []
+    label.setPixmap = lambda pixmap: painted.append(pixmap)
+    label.set_email(bob)
+    # bob's miss is cached, so no new request and the default is shown.
+    assert label.network.get.call_count == 2
+    assert painted[-1] is label.default_pixmap()
+
+
+def test_default_pixmap_decoded_once(qapp):
+    """The fallback icon is decoded a single time and reused."""
+    label = _make_label()
+    first = label.default_pixmap()
+    second = label.default_pixmap()
+    assert first is second

@@ -8,6 +8,7 @@ from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtNetwork
 from qtpy import QtWidgets
+from qtpy.QtCore import Qt
 
 from . import core
 from . import icons
@@ -78,6 +79,9 @@ class GravatarLabel(QtWidgets.QLabel):
         # which may have moved on to a newer selection.
         self.requested: dict[str, str] = {}
         self._default_pixmap_bytes = None
+        # The default icon, decoded once and reused, so cache-misses don't
+        # re-decode PNG bytes on every commit.
+        self._default_pixmap: QPixmap | None = None
 
         self.network = QtNetwork.QNetworkAccessManager()
         self.network.finished.connect(self.network_finished)
@@ -100,6 +104,11 @@ class GravatarLabel(QtWidgets.QLabel):
                 return
             # The retry window has elapsed; allow another attempt.
             del self.failed[email]
+        # Show the default icon while the avatar is fetched. This must repaint
+        # even when an avatar is already displayed: the email has changed to an
+        # author we have not resolved yet, so continuing to show the previous
+        # author's avatar would attribute the wrong face to this commit.
+        # network_finished() swaps in the real avatar once the reply arrives.
         self.set_pixmap_from_default()
         self.request(email)
 
@@ -152,7 +161,9 @@ class GravatarLabel(QtWidgets.QLabel):
         if reply_error == no_error and not relocated:
             # A real avatar was returned. Cache it permanently for this email.
             response = reply.readAll()
-            pixmap = self.pixmap_from_bytes(response)
+            # Scale to the label's size so swapping avatars never resizes the
+            # label and nudges the layout, which reads as flicker.
+            pixmap = self._scale_to_imgsize(self.pixmap_from_bytes(response))
             if email is not None:
                 self.pixmaps[email] = pixmap
                 self.failed.pop(email, None)
@@ -184,9 +195,34 @@ class GravatarLabel(QtWidgets.QLabel):
         pixmap.loadFromData(data)
         return pixmap
 
+    def _scale_to_imgsize(self, pixmap: QPixmap) -> QPixmap:
+        """Scale a pixmap to the label's icon size with a smooth transform.
+
+        Keeping every displayed pixmap the same size means swapping the default
+        icon for a downloaded avatar (or one avatar for another) never resizes
+        the label, avoiding the layout jump that reads as flicker. The avatar is
+        already roughly imgsize (requested via s=imgsize), so this is usually a
+        no-op or a minor adjustment.
+        """
+        if pixmap.isNull():
+            return pixmap
+        size = self.imgsize
+        if pixmap.width() == size and pixmap.height() == size:
+            return pixmap
+        return pixmap.scaled(
+            size,
+            size,
+            Qt.KeepAspectRatio,
+            Qt.SmoothTransformation,
+        )
+
     def default_pixmap(self) -> QPixmap:
-        """Return the fallback git-cola icon as a QPixmap"""
-        return self.pixmap_from_bytes(self.default_pixmap_as_bytes())
+        """Return the fallback git-cola icon, decoded once and reused"""
+        if self._default_pixmap is None:
+            self._default_pixmap = self.pixmap_from_bytes(
+                self.default_pixmap_as_bytes()
+            )
+        return self._default_pixmap
 
     def set_pixmap_from_default(self) -> QPixmap:
         """Display the fallback icon and return it"""
