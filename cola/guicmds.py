@@ -268,7 +268,7 @@ def open_quick_repo_search(
             added.add(key)
 
         title = N_('Quick Open Repository')
-        place_holder = N_('Search repositories by name...')
+        placeholder = N_('Search repositories by name...')
         if open_repo:
             open_cmd: type[cmds.NoOp] | type[cmds.OpenRepo] = cmds.OpenRepo
         else:
@@ -278,7 +278,7 @@ def open_quick_repo_search(
             context,
             entries,
             title,
-            place_holder=place_holder,
+            placeholder=placeholder,
             enter_action=lambda entry: cmds.do(open_cmd, context, entry.key),
             parent=parent,
         )

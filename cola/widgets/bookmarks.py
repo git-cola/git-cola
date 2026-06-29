@@ -55,9 +55,9 @@ class BookmarksWidget(QtWidgets.QFrame):
             item_values.append(item)
             item_model.appendRow(item)
 
-        place_holder = N_('Search repositories by name...')
+        placeholder = N_('Search repositories by name...')
         self.quick_switcher = switcher.switcher_outer_view(
-            context, item_model, place_holder=place_holder
+            context, item_model, placeholder=placeholder
         )
         self.quick_switcher.proxy_model.setSourceModel(self.item_model)
 

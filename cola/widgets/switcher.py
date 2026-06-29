@@ -12,17 +12,17 @@ from ..widgets import text
 
 
 def switcher_inner_view(
-    context, entries, title=None, place_holder=None, enter_action=None, parent=None
+    context, entries, title=None, placeholder=None, enter_action=None, parent=None
 ):
     dialog = SwitcherInnerView(
-        context, entries, title, place_holder, enter_action, parent
+        context, entries, title, placeholder, enter_action, parent
     )
     dialog.show()
     return dialog
 
 
-def switcher_outer_view(context, entries, place_holder=None, parent=None):
-    dialog = SwitcherOuterView(context, entries, place_holder, parent)
+def switcher_outer_view(context, entries, placeholder=None, parent=None):
+    dialog = SwitcherOuterView(context, entries, placeholder, parent)
     dialog.show()
     return dialog
 
@@ -64,7 +64,7 @@ class Switcher(standard.Dialog):
         self,
         context,
         entries_model,
-        place_holder=None,
+        placeholder=None,
         parent=None,
     ):
         standard.Dialog.__init__(self, parent=parent)
@@ -72,7 +72,7 @@ class Switcher(standard.Dialog):
         self.context = context
         self.entries_model = entries_model
 
-        self.filter_input = SwitcherLineEdit(place_holder=place_holder, parent=self)
+        self.filter_input = SwitcherLineEdit(placeholder=placeholder, parent=self)
 
         self.proxy_model = SwitcherSortFilterProxyModel(entries_model, parent=self)
         self.switcher_list = None
@@ -96,7 +96,7 @@ class SwitcherInnerView(Switcher):
         context,
         entries_model,
         title,
-        place_holder=None,
+        placeholder=None,
         enter_action=None,
         parent=None,
     ):
@@ -104,7 +104,7 @@ class SwitcherInnerView(Switcher):
             self,
             context,
             entries_model,
-            place_holder=place_holder,
+            placeholder=placeholder,
             parent=parent,
         )
         self.setWindowTitle(title)
@@ -170,12 +170,12 @@ class SwitcherInnerView(Switcher):
 
 
 class SwitcherOuterView(Switcher):
-    def __init__(self, context, entries_model, place_holder=None, parent=None):
+    def __init__(self, context, entries_model, placeholder=None, parent=None):
         Switcher.__init__(
             self,
             context,
             entries_model,
-            place_holder=place_holder,
+            placeholder=placeholder,
             parent=parent,
         )
         self.filter_input.hide()
@@ -200,10 +200,10 @@ class SwitcherLineEdit(text.LineEdit):
     switcher_accept = Signal()
     switcher_escape = Signal()
 
-    def __init__(self, place_holder=None, parent=None):
+    def __init__(self, placeholder=None, parent=None):
         text.LineEdit.__init__(self, parent=parent)
-        if place_holder:
-            self.setPlaceholderText(place_holder)
+        if placeholder:
+            self.setPlaceholderText(placeholder)
 
     def keyPressEvent(self, event):
         """
