@@ -77,6 +77,14 @@ Usability, bells and whistles
   File paths are copied to the clipboard with newline separators.
   (`#1609 <https://github.com/git-cola/git-cola/pull/1609>`_)
 
+* The DAG's gravatar icons now load without flicker when quickly switching
+  between commits.
+  (`#1612 <https://github.com/git-cola/git-cola/pull/1612>`_)
+
+* The DAG's diff viewer now avoids loading outdated diffs when quickly
+  switching between commits.
+  (`#1613 <https://github.com/git-cola/git-cola/pull/1613>`_)
+
 Fixes
 -----
 * Closing the main window after opening a DAG window was causing errors
@@ -86,10 +94,6 @@ Fixes
 
 * The DAG's gravatar icon size was improved when using hi-DPI displays.
   (`#1577 <https://github.com/git-cola/git-cola/pull/1577>`_)
-
-* The DAG's gravatar icons now load without flicker when quickly switching
-  between commits.
-  (`#1612 <https://github.com/git-cola/git-cola/pull/1612>`_)
 
 * Right-clicking in an empty area in the DAG was causing a crash and has been fixed.
   (`#1572 <https://github.com/git-cola/git-cola/issues/1572>`_)
