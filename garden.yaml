@@ -408,7 +408,7 @@ variables:
     then
         source "${env-dir}/bin/activate"
     fi
-  offscreen: "QT_QPA_PLATFORM=offscreen"
+  offscreen: "QT_QPA_PLATFORMTHEME=offscreen QT_QPA_PLATFORM=offscreen"
   pip-editable: "--editable"
   pip-upgrade: ""
   version-digits: |
