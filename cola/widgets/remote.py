@@ -386,7 +386,8 @@ class RemoteActionDialog(standard.Dialog):
             self.command_display,
             self.options_layout,
         )
-        self.main_layout.setStretchFactor(self.top_layout, 2)
+        self.main_layout.setStretchFactor(self.top_layout, 3)
+        self.main_layout.setStretchFactor(self.command_display, 1)
         self.setLayout(self.main_layout)
 
         remotes = model.remotes
