@@ -2435,7 +2435,7 @@ class Rebase(ContextCommand):
             rebase_cmd = ['git', 'rebase']
             rebase_cmd.extend(transform_kwargs(**kwargs))
             rebase_cmd.extend(args)
-            self.context.git_cmd(core.list2cmdline(rebase_cmd))
+            self.context.notifier.git_cmd(core.list2cmdline(rebase_cmd))
 
         with SequenceEditorEnvironment(
             self.context,
@@ -2460,7 +2460,7 @@ class Rebase(ContextCommand):
 class RebaseEditTodo(ContextCommand):
     def do(self) -> tuple[int, str, str]:
         if prefs.verbose_simple_commands(self.context):
-            self.context.git_cmd('git rebase --edit-todo')
+            self.context.notifier.git_cmd('git rebase --edit-todo')
 
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
@@ -2477,7 +2477,7 @@ class RebaseEditTodo(ContextCommand):
 class RebaseContinue(ContextCommand):
     def do(self) -> tuple[int, str, str]:
         if prefs.verbose_simple_commands(self.context):
-            self.context.git_cmd('git rebase --continue')
+            self.context.notifier.git_cmd('git rebase --continue')
 
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
@@ -2494,7 +2494,7 @@ class RebaseContinue(ContextCommand):
 class RebaseSkip(ContextCommand):
     def do(self) -> tuple[int, str, str]:
         if prefs.verbose_simple_commands(self.context):
-            self.context.git_cmd('git rebase --skip')
+            self.context.notifier.git_cmd('git rebase --skip')
 
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
@@ -2511,7 +2511,7 @@ class RebaseSkip(ContextCommand):
 class RebaseAbort(ContextCommand):
     def do(self) -> None:
         if prefs.verbose_simple_commands(self.context):
-            self.context.git_cmd('git rebase --abort')
+            self.context.notifier.git_cmd('git rebase --abort')
         status, out, err = self.git.rebase(abort=True)
         Interaction.log_status(status, out, err)
         self.model.update_status()
