@@ -2582,6 +2582,15 @@ class RevertEditsCommand(ConfirmAction):
         self.model.set_diff_type(main.Types.TEXT)
         self.model.update_file_status()
 
+    def get_diff_output(self) -> str:
+        """Get diff of files to be reverted"""
+        checkout_args = self.checkout_args()
+        files = [arg for arg in checkout_args if arg != '--']
+        if not files:
+            return ''    
+        status, out, _ = self.git.diff(*files, patch_with_stat=True)
+        return out if status == 0 else ''
+
 
 class RevertUnstagedEdits(RevertEditsCommand):
     @staticmethod
@@ -2594,6 +2603,7 @@ class RevertUnstagedEdits(RevertEditsCommand):
         return False
 
     def confirm(self) -> bool:
+        from cola.widgets.revert import RevertConfirmDialog
         title = N_('Revert Unstaged Changes?')
         text = N_(
             'This operation removes unstaged edits from selected files.\n'
@@ -2601,10 +2611,13 @@ class RevertUnstagedEdits(RevertEditsCommand):
         )
         info = N_('Revert the unstaged changes?')
         ok_text = N_('Revert Unstaged Changes')
-        return Interaction.confirm(
-            title, text, info, ok_text, default=True, icon=self.icon
-        )
 
+        s = self.selection.selection()
+        files = s.modified if not s.staged else []
+        diff = self.get_diff_output()
+        
+        dialog = RevertConfirmDialog(title, text, diff, files)
+        return dialog.exec() == RevertConfirmDialog.Accepted
 
 class RevertUncommittedEdits(RevertEditsCommand):
     @staticmethod
@@ -2616,6 +2629,8 @@ class RevertUncommittedEdits(RevertEditsCommand):
 
     def confirm(self) -> bool:
         """Prompt for reverting changes"""
+        from cola.widgets.revert import RevertConfirmDialog
+
         title = N_('Revert Uncommitted Changes?')
         text = N_(
             'This operation removes uncommitted edits from selected files.\n'
@@ -2623,9 +2638,13 @@ class RevertUncommittedEdits(RevertEditsCommand):
         )
         info = N_('Revert the uncommitted changes?')
         ok_text = N_('Revert Uncommitted Changes')
-        return Interaction.confirm(
-            title, text, info, ok_text, default=True, icon=self.icon
-        )
+        
+        s = self.selection.selection()
+        files = s.modified + s.staged
+        diff = self.get_diff_output()
+        dialog = RevertConfirmDialog(title, text, diff, files)
+        
+        return dialog.exec() == RevertConfirmDialog.Accepted
 
 
 class RunConfigAction(ContextCommand):
