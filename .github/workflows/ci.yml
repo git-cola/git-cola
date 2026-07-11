@@ -93,7 +93,9 @@ jobs:
           rustup toolchain install stable --profile minimal --no-self-update
           cargo install garden-tools
       - name: Install dependencies
-        run: brew install git-cola
+        run: |
+          brew untap aws/tap || true
+          brew install git-cola
       - name: Build macOS git-cola.app bundle
         run: garden macos/app -vv -D cola-app='${TREE_PATH}/local/git-cola.app'
       - name: Upload git-cola.app.zip
