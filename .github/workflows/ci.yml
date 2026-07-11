@@ -95,7 +95,7 @@ jobs:
       - name: Install dependencies
         run: brew install git-cola
       - name: Build macOS git-cola.app bundle
-        run: garden macos/app -vv -D cola_app='${TREE_PATH}/local/git-cola.app'
+        run: garden macos/app -vv -D cola-app='${TREE_PATH}/local/git-cola.app'
       - name: Upload git-cola.app.zip
         uses: actions/upload-artifact@v7
         with:
