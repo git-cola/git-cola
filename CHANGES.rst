@@ -112,7 +112,7 @@ Fixes
   (`#1597 <https://github.com/git-cola/git-cola/pull/1597>`_)
 
 * Support for ``$LANGUAGE``, ``$LC_ALL``, ``$LC_MESSAGES`` and ``$LANG`` was improved.
-  (`#519972 <https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=519972>`_)
+  (`debian #1140489 <https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1140489>`_)
 
 Translations
 ------------
@@ -5155,9 +5155,7 @@ Developer
 Packaging
 ---------
 * All resources are now installed into `$prefix/share/git-cola`.
-  Closed Debian bug #519972
-
-  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=519972
+  (`debian #519972 <https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=519972>`_)
 
 
 .. _v1.3.6:
