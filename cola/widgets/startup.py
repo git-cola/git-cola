@@ -363,7 +363,9 @@ class BookmarksListView(QtWidgets.QListView):
 
         self.copy_action = qtutils.add_action(self, N_('Copy'), self.copy, hotkeys.COPY)
 
-        self.delete_action = qtutils.add_action(self, N_('Delete'), self.delete_item)
+        self.remove_action = qtutils.add_action(
+            self, N_('Remove'), self.remove_selected
+        )
 
         self.remove_missing_action = qtutils.add_action(
             self, N_('Prune Missing Entries'), self.remove_missing
@@ -382,7 +384,7 @@ class BookmarksListView(QtWidgets.QListView):
             self.launch_terminal_action,
             self.open_default_action,
             self.rename_repo_action,
-            self.delete_action,
+            self.remove_action,
         )
         self.action_group.setEnabled(True)
         self.set_default_repo_action.setEnabled(True)
@@ -440,7 +442,7 @@ class BookmarksListView(QtWidgets.QListView):
                 menu.addAction(self.set_default_repo_action)
             menu.addAction(self.rename_repo_action)
             menu.addSeparator()
-            menu.addAction(self.delete_action)
+            menu.addAction(self.remove_action)
             menu.addAction(self.remove_missing_action)
             menu.exec_(self.mapToGlobal(event.pos()))
 
@@ -518,7 +520,7 @@ class BookmarksListView(QtWidgets.QListView):
         context = self.context
         self.apply_func(lambda item: cmds.do(cmds.LaunchTerminal, context, item.path))
 
-    def delete_item(self):
+    def remove_selected(self):
         """Remove the selected repo item
 
         If the item comes from bookmarks (item.is_bookmark) then delete the item
