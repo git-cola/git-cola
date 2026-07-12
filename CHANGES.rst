@@ -85,6 +85,9 @@ Usability, bells and whistles
   switching between commits.
   (`#1613 <https://github.com/git-cola/git-cola/pull/1613>`_)
 
+* The startup dialog now includes a button to remove items from appearing.
+  (`#1616 <https://github.com/git-cola/git-cola/issues/1616>`_)
+
 Fixes
 -----
 * Closing the main window after opening a DAG window was causing errors

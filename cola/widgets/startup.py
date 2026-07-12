@@ -52,6 +52,9 @@ class StartupDialog(standard.Dialog):
         self.clone_button = qtutils.create_button(
             text=N_('Clone...'), icon=icons.cola()
         )
+        self.remove_button = qtutils.create_button(
+            text=N_('Remove'), icon=icons.remove(), enabled=False
+        )
         self.close_button = qtutils.close_button()
 
         self.bookmarks_model = bookmarks_model = QtGui.QStandardItemModel()
@@ -113,6 +116,7 @@ class StartupDialog(standard.Dialog):
             self.open_button,
             self.clone_button,
             self.new_button,
+            self.remove_button,
             qtutils.STRETCH,
             self.close_button,
         )
@@ -129,6 +133,9 @@ class StartupDialog(standard.Dialog):
         qtutils.connect_button(self.close_button, self.reject)
         self.tab_bar.currentChanged.connect(self.tab_changed)
 
+        qtutils.connect_button(self.remove_button, self.remove_selected)
+        self.bookmarks.selectionModel().selectionChanged.connect(self.selection_changed)
+
         self.init_state(settings, self.resize_widget)
         self.setFocusProxy(self.bookmarks)
         self.bookmarks.setFocus()
@@ -138,6 +145,10 @@ class StartupDialog(standard.Dialog):
         self.list_mode = list_mode
         if list_mode == 'list':
             self.tab_bar.setCurrentIndex(1)
+
+    def selection_changed(self, items):
+        is_selected = any(index.row() > 0 for index in items.indexes())
+        self.remove_button.setEnabled(is_selected)
 
     def tab_changed(self, idx):
         bookmarks = self.bookmarks
@@ -170,6 +181,7 @@ class StartupDialog(standard.Dialog):
                 item = builder.get(item.path, item.name, view_mode, item.is_bookmark)
                 new_items.append(item)
 
+        self.remove_button.setEnabled(False)
         self.set_model(new_items)
 
         if list_mode != self.list_mode:
@@ -269,6 +281,9 @@ class StartupDialog(standard.Dialog):
         if selected and selected[0].row() != 0:
             return self.bookmarks_model.data(selected[0], Qt.UserRole)
         return None
+
+    def remove_selected(self):
+        self.bookmarks.remove_selected()
 
     def set_model(self, items):
         bookmarks_model = self.bookmarks_model
