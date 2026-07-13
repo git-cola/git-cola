@@ -853,6 +853,21 @@ def diff_upstream(context: ApplicationContext, head: str) -> list[Any | str]:
     return diff_filenames(context, base, tracked)
 
 
+def diff_patch_with_stat(
+    context: ApplicationContext, paths: list[str], head: bool
+) -> str:
+    """Return a patch with a diffstat for paths, against HEAD when head is True"""
+    if not paths:
+        return ''
+    args = []
+    if head:
+        args.append('HEAD')
+    args.append('--')
+    args.extend(paths)
+    result = context.git.diff(*args, patch_with_stat=True)
+    return result[STDOUT]
+
+
 def list_submodule(context: ApplicationContext) -> list[Any]:
     """Return submodules in the format(state, sha_1, path, describe)"""
     status, data, _ = context.git.submodule('status')
