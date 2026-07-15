@@ -4,6 +4,7 @@ from unittest.mock import Mock
 from unittest.mock import patch
 
 from cola import cmds
+from cola.widgets import revert
 
 
 def test_Commit_strip_comments():
@@ -41,6 +42,24 @@ def test_unix_path_is_a_noop_on_sane_platforms():
     expect = path
     actual = cmds.unix_path(path, is_win32=lambda: False)
     assert expect == actual
+
+
+def test_revert_dialog_summary_contains_file_and_line_counts():
+    diff_text = """diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -1 +1,2 @@
+-old
++new
++line
+"""
+
+    summary = revert.summarize_changes(diff_text, ['README.md'])
+
+    assert summary['file_count'] == 1
+    assert summary['changed_lines'] == 3
+    assert summary['added_lines'] == 2
+    assert summary['removed_lines'] == 1
 
 
 def test_context_edit_command():

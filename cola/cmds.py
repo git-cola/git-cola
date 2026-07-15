@@ -2616,7 +2616,7 @@ class RevertUnstagedEdits(RevertEditsCommand):
         files = s.modified if not s.staged else []
         diff = self.get_diff_output()
         
-        dialog = RevertConfirmDialog(title, text, diff, files)
+        dialog = RevertConfirmDialog(self.context, title, text, diff, files)
         return dialog.exec() == RevertConfirmDialog.Accepted
 
 class RevertUncommittedEdits(RevertEditsCommand):
@@ -2642,8 +2642,8 @@ class RevertUncommittedEdits(RevertEditsCommand):
         s = self.selection.selection()
         files = s.modified + s.staged
         diff = self.get_diff_output()
-        dialog = RevertConfirmDialog(title, text, diff, files)
-        
+        dialog = RevertConfirmDialog(self.context, title, text, diff, files)
+
         return dialog.exec() == RevertConfirmDialog.Accepted
 
 
