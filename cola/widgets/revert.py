@@ -61,6 +61,11 @@ class RevertConfirmDialog(standard.Dialog):
         summary_label.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         summary_label.setMaximumHeight(96)
 
+        separator = QtWidgets.QFrame()
+        separator.setFrameShape(QtWidgets.QFrame.Shape.HLine)
+        separator.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
+        separator.setContentsMargins(0, 4, 0, 4)
+
         files_group = QtWidgets.QGroupBox(N_('Files to revert:'))
         files_group.setStyleSheet('QGroupBox { padding-top: 16px; }')
         files_layout = QtWidgets.QVBoxLayout()
@@ -103,6 +108,7 @@ class RevertConfirmDialog(standard.Dialog):
         layout.setContentsMargins(10, 10, 10, 10)
         layout.addWidget(msg)
         layout.addWidget(summary_label)
+        layout.addWidget(separator)
         layout.addWidget(files_group)
         layout.addWidget(diff_group, stretch=1)
         layout.addLayout(btn_layout)
