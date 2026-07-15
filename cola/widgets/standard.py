@@ -1005,6 +1005,7 @@ class MessageBox(Dialog):
         ok_text='',
         cancel_text=None,
         cancel_icon=None,
+        expand_details=True,
     ):
         Dialog.__init__(self, parent=parent)
 
@@ -1034,6 +1035,8 @@ class MessageBox(Dialog):
         self.button_ok = qtutils.create_button(text=ok_text, icon=ok_icon)
 
         self.button_close = qtutils.close_button(text=cancel_text, icon=cancel_icon)
+        self.button_details = qtutils.create_button(text=N_('Show Details...'))
+        self.button_details.setCheckable(True)
 
         if ok_text:
             self.button_ok.setText(ok_text)
@@ -1045,8 +1048,13 @@ class MessageBox(Dialog):
         if details:
             self.details_text.setFont(qtutils.default_monospace_font())
             self.details_text.setPlainText(details)
+            if expand_details:
+                self.button_details.hide()
+            else:
+                self.details_text.hide()
         else:
             self.details_text.hide()
+            self.button_details.hide()
 
         self.info_layout = qtutils.vbox(
             defs.large_margin,
@@ -1067,6 +1075,7 @@ class MessageBox(Dialog):
         self.buttons_layout = qtutils.hbox(
             defs.no_margin,
             defs.button_spacing,
+            self.button_details,
             qtutils.STRETCH,
             self.button_close,
             self.button_ok,
@@ -1091,6 +1100,7 @@ class MessageBox(Dialog):
 
         qtutils.connect_button(self.button_ok, self.accept)
         qtutils.connect_button(self.button_close, self.reject)
+        self.button_details.toggled.connect(self.details_text.setVisible)
         self.init_state(None, self.set_initial_size)
 
     def set_initial_size(self):
@@ -1155,6 +1165,7 @@ def confirm(
     default=True,
     cancel_text=None,
     cancel_icon=None,
+    details=None,
 ):
     """Confirm that an action should take place"""
     cancel_text = cancel_text or N_('Cancel')
@@ -1171,6 +1182,8 @@ def confirm(
         cancel_icon=cancel_icon,
         logo=logo,
         default=default,
+        details=details,
+        expand_details=False,
     )
 
     return mbox.run() == mbox.Accepted

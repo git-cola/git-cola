@@ -108,11 +108,14 @@ class Interaction:
         icon=None,
         default: bool = True,
         cancel_text: str | None = None,
+        details: str | None = None,
     ) -> bool:
         cancel_text = cancel_text or 'Cancel'
         icon = icon or '?'
 
-        cls.information(title, message=text, informative_text=informative_text)
+        cls.information(
+            title, message=text, informative_text=informative_text, details=details
+        )
         if default:
             prompt = '%s? [Y/n] ' % ok_text
         else:

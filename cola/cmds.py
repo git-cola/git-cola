@@ -2612,8 +2612,9 @@ class RevertUnstagedEdits(RevertEditsCommand):
         )
         info = N_('Revert the unstaged changes?')
         ok_text = N_('Revert Unstaged Changes')
+        details = self.preview_diff()
         return Interaction.confirm(
-            title, text, info, ok_text, default=True, icon=self.icon
+            title, text, info, ok_text, default=True, icon=self.icon, details=details
         )
 
 
@@ -2634,8 +2635,9 @@ class RevertUncommittedEdits(RevertEditsCommand):
         )
         info = N_('Revert the uncommitted changes?')
         ok_text = N_('Revert Uncommitted Changes')
+        details = self.preview_diff()
         return Interaction.confirm(
-            title, text, info, ok_text, default=True, icon=self.icon
+            title, text, info, ok_text, default=True, icon=self.icon, details=details
         )
 
 

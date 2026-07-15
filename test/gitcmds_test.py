@@ -218,3 +218,32 @@ def test_diff_helper(app_context):
     expect_rn = '+A change\r\n'
     actual = gitcmds.diff_helper(app_context, ref='HEAD', cached=True)
     assert expect_n in actual or expect_rn in actual
+
+
+def test_diff_patch_with_stat(app_context):
+    """diff_patch_with_stat() previews the changes that a revert will discard"""
+    helper.commit_files()
+    helper.write_file('A', 'A content\n')
+    helper.write_file('B', 'B content\n')
+    helper.run_git('add', 'A', 'B')
+    helper.run_git('commit', '-m', 'add A and B')
+
+    # An empty path list produces no diff.
+    assert gitcmds.diff_patch_with_stat(app_context, [], head=False) == ''
+
+    # Unstaged edits are diffed against the index.
+    helper.append_file('A', 'A change\n')
+    actual = gitcmds.diff_patch_with_stat(app_context, ['A'], head=False)
+    assert '1 file changed' in actual
+    assert '+A change' in actual
+
+    # Only the requested paths are included in the diff.
+    helper.append_file('B', 'B change\n')
+    actual = gitcmds.diff_patch_with_stat(app_context, ['A'], head=False)
+    assert 'B change' not in actual
+
+    # Staged edits do not appear in the index diff but do appear against HEAD.
+    helper.run_git('add', 'A')
+    assert gitcmds.diff_patch_with_stat(app_context, ['A'], head=False) == ''
+    actual = gitcmds.diff_patch_with_stat(app_context, ['A'], head=True)
+    assert '+A change' in actual
