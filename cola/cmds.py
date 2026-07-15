@@ -2612,12 +2612,13 @@ class RevertUnstagedEdits(RevertEditsCommand):
         info = N_('Revert the unstaged changes?')
         ok_text = N_('Revert Unstaged Changes')
 
-        s = self.selection.selection()
-        files = s.modified if not s.staged else []
+        checkout_args = self.checkout_args()
+        files = [arg for arg in checkout_args if arg != '--' and arg != self.model.head]
         diff = self.get_diff_output()
         
         dialog = RevertConfirmDialog(self.context, title, text, diff, files)
         return dialog.exec() == RevertConfirmDialog.Accepted
+
 
 class RevertUncommittedEdits(RevertEditsCommand):
     @staticmethod
@@ -2639,8 +2640,8 @@ class RevertUncommittedEdits(RevertEditsCommand):
         info = N_('Revert the uncommitted changes?')
         ok_text = N_('Revert Uncommitted Changes')
         
-        s = self.selection.selection()
-        files = s.modified + s.staged
+        checkout_args = self.checkout_args()
+        files = [arg for arg in checkout_args if arg != '--' and arg != self.model.head]
         diff = self.get_diff_output()
         dialog = RevertConfirmDialog(self.context, title, text, diff, files)
 
