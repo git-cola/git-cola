@@ -6,7 +6,7 @@ from . import diff
 
 
 def summarize_changes(diff_text, filenames):
-    """Build a concise summary for the revert confirmation dialog."""
+    """Build a concise diff-stat summary for the revert confirmation dialog."""
     file_count = len(filenames)
     if not diff_text:
         return {
@@ -14,7 +14,6 @@ def summarize_changes(diff_text, filenames):
             'changed_lines': 0,
             'added_lines': 0,
             'removed_lines': 0,
-            'change_types': ['modified'] if file_count else [],
         }
 
     added_lines = 0
@@ -28,11 +27,9 @@ def summarize_changes(diff_text, filenames):
         elif line.startswith('-') and not line.startswith('---'):
             removed_lines += 1
 
-    changed_lines = added_lines + removed_lines
-
     return {
         'file_count': file_count,
-        'changed_lines': changed_lines,
+        'changed_lines': added_lines + removed_lines,
         'added_lines': added_lines,
         'removed_lines': removed_lines,
     }
@@ -53,9 +50,8 @@ class RevertConfirmDialog(standard.Dialog):
         summary = summarize_changes(diff_text, filenames)
         summary_text = (
             f"{N_('Files')}: {summary['file_count']}\n"
-            f"{N_('Changed lines')}: {summary['changed_lines']}\n"
-            f"{N_('Added lines')}: {summary['added_lines']}\n"
-            f"{N_('Removed lines')}: {summary['removed_lines']}"
+            f"{N_('Insertions')}: {summary['added_lines']}\n"
+            f"{N_('Deletions')}: {summary['removed_lines']}"
         )
         summary_label = QtWidgets.QLabel(summary_text)
         summary_label.setWordWrap(True)
