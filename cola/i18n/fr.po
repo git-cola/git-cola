@@ -244,7 +244,7 @@ msgstr "Impossible d'exécuter « %s » : veuillez configurer un visionneur d
 
 #: cola/cmds.py:614
 msgid "Cherry-pick failed"
-msgstr "Échec de la copie"
+msgstr "Échec du cherry-pick"
 
 #: cola/cmds.py:628
 msgid "Revert failed"

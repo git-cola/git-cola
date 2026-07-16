@@ -1,5 +1,13 @@
 .. _v4.19.0:
 
+Upcoming
+========
+
+Translations
+------------
+* Updated French translation.
+  (`#1608+ <https://github.com/git-cola/git-cola/pull/1608#pullrequestreview-4688968144>`_)
+
 v4.19.0
 =======
 
