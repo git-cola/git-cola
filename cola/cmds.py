@@ -2610,9 +2610,7 @@ class RevertUnstagedEdits(RevertEditsCommand):
             'This operation removes unstaged edits from selected files.\n'
             'These changes cannot be recovered.'
         )
-        info = N_('Revert the unstaged changes?')
-        ok_text = N_('Revert Unstaged Changes')
-
+        
         checkout_args = self.checkout_args()
         files = [arg for arg in checkout_args if arg != '--' and arg != self.model.head]
         diff = self.get_diff_output()
@@ -2638,9 +2636,6 @@ class RevertUncommittedEdits(RevertEditsCommand):
             'This operation removes uncommitted edits from selected files.\n'
             'These changes cannot be recovered.'
         )
-        info = N_('Revert the uncommitted changes?')
-        ok_text = N_('Revert Uncommitted Changes')
-
         checkout_args = self.checkout_args()
         files = [arg for arg in checkout_args if arg != '--' and arg != self.model.head]
         diff = self.get_diff_output()
