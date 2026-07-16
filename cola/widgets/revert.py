@@ -1,7 +1,7 @@
 from qtpy import QtWidgets
+
 from ..i18n import N_
-from . import standard
-from . import diff
+from . import diff, standard
 
 
 def summarize_changes(diff_text, filenames):
