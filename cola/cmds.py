@@ -2610,7 +2610,7 @@ class RevertUnstagedEdits(RevertEditsCommand):
             'This operation removes unstaged edits from selected files.\n'
             'These changes cannot be recovered.'
         )
-        
+
         checkout_args = self.checkout_args()
         files = [arg for arg in checkout_args if arg != '--' and arg != self.model.head]
         diff = self.get_diff_output()
