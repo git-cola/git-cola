@@ -1,5 +1,4 @@
 from qtpy import QtWidgets
-from .. import qtutils
 from ..i18n import N_
 from . import standard
 from . import diff
@@ -48,17 +47,15 @@ class RevertConfirmDialog(standard.Dialog):
         msg.setWordWrap(True)
 
         summary = summarize_changes(diff_text, filenames)
-        summary_text = (
-            f"{N_('Files')}: {summary['file_count']}\n"
-            f"{N_('Insertions')}: {summary['added_lines']}\n"
-            f"{N_('Deletions')}: {summary['removed_lines']}"
-        )
+        summary_text = f"{N_('Files')}: {summary['file_count']}\n" f"{N_('Insertions')}: {summary['added_lines']}\n" f"{N_('Deletions')}: {summary['removed_lines']}"
         summary_label = QtWidgets.QLabel(summary_text)
         summary_label.setWordWrap(True)
         summary_label.setFrameShape(QtWidgets.QFrame.Shape.Panel)
         summary_label.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
         summary_label.setContentsMargins(8, 8, 8, 8)
-        summary_label.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        summary_label.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         summary_label.setMaximumHeight(96)
 
         separator = QtWidgets.QFrame()
@@ -74,10 +71,14 @@ class RevertConfirmDialog(standard.Dialog):
         files_text.setPlainText('\n'.join(filenames))
         files_text.setReadOnly(True)
         files_text.setMaximumHeight(120)
-        files_text.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        files_text.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         files_layout.addWidget(files_text)
         files_group.setLayout(files_layout)
-        files_group.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        files_group.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
 
         diff_group = QtWidgets.QGroupBox(N_('Changes to be reverted:'))
         diff_group.setStyleSheet('QGroupBox { padding-top: 16px; }')
@@ -88,10 +89,14 @@ class RevertConfirmDialog(standard.Dialog):
         diff_edit.setPlainText(diff_text or N_('(no changes)'))
         diff_edit.setReadOnly(True)
         diff_edit.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
-        diff_edit.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        diff_edit.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         diff_layout.addWidget(diff_edit)
         diff_group.setLayout(diff_layout)
-        diff_group.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        diff_group.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
 
         ok_btn = QtWidgets.QPushButton(N_('Revert'))
         cancel_btn = QtWidgets.QPushButton(N_('Cancel'))

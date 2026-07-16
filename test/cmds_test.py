@@ -245,29 +245,31 @@ def test_undo_last_commit_confirms_action(prefs, interaction):
 def test_revert_unstaged_edits_confirm(mock_dialog):
     context = Mock()
     context.model.head = 'HEAD'
-    
+
     selection = Mock()
     selection.staged = ['staged_file.txt']
     selection.modified = ['modified_file.txt']
-    
+
     cmd = cmds.RevertUnstagedEdits(context)
     cmd.selection = Mock()
     cmd.selection.selection = Mock(return_value=selection)
-    
+
     cmd.get_diff_output = Mock(return_value='diff_output')
-    
+
     mock_dialog.return_value.exec.return_value = 1
     mock_dialog.Accepted = 1
-    
+
     assert cmd.confirm()
-    
+
     mock_dialog.assert_called_once_with(
         context,
         cmds.N_('Revert Unstaged Changes?'),
-        cmds.N_('This operation removes unstaged edits from selected files.\n'
-                'These changes cannot be recovered.'),
+        cmds.N_(
+            'This operation removes unstaged edits from selected files.\n'
+            'These changes cannot be recovered.'
+        ),
         'diff_output',
-        ['staged_file.txt']
+        ['staged_file.txt'],
     )
 
 
@@ -275,27 +277,29 @@ def test_revert_unstaged_edits_confirm(mock_dialog):
 def test_revert_unstaged_edits_confirm_unstaged_only(mock_dialog):
     context = Mock()
     context.model.head = 'HEAD'
-    
+
     selection = Mock()
     selection.staged = []
     selection.modified = ['modified_file.txt']
-    
+
     cmd = cmds.RevertUnstagedEdits(context)
     cmd.selection = Mock()
     cmd.selection.selection = Mock(return_value=selection)
-    
+
     cmd.get_diff_output = Mock(return_value='diff_output')
-    
+
     mock_dialog.return_value.exec.return_value = 1
     mock_dialog.Accepted = 1
-    
+
     assert cmd.confirm()
-    
+
     mock_dialog.assert_called_once_with(
         context,
         cmds.N_('Revert Unstaged Changes?'),
-        cmds.N_('This operation removes unstaged edits from selected files.\n'
-                'These changes cannot be recovered.'),
+        cmds.N_(
+            'This operation removes unstaged edits from selected files.\n'
+            'These changes cannot be recovered.'
+        ),
         'diff_output',
-        ['modified_file.txt']
+        ['modified_file.txt'],
     )

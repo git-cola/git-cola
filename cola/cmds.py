@@ -2587,7 +2587,7 @@ class RevertEditsCommand(ConfirmAction):
         checkout_args = self.checkout_args()
         files = [arg for arg in checkout_args if arg != '--']
         if not files:
-            return ''    
+            return ''
         status, out, _ = self.git.diff(*files, patch_with_stat=True)
         return out if status == 0 else ''
 
@@ -2604,6 +2604,7 @@ class RevertUnstagedEdits(RevertEditsCommand):
 
     def confirm(self) -> bool:
         from cola.widgets.revert import RevertConfirmDialog
+
         title = N_('Revert Unstaged Changes?')
         text = N_(
             'This operation removes unstaged edits from selected files.\n'
@@ -2615,7 +2616,7 @@ class RevertUnstagedEdits(RevertEditsCommand):
         checkout_args = self.checkout_args()
         files = [arg for arg in checkout_args if arg != '--' and arg != self.model.head]
         diff = self.get_diff_output()
-        
+
         dialog = RevertConfirmDialog(self.context, title, text, diff, files)
         return dialog.exec() == RevertConfirmDialog.Accepted
 
@@ -2639,7 +2640,7 @@ class RevertUncommittedEdits(RevertEditsCommand):
         )
         info = N_('Revert the uncommitted changes?')
         ok_text = N_('Revert Uncommitted Changes')
-        
+
         checkout_args = self.checkout_args()
         files = [arg for arg in checkout_args if arg != '--' and arg != self.model.head]
         diff = self.get_diff_output()
