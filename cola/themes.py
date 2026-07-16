@@ -593,10 +593,16 @@ def style_sheet_default(palette: QPalette, bold_fonts: bool) -> str:
     else:
         font_weight = ''
 
-    return """
-        * {{
-            {font_weight}
-        }}
+    # macOS renders native checkboxes and radios that align correctly and look
+    # like the rest of the platform. Restyling their indicators via a stylesheet
+    # resizes the box but leaves QMacStyle positioning it against the native
+    # (smaller) metrics, which pushes the indicator out of vertical alignment
+    # with its label. Keep the native controls there and only restyle the
+    # indicators on platforms where the palette-based default looks out of place.
+    if utils.is_darwin():
+        checkbox_style = ''
+    else:
+        checkbox_style = """
         QCheckBox::indicator {{
             width: {checkbox_size}px;
             height: {checkbox_size}px;
@@ -626,7 +632,16 @@ def style_sheet_default(palette: QPalette, bold_fonts: bool) -> str:
             border-radius: {radio_radius}px;
             background: {base_rgb};
         }}
+        """
 
+    style_sheet = (
+        """
+        * {{
+            {font_weight}
+        }}
+        """
+        + checkbox_style
+        + """
         QSplitter::handle:hover {{
             background: {highlight_rgb};
         }}
@@ -640,7 +655,9 @@ def style_sheet_default(palette: QPalette, bold_fonts: bool) -> str:
             background: {highlight_rgb};
         }}
 
-        """.format(
+        """
+    )
+    return style_sheet.format(
         font_weight=font_weight,
         separator=defs.separator,
         highlight_rgb=highlight_rgb,
