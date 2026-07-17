@@ -10,6 +10,7 @@ Thanks
 * Adam Lesperance
 * Adrien be
 * Adil
+* AFRADOX
 * AJ Bagwell
 * Akhil Presingu
 * akontsevich
