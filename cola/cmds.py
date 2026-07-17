@@ -2556,20 +2556,31 @@ class RevertEditsCommand(ConfirmAction):
     def checkout_from_head(self) -> bool:
         return False
 
+    def path_list(self) -> list[str]:
+        """Return the paths that will be checked out"""
+        s = self.selection.selection()
+        if s.staged:
+            return s.staged
+        else:
+            return s.modified
+
     def checkout_args(self) -> list[str]:
         args = []
-        s = self.selection.selection()
         if self.checkout_from_head():
             args.append(self.model.head)
         args.append('--')
 
-        if s.staged:
-            items = s.staged
-        else:
-            items = s.modified
+        items = self.path_list()
         args.extend(items)
 
         return args
+
+    def preview_diff(self) -> str:
+        """Return a diff of the changes that will be reverted"""
+        paths = self.path_list()
+        return gitcmds.diff_patch_with_stat(
+            self.context, paths, self.checkout_from_head()
+        )
 
     def action(self) -> tuple[int, str, str]:
         checkout_args = self.checkout_args()
@@ -2601,8 +2612,9 @@ class RevertUnstagedEdits(RevertEditsCommand):
         )
         info = N_('Revert the unstaged changes?')
         ok_text = N_('Revert Unstaged Changes')
+        details = self.preview_diff()
         return Interaction.confirm(
-            title, text, info, ok_text, default=True, icon=self.icon
+            title, text, info, ok_text, default=True, icon=self.icon, details=details
         )
 
 
@@ -2623,8 +2635,9 @@ class RevertUncommittedEdits(RevertEditsCommand):
         )
         info = N_('Revert the uncommitted changes?')
         ok_text = N_('Revert Uncommitted Changes')
+        details = self.preview_diff()
         return Interaction.confirm(
-            title, text, info, ok_text, default=True, icon=self.icon
+            title, text, info, ok_text, default=True, icon=self.icon, details=details
         )
 
 
