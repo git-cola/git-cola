@@ -12,6 +12,11 @@ Usability, bells and whistles
   to better match macOS's native light and dark mode themes.
   (`#1622 <https://github.com/git-cola/git-cola/pull/1622>`_)
 
+* The Stage and Unstage commands now support Undo and Redo under the hood,
+  but the application does not yet expose the Undo and Redo queues.
+  A future change will add Undo and Redo support to the application.
+  (`#1619 <https://github.com/git-cola/git-cola/pull/1619>`_)
+
 Translations
 ------------
 * Updated French translation.
