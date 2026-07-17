@@ -245,7 +245,13 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     """A textedit for interacting with diff text"""
 
     def __init__(
-        self, context, parent, is_commit=False, whitespace=True, numbers=False
+        self,
+        context,
+        parent,
+        is_commit=False,
+        whitespace=True,
+        numbers=False,
+        numbers_visible=False,
     ) -> None:
         super().__init__(context, '', parent=parent)
         # Diff/patch syntax highlighter
@@ -264,7 +270,8 @@ class DiffTextEdit(VimHintedPlainTextEdit):
         self.diff_lines = diffparse.DiffLines()
         if numbers:
             self.numbers = DiffLineNumbers(context, self, diff_lines=self.diff_lines)
-            self.numbers.hide()
+            if not numbers_visible:
+                self.numbers.hide()
         else:
             self.numbers = None
         self.scrollvalue = None
