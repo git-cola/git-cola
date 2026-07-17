@@ -38,6 +38,15 @@ class FormWidget(QtWidgets.QWidget):
         self.setLayout(QtWidgets.QFormLayout())
 
     def add_row(self, label, widget):
+        # QFormLayout aligns a plain label to the baseline of a bare checkbox,
+        # which leaves the native macOS indicator sitting a few pixels above its
+        # label text. Wrapping the button in a layout (which has no text
+        # baseline) makes the form vertically centre the row so the indicator
+        # lines up with the label.
+        if isinstance(widget, (QtWidgets.QCheckBox, QtWidgets.QRadioButton)):
+            widget = qtutils.hbox(
+                defs.no_margin, defs.no_spacing, widget, qtutils.STRETCH
+            )
         self.layout().addRow(label, widget)
 
     def set_config(self, config_dict):
