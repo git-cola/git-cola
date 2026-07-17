@@ -5,6 +5,12 @@ from unittest.mock import patch
 
 from cola import cmds
 
+from . import helper
+from .helper import app_context
+
+# Prevent unused imports lint errors.
+assert app_context is not None
+
 
 def test_Commit_strip_comments():
     """Ensure that commit messages are stripped of comments"""
@@ -220,16 +226,6 @@ def test_undo_last_commit_confirms_action(prefs, interaction):
     assert cmd.confirm()
     context.model.is_commit_published.assert_called_once()
     interaction.confirm.assert_called_once()
-
-
-from cola import core
-from cola import gitcmds
-
-from . import helper
-from .helper import app_context
-
-# Prevent unused imports lint errors.
-assert app_context is not None
 
 
 def test_stage_undo_restores_untracked_state(app_context):
