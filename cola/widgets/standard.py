@@ -1093,8 +1093,8 @@ class MessageBox(Dialog):
             defs.margin,
             defs.button_spacing,
             self.top_layout,
-            self.buttons_layout,
             self.details_text,
+            self.buttons_layout,
         )
         self.main_layout.setStretchFactor(self.details_text, 2)
         self.setLayout(self.main_layout)
