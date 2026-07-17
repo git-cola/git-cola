@@ -3,6 +3,10 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* The dialog that appears when reverting worktree edits now includes a diff
+  preview of the content that will be reverted.
+  (`#1621 <https://github.com/git-cola/git-cola/pull/1621>`_)
+
 * Checkboxes and Radio Buttons on macOS are now rendered using native widgetry
   to better match macOS's native light and dark mode themes.
   (`#1622 <https://github.com/git-cola/git-cola/pull/1622>`_)
