@@ -2930,6 +2930,8 @@ def should_stage_conflicts(path) -> bool:
 class Stage(ContextCommand):
     """Stage a set of paths."""
 
+    UNDOABLE = True
+
     @staticmethod
     def name() -> str:
         return N_('Stage')
@@ -2937,11 +2939,36 @@ class Stage(ContextCommand):
     def __init__(self, context: ApplicationContext, paths: list[str]) -> None:
         super().__init__(context)
         self.paths = paths
+        self._old_diff = ''
 
     def do(self) -> tuple[int, str, str]:
+        if not super().do():
+            return (0, '', '')
+        if self.paths:
+            status, out, _ = self.git.diff(
+                '--', *self.paths, cached=True, _readonly=True
+            )
+            if status == 0:
+                self._old_diff = out
         msg = N_('Staging: %s') % (', '.join(self.paths))
         Interaction.log(msg)
         return self.stage_paths()
+
+    def undo(self) -> None:
+        super().undo()
+        if not self.paths:
+            return
+        self.git.reset('--', *self.paths)
+        if self._old_diff:
+            tmp_file = utils.tmp_filename('undo-stage')
+            core.write(tmp_file, self._old_diff)
+            try:
+                status, out, err = gitcmds.apply_diff(self.context, tmp_file)
+            finally:
+                core.unlink(tmp_file)
+            if status != 0:
+                Interaction.log_status(status, out, err)
+        self.model.update_files(emit=True)
 
     def stage_paths(self) -> tuple[int, str, str]:
         """Stages add/removals to git."""
@@ -3204,6 +3231,8 @@ class Tag(ContextCommand):
 class Unstage(ContextCommand):
     """Unstage a set of paths."""
 
+    UNDOABLE = True
+
     @staticmethod
     def name() -> str:
         return N_('Unstage')
@@ -3211,12 +3240,20 @@ class Unstage(ContextCommand):
     def __init__(self, context: ApplicationContext, paths: list[str]) -> None:
         super().__init__(context)
         self.paths = paths
+        self._old_diff = ''
 
     def do(self) -> tuple[int, str, str]:
         """Unstage paths"""
+        if not super().do():
+            return (0, '', '')
         context = self.context
         head = self.model.head
         paths = self.paths
+
+        if paths:
+            status, out, _ = self.git.diff('--', *paths, cached=True, _readonly=True)
+            if status == 0:
+                self._old_diff = out
 
         msg = N_('Unstaging: %s') % (', '.join(paths))
         Interaction.log(msg)
@@ -3226,6 +3263,20 @@ class Unstage(ContextCommand):
         Interaction.command(N_('Error'), 'git reset', status, out, err)
         self.model.update_file_status()
         return (status, out, err)
+
+    def undo(self) -> None:
+        super().undo()
+        if not self.paths or not self._old_diff:
+            return
+        tmp_file = utils.tmp_filename('undo-unstage')
+        core.write(tmp_file, self._old_diff)
+        try:
+            status, out, err = gitcmds.apply_diff(self.context, tmp_file)
+        finally:
+            core.unlink(tmp_file)
+        if status != 0:
+            Interaction.log_status(status, out, err)
+        self.model.update_file_status()
 
 
 class UnstageAll(ContextCommand):

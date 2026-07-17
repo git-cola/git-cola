@@ -220,3 +220,53 @@ def test_undo_last_commit_confirms_action(prefs, interaction):
     assert cmd.confirm()
     context.model.is_commit_published.assert_called_once()
     interaction.confirm.assert_called_once()
+
+
+from cola import core
+from cola import gitcmds
+
+from . import helper
+from .helper import app_context
+
+# Prevent unused imports lint errors.
+assert app_context is not None
+
+
+def test_stage_undo_restores_untracked_state(app_context):
+    """Undoing a Stage on a new file returns it to untracked"""
+    app_context.timestamp = time.time()
+    model = app_context.model
+    helper.touch('new_file.txt')
+    model.update_status()
+    assert 'new_file.txt' in model.untracked
+
+    cmd = cmds.Stage(app_context, ['new_file.txt'])
+    cmd.do()
+    model.update_status()
+    assert 'new_file.txt' in model.staged
+
+    cmd.undo()
+    model.update_status()
+    assert 'new_file.txt' not in model.staged
+    assert 'new_file.txt' in model.untracked
+
+
+def test_unstage_undo_restores_staged_state(app_context):
+    """Undoing an Unstage on a modified file returns it to staged"""
+    app_context.timestamp = time.time()
+    helper.commit_files()
+    helper.write_file('A', 'change')
+    helper.run_git('add', 'A')
+    model = app_context.model
+    model.update_status()
+    assert 'A' in model.staged
+
+    cmd = cmds.Unstage(app_context, ['A'])
+    cmd.do()
+    model.update_status()
+    assert 'A' not in model.staged
+    assert 'A' in model.modified
+
+    cmd.undo()
+    model.update_status()
+    assert 'A' in model.staged
