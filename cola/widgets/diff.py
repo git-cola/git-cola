@@ -14,6 +14,7 @@ from .. import actions
 from .. import cmds
 from .. import core
 from .. import diffparse
+from .. import fields
 from .. import gitcmds
 from .. import gravatar
 from .. import hotkeys
@@ -818,7 +819,9 @@ class Viewer(QtWidgets.QFrame):
         self.search_widget.setFocus()
 
     def export_state(self, state):
-        state['show_diff_line_numbers'] = self.options.show_line_numbers.isChecked()
+        state[
+            fields.SHOW_DIFF_LINE_NUMBERS
+        ] = self.options.show_line_numbers.isChecked()
         state['show_diff_filenames'] = self.options.show_filenames.isChecked()
         state['image_diff_mode'] = self.options.image_mode.currentIndex()
         state['image_zoom_mode'] = self.options.zoom_mode.currentIndex()
@@ -829,7 +832,7 @@ class Viewer(QtWidgets.QFrame):
         return state
 
     def apply_state(self, state):
-        diff_numbers = bool(state.get('show_diff_line_numbers', False))
+        diff_numbers = bool(state.get(fields.SHOW_DIFF_LINE_NUMBERS, False))
         self.set_line_numbers(diff_numbers, update=True)
 
         show_filenames = bool(state.get('show_diff_filenames', True))
