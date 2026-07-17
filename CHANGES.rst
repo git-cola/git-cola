@@ -1,12 +1,19 @@
-.. _v4.19.0:
-
 Upcoming
 ========
+
+Usability, bells and whistles
+-----------------------------
+* Checkboxes and Radio Buttons on macOS are now rendered using native widgetry
+  to better match macOS's native light and dark mode themes.
+  (`#1622 <https://github.com/git-cola/git-cola/pull/1622>`_)
 
 Translations
 ------------
 * Updated French translation.
   (`#1608+ <https://github.com/git-cola/git-cola/pull/1608#pullrequestreview-4688968144>`_)
+
+
+.. _v4.19.0:
 
 v4.19.0
 =======
