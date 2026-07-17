@@ -1005,6 +1005,7 @@ class MessageBox(Dialog):
         ok_text='',
         cancel_text=None,
         cancel_icon=None,
+        details_display_fn=None,
         expand_details=True,
     ):
         Dialog.__init__(self, parent=parent)
@@ -1043,14 +1044,21 @@ class MessageBox(Dialog):
         else:
             self.button_ok.hide()
 
-        self.details_text = QtWidgets.QPlainTextEdit()
+        if details_display_fn:
+            self.details_text = details_display_fn(self)
+        else:
+            self.details_text = QtWidgets.QPlainTextEdit()
+            self.details_text.setFont(qtutils.default_monospace_font())
+
         self.details_text.setReadOnly(True)
         if details:
-            self.details_text.setFont(qtutils.default_monospace_font())
-            self.details_text.setPlainText(details)
-            if expand_details:
-                self.button_details.hide()
+            if hasattr(self.details_text, 'set_diff'):
+                self.details_text.set_diff(details)
+            elif hasattr(self.details_text, 'set_value'):
+                self.details_text.set_value(details)
             else:
+                self.details_text.setPlainText(details)
+            if not expand_details:
                 self.details_text.hide()
         else:
             self.details_text.hide()
@@ -1166,6 +1174,7 @@ def confirm(
     cancel_text=None,
     cancel_icon=None,
     details=None,
+    details_display_fn=None,
 ):
     """Confirm that an action should take place"""
     cancel_text = cancel_text or N_('Cancel')
@@ -1183,6 +1192,7 @@ def confirm(
         logo=logo,
         default=default,
         details=details,
+        details_display_fn=details_display_fn,
         expand_details=False,
     )
 
@@ -1211,7 +1221,9 @@ def command_error(title, cmd, status, out, err):
     critical(title, message=message, details=details)
 
 
-def information(title, message=None, details=None, informative_text=None):
+def information(
+    title, message=None, details=None, details_display_fn=None, informative_text=None
+):
     """Show information with the provided title and message."""
     if message is None:
         message = title
@@ -1221,6 +1233,7 @@ def information(title, message=None, details=None, informative_text=None):
         text=message,
         info=informative_text,
         details=details,
+        details_display_fn=details_display_fn,
         logo=icons.cola(),
     )
     mbox.run()

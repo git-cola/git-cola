@@ -3,6 +3,9 @@ import os
 import sys
 from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from typing import Callable
+
 from . import core
 from .i18n import N_
 
@@ -70,6 +73,7 @@ class Interaction:
         title: str,
         message: str | None = None,
         details: str | None = None,
+        details_display_fn: Callable | None = None,
         informative_text: str | None = None,
     ) -> None:
         if message is None:
@@ -109,12 +113,17 @@ class Interaction:
         default: bool = True,
         cancel_text: str | None = None,
         details: str | None = None,
+        details_display_fn: Callable | None = None,
     ) -> bool:
         cancel_text = cancel_text or 'Cancel'
         icon = icon or '?'
 
         cls.information(
-            title, message=text, informative_text=informative_text, details=details
+            title,
+            message=text,
+            informative_text=informative_text,
+            details=details,
+            details_display_fn=details_display_fn,
         )
         if default:
             prompt = '%s? [Y/n] ' % ok_text
