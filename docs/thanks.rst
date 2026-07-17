@@ -322,6 +322,7 @@ Thanks
 * Vitor Lobo
 * v.paritskiy
 * waterzch
+* William Schmidt
 * Wolfgang Ocker
 * wm4
 * WNguyen14
