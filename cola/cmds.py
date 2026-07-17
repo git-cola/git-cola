@@ -2546,9 +2546,12 @@ class RefreshConfig(ContextCommand):
 
 
 class RevertEditsCommand(ConfirmAction):
-    def __init__(self, context: ApplicationContext) -> None:
+    def __init__(
+        self, context: ApplicationContext, details_display_fn: Callable | None = None
+    ) -> None:
         super().__init__(context)
         self.icon = icons.undo()
+        self.details_display_fn = details_display_fn
 
     def ok_to_run(self) -> bool:
         return self.model.is_undoable()
@@ -2614,7 +2617,14 @@ class RevertUnstagedEdits(RevertEditsCommand):
         ok_text = N_('Revert Unstaged Changes')
         details = self.preview_diff()
         return Interaction.confirm(
-            title, text, info, ok_text, default=True, icon=self.icon, details=details
+            title,
+            text,
+            info,
+            ok_text,
+            default=True,
+            icon=self.icon,
+            details=details,
+            details_display_fn=self.details_display_fn,
         )
 
 
@@ -2637,7 +2647,14 @@ class RevertUncommittedEdits(RevertEditsCommand):
         ok_text = N_('Revert Uncommitted Changes')
         details = self.preview_diff()
         return Interaction.confirm(
-            title, text, info, ok_text, default=True, icon=self.icon, details=details
+            title,
+            text,
+            info,
+            ok_text,
+            default=True,
+            icon=self.icon,
+            details=details,
+            details_display_fn=self.details_display_fn,
         )
 
 

@@ -10,6 +10,7 @@ from .. import actions
 from .. import cmds
 from .. import core
 from .. import difftool
+from .. import fields
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
@@ -24,6 +25,7 @@ from ..widgets import standard
 from . import common
 from . import completion
 from . import defs
+from . import diff
 from . import text
 
 # Top-level status widget item indexes.
@@ -193,7 +195,11 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.revert_unstaged_edits_action = qtutils.add_action(
             self,
             cmds.RevertUnstagedEdits.name(),
-            cmds.run(cmds.RevertUnstagedEdits, context),
+            cmds.run(
+                cmds.RevertUnstagedEdits,
+                context,
+                details_display_fn=self.details_display_fn,
+            ),
             hotkeys.REVERT,
             hotkeys.REVERT_ALT,
         )
@@ -334,6 +340,14 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         self.itemDoubleClicked.connect(cmds.run(cmds.StageOrUnstage, self.context))
         self.itemCollapsed.connect(lambda x: self._update_column_widths())
         self.itemExpanded.connect(lambda x: self._update_column_widths())
+
+    def details_display_fn(self, parent):
+        """Show details in a DiffTextEdit when confirming reverts"""
+        mainview_settings = self.context.settings.gui_state.get(fields.MAINVIEW)
+        numbers = mainview_settings.get(fields.SHOW_DIFF_LINE_NUMBERS, True)
+        return diff.DiffTextEdit(
+            self.context, parent, numbers=numbers, numbers_visible=numbers
+        )
 
     def _make_current_item_visible(self):
         item = self.currentItem()

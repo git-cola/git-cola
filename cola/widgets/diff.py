@@ -1353,7 +1353,11 @@ class DiffEditor(DiffTextEdit):
             self,
             icons.undo(),
             cmds.RevertUnstagedEdits.name(),
-            cmds.run(cmds.RevertUnstagedEdits, self.context),
+            cmds.run(
+                cmds.RevertUnstagedEdits,
+                self.context,
+                details_display_fn=self.details_display_fn,
+            ),
             hotkeys.REVERT_UNSTAGED_EDITS,
         )
 
@@ -1395,6 +1399,13 @@ class DiffEditor(DiffTextEdit):
 
         # Update actions when the diff text selection changes.
         self.selectionChanged.connect(self._update_actions_for_selected_text)
+
+    def details_display_fn(self, parent):
+        """Show details in a DiffTextEdit when confirming reverts"""
+        numbers = self.numbers.isVisible()
+        return DiffTextEdit(
+            self.context, parent, numbers=numbers, numbers_visible=numbers
+        )
 
     def set_max_diff_size(self, value):
         """Set the max diff state on the diff widget"""
