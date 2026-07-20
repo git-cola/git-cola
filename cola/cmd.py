@@ -82,10 +82,10 @@ class CommandBus(QtCore.QObject):
         self.do_command.connect(lambda cmd: cmd.do(), type=Qt.QueuedConnection)
         self.undo_command.connect(lambda cmd: cmd.undo(), type=Qt.QueuedConnection)
 
-    def do(self, cmd: str) -> None:
+    def do(self, cmd: Command) -> None:
         """Run a command on the main thread"""
         self.do_command.emit(cmd)
 
-    def undo(self, cmd: str) -> None:
+    def undo(self, cmd: Command) -> None:
         """Undo a command on the main thread"""
         self.undo_command.emit(cmd)
