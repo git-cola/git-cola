@@ -198,7 +198,7 @@ def readline(fh, encoding=None) -> UStr | None:
 def start_command(
     cmd: list[UStr | str],
     cwd: UStr | None = None,
-    add_env: None = None,
+    add_env: dict[str, str] | None = None,
     universal_newlines: bool = False,
     stdin: int | None = subprocess.PIPE,
     stdout: int | None = subprocess.PIPE,
