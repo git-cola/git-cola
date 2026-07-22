@@ -417,3 +417,32 @@ def test_it_doesnt_deadlock():
 
     actual = err
     assert expect == actual
+
+
+def _capture_command(**call_kwargs):
+    """Run Git.git() with execute() stubbed and return the constructed argv"""
+    instance = git.Git()
+    instance.set_worktree(os.getcwd())
+    captured = []
+
+    def fake_execute(command, **_kwargs):
+        captured.append(list(command))
+        return (0, '', '')
+
+    with patch.object(git.Git, 'execute', staticmethod(fake_execute)):
+        instance.status(**call_kwargs)
+    return captured[0]
+
+
+def test_readonly_command_skips_optional_locks():
+    """Read-only commands pass --no-optional-locks before the subcommand"""
+    argv = _capture_command(_readonly=True)
+    assert '--no-optional-locks' in argv
+    # The flag is a top-level git option, so it must precede the subcommand.
+    assert argv.index('--no-optional-locks') < argv.index('status')
+
+
+def test_write_command_keeps_optional_locks():
+    """Commands that may write must not skip the optional index lock"""
+    argv = _capture_command(_readonly=False)
+    assert '--no-optional-locks' not in argv
