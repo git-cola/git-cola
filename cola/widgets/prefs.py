@@ -469,6 +469,15 @@ class AppearanceFormWidget(FormWidget):
         self.status_indent = qtutils.checkbox()
         self.block_cursor = qtutils.checkbox(checked=True)
 
+        tooltip = N_(
+            'Choose whether appearance settings apply to all repositories\n'
+            'or only to the current repository'
+        )
+        self.scope = qtutils.combo(
+            [N_('All Repositories'), N_('Current Repository')], tooltip=tooltip
+        )
+
+        self.add_row(N_('Apply Settings To'), self.scope)
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.fixed_font_size)
         self.add_row(N_('Font Size (UI)'), self.font_size)
@@ -503,6 +512,12 @@ class AppearanceFormWidget(FormWidget):
         self.fixed_font_size.valueChanged.connect(self.diff_font_size_changed)
         self.font_size.valueChanged.connect(self.font_size_changed)
         self.theme.currentIndexChanged.connect(self._theme_changed)
+        self.scope.currentIndexChanged.connect(self._scope_changed)
+
+    def _scope_changed(self, idx):
+        """Switch between editing global and repository-local appearance settings"""
+        self.source = 'local' if idx == 1 else 'global'
+        self.update_from_config()
 
     def _theme_changed(self, theme_idx):
         """Set the icon theme to dark/light when the main theme changes"""
@@ -537,13 +552,15 @@ class AppearanceFormWidget(FormWidget):
 
     def diff_font_size_changed(self, size):
         """The diff font size was changed"""
+        # The diff font is read back via qtutils.diff_font(), which always reads
+        # the merged config, so it is intentionally kept global-only here.
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
         cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())
 
     def font_size_changed(self, size):
         """The UI font size was changed"""
-        cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTSIZE, size)
+        cmds.do(prefs.SetConfig, self.model, self.source, prefs.FONTSIZE, size)
 
     def current_font_changed(self, font):
         cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())
