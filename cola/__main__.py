@@ -1,6 +1,6 @@
 """Run cola as a Python module.
 
-Usage: python -m cola 
+Usage: python -m cola
 """
 
 from cola import main
