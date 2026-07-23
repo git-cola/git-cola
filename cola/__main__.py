@@ -7,7 +7,7 @@ from cola import main
 
 
 def run() -> None:
-    """Start the command-line interface."""
+    """Start the command-line interface. test comment for garden checks"""
     main.main()
 
 
