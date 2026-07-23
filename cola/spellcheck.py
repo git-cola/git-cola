@@ -131,10 +131,10 @@ class NorvigSpellCheck:
         words = self.dictwords
         propernames = self.propernames
 
-        if use_common_files and words and os.path.exists(words):
+        if use_common_files and words and core.exists(words):
             paths.append(words)
 
-        if use_common_files and propernames and os.path.exists(propernames):
+        if use_common_files and propernames and core.exists(propernames):
             paths.append(propernames)
 
         for path in self.extra_dictionaries:
@@ -207,6 +207,6 @@ def get_available_dictionaries() -> list[str]:
         # Create a "/usr/share/hunspell/*.dic" glob pattern.
         hunspell_pattern = os.path.join(hunspell_prefix, 'share', 'hunspell', '*.dic')
         dictionaries.extend(
-            path for path in glob.glob(hunspell_pattern) if not os.path.islink(path)
+            path for path in glob.glob(hunspell_pattern) if not core.islink(path)
         )
     return dictionaries

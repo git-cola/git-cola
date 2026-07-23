@@ -44,6 +44,9 @@ extras = [
     "pyobjc; sys_platform == 'darwin'",
     # Enables the "Send to Trash" feature.
     "send2trash",
+    # Enables server/client functionality.
+    "websockets >= 15.0.1",
+    "msgpack >= 1.1.2",
 ]
 # Developer tools.
 dev = [

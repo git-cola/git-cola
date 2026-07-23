@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 from typing import Any
 
 from . import core
+from . import operations
 from .compat import WIN32
 from .compat import int_types
 from .compat import ustr
@@ -48,52 +49,51 @@ def dashify(value: str) -> str:
     return value.replace('_', '-')
 
 
-def is_git_dir(git_dir: TextType) -> bool:
+def is_git_dir(ops: operations.IOperations, git_dir: TextType) -> bool:
     """From git's setup.c:is_git_directory()."""
     result = False
     if git_dir:
         headref = join(git_dir, 'HEAD')
 
         if (
-            core.isdir(git_dir)
+            ops.isdir(git_dir)
             and (
-                core.isdir(join(git_dir, 'objects'))
-                and core.isdir(join(git_dir, 'refs'))
+                ops.isdir(join(git_dir, 'objects')) and ops.isdir(join(git_dir, 'refs'))
             )
             or (
-                core.isfile(join(git_dir, 'gitdir'))
-                and core.isfile(join(git_dir, 'commondir'))
+                ops.isfile(join(git_dir, 'gitdir'))
+                and ops.isfile(join(git_dir, 'commondir'))
             )
         ):
-            result = core.isfile(headref) or (
-                core.islink(headref) and core.readlink(headref).startswith('refs/')
+            result = ops.isfile(headref) or (
+                ops.islink(headref) and core.readlink(headref).startswith('refs/')
             )
         else:
-            result = is_git_file(git_dir)
+            result = is_git_file(ops, git_dir)
 
     return result
 
 
-def is_git_file(filename: TextType) -> bool:
-    return core.isfile(filename) and os.path.basename(filename) == '.git'
+def is_git_file(ops: operations.IOperations, filename: TextType) -> bool:
+    return ops.isfile(filename) and os.path.basename(filename) == '.git'
 
 
-def is_git_worktree(dirname) -> bool:
-    return is_git_dir(join(dirname, '.git'))
+def is_git_worktree(ops: operations.IOperations, dirname) -> bool:
+    return is_git_dir(ops, join(dirname, '.git'))
 
 
-def is_git_repository(path) -> bool:
-    return is_git_worktree(path) or is_git_dir(path)
+def is_git_repository(ops: operations.IOperations, path) -> bool:
+    return is_git_worktree(ops, path) or is_git_dir(ops, path)
 
 
-def read_git_file(path: str) -> str | None:
+def read_git_file(ops: operations.IOperations, path: str) -> str | None:
     """Read the path from a .git-file
 
     `None` is returned when <path> is not a .git-file.
 
     """
     result = None
-    if path and is_git_file(path):
+    if path and is_git_file(ops, path):
         header = 'gitdir: '
         data = core.read(path).strip()
         if data.startswith(header):
@@ -110,37 +110,39 @@ class Paths:
 
     def __init__(
         self,
+        ops: operations.IOperations,
         git_dir: TextType | None = None,
         git_file: TextType | None = None,
         worktree: TextType | None = None,
         common_dir: TextType | None = None,
     ) -> None:
-        if git_dir and not is_git_dir(git_dir):
+        if git_dir and not is_git_dir(ops, git_dir):
             git_dir = None
         self.git_dir = git_dir
         self.git_file = git_file
         self.worktree = worktree
         self.common_dir = common_dir
+        self.ops = ops
 
     def get(self, path: core.UStr | str) -> Paths:
         """Search for git worktrees and bare repositories"""
         if not self.git_dir or not self.worktree:
             ceiling_dirs = set()
-            ceiling = core.getenv('GIT_CEILING_DIRECTORIES')
+            ceiling = self.ops.getenv('GIT_CEILING_DIRECTORIES')
             if ceiling:
                 ceiling_dirs.update([x for x in ceiling.split(os.pathsep) if x])
             if path:
-                path = core.abspath(path)
+                path = self.ops.abspath(path)
             self._search_for_git(path, ceiling_dirs)
 
         if self.git_dir:
-            git_dir_path = read_git_file(self.git_dir)
+            git_dir_path = read_git_file(self.ops, self.git_dir)
             if git_dir_path:
                 self.git_file = self.git_dir
                 self.git_dir = git_dir_path
 
                 commondir_file = join(git_dir_path, 'commondir')
-                if core.exists(commondir_file):
+                if self.ops.exists(commondir_file):
                     common_path = core.read(commondir_file).strip()
                     if common_path:
                         if os.path.isabs(common_path):
@@ -157,7 +159,7 @@ class Paths:
         while path:
             if path in ceiling_dirs:
                 break
-            if is_git_dir(path):
+            if is_git_dir(self.ops, path):
                 if not self.git_dir:
                     self.git_dir = path
                 basename = os.path.basename(path)
@@ -170,11 +172,11 @@ class Paths:
                     basename = os.path.basename(self.git_dir)
                     if basename == '.git':
                         self.worktree = os.path.dirname(self.git_dir)
-                    elif path and not is_git_dir(path):
+                    elif path and not is_git_dir(self.ops, path):
                         self.worktree = path
                 break
             gitpath = join(path, '.git')
-            if is_git_dir(gitpath):
+            if is_git_dir(self.ops, gitpath):
                 if not self.git_dir:
                     self.git_dir = gitpath
                 if not self.worktree:
@@ -185,10 +187,12 @@ class Paths:
                 break
 
 
-def find_git_directory(path: core.UStr) -> Paths:
+def find_git_directory(ops: operations.IOperations, path: core.UStr | str) -> Paths:
     """Perform Git repository discovery"""
     return Paths(
-        git_dir=core.getenv('GIT_DIR'), worktree=core.getenv('GIT_WORK_TREE')
+        ops,
+        git_dir=ops.getenv('GIT_DIR'),
+        worktree=ops.getenv('GIT_WORK_TREE'),
     ).get(path)
 
 
@@ -197,14 +201,15 @@ class Git:
     The Git class manages communication with the Git binary
     """
 
-    def __init__(self, worktree: None = None) -> None:
-        self.paths = Paths()
+    def __init__(self, ops: operations.IOperations, worktree: None = None) -> None:
+        self.ops = ops
+        self.paths = Paths(self.ops)
 
         self._valid = {}  #: Store the result of is_git_dir() for performance
-        self.set_worktree(worktree or core.getcwd())
+        self.set_worktree(worktree or self.ops.getcwd())
 
     def is_git_repository(self, path) -> bool:
-        return is_git_repository(path)
+        return is_git_repository(path, self.ops)
 
     def getcwd(self) -> TextType:
         """Return the working directory used by git()"""
@@ -212,13 +217,13 @@ class Git:
 
     def set_worktree(self, path: str) -> TextType:
         path = core.decode(path)
-        self.paths = find_git_directory(path)
+        self.paths = find_git_directory(self.ops, path)
         return self.paths.worktree
 
     def worktree(self) -> TextType:
         if not self.paths.worktree:
-            path = core.abspath(core.getcwd())
-            self.paths = find_git_directory(path)
+            path = self.ops.abspath(self.ops.getcwd())
+            self.paths = find_git_directory(self.ops, path)
         return self.paths.worktree
 
     def is_valid(self) -> bool:
@@ -231,7 +236,7 @@ class Git:
         try:
             valid = bool(git_dir) and self._valid[git_dir]
         except KeyError:
-            valid = self._valid[git_dir] = is_git_dir(git_dir)
+            valid = self._valid[git_dir] = is_git_dir(self.ops, git_dir)
 
         return valid
 
@@ -239,16 +244,16 @@ class Git:
         result = None
         if self.paths.git_dir:
             result = join(self.paths.git_dir, *paths)
-        if result and self.paths.common_dir and not core.exists(result):
+        if result and self.paths.common_dir and not self.ops.exists(result):
             common_result = join(self.paths.common_dir, *paths)
-            if core.exists(common_result):
+            if self.ops.exists(common_result):
                 result = common_result
         return result
 
     def git_dir(self) -> TextType:
         if not self.paths.git_dir:
-            path = core.abspath(core.getcwd())
-            self.paths = find_git_directory(path)
+            path = self.ops.abspath(self.ops.getcwd())
+            self.paths = find_git_directory(self.ops, path)
         return self.paths.git_dir
 
     def __getattr__(self, name: str) -> partial:
@@ -259,6 +264,7 @@ class Git:
     @staticmethod
     def execute(
         command: list[TextType],
+        ops: operations.IOperations = operations.LocalOperations(),
         _add_env: dict[str, str] | None = None,
         _cwd: TextType | None = None,
         _decode: bool = True,
@@ -285,7 +291,7 @@ class Git:
         """
         # Allow the user to have the command executed in their working dir.
         if not _cwd:
-            _cwd = core.getcwd()
+            _cwd = ops.getcwd()
 
         extra = {}
 
@@ -303,7 +309,7 @@ class Git:
         if not _readonly:
             _index_lock.acquire()
         try:
-            status, out, err = core.run_command(
+            status, out, err = ops.run_command(
                 command,
                 add_env=_add_env,
                 cwd=_cwd,
@@ -331,12 +337,12 @@ class Git:
             Interaction.log_status(status, msg, '')
         elif cola_trace == 'full':
             if out or err:
-                core.print_stderr(
+                ops.print_stderr(
                     "# %.3fs: %s -> %d: '%s' '%s'"
                     % (elapsed_time, ' '.join(command), status, out, err)
                 )
             else:
-                core.print_stderr(
+                ops.print_stderr(
                     '# %.3fs: %s -> %d' % (elapsed_time, ' '.join(command), status)
                 )
         elif cola_trace:
@@ -382,7 +388,7 @@ class Git:
         call.extend(args)
         try:
             result: tuple[int, TextType, TextType] = self.execute(
-                call, **_kwargs  # type: ignore[arg-type]
+                call, self.ops, **_kwargs  # type: ignore[arg-type]
             )
         except OSError as exc:
             if WIN32 and exc.errno == errno.ENOENT:
@@ -390,21 +396,21 @@ class Git:
                 # case of argv overflow. We should be safe from that but use
                 # defensive coding for the worst-case scenario. On UNIX
                 # we have ENAMETOOLONG but that doesn't exist on Windows.
-                if _git_is_installed():
+                if _git_is_installed(self.ops):
                     raise exc
-                _print_win32_git_hint()
+                _print_win32_git_hint(self.ops)
             result = (1, '', "error: unable to execute '%s'" % GIT)
         return result
 
 
-def _git_is_installed():
+def _git_is_installed(ops: operations.IOperations):
     """Return True if git is installed"""
     # On win32 Git commands can fail with ENOENT in case of argv overflow. We
     # should be safe from that but use defensive coding for the worst-case
     # scenario. On UNIX we have ENAMETOOLONG but that doesn't exist on
     # Windows.
     try:
-        status, _, _ = Git.execute([GIT, '--version'])
+        status, _, _ = Git.execute([GIT, '--version'], ops)
         result = status == 0
     except OSError:
         result = False
@@ -461,18 +467,18 @@ def win32_git_error_hint() -> str:
 
 
 @memoize
-def _print_win32_git_hint() -> None:
+def _print_win32_git_hint(ops: operations.IOperations) -> None:
     hint = '\n' + win32_git_error_hint() + '\n'
-    core.print_stderr("error: unable to execute 'git'" + hint)
+    ops.print_stderr("error: unable to execute 'git'" + hint)
 
 
-def create() -> Git:
+def create(ops: operations.IOperations) -> Git:
     """Create Git instances
 
-    >>> git = create()
+    >>> git = create(operations.LocalOperations())
     >>> status, out, err = git.version()
     >>> 'git' == out[:3].lower()
     True
 
     """
-    return Git()
+    return Git(ops)

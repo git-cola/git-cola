@@ -6,7 +6,6 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
 from .. import cmds
-from .. import core
 from .. import display
 from .. import guicmds
 from .. import hotkeys
@@ -217,7 +216,7 @@ class StartupDialog(standard.Dialog):
         self.repodir = self.get_selected_bookmark()
         if not self.repodir:
             self.repodir = qtutils.opendir_dialog(
-                N_('Open Git Repository'), core.getcwd()
+                N_('Open Git Repository'), self.context.ops.getcwd()
             )
         if self.repodir:
             self.accept()
@@ -253,7 +252,7 @@ class StartupDialog(standard.Dialog):
             self.repodir = self.bookmarks_model.data(index, Qt.UserRole)
             if not self.repodir:
                 return
-            if not core.exists(self.repodir):
+            if not self.context.ops.exists(self.repodir):
                 self.handle_broken_repo(index)
                 return
             self.accept()

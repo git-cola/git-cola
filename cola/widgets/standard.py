@@ -1,6 +1,8 @@
+from __future__ import annotations
 import os
 import time
 from functools import partial
+from typing import TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -21,6 +23,9 @@ from ..models import prefs
 from ..settings import Settings
 from ..settings import mklist
 from . import defs
+
+if TYPE_CHECKING:
+    from ..app import ApplicationContext
 
 # Magic header emitted by QWidget::saveGeometry() (Qt 5/6).
 _QWIDGET_GEOMETRY_MAGIC = b'\x01\xd9\xd0\xcb'
@@ -257,7 +262,7 @@ class MainWindowMixin(WidgetMixin):
                 settings = context.settings
                 settings.load()
             try:
-                cwd = core.getcwd()
+                cwd = self.context.ops.getcwd()
             except FileNotFoundError:
                 pass
             else:
@@ -918,9 +923,10 @@ class SpinBox(QtWidgets.QSpinBox):
 class DirectoryPathLineEdit(QtWidgets.QWidget):
     """A combined line edit and file browser button"""
 
-    def __init__(self, path, parent):
+    def __init__(self, context: ApplicationContext, path, parent):
         QtWidgets.QWidget.__init__(self, parent)
 
+        self.context = context
         self.line_edit = QtWidgets.QLineEdit()
         self.line_edit.setText(path)
 
@@ -952,11 +958,11 @@ class DirectoryPathLineEdit(QtWidgets.QWidget):
             return
         # Make the directory relative only if it the current directory or
         # or subdirectory from the current directory.
-        current_dir = core.getcwd()
+        current_dir = self.context.ops.getcwd()
         if output_dir == current_dir:
             output_dir = '.'
         elif output_dir.startswith(current_dir + os.sep):
-            output_dir = os.path.relpath(output_dir)
+            output_dir = self.context.ops.relpath(output_dir)
         self.set_value(output_dir)
 
 

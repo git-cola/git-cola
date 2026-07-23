@@ -20,7 +20,9 @@ from ..interaction import Interaction
 from . import prefs
 
 if TYPE_CHECKING:
+    from ..app import ApplicationContext
     from ..types import TextType
+
 
 FETCH = 'fetch'
 FETCH_HEAD = 'FETCH_HEAD'
@@ -179,7 +181,7 @@ class MainModel(QtCore.QObject):
             cwd = self.git.getcwd()
             self.project = os.path.basename(cwd)
             self.set_directory(cwd)
-            core.chdir(cwd)
+            self.context.ops.chdir(cwd)
             self.update_config(reset=reset)
 
             # Detect the "git init" scenario by checking for branches.
@@ -188,7 +190,9 @@ class MainModel(QtCore.QObject):
                 has_branches = bool(gitcmds.branch_list(self.context))
             else:
                 refs = self.git.git_path('refs', 'heads')
-                has_branches = core.exists(refs) and bool(core.listdir(refs))
+                has_branches = self.context.ops.exists(refs) and bool(
+                    self.context.ops.listdir(refs)
+                )
             # "git rev-parse" exits with a non-zero exit status when the
             # safe.directory protection is active.
             if has_branches:
@@ -218,9 +222,9 @@ class MainModel(QtCore.QObject):
         return (
             lfs_filter
             and lfs_dir
-            and core.exists(lfs_dir)
+            and self.context.ops.exists(lfs_dir)
             and lfs_hook
-            and core.exists(lfs_hook)
+            and self.context.ops.exists(lfs_hook)
         )
 
     def set_commitmsg(self, msg: str, notify: bool = True) -> None:
@@ -239,7 +243,7 @@ class MainModel(QtCore.QObject):
         try:
             if not msg.endswith('\n'):
                 msg += '\n'
-            core.write(path, msg)
+            self.context.ops.write_file(path, msg)
         except OSError:
             pass
         return path
@@ -422,10 +426,12 @@ class MainModel(QtCore.QObject):
         merge_head = self.git.git_path('MERGE_HEAD')
         rebase_merge = self.git.git_path('rebase-merge')
         rebase_apply = self.git.git_path('rebase-apply', 'applying')
-        self.is_cherry_picking = cherry_pick_head and core.exists(cherry_pick_head)
-        self.is_merging = merge_head and core.exists(merge_head)
-        self.is_rebasing = rebase_merge and core.exists(rebase_merge)
-        self.is_applying_patch = rebase_apply and core.exists(rebase_apply)
+        self.is_cherry_picking = cherry_pick_head and self.context.ops.exists(
+            cherry_pick_head
+        )
+        self.is_merging = merge_head and self.context.ops.exists(merge_head)
+        self.is_rebasing = rebase_merge and self.context.ops.exists(rebase_merge)
+        self.is_applying_patch = rebase_apply and self.context.ops.exists(rebase_apply)
         if self.mode == self.mode_amend and (
             self.is_merging or self.is_cherry_picking or self.is_applying_patch
         ):
@@ -550,7 +556,7 @@ class MainModel(QtCore.QObject):
         """If we've chosen a directory then use it, otherwise use current"""
         if self.directory:
             return self.directory
-        return core.getcwd()
+        return self.context.ops.getcwd()
 
     def cycle_ref_sort(self) -> None:
         """Choose the next ref sort type (version, reverse-chronological)"""
@@ -711,34 +717,34 @@ def autodetect_proxy(context, kwargs: dict[Any, Any]) -> None:
         return
     # This function has the side-effect of updating the kwargs dict.
     # The "_add_env" parameter gets forwarded to the __getattr__ git function's
-    # _add_env option which forwards to core.run_command()'s add_env option.
-    add_env = autodetect_proxy_environ()
+    # _add_env option which forwards to ops.run_command()'s add_env option.
+    add_env = autodetect_proxy_environ(context)
     if add_env:
         kwargs['_add_env'] = add_env
 
 
-def autodetect_proxy_environ() -> dict[Any, Any]:
+def autodetect_proxy_environ(context: ApplicationContext) -> dict[Any, Any]:
     """Return the environment variables used for configuring proxies"""
     add_env = {}
-    xdg_current_desktop = core.getenv('XDG_CURRENT_DESKTOP', default='')
+    xdg_current_desktop = context.ops.getenv('XDG_CURRENT_DESKTOP', default='')
     if not xdg_current_desktop:
         return add_env
 
     http_proxy: TextType | None = None
     https_proxy: TextType | None = None
     if xdg_current_desktop == 'KDE' or xdg_current_desktop.endswith(':KDE'):
-        kreadconfig = core.find_executable('kreadconfig5')
+        kreadconfig = context.ops.find_executable('kreadconfig5')
         if kreadconfig:
-            http_proxy = autodetect_proxy_kde(kreadconfig, 'http')
-            https_proxy = autodetect_proxy_kde(kreadconfig, 'https')
+            http_proxy = autodetect_proxy_kde(context, kreadconfig, 'http')
+            https_proxy = autodetect_proxy_kde(context, kreadconfig, 'https')
     elif xdg_current_desktop:
         # If we're not on KDE then we'll fallback to GNOME / gsettings.
-        gsettings = core.find_executable('gsettings')
-        if gsettings and autodetect_proxy_gnome_is_enabled(gsettings):
-            http_proxy = autodetect_proxy_gnome(gsettings, 'http')
-            https_proxy = autodetect_proxy_gnome(gsettings, 'https')
+        gsettings = context.ops.find_executable('gsettings')
+        if gsettings and autodetect_proxy_gnome_is_enabled(context, gsettings):
+            http_proxy = autodetect_proxy_gnome(context, gsettings, 'http')
+            https_proxy = autodetect_proxy_gnome(context, gsettings, 'https')
 
-    if os.environ.get('http_proxy'):
+    if context.ops.get_environ().get('http_proxy'):
         Interaction.log(
             N_('http proxy configured by the "http_proxy" environment variable')
         )
@@ -749,7 +755,7 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
         )
         add_env['http_proxy'] = http_proxy
 
-    if os.environ.get('https_proxy', None):
+    if context.ops.get_environ().get('https_proxy', None):
         Interaction.log(
             N_('https proxy configured by the "https_proxy" environment variable')
         )
@@ -763,24 +769,28 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     return add_env
 
 
-def autodetect_proxy_gnome_is_enabled(gsettings: str) -> bool:
+def autodetect_proxy_gnome_is_enabled(
+    context: ApplicationContext, gsettings: str
+) -> bool:
     """Is the proxy manually configured on Gnome?"""
-    status, out, _ = core.run_command(
+    status, out, _ = context.ops.run_command(
         [gsettings, 'get', 'org.gnome.system.proxy', 'mode']
     )
     return status == 0 and out.strip().strip("'") == 'manual'
 
 
-def autodetect_proxy_gnome(gsettings: str, scheme: str) -> str | None:
+def autodetect_proxy_gnome(
+    context: ApplicationContext, gsettings: str, scheme: str
+) -> str | None:
     """Return the configured HTTP proxy for Gnome"""
-    status, out, _ = core.run_command(
+    status, out, _ = context.ops.run_command(
         [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'host']
     )
     if status != 0:
         return None
     host = out.strip().strip("'")
     port = ''
-    status, out, _ = core.run_command(
+    status, out, _ = context.ops.run_command(
         [gsettings, 'get', f'org.gnome.system.proxy.{scheme}', 'port']
     )
     if status == 0:
@@ -789,7 +799,9 @@ def autodetect_proxy_gnome(gsettings: str, scheme: str) -> str | None:
     return proxy
 
 
-def autodetect_proxy_kde(kreadconfig: str, scheme: str) -> str | None:
+def autodetect_proxy_kde(
+    context: ApplicationContext, kreadconfig: str, scheme: str
+) -> str | None:
     """Return the configured HTTP proxy for KDE"""
     cmd = [
         kreadconfig,
@@ -800,7 +812,7 @@ def autodetect_proxy_kde(kreadconfig: str, scheme: str) -> str | None:
         '--key',
         'ProxyType',
     ]
-    status, out, err = core.run_command(cmd)
+    status, out, err = context.ops.run_command(cmd)
     if status == 0 and out.strip() == '1':
         cmd = [
             kreadconfig,
@@ -811,7 +823,7 @@ def autodetect_proxy_kde(kreadconfig: str, scheme: str) -> str | None:
             '--key',
             f'{scheme}Proxy',
         ]
-        status, out, err = core.run_command(cmd)
+        status, out, err = context.ops.run_command(cmd)
         if status == 0:
             proxy = out.strip().replace(' ', ':')
             return proxy

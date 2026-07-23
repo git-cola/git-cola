@@ -317,7 +317,7 @@ class Search(SearchWidget):
         if not paths:
             return
         filepaths = []
-        curdir = core.getcwd()
+        curdir = self.context.ops.getcwd()
         prefix_len = len(curdir) + 1
         for path in paths:
             if not path.startswith(curdir):

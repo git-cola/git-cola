@@ -370,15 +370,17 @@ class ApplyPatch(ContextCommand):
     def do(self) -> None:
         context = self.context
 
-        tmp_file = utils.tmp_filename('apply', suffix='.patch')
+        tmp_file = context.ops.tmp_filename('apply', suffix='.patch')
         try:
-            core.write(tmp_file, self.patch.as_text(), encoding=self.encoding)
+            context.ops.write_file(
+                tmp_file, self.patch.as_text(), encoding=self.encoding
+            )
             if self.apply_to_worktree:
                 status, out, err = gitcmds.apply_diff_to_worktree(context, tmp_file)
             else:
                 status, out, err = gitcmds.apply_diff(context, tmp_file)
         finally:
-            core.unlink(tmp_file)
+            context.ops.unlink(tmp_file)
 
         Interaction.log_status(status, out, err)
         self.model.update_file_status(update_index=True)
@@ -462,7 +464,7 @@ class Archive(ContextCommand):
         if self.prefix:
             cmd.append('--prefix=' + self.prefix)
         cmd.append(self.ref)
-        proc = core.start_command(cmd, stdout=fp)
+        proc = self.context.ops.run_command(cmd, stdout=fp)
         out, err = proc.communicate()
         fp.close()
         status = proc.returncode
@@ -869,12 +871,12 @@ class Commit(ResetMode):
         # Create the commit message file
         context = self.context
         msg = self.msg
-        tmp_file = utils.tmp_filename('commit-message')
+        tmp_file = context.ops.tmp_filename('commit-message')
         add_env = {
             'NO_COLOR': '1',
             'TERM': 'dumb',
         }
-        add_env.update(main.autodetect_proxy_environ())
+        add_env.update(main.autodetect_proxy_environ(self.context))
         kwargs = {}
         # Override the commit date.
         if self.date:
@@ -898,7 +900,7 @@ class Commit(ResetMode):
             self.context.notifier.git_cmd(core.list2cmdline(cmd_args))
 
         try:
-            core.write(tmp_file, msg)
+            self.context.ops.write_file(tmp_file, msg)
             # Run 'git commit'
             status, out, err = self.git.commit(
                 _add_env=add_env,
@@ -910,7 +912,7 @@ class Commit(ResetMode):
                 **kwargs,
             )
         finally:
-            core.unlink(tmp_file)
+            self.context.ops.unlink(tmp_file)
         if status == 0:
             super().do()
             if context.cfg.get(prefs.AUTOTEMPLATE):
@@ -960,10 +962,10 @@ class Ignore(ContextCommand):
             filename = self.git.git_path('info', 'exclude')
         else:
             filename = '.gitignore'
-        if core.exists(filename):
+        if self.context.ops.exists(filename):
             current_list = core.read(filename)
             new_additions = current_list.rstrip() + '\n' + new_additions
-        core.write(filename, new_additions)
+        self.context.ops.write_file(filename, new_additions)
         Interaction.log_status(0, f'Added to {filename}:\n{for_status}', '')
         self.model.update_file_status()
 
@@ -1210,7 +1212,7 @@ class RemoveFiles(ContextCommand):
     def __init__(self, context: ApplicationContext, remover, filenames) -> None:
         super().__init__(context)
         if remover is None:
-            remover = os.remove
+            remover = self.context.ops.remove
         self.remover = remover
         self.filenames = filenames
         # We could git-hash-object stuff and provide undo-ability
@@ -1234,7 +1236,8 @@ class RemoveFiles(ContextCommand):
 
         if bad_filenames:
             Interaction.information(
-                N_('Error'), N_('Deleting "%s" failed') % file_summary(bad_filenames)
+                N_('Error'),
+                N_('Deleting "%s" failed') % file_summary(bad_filenames),
             )
 
         if rescan:
@@ -1549,7 +1552,7 @@ class DiffImage(EditModel):
 
             if new_oid != missing_blob_oid:
                 found_in_annex = False
-                if annex and core.islink(filename):
+                if annex and self.context.ops.islink(filename):
                     status, out, _ = self.git.annex('status', '--', filename)
                     if status == 0:
                         details = out.split(' ')
@@ -1575,7 +1578,7 @@ class DiffImage(EditModel):
         merge_heads = [
             merge_head
             for merge_head in candidate_merge_heads
-            if core.exists(self.git.git_path(merge_head))
+            if context.ops.exists(self.git.git_path(merge_head))
         ]
 
         if annex:  # Attempt to find files in git-annex
@@ -1855,11 +1858,11 @@ class LaunchTerminal(ContextCommand):
             command = '/bin/sh'
             shells = ('zsh', 'fish', 'bash', 'sh')
             for basename in shells:
-                executable = core.find_executable(basename)
+                executable = self.context.ops.find_executable(basename)
                 if executable:
                     command = executable
                     break
-            argv.append(os.getenv('SHELL', command))
+            argv.append(self.context.ops.getenv('SHELL', command))
             shell = False
 
         core.fork(argv, cwd=self.path, shell=shell)
@@ -1902,7 +1905,7 @@ class LoadCommitMessageFromFile(ContextCommand):
 
     def do(self) -> None:
         path = os.path.expanduser(self.path)
-        if not path or not core.isfile(path):
+        if not path or not self.context.ops.isfile(path):
             Interaction.log(N_('Error: Cannot find commit template'))
             Interaction.log(N_('%s: No such file or directory.') % path)
             return
@@ -1967,7 +1970,7 @@ class PrepareCommitMessageHook(ContextCommand):
         title = N_('Error running prepare-commitmsg hook')
         hook = gitcmds.prepare_commit_message_hook(self.context)
 
-        if os.path.exists(hook):
+        if self.context.ops.exists(hook):
             Interaction.log('hook cola-prepare-commit-msg exists: "%s"' % hook)
             filename = self.model.save_commitmsg()
 
@@ -1989,11 +1992,11 @@ class PrepareCommitMessageHook(ContextCommand):
                 cmd = [bash, hook_rep, filename_rep]
 
                 Interaction.log("running 'prepare-commit-msg': %s" % str(cmd))
-                status, out, err = core.run_command(cmd)
+                status, out, err = self.context.ops.run_command(cmd)
             else:
                 # On *nix:
                 # The hook script is executed directly using the given path.
-                status, out, err = core.run_command([hook, filename])
+                status, out, err = self.context.ops.run_command([hook, filename])
 
             if status == 0:
                 result = core.read(filename)
@@ -2093,7 +2096,7 @@ class OpenDefaultApp(ContextCommand):
     def do(self) -> None:
         if not self.filenames:
             return
-        utils.launch_default_app(self.filenames)
+        utils.launch_default_app(self.context, self.filenames)
 
 
 class OpenDir(OpenDefaultApp):
@@ -2112,8 +2115,8 @@ class OpenDir(OpenDefaultApp):
         if not dirnames:
             return
         # An empty dirname defaults to to the current directory.
-        dirs = [(dirname or core.getcwd()) for dirname in dirnames]
-        utils.launch_default_app(dirs)
+        dirs = [(dirname or self.context.ops.getcwd()) for dirname in dirnames]
+        utils.launch_default_app(self.context, dirs)
 
 
 class OpenParentDir(OpenDir):
@@ -2194,7 +2197,7 @@ class OpenParentRepo(OpenRepo):
             if status == 0:
                 path = out
         if not path:
-            path = os.path.dirname(core.getcwd())
+            path = os.path.dirname(context.ops.getcwd())
         super().__init__(context, path)
 
 
@@ -2315,10 +2318,11 @@ class SequenceEditorEnvironment:
             'GIT_SEQUENCE_EDITOR': sequence_editor(),
         }
         self.env.update(kwargs)
+        self.context = context
 
     def __enter__(self) -> SequenceEditorEnvironment:
         for var, value in self.env.items():
-            compat.setenv(var, value)
+            compat.setenv(self.context.ops, var, value)
         return self
 
     def __exit__(
@@ -2328,7 +2332,7 @@ class SequenceEditorEnvironment:
         exc_tb: None,
     ) -> None:
         for var in self.env:
-            compat.unsetenv(var)
+            compat.unsetenv(self.context.ops, var)
 
 
 class Rebase(ContextCommand):
@@ -2669,7 +2673,7 @@ class RunConfigAction(ContextCommand):
         """Run the user-configured action"""
         for env in ('ARGS', 'DIRNAME', 'FILENAME', 'REVISION'):
             try:
-                compat.unsetenv(env)
+                compat.unsetenv(self.context.ops, env)
             except KeyError:
                 pass
         rev = None
@@ -2694,8 +2698,8 @@ class RunConfigAction(ContextCommand):
                 )
                 return False
             dirname = utils.dirname(filename, current_dir='.')
-            compat.setenv('FILENAME', filename)
-            compat.setenv('DIRNAME', dirname)
+            compat.setenv(self.context.ops, 'FILENAME', filename)
+            compat.setenv(self.context.ops, 'DIRNAME', dirname)
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
@@ -2717,9 +2721,9 @@ class RunConfigAction(ContextCommand):
             if not Interaction.question(title, prompt):
                 return False
         if rev:
-            compat.setenv('REVISION', rev)
+            compat.setenv(self.context.ops, 'REVISION', rev)
         if args:
-            compat.setenv('ARGS', args)
+            compat.setenv(self.context.ops, 'ARGS', args)
         title = os.path.expandvars(cmd)
         Interaction.log(N_('Running command: %s') % title)
         cmd = ['sh', '-c', cmd]
@@ -2728,9 +2732,9 @@ class RunConfigAction(ContextCommand):
             core.fork(cmd)
             status, out, err = (0, '', '')
         elif opts.get('noconsole'):
-            status, out, err = core.run_command(cmd)
+            status, out, err = self.context.ops.run_command(cmd)
         else:
-            status, out, err = Interaction.run_command(title, cmd)
+            status, out, err = Interaction.run_command(self.context.ops, title, cmd)
 
         if not opts.get('background') and not opts.get('norescan'):
             self.model.update_status()
@@ -2886,15 +2890,15 @@ def check_conflicts(context: ApplicationContext, unmerged: list[Any]) -> list[An
 
     """
     if prefs.check_conflicts(context):
-        unmerged = [path for path in unmerged if is_conflict_free(path)]
+        unmerged = [path for path in unmerged if is_conflict_free(context, path)]
     return unmerged
 
 
-def is_conflict_free(path) -> bool:
+def is_conflict_free(context: ApplicationContext, path) -> bool:
     """Return True if `path` contains no conflict markers"""
     rgx = re.compile(r'^(<<<<<<<|\|\|\|\|\|\|\||>>>>>>>) ')
     try:
-        with core.xopen(path, 'rb') as f:
+        with context.ops.xopen(path, 'rb') as f:
             for line in f:
                 line = core.decode(line, errors='ignore')
                 if rgx.match(line):
@@ -2986,7 +2990,7 @@ class Stage(ContextCommand):
         err = ''
 
         for path in set(paths):
-            if core.exists(path) or core.islink(path):
+            if self.context.ops.exists(path) or self.context.ops.islink(path):
                 if path.endswith('/'):
                     path = path.rstrip('/')
                 add.append(path)
@@ -3195,9 +3199,9 @@ class Tag(ContextCommand):
         tmp_file = None
         try:
             if tag_message:
-                tmp_file = utils.tmp_filename('tag-message')
+                tmp_file = self.context.ops.tmp_filename('tag-message')
                 opts['file'] = tmp_file
-                core.write(tmp_file, tag_message)
+                self.context.ops.write_file(tmp_file, tag_message)
 
             if sign:
                 opts['sign'] = True
@@ -3211,7 +3215,7 @@ class Tag(ContextCommand):
             status, out, err = self.git.tag(tag_name, revision, **opts)
         finally:
             if tmp_file:
-                core.unlink(tmp_file)
+                self.context.ops.unlink(tmp_file)
 
         title = N_('Error: could not create tag "%s"') % tag_name
         Interaction.command(title, 'git tag', status, out, err)
@@ -3371,7 +3375,7 @@ class VisualizeAll(ContextCommand):
     def do(self) -> None:
         context = self.context
         browser = utils.shell_split(prefs.history_browser(context))
-        launch_history_browser(browser + ['--all'])
+        launch_history_browser(context, browser + ['--all'])
 
 
 class VisualizeCurrent(ContextCommand):
@@ -3380,7 +3384,7 @@ class VisualizeCurrent(ContextCommand):
     def do(self) -> None:
         context = self.context
         browser = utils.shell_split(prefs.history_browser(context))
-        launch_history_browser(browser + [self.model.currentbranch] + ['--'])
+        launch_history_browser(context, browser + [self.model.currentbranch] + ['--'])
 
 
 class VisualizePaths(ContextCommand):
@@ -3396,7 +3400,7 @@ class VisualizePaths(ContextCommand):
             self.argv = browser
 
     def do(self) -> None:
-        launch_history_browser(self.argv)
+        launch_history_browser(self.context, self.argv)
 
 
 class VisualizeRevision(ContextCommand):
@@ -3417,7 +3421,7 @@ class VisualizeRevision(ContextCommand):
         if self.paths:
             argv.append('--')
             argv.extend(self.paths)
-        launch_history_browser(argv)
+        launch_history_browser(context, argv)
 
 
 class SubmoduleAdd(ConfirmAction):
@@ -3550,7 +3554,7 @@ class SubmodulesUpdate(ConfirmAction):
         return cmd
 
 
-def launch_history_browser(argv: list[str]) -> None:
+def launch_history_browser(context: ApplicationContext, argv: list[str]) -> None:
     """Launch the configured history browser"""
     try:
         core.fork(argv)

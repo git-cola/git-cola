@@ -7,7 +7,6 @@ from qtpy.QtCore import QModelIndex
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
-from .. import core
 from .. import gitcmds
 from .. import icons
 from .. import qtutils
@@ -83,7 +82,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
 
     def mimeData(self, indexes: list[QModelIndex]) -> QMimeData:
         paths = qtutils.paths_from_indexes(
-            self, indexes, item_type=GitRepoNameItem.TYPE
+            self.context, self, indexes, item_type=GitRepoNameItem.TYPE
         )
         return qtutils.mimedata_from_paths(self.context, paths)
 
@@ -306,10 +305,10 @@ class GitRepoInfoTask(qtutils.Task):
 
         """
         try:
-            st = core.stat(self.path)
+            st = self.context.ops.stat(self.path)
         except OSError:
             return N_('%d minutes ago') % 0
-        elapsed = time.time() - st.st_mtime
+        elapsed = time.time() - st.get('st_mtime')
         minutes = int(elapsed / 60)
         if minutes < 60:
             return N_('%d minutes ago') % minutes

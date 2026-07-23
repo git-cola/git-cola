@@ -748,7 +748,7 @@ def get_all_themes() -> list[Theme]:
 
     # check if themes path exists in user folder
     path = resources.config_home('themes')
-    if not os.path.isdir(path):
+    if not core.isdir(path):
         return themes
 
     # Gather Qt .qss stylesheet themes

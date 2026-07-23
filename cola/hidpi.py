@@ -4,6 +4,7 @@ from qtpy import QtCore
 
 from . import compat
 from . import core
+from . import operations
 from . import version
 from .i18n import N_
 
@@ -23,17 +24,18 @@ def is_supported() -> bool:
 
 def apply_choice(value: str) -> None:
     value = compat.ustr(value)
+    ops = operations.LocalOperations()
     if value == Option.AUTO:
         # Do not override the configuration when either of these
         # two environment variables are defined.
         if not core.getenv('QT_AUTO_SCREEN_SCALE_FACTOR') and not core.getenv(
             'QT_SCALE_FACTOR'
         ):
-            compat.setenv('QT_AUTO_SCREEN_SCALE_FACTOR', '1')
-            compat.unsetenv('QT_SCALE_FACTOR')
+            compat.setenv(ops, 'QT_AUTO_SCREEN_SCALE_FACTOR', '1')
+            compat.unsetenv(ops, 'QT_SCALE_FACTOR')
     elif value and value != Option.DISABLE:
-        compat.unsetenv('QT_AUTO_SCREEN_SCALE_FACTOR')
-        compat.setenv('QT_SCALE_FACTOR', value)
+        compat.unsetenv(ops, 'QT_AUTO_SCREEN_SCALE_FACTOR')
+        compat.setenv(ops, 'QT_SCALE_FACTOR', value)
 
 
 def options() -> tuple[tuple[str, str], ...]:
