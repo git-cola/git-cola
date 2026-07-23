@@ -1,13 +1,13 @@
 """Run cola as a Python module.
 
-Usage: python -m cola
+Usage: python -m cola 
 """
 
 from cola import main
 
 
 def run() -> None:
-    """Start the command-line interface."""
+    """Start the command-line interface. test comment for garden checks"""
     main.main()
 
 
