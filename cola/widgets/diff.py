@@ -1328,6 +1328,8 @@ class DiffEditor(DiffTextEdit):
 
     def __init__(self, context, options, parent):
         DiffTextEdit.__init__(self, context, parent, numbers=True)
+        # Guide the user when nothing is selected instead of showing a blank pane.
+        self.hint.set_value(N_('Select a file to view its diff'))
         self.context = context
         self.model = model = context.model
         self.selection_model = selection_model = context.selection
