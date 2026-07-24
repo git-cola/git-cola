@@ -109,7 +109,16 @@ class CommitMessageEditor(QtWidgets.QFrame):
         )
         self.description.menu_actions.extend(menu_actions)
 
-        commit_button_tooltip = N_('Commit staged changes\nShortcut: Ctrl+Enter')
+        # Render the shortcut from the action so it matches the platform --
+        # Qt maps Ctrl to Command on macOS -- instead of hardcoding "Ctrl+Enter".
+        commit_shortcut = self.commit_action.shortcut().toString(
+            QtGui.QKeySequence.NativeText
+        )
+        commit_button_tooltip = N_('Commit staged changes')
+        if commit_shortcut:
+            commit_button_tooltip = '{}\n{}'.format(
+                commit_button_tooltip, N_('Shortcut: %s') % commit_shortcut
+            )
         self.commit_button = qtutils.create_button(
             text=N_('Commit@@verb'), tooltip=commit_button_tooltip, icon=icons.commit()
         )
