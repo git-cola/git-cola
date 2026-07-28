@@ -323,9 +323,11 @@ git commit -m "refactor: extract reusable commit history widget"
 
 **Files:**
 - Modify: `cola/dag.py:22-47`
+- Modify: `cola/main.py:38-73,153-173,606-617`
 - Modify: `cola/models/dag.py:67-76`
 - Modify: `cola/widgets/dag.py:45-63,1391-1935`
 - Modify: `test/dag_test.py`
+- Create: `test/main_test.py`
 - Modify: `test/widgets_dag_history_test.py`
 
 **RED:**
@@ -339,13 +341,15 @@ git commit -m "refactor: extract reusable commit history widget"
 - Altes Schema wird beim nächsten Export ausschließlich als neues kanonisches Schema ausgegeben.
 - Explizite CLI-Overrides für `ref` und `count` gewinnen über altes und neues gespeichertes State-Schema.
 - Reale Parser-zu-State-Tests decken gespeichertes `count=500` plus explizites `--count 1000` sowie gespeicherten Fremd-Ref plus expliziten aktuellen Branch ab.
-- `parse_args([]).count` unterscheidet „nicht angegeben“ von `parse_args(['--count', '1000']).count`.
+- Standalone `cola.dag.parse_args([])` und Subcommand `cola.main.parse_args(['dag'])` liefern jeweils `count is None`, wenn die Option fehlt.
+- `cola.dag.parse_args(['--count', '1000'])` und `cola.main.parse_args(['dag', '--count', '1000'])` erhalten die explizite `1000` und markieren sie im nachfolgenden `DAG.set_arguments()` als Override.
+- Beide Einstiegspfade prüfen außerdem explizite Ref-Präsenz bis zum State-Prioritätsvertrag.
 - MainView ohne CLI-Overrides darf den gespeicherten Child-Ref restaurieren.
 
 **GREEN:**
 
-1. `cola.dag.parse_args()` verwendet für `--count` `default=None`, damit Optionspräsenz erkennbar bleibt.
-2. `git_dag()` initialisiert `DAG` weiterhin mit dem Produktdefault `1000`.
+1. Sowohl `cola.dag.parse_args()` (`git-dag`) als auch `cola.main.add_dag_command()` (`git cola dag`) verwenden für `--count` `default=None`, damit Optionspräsenz in beiden Namespaces erkennbar bleibt.
+2. `git_dag()` initialisiert `DAG` weiterhin zentral mit dem Produktdefault `1000`.
 3. `DAG.set_arguments()` setzt `overrides['count']`, sobald `args.count is not None`, und `overrides['ref']`, sobald explizite `args.args` vorhanden sind — jeweils unabhängig davon, ob `set_count()`/`set_ref()` den Wert ändert.
 4. `GitDAG.apply_state()` löst alten/neuen State anhand dieses korrigierten `DAG.overridden('ref'/'count')`-Vertrags auf und übergibt dem Widget priorisierte Werte; keine zweite Override-Logik im Widget.
 5. Log-Dock enthält das Widget; `apply_state()` liest altes flaches und neues Schema, `export_state()` schreibt nur das neue Schema. Übergangs-Aliase nur für nachgewiesene externe Aufrufer.
@@ -353,11 +357,11 @@ git commit -m "refactor: extract reusable commit history widget"
 **GREEN-Gate vor Commit:**
 
 ```bash
-QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/widgets_dag_history_test.py -q
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/main_test.py test/widgets_dag_history_test.py -q
 ```
 
 ```bash
-git add cola/dag.py cola/models/dag.py cola/widgets/dag.py test/dag_test.py test/widgets_dag_history_test.py
+git add cola/dag.py cola/main.py cola/models/dag.py cola/widgets/dag.py test/dag_test.py test/main_test.py test/widgets_dag_history_test.py
 git commit -m "refactor: compose dag window and migrate history state"
 ```
 
@@ -485,7 +489,7 @@ git commit -m "test: cover inline history under Qt5 and Qt6"
 **Direkte fokussierte Suite:**
 
 ```bash
-QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/graph_test.py test/widgets_dag_history_test.py test/widgets_main_history_test.py -q
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/main_test.py test/graph_test.py test/widgets_dag_history_test.py test/widgets_main_history_test.py -q
 ```
 
 **Vollständige Projekt-Gates:**
@@ -495,7 +499,7 @@ garden test -vv
 garden check
 git diff --check
 git status --short
-QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/graph_test.py test/widgets_dag_history_test.py test/widgets_main_history_test.py -q
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/main_test.py test/graph_test.py test/widgets_dag_history_test.py test/widgets_main_history_test.py -q
 ```
 
 `garden test` ist das vollständige Test-Gate; `garden test -- <paths>` ist nicht fokussiert, weil die Garden-Task immer `cola test` anhängt. `garden check` führt zusätzlich Format-Check, `pyupgrade` und `mypy` aus. `check/pyupgrade` kann Dateien ändern; danach den Diff vollständig prüfen, nur erwartete Änderungen behalten und die direkte fokussierte Suite erneut ausführen.
@@ -512,7 +516,7 @@ Zusätzlich prüfen:
 - Git-Lesen und `build_graph()` für den Inline-Graph laufen im Worker, nicht im GUI-Thread; bestehendes `GraphView`-Scene-Layout und Qt-Items bleiben GUI-seitig;
 - Main-History höchstens 1.000 und ohne Pseudo-Commits;
 - `model.updated` aktualisiert automatisch mit Deduplizierung/Coalescing;
-- CLI-Ref/Count gewinnen im standalone DAG über gespeicherten State, auch wenn explizite Werte (`--count 1000`, aktueller Branch) den initialen Defaults entsprechen;
+- CLI-Ref/Count gewinnen über gespeicherten State in beiden Startpfaden (`git-dag` und `git cola dag`), auch wenn explizite Werte (`--count 1000`, aktueller Branch) den initialen Defaults entsprechen;
 - alter GitDAG-State und alter MainView-v2-State bleiben lesbar;
 - CI-Matrix führt dieselben Paint-Smokes unter PyQt5 und PyQt6 aus.
 
@@ -530,11 +534,13 @@ History direkt sichtbar/gefüllt, `--all`, HEAD/Refs lesbar, keine Pseudo-Zeilen
 
 | Datei | Zweck |
 |---|---|
-| `cola/dag.py` | CLI-Präsenz für defaultgleiche Count-Overrides |
+| `cola/dag.py` | `git-dag`-CLI-Präsenz für defaultgleiche Overrides |
+| `cola/main.py` | `git cola dag`-CLI-Präsenz für defaultgleiche Overrides |
 | `cola/models/dag.py` | Factory-Isolation, Reader-Reset, stderr- und Override-Vertrag |
 | `cola/widgets/dag.py` | Loader, vollständiger Graph, Widget, Style |
 | `cola/widgets/main.py` | Dock, initialer Load, State, Close |
-| `test/dag_test.py` | Reader-/Factory-Isolation |
+| `test/dag_test.py` | Reader-/Factory-Isolation und standalone DAG-Parser |
+| `test/main_test.py` | `git cola dag`-Subcommand-Parser und Override-Präsenz |
 | `test/widgets_dag_history_test.py` | Lifecycle, Chunk, Widget, Style, Paint |
 | `test/widgets_main_history_test.py` | Dock, Load, Menü, Migration, Close |
 | `.github/workflows/ci.yml` | fokussierte PyQt5-/PyQt6-Paint-Matrix |
@@ -578,6 +584,6 @@ Vor Implementierung muss `critical-plan-review` bestätigen:
 - fokussierter direkter pytest-Lauf, vollständiges `garden test` und `garden check` sind getrennt;
 - dieselben Paint-Smokes laufen unter PyQt5 und PyQt6;
 - stderr-Erhalt/Reset und atomarer finaler Apply sind explizit;
-- CLI-Override-Priorität basiert auf Optionspräsenz und deckt defaultgleiche explizite Werte ab;
+- CLI-Override-Priorität basiert in `git-dag` und `git cola dag` auf Optionspräsenz und deckt defaultgleiche explizite Werte ab;
 - nur Git-Lesen und Inline-`build_graph()` werden als Worker-Arbeit bezeichnet; Qt-/GraphView-Anwendung bleibt GUI-seitig;
 - `display_status=False`, `--all`, `1000` festgelegt.
