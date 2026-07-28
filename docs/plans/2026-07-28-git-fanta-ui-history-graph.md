@@ -129,13 +129,14 @@ RUNNING + close -> STOPPING -> STOPPED
 
 Ein normaler Refresh blockiert die GUI nicht. `stop_and_wait()` verhindert neue Runs, setzt das kooperative Interruption-Flag, ignoriert verspätete Signale und wartet beim finalen Schließen vollständig. Es ist eine sichere Abschlussbarriere, kein Versprechen, einen bereits in `core.run_command()` laufenden synchronen `git log`-Prozess sofort abzubrechen.
 
-### Chunk-Regel
+### Atomarer Lade- und Graphvertrag
 
-- Batches dürfen progressiv Commit-Items erzeugen.
-- `CommitTreeWidget.add_commits()` berechnet keinen Teilgraphen.
-- Der Worker sammelt alle Commits und berechnet `GraphResult` genau einmal.
-- Das finale Result wendet den vollständigen Graphen im GUI-Thread nur noch als Rollen an.
-- Ein Test deckt eine Parent-Kante über die 2048er-Grenze ab.
+- Der Worker sammelt die vollständige Commitliste; partielle Läufe verändern keine sichtbaren Items.
+- Das bisherige `add`-Batch-Signal wird nicht für sichtbare Zwischenzustände weiterverwendet.
+- Der Worker berechnet `GraphResult` genau einmal auf der vollständigen Liste.
+- Nur ein erfolgreiches, aktuelles finales `HistoryResult` ersetzt Items, OID-Map, Graph-Rollen, Cache und Auswahl gemeinsam.
+- Fehlerhafte, stale oder beim Schließen verworfene Läufe besitzen keinen sichtbaren Staging-State.
+- Ein synthetischer Test deckt eine Parent-Kante über Index 2047/2048 ab und beweist, dass vor dem finalen Result kein partieller Tree sichtbar wird.
 
 ---
 
@@ -182,6 +183,12 @@ Tests für:
 
 Diese Tests sind als Refactor-Sicherheitsnetz bereits grün.
 
+**GREEN-Gate vor Commit:**
+
+```bash
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/graph_test.py test/widgets_dag_history_test.py -q
+```
+
 ```bash
 git add test/dag_test.py test/widgets_dag_history_test.py
 git commit -m "test: characterize dag history behavior"
@@ -209,9 +216,13 @@ assert second_read_commit is not first_read_commit
 - Jeder `RepoReader` besitzt eine Factory.
 - Jeder `Commit` erhält diese Factory explizit; `parse()` erzeugt Parents darüber.
 - Direkte STAGE-/WORKTREE-Konstruktionen in `get_worktree_commits()` verwenden dieselbe Reader-Factory.
-- `RepoReader.reset()` leert Factory, `_objects`, `_topo_list`, `_top_commit` und Cache-Marker symmetrisch.
+- `RepoReader.reset()` leert Factory, `_objects`, `_topo_list`, `_top_commit`, `returncode`, `error` und Cache-Marker symmetrisch.
+- `RepoReader.get()` bewahrt den dritten Rückgabewert von `core.run_command()` als `self.error`; ein erfolgreicher Lauf und `reset()` löschen alte Fehlerdaten.
+- Model-Tests decken erfolgreichen Lauf, Fehlerlauf mit stderr sowie Reset nach Fehler ab.
 - Alle verbliebenen Klassenstate-Zugriffe werden entfernt.
 - Keine globale Sperre und keine versteckte Fallback-Factory.
+
+**GREEN-Gate vor Commit:**
 
 ```bash
 python3 -B -m pytest test/dag_test.py test/graph_test.py -q
@@ -222,7 +233,9 @@ git commit -m "fix: isolate dag commit factories per reader"
 ### Task 3: Resultatvertrag und Worker-Lifecycle serialisieren
 
 **Files:**
+- Modify: `cola/models/dag.py:236-313`
 - Modify: `cola/widgets/dag.py:1621-1641,1744-1795,1823-1836,1931-1982`
+- Modify: `test/dag_test.py`
 - Modify: `test/widgets_dag_history_test.py`
 
 **RED – Ergebnissemantik:**
@@ -231,25 +244,27 @@ git commit -m "fix: isolate dag commit factories per reader"
 2. fehlgeschlagener Lauf behält die letzte erfolgreiche Ansicht;
 3. Fehler beendet Loading und liefert `returncode`/Fehlertext an einen nichtmodalen Status;
 4. ein Erfolg entfernt den alten Fehlerstatus;
-5. nach einem Fehler wird ein pending Request normal ausgeführt.
+5. nach einem Fehler wird ein pending Request normal ausgeführt;
+6. `HistoryResult.error` übernimmt exakt `RepoReader.error` und erfindet keinen parallelen generischen Fehlertext.
 
 **RED – Lifecycle:**
 
 1. Doppel-Refresh startet höchstens einen Worker;
-2. der letzte pending Request gewinnt;
-3. Worker erhält immutable Parameter;
-4. stale `run_id` verändert die View nicht;
-5. Close während Load und mit pending Request wartet sicher auf den Abschluss;
-6. nach `stop_and_wait()` starten keine Runs und keine UI-Updates;
-7. Close vor einem geplanten initialen `singleShot` startet keinen Worker.
+2. ein zum aktiven oder pending Cache-Key identischer Request wird ignoriert;
+3. nur ein tatsächlich anderer letzter pending Request gewinnt;
+4. Worker erhält immutable Parameter;
+5. stale `run_id` verändert die View nicht;
+6. Close während Load und mit pending Request wartet sicher auf den Abschluss;
+7. nach `stop_and_wait()` starten keine Runs und keine UI-Updates;
+8. Close vor einem geplanten initialen `singleShot` startet keinen Worker.
 
-**GREEN:** Ein Owner verwaltet `active_thread`, `active_run_id`, `pending_request`, `stopping` und Loading-/Error-State. Folgeläufe starten erst nach `finished`; Slots prüfen `run_id`. `thread_begin` leert die letzte erfolgreiche Ansicht nicht. Erst ein erfolgreiches Resultat ersetzt sie atomar.
+**GREEN:** Ein Owner verwaltet `active_thread`, `active_run_id`, `pending_request`, `stopping` und Loading-/Error-State. Folgeläufe starten erst nach `finished`; Slots prüfen `run_id`. Identische active/pending Cache-Keys werden dedupliziert. `thread_begin` leert die letzte erfolgreiche Ansicht nicht. Erst ein erfolgreiches Resultat ersetzt sie atomar. Der Worker übernimmt `returncode` und `error` ausschließlich aus `RepoReader`.
 
 `requestInterruption()` wird nur zwischen kooperativen Phasen geprüft. Der Test verwendet einen kontrolliert freigegebenen blockierenden Fake und behauptet nicht, dass das Flag einen laufenden `core.run_command()`-Prozess beendet.
 
 ```bash
-QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/widgets_dag_history_test.py -q
-git add cola/widgets/dag.py test/widgets_dag_history_test.py
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/widgets_dag_history_test.py -q
+git add cola/models/dag.py cola/widgets/dag.py test/dag_test.py test/widgets_dag_history_test.py
 git commit -m "fix: define and serialize history load results"
 ```
 
@@ -259,9 +274,15 @@ git commit -m "fix: define and serialize history load results"
 - Modify: `cola/widgets/dag.py:1294-1343,1810-1832,1945-1982`
 - Modify: `test/widgets_dag_history_test.py`
 
-**RED:** Mehr als 2.048 Commits mit einer Parent-Kante über die Batch-Grenze. Prüfen: alle OIDs haben Graph-Zeilen, Kante vorhanden, `build_graph()` genau einmal und nicht im GUI-Thread.
+**RED:** Eine synthetische History mit mehr als 2.048 Commits und einer Parent-Kante über Index 2047/2048. Prüfen: alle OIDs haben Graph-Zeilen, `GraphRow.edges_to_parent` enthält die Grenzkante, `build_graph()` läuft genau einmal im Worker, vor dem finalen Result ist kein partieller Tree sichtbar und Fehler/stale/close nach intern gelesenen Teilmengen verändern die letzte erfolgreiche Ansicht nicht.
 
-**GREEN:** Items dürfen batchweise entstehen; vollständiger Graph wird einmal im Worker berechnet und final über `HistoryResult` angewendet. Große `GraphView` erhält weiterhin die vollständige Liste.
+**GREEN:** Der Worker sammelt alle Commits und berechnet den vollständigen Graph einmal. Das bisherige sichtbare `add`-Batch-Verhalten entfällt. Ein aktuelles erfolgreiches `HistoryResult` wird im GUI-Thread atomar in Items, OID-Map, Rollen und vollständige große `GraphView` umgesetzt; Fehler und stale Results werden ohne sichtbare Mutation verworfen.
+
+**GREEN-Gate vor Commit:**
+
+```bash
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/graph_test.py test/widgets_dag_history_test.py -q
+```
 
 ```bash
 git add cola/widgets/dag.py test/widgets_dag_history_test.py
@@ -287,6 +308,12 @@ def test_history_widget_uses_all_refs_without_status(qapp, app_context):
 
 **GREEN:** Widget besitzt Controls, `CommitTreeWidget`, Worker-State, Cache, Commitliste, Selection, Child-State und `stop_and_wait()`. Es besitzt keine große GraphView, Diff/Files oder Dock-Geometrie. Cache-/Selection-/Thread-State wird vollständig aus `GitDAG` verschoben, nicht kopiert.
 
+**GREEN-Gate vor Commit:**
+
+```bash
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/widgets_dag_history_test.py -q
+```
+
 ```bash
 git add cola/widgets/dag.py test/widgets_dag_history_test.py
 git commit -m "refactor: extract reusable commit history widget"
@@ -307,8 +334,16 @@ git commit -m "refactor: extract reusable commit history widget"
 - `apply_state()` akzeptiert ein Fixture des bisherigen flachen GitDAG-Schemas (`count`, `display_inline_graph`, `display_status`, `log`).
 - Neues `state['history']` wird symmetrisch gelesen und geschrieben.
 - Altes Schema wird beim nächsten Export ausschließlich als neues kanonisches Schema ausgegeben.
+- Explizite CLI-Overrides für `ref` und `count` gewinnen über altes und neues gespeichertes State-Schema.
+- MainView ohne CLI-Overrides darf den gespeicherten Child-Ref restaurieren.
 
-**GREEN:** Log-Dock enthält das Widget. GitDAG besitzt nur zusätzliche Docks, downstream Selection und Window-State. `apply_state()` besitzt einen eng begrenzten Rückwärtslesepfad für das alte flache Schema; `export_state()` schreibt nur das neue Schema. Übergangs-Aliase nur für nachgewiesene externe Aufrufer.
+**GREEN:** Log-Dock enthält das Widget. GitDAG besitzt nur zusätzliche Docks, downstream Selection und Window-State. `apply_state()` besitzt einen eng begrenzten Rückwärtslesepfad für das alte flache Schema; `export_state()` schreibt nur das neue Schema. `GitDAG.apply_state()` löst Werte anhand des vorhandenen `DAG.overridden('ref'/'count')`-Vertrags auf und übergibt dem Widget bereits priorisierte Werte; keine zweite Override-Logik im Widget. Übergangs-Aliase nur für nachgewiesene externe Aufrufer.
+
+**GREEN-Gate vor Commit:**
+
+```bash
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/widgets_dag_history_test.py -q
+```
 
 ```bash
 git add cola/widgets/dag.py test/widgets_dag_history_test.py
@@ -342,6 +377,12 @@ state['history'] = self.historywidget.export_state()
 
 Kein Versions-Bump und kein Zwischencommit, der Dock ohne Migration einführt.
 
+**GREEN-Gate vor Commit:**
+
+```bash
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/widgets_main_history_test.py -q
+```
+
 ```bash
 git add cola/widgets/main.py test/widgets_main_history_test.py
 git commit -m "feat: add history dock without resetting layouts"
@@ -364,12 +405,19 @@ git commit -m "feat: add history dock without resetting layouts"
 **RED – laufende Updates:**
 
 1. ein relevantes `model.updated` ruft die öffentliche History-Refresh-API auf;
-2. mehrere schnelle Updates werden zum letzten pending Request zusammengeführt;
-3. Commit, Checkout, Fetch/Rescan werden nach dem nächsten erfolgreichen Lauf sichtbar;
-4. fehlgeschlagener Auto-Refresh behält die letzte Historie und zeigt den nichtmodalen Fehlerstatus;
-5. erfolgreicher leerer Auto-Refresh leert die Ansicht.
+2. ein identischer Request zum active oder pending Cache-Key startet keinen zweiten Lauf;
+3. mehrere schnelle tatsächlich unterschiedliche Updates werden zum letzten pending Request zusammengeführt;
+4. Commit, Checkout, Fetch/Rescan werden nach dem nächsten erfolgreichen Lauf sichtbar;
+5. fehlgeschlagener Auto-Refresh behält die letzte Historie und zeigt den nichtmodalen Fehlerstatus;
+6. erfolgreicher leerer Auto-Refresh leert die Ansicht.
 
-**GREEN:** Initialen Load erst nach State-Restore/Event-Loop auslösen. `MainView.refresh()` beziehungsweise seine vorhandene `model.updated`-Verbindung ruft ausschließlich `historywidget.load_if_stale()` auf; MainView kennt keine Worker-Details. Coalescing bleibt alleiniger Owner im History-Widget. Verborgene Docks werden ebenfalls aktuell gehalten, damit Einblenden keinen veralteten Graph zeigt.
+**GREEN:** Initialen Load erst nach State-Restore/Event-Loop auslösen. `MainView.refresh()` beziehungsweise seine vorhandene `model.updated`-Verbindung ruft ausschließlich `historywidget.load_if_stale()` auf; MainView kennt keine Worker-Details. Deduplizierung und Coalescing bleiben alleiniger Owner im History-Widget. Verborgene Docks werden ebenfalls aktuell gehalten, damit Einblenden keinen veralteten Graph zeigt.
+
+**GREEN-Gate vor Commit:**
+
+```bash
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/widgets_dag_history_test.py test/widgets_main_history_test.py -q
+```
 
 ```bash
 git add cola/widgets/main.py test/widgets_main_history_test.py
@@ -386,57 +434,80 @@ git commit -m "feat: keep main history synchronized"
 
 **GREEN:** kleine reine `inline_graph_style(option.palette)`-Factory pro Paint; kein stale Cache. Falls nötig `CommitTreeWidget.changeEvent()` analog `GraphView`. Eigene Inline-Lane-Palette; keine Mutation globaler EdgeColor-Liste. Zeilenhöhe 24–28 px, leicht luftigere Spuren, HEAD-Akzentring, bestehende Chips/Animation.
 
+**GREEN-Gate vor Commit:**
+
+```bash
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/widgets_dag_history_test.py -q
+```
+
 ```bash
 git add cola/widgets/dag.py test/widgets_dag_history_test.py
 git commit -m "style: refine palette-aware inline commit graph"
 ```
 
-### Task 10: Qt5-/Qt6-Paint-Smoke-Tests
+### Task 10: Dieselben Offscreen-Smokes unter PyQt5 und PyQt6
 
 **Files:**
 - Modify: `test/widgets_dag_history_test.py`
+- Modify: `.github/workflows/ci.yml`
 
-Mit transparentem `QImage` linear, Fork, Merge, HEAD, Light und Dark rendern. Nur semantische Regionen und sichtbare Pixel prüfen, keine Golden Images.
+**RED:** Mit transparentem `QImage` linear, Fork, Merge, HEAD, Light und Dark rendern. Semantische Regionen und sichtbare Pixel prüfen, keine Golden Images. Derselbe Testknoten muss unter `QT_API=pyqt5` und `QT_API=pyqt6` laufen; ein nur unter dem aktuell installierten Binding ausgeführter Test erfüllt diesen Task nicht.
+
+**GREEN:** Einen kleinen Linux-CI-Matrix-Job für `pyqt5` und `pyqt6` ergänzen. Pro Matrixeintrag `.[testing,<binding>]` in einer isolierten Umgebung installieren und ausschließlich die semantischen History-Paint-Tests mit `QT_QPA_PLATFORM=offscreen` und passendem `QT_API` ausführen. Bestehenden vollständigen PyQt6-Job nicht duplizieren.
+
+**Lokale GREEN-Gates, sofern beide Extras installiert sind:**
 
 ```bash
-git add test/widgets_dag_history_test.py cola/widgets/dag.py
-git commit -m "test: cover inline history rendering offscreen"
+QT_QPA_PLATFORM=offscreen QT_API=pyqt5 python3 -B -m pytest test/widgets_dag_history_test.py -k 'paint or palette' -q
+QT_QPA_PLATFORM=offscreen QT_API=pyqt6 python3 -B -m pytest test/widgets_dag_history_test.py -k 'paint or palette' -q
+```
+
+Fehlt lokal ein Binding, muss der vorhandene Binding-Lauf grün sein und die CI-Matrix beide Läufe vor Merge bestätigen.
+
+```bash
+git add .github/workflows/ci.yml test/widgets_dag_history_test.py cola/widgets/dag.py
+git commit -m "test: cover inline history under Qt5 and Qt6"
 ```
 
 ### Task 11: Vollständige Verifikation
 
-**Fokussierte Suite:**
+**Direkte fokussierte Suite:**
 
 ```bash
-garden test --   test/dag_test.py   test/graph_test.py   test/widgets_dag_history_test.py   test/widgets_main_history_test.py
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/graph_test.py test/widgets_dag_history_test.py test/widgets_main_history_test.py -q
 ```
 
 **Vollständige Projekt-Gates:**
 
 ```bash
+garden test -vv
 garden check
 git diff --check
 git status --short
+QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/graph_test.py test/widgets_dag_history_test.py test/widgets_main_history_test.py -q
 ```
 
-`garden check` führt laut `garden.yaml` Tests, Format-Check, `pyupgrade` und `mypy` aus. `check/pyupgrade` kann Dateien ändern; danach den Diff vollständig prüfen, nur erwartete Format-/Upgrade-Änderungen behalten und die fokussierte Suite erneut ausführen. Nicht stattdessen das mutierende `garden fmt` als reinen Check ausgeben.
+`garden test` ist das vollständige Test-Gate; `garden test -- <paths>` ist nicht fokussiert, weil die Garden-Task immer `cola test` anhängt. `garden check` führt zusätzlich Format-Check, `pyupgrade` und `mypy` aus. `check/pyupgrade` kann Dateien ändern; danach den Diff vollständig prüfen, nur erwartete Änderungen behalten und die direkte fokussierte Suite erneut ausführen.
 
 Zusätzlich prüfen:
 
 - Main-History und DAG gleichzeitig;
 - zwei interleaved Reader und zweiter Read nach Reset teilen keine Commits;
-- Doppel-Refresh, Parameterwechsel, Error/Empty, pending-after-error und stale Signals;
+- stderr bleibt bei Fehler erhalten und wird bei Erfolg/Reset gelöscht;
+- Doppel-Refresh, identischer active/pending Request, Parameterwechsel, Error/Empty, pending-after-error und stale Results;
+- kein sichtbarer partieller Tree vor finalem Result;
 - Close vor initialem Timer sowie Close mit active+pending Request;
 - synthetische Parent-Kante über Index 2047/2048 und vollständige GraphView-Übergabe;
 - `build_graph()` läuft im Worker, nicht im GUI-Thread;
 - Main-History höchstens 1.000 und ohne Pseudo-Commits;
-- `model.updated` aktualisiert automatisch mit Coalescing;
-- alter GitDAG-State und alter MainView-v2-State bleiben lesbar.
+- `model.updated` aktualisiert automatisch mit Deduplizierung/Coalescing;
+- CLI-Ref/Count gewinnen im standalone DAG über gespeicherten State;
+- alter GitDAG-State und alter MainView-v2-State bleiben lesbar;
+- CI-Matrix führt dieselben Paint-Smokes unter PyQt5 und PyQt6 aus.
 
-Manuell als normaler Benutzer:
+Manuell aus dem Root des normalen Desktop-Clones ausführen:
 
 ```bash
-cd ~/Projects/git-fanta
 ./bin/git-cola
 ```
 
@@ -448,12 +519,13 @@ History direkt sichtbar/gefüllt, `--all`, HEAD/Refs lesbar, keine Pseudo-Zeilen
 
 | Datei | Zweck |
 |---|---|
-| `cola/models/dag.py` | Factory-Isolation |
+| `cola/models/dag.py` | Factory-Isolation, Reader-Reset und stderr-Vertrag |
 | `cola/widgets/dag.py` | Loader, vollständiger Graph, Widget, Style |
 | `cola/widgets/main.py` | Dock, initialer Load, State, Close |
 | `test/dag_test.py` | Reader-/Factory-Isolation |
 | `test/widgets_dag_history_test.py` | Lifecycle, Chunk, Widget, Style, Paint |
 | `test/widgets_main_history_test.py` | Dock, Load, Menü, Migration, Close |
+| `.github/workflows/ci.yml` | fokussierte PyQt5-/PyQt6-Paint-Matrix |
 
 `cola/models/graph.py` bleibt unverändert, sofern kein echter RED-Test eine Algorithmuslücke belegt.
 
@@ -490,5 +562,8 @@ Vor Implementierung muss `critical-plan-review` bestätigen:
 - alter GitDAG-State und MainView-v2-State werden migriert;
 - Dock und v2-Migration bilden eine gemeinsame TDD-Scheibe;
 - `stop_and_wait()` ist als sichere Barriere statt Prozess-Kill beschrieben;
-- exakte `garden test -- ...`- und `garden check`-Gates sind angegeben;
+- jedes Task-Commit besitzt ein direktes GREEN-Gate;
+- fokussierter direkter pytest-Lauf, vollständiges `garden test` und `garden check` sind getrennt;
+- dieselben Paint-Smokes laufen unter PyQt5 und PyQt6;
+- stderr-Erhalt/Reset, atomarer finaler Apply und CLI-Override-Priorität sind explizit;
 - `display_status=False`, `--all`, `1000` festgelegt.
