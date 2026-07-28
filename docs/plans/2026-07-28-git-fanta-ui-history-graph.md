@@ -37,7 +37,7 @@ Main-History-Dock:
 - Das Dock ist über `View` genau einmal ein-/ausblendbar.
 - Sichtbarkeit, Ref, Count, Inline-Modus und Spalten werden gespeichert.
 - Alte MainView-Layouts bleiben erhalten; `widget_version` bleibt `2`.
-- Git- und Graphberechnung laufen außerhalb des GUI-Threads.
+- Git-Lesen und `cola.models.graph.build_graph()` für den Inline-Graph laufen außerhalb des GUI-Threads; Qt-Item- und bestehendes `GraphView`-Scene-Layout bleiben im GUI-Thread.
 - Light/Dark sowie Qt5/Qt6 bleiben unterstützt.
 
 ## 3. Nichtziele
@@ -322,7 +322,10 @@ git commit -m "refactor: extract reusable commit history widget"
 ### Task 6: `GitDAG` rekomponieren und alten State migrieren
 
 **Files:**
-- Modify: `cola/widgets/dag.py:1391-1935`
+- Modify: `cola/dag.py:22-47`
+- Modify: `cola/models/dag.py:67-76`
+- Modify: `cola/widgets/dag.py:45-63,1391-1935`
+- Modify: `test/dag_test.py`
 - Modify: `test/widgets_dag_history_test.py`
 
 **RED:**
@@ -335,9 +338,17 @@ git commit -m "refactor: extract reusable commit history widget"
 - Neues `state['history']` wird symmetrisch gelesen und geschrieben.
 - Altes Schema wird beim nächsten Export ausschließlich als neues kanonisches Schema ausgegeben.
 - Explizite CLI-Overrides für `ref` und `count` gewinnen über altes und neues gespeichertes State-Schema.
+- Reale Parser-zu-State-Tests decken gespeichertes `count=500` plus explizites `--count 1000` sowie gespeicherten Fremd-Ref plus expliziten aktuellen Branch ab.
+- `parse_args([]).count` unterscheidet „nicht angegeben“ von `parse_args(['--count', '1000']).count`.
 - MainView ohne CLI-Overrides darf den gespeicherten Child-Ref restaurieren.
 
-**GREEN:** Log-Dock enthält das Widget. GitDAG besitzt nur zusätzliche Docks, downstream Selection und Window-State. `apply_state()` besitzt einen eng begrenzten Rückwärtslesepfad für das alte flache Schema; `export_state()` schreibt nur das neue Schema. `GitDAG.apply_state()` löst Werte anhand des vorhandenen `DAG.overridden('ref'/'count')`-Vertrags auf und übergibt dem Widget bereits priorisierte Werte; keine zweite Override-Logik im Widget. Übergangs-Aliase nur für nachgewiesene externe Aufrufer.
+**GREEN:**
+
+1. `cola.dag.parse_args()` verwendet für `--count` `default=None`, damit Optionspräsenz erkennbar bleibt.
+2. `git_dag()` initialisiert `DAG` weiterhin mit dem Produktdefault `1000`.
+3. `DAG.set_arguments()` setzt `overrides['count']`, sobald `args.count is not None`, und `overrides['ref']`, sobald explizite `args.args` vorhanden sind — jeweils unabhängig davon, ob `set_count()`/`set_ref()` den Wert ändert.
+4. `GitDAG.apply_state()` löst alten/neuen State anhand dieses korrigierten `DAG.overridden('ref'/'count')`-Vertrags auf und übergibt dem Widget priorisierte Werte; keine zweite Override-Logik im Widget.
+5. Log-Dock enthält das Widget; `apply_state()` liest altes flaches und neues Schema, `export_state()` schreibt nur das neue Schema. Übergangs-Aliase nur für nachgewiesene externe Aufrufer.
 
 **GREEN-Gate vor Commit:**
 
@@ -346,7 +357,7 @@ QT_QPA_PLATFORM=offscreen python3 -B -m pytest test/dag_test.py test/widgets_dag
 ```
 
 ```bash
-git add cola/widgets/dag.py test/widgets_dag_history_test.py
+git add cola/dag.py cola/models/dag.py cola/widgets/dag.py test/dag_test.py test/widgets_dag_history_test.py
 git commit -m "refactor: compose dag window and migrate history state"
 ```
 
@@ -498,10 +509,10 @@ Zusätzlich prüfen:
 - kein sichtbarer partieller Tree vor finalem Result;
 - Close vor initialem Timer sowie Close mit active+pending Request;
 - synthetische Parent-Kante über Index 2047/2048 und vollständige GraphView-Übergabe;
-- `build_graph()` läuft im Worker, nicht im GUI-Thread;
+- Git-Lesen und `build_graph()` für den Inline-Graph laufen im Worker, nicht im GUI-Thread; bestehendes `GraphView`-Scene-Layout und Qt-Items bleiben GUI-seitig;
 - Main-History höchstens 1.000 und ohne Pseudo-Commits;
 - `model.updated` aktualisiert automatisch mit Deduplizierung/Coalescing;
-- CLI-Ref/Count gewinnen im standalone DAG über gespeicherten State;
+- CLI-Ref/Count gewinnen im standalone DAG über gespeicherten State, auch wenn explizite Werte (`--count 1000`, aktueller Branch) den initialen Defaults entsprechen;
 - alter GitDAG-State und alter MainView-v2-State bleiben lesbar;
 - CI-Matrix führt dieselben Paint-Smokes unter PyQt5 und PyQt6 aus.
 
@@ -519,7 +530,8 @@ History direkt sichtbar/gefüllt, `--all`, HEAD/Refs lesbar, keine Pseudo-Zeilen
 
 | Datei | Zweck |
 |---|---|
-| `cola/models/dag.py` | Factory-Isolation, Reader-Reset und stderr-Vertrag |
+| `cola/dag.py` | CLI-Präsenz für defaultgleiche Count-Overrides |
+| `cola/models/dag.py` | Factory-Isolation, Reader-Reset, stderr- und Override-Vertrag |
 | `cola/widgets/dag.py` | Loader, vollständiger Graph, Widget, Style |
 | `cola/widgets/main.py` | Dock, initialer Load, State, Close |
 | `test/dag_test.py` | Reader-/Factory-Isolation |
@@ -565,5 +577,7 @@ Vor Implementierung muss `critical-plan-review` bestätigen:
 - jedes Task-Commit besitzt ein direktes GREEN-Gate;
 - fokussierter direkter pytest-Lauf, vollständiges `garden test` und `garden check` sind getrennt;
 - dieselben Paint-Smokes laufen unter PyQt5 und PyQt6;
-- stderr-Erhalt/Reset, atomarer finaler Apply und CLI-Override-Priorität sind explizit;
+- stderr-Erhalt/Reset und atomarer finaler Apply sind explizit;
+- CLI-Override-Priorität basiert auf Optionspräsenz und deckt defaultgleiche explizite Werte ab;
+- nur Git-Lesen und Inline-`build_graph()` werden als Worker-Arbeit bezeichnet; Qt-/GraphView-Anwendung bleibt GUI-seitig;
 - `display_status=False`, `--all`, `1000` festgelegt.
