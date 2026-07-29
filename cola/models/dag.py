@@ -17,31 +17,30 @@ WORKTREE = 'WORKTREE'
 
 
 class CommitFactory:
-    root_generation = 0
-    commits = {}
+    def __init__(self) -> None:
+        self.root_generation = 0
+        self.commits: dict[str, Commit] = {}
 
-    @classmethod
-    def reset(cls) -> None:
-        cls.commits.clear()
-        cls.root_generation = 0
+    def reset(self) -> None:
+        self.commits.clear()
+        self.root_generation = 0
 
-    @classmethod
     def new(
-        cls, context, oid: str | None = None, log_entry: str | None = None
+        self, context, oid: str | None = None, log_entry: str | None = None
     ) -> Commit:
         if not oid and log_entry:
             oid = log_entry[: context.model.oid_len]
         try:
-            commit = cls.commits[oid]
+            commit = self.commits[oid]
             if log_entry and not commit.parsed:
                 commit.parse(log_entry)
-            cls.root_generation = max(commit.generation, cls.root_generation)
+            self.root_generation = max(commit.generation, self.root_generation)
         except KeyError:
-            commit = Commit(context, oid=oid, log_entry=log_entry)
+            commit = Commit(context, self, oid=oid, log_entry=log_entry)
             if not log_entry:
-                cls.root_generation += 1
-                commit.generation = max(commit.generation, cls.root_generation)
-            cls.commits[oid] = commit
+                self.root_generation += 1
+                commit.generation = max(commit.generation, self.root_generation)
+            self.commits[oid] = commit
         return commit
 
 
@@ -91,10 +90,9 @@ class DAG:
 
 
 class Commit:
-    root_generation = 0
-
     __slots__ = (
         'context',
+        'factory',
         'oid',
         'summary',
         'parents',
@@ -111,9 +109,14 @@ class Commit:
     )
 
     def __init__(
-        self, context, oid: str | None = None, log_entry: str | None = None
+        self,
+        context,
+        factory: CommitFactory,
+        oid: str | None = None,
+        log_entry: str | None = None,
     ) -> None:
         self.context = context
+        self.factory = factory
         self.oid = oid
         self.summary: str | None = None
         self.parents: list[Commit] = []
@@ -124,7 +127,7 @@ class Commit:
         self.author: str | None = None
         self.authdate: str | None = None
         self.parsed = False
-        self.generation = CommitFactory.root_generation
+        self.generation = factory.root_generation
         self.column = None
         self.row = None
         if log_entry:
@@ -145,7 +148,7 @@ class Commit:
         if parents:
             generation = None
             for parent_oid in parents.split(' '):
-                parent = CommitFactory.new(self.context, oid=parent_oid)
+                parent = self.factory.new(self.context, oid=parent_oid)
                 parent.children.append(self)
                 if generation is None:
                     generation = parent.generation + 1
@@ -239,6 +242,9 @@ class RepoReader:
         self.params = params
         self.git = context.git
         self.returncode = 0
+        self.error = ''
+        self.factory = CommitFactory()
+        self._epoch = 0
         self._allow_git_init = allow_git_init
         self._objects: dict[str, Commit] = {}
         self._cmd = [
@@ -256,6 +262,7 @@ class RepoReader:
         """Indicates that all data has been read"""
         self._topo_list = []
         """List of commits objects in topological order"""
+        self._top_commit = None
 
     cached = property(lambda self: self._cached)
     """Return True when no commits remain to be read"""
@@ -264,9 +271,14 @@ class RepoReader:
         return len(self._topo_list)
 
     def reset(self) -> None:
-        CommitFactory.reset()
-        self._cached = False
+        self._epoch += 1
+        self.factory = CommitFactory()
+        self._objects = {}
         self._topo_list = []
+        self._top_commit = None
+        self.returncode = 0
+        self.error = ''
+        self._cached = False
 
     def get(self) -> Iterator[Commit]:
         """Generator function returns Commit objects found by the params"""
@@ -276,6 +288,10 @@ class RepoReader:
             return
 
         self.reset()
+        epoch = self._epoch
+        factory = self.factory
+        objects = self._objects
+        topo_list = self._topo_list
         ref_args = utils.shell_split(self.params.ref)
         cmd = (
             self._cmd
@@ -289,28 +305,35 @@ class RepoReader:
         # When _allow_git_init is True then we detect the "git init" state
         # by checking whether any local branches currently exist.
         if not self._allow_git_init or self.context.model.local_branches:
-            status, out, _ = core.run_command(cmd)
+            status, out, command_error = core.run_command(cmd)
+            if epoch == self._epoch:
+                self.returncode = status
+                self.error = command_error
             oid_len = self.context.model.oid_len
             for log_entry in reversed(out.splitlines()):
                 if not log_entry:
                     break
                 oid = log_entry[:oid_len]
                 try:
-                    commit = self._objects[oid]
+                    commit = objects[oid]
                 except KeyError:
                     try:
-                        commit = CommitFactory.new(self.context, log_entry=log_entry)
+                        commit = factory.new(self.context, log_entry=log_entry)
                     except (KeyError, ValueError):
                         continue
-                    self._objects[commit.oid] = commit
-                    self._topo_list.append(commit)
+                    objects[commit.oid] = commit
+                    topo_list.append(commit)
                 yield commit
         else:
             # git init
             status = 0
-        self._top_commit = commit
-        self._cached = True
-        self.returncode = status
+            command_error = ''
+            if epoch == self._epoch:
+                self.returncode = status
+                self.error = command_error
+        if epoch == self._epoch:
+            self._top_commit = commit
+            self._cached = True
 
     def get_worktree_commits(self) -> tuple[Commit | None, Commit | None]:
         """A Commit object that represents unstaged modified changes in a worktree"""
@@ -353,7 +376,7 @@ class RepoReader:
         worktree_commit = None
 
         if model.staged:
-            stage_commit = Commit(context, oid=STAGE)
+            stage_commit = Commit(context, self.factory, oid=STAGE)
             stage_commit.add_label(STAGE)
             stage_commit.parents = parents
             stage_commit.summary = stage_summary
@@ -369,7 +392,7 @@ class RepoReader:
             parent_commit = stage_commit
 
         if model.modified or model.unmerged:
-            worktree_commit = Commit(context, oid=WORKTREE)
+            worktree_commit = Commit(context, self.factory, oid=WORKTREE)
             worktree_commit.add_label(WORKTREE)
             worktree_commit.parents = parents
             worktree_commit.summary = worktree_summary

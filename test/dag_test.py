@@ -42,6 +42,294 @@ def dag_context(app_context):
     return DAGTestData(app_context)
 
 
+def _log_entry(oid, parents=""):
+    fields = (oid, parents, "", "Author", "Date", "author@example.com", oid)
+    return dag.LOGSEP.join(fields)
+
+
+def test_repo_readers_isolate_interleaved_commit_graphs(app_context):
+    shared_oid = "1" * 40
+    parent_a_oid = "a" * 40
+    parent_b_oid = "b" * 40
+    output_a = "\n".join(
+        (_log_entry(shared_oid, parent_a_oid), _log_entry(parent_a_oid))
+    )
+    output_b = "\n".join(
+        (_log_entry(shared_oid, parent_b_oid), _log_entry(parent_b_oid))
+    )
+    reader_a = dag.RepoReader(app_context, dag.DAG("reader-a", 2), allow_git_init=False)
+    reader_b = dag.RepoReader(app_context, dag.DAG("reader-b", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command",
+            side_effect=((0, output_a, ""), (0, output_b, "")),
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        commits_a = reader_a.get()
+        parent_a = next(commits_a)
+        commits_b = list(reader_b.get())
+        commits_a = [parent_a, *commits_a]
+
+    tip_a = reader_a[shared_oid]
+    tip_b = reader_b[shared_oid]
+    parent_b = reader_b[parent_b_oid]
+    assert tip_a is commits_a[1]
+    assert tip_b is commits_b[1]
+    assert tip_a is not tip_b
+    assert tip_a.parents == [parent_a]
+    assert tip_b.parents == [parent_b]
+    assert parent_a is not parent_b
+    assert parent_a.children == [tip_a]
+    assert parent_b.children == [tip_b]
+    assert reader_a.factory is not reader_b.factory
+    assert reader_a.factory.commits is not reader_b.factory.commits
+
+
+def test_repo_reader_reset_discards_objects_and_changed_input(app_context):
+    shared_oid = "1" * 40
+    parent_a_oid = "a" * 40
+    parent_b_oid = "b" * 40
+    output_a = "\n".join(
+        (_log_entry(shared_oid, parent_a_oid), _log_entry(parent_a_oid))
+    )
+    output_b = "\n".join(
+        (_log_entry(shared_oid, parent_b_oid), _log_entry(parent_b_oid))
+    )
+    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command",
+            side_effect=((0, output_a, ""), (0, output_b, "")),
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        list(reader.get())
+        first_tip = reader[shared_oid]
+        first_parent = reader[parent_a_oid]
+
+        reader.reset()
+
+        assert reader._objects == {}
+        assert reader._topo_list == []
+        assert reader._top_commit is None
+        assert reader.factory.commits == {}
+        assert reader.factory.root_generation == 0
+        assert reader.cached is False
+
+        list(reader.get())
+
+    second_tip = reader[shared_oid]
+    second_parent = reader[parent_b_oid]
+    assert second_tip is not first_tip
+    assert second_parent is not first_parent
+    assert second_tip.parents == [second_parent]
+    assert first_tip.parents == [first_parent]
+
+
+def test_repo_reader_preserves_command_error(app_context):
+    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command",
+            return_value=(128, "", "fatal: bad revision"),
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        assert list(reader.get()) == []
+
+    assert reader.returncode == 128
+    assert reader.error == "fatal: bad revision"
+
+
+def test_repo_reader_success_clears_previous_command_error(app_context):
+    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command",
+            side_effect=(
+                (128, "", "fatal: bad revision"),
+                (0, "", ""),
+            ),
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        list(reader.get())
+        reader.reset()
+        list(reader.get())
+
+    assert reader.returncode == 0
+    assert reader.error == ""
+
+
+def test_repo_reader_reset_clears_previous_command_error(app_context):
+    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command",
+            return_value=(128, "", "fatal: bad revision"),
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        list(reader.get())
+
+    reader.reset()
+
+    assert reader.returncode == 0
+    assert reader.error == ""
+
+
+
+def test_repo_reader_isolates_overlapping_runs(app_context):
+    shared_oid = "1" * 40
+    parent_a_oid = "a" * 40
+    parent_b_oid = "b" * 40
+    output_a = "\n".join(
+        (_log_entry(shared_oid, parent_a_oid), _log_entry(parent_a_oid))
+    )
+    output_b = "\n".join(
+        (_log_entry(shared_oid, parent_b_oid), _log_entry(parent_b_oid))
+    )
+    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command",
+            side_effect=((11, output_a, "old error"), (12, output_b, "new error")),
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        old_commits = reader.get()
+        old_parent = next(old_commits)
+        old_factory = reader.factory
+
+        new_commits = reader.get()
+        new_parent = next(new_commits)
+        new_factory = reader.factory
+        new_tip = next(new_commits)
+        with pytest.raises(StopIteration):
+            next(new_commits)
+
+        old_tip = next(old_commits)
+        with pytest.raises(StopIteration):
+            next(old_commits)
+
+    assert old_factory is not new_factory
+    assert old_tip.parents == [old_parent]
+    assert old_parent.children == [old_tip]
+    assert new_tip.parents == [new_parent]
+    assert new_parent.children == [new_tip]
+    assert old_tip is not new_tip
+    assert reader.factory is new_factory
+    assert reader._objects == {
+        parent_b_oid: new_parent,
+        shared_oid: new_tip,
+    }
+    assert reader._topo_list == [new_parent, new_tip]
+    assert reader._top_commit is new_tip
+    assert reader.cached is True
+    assert reader.returncode == 12
+    assert reader.error == "new error"
+
+
+def test_repo_reader_reset_does_not_mutate_partial_run(app_context):
+    tip_oid = "1" * 40
+    parent_oid = "a" * 40
+    output = "\n".join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
+    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command", return_value=(0, output, "")
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        commits = reader.get()
+        parent = next(commits)
+        old_factory = reader.factory
+        old_objects = reader._objects
+        old_topo_list = reader._topo_list
+
+        reader.reset()
+
+        assert reader.factory is not old_factory
+        assert reader._objects is not old_objects
+        assert reader._topo_list is not old_topo_list
+        assert reader.factory.commits == {}
+        assert reader._objects == {}
+        assert reader._topo_list == []
+        assert reader._top_commit is None
+        assert reader.cached is False
+
+        tip = next(commits)
+        with pytest.raises(StopIteration):
+            next(commits)
+
+    assert old_objects == {parent_oid: parent, tip_oid: tip}
+    assert old_topo_list == [parent, tip]
+    assert tip.parents == [parent]
+    assert parent.children == [tip]
+    assert reader.factory.commits == {}
+    assert reader._objects == {}
+    assert reader._topo_list == []
+    assert reader._top_commit is None
+    assert reader.cached is False
+
+
+def test_repo_reader_publishes_command_status_before_first_yield(app_context):
+    tip_oid = "1" * 40
+    parent_oid = "a" * 40
+    output = "\n".join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
+    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command",
+            return_value=(17, output, "command failed"),
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        commits = reader.get()
+        next(commits)
+
+    assert reader.returncode == 17
+    assert reader.error == "command failed"
+    assert reader.cached is False
+    assert reader._top_commit is None
+
+
+def test_repo_reader_keeps_command_status_after_processing_exception(app_context):
+    tip_oid = "1" * 40
+    parent_oid = "a" * 40
+    output = "\n".join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
+    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+
+    with (
+        patch(
+            "cola.models.dag.core.run_command",
+            return_value=(17, output, "command failed"),
+        ),
+        patch("cola.models.dag.prefs.logdate", return_value="default"),
+    ):
+        commits = reader.get()
+        next(commits)
+        with (
+            patch.object(reader.factory, "new", side_effect=RuntimeError("boom")),
+            pytest.raises(RuntimeError, match="boom"),
+        ):
+            next(commits)
+
+    assert reader.returncode == 17
+    assert reader.error == "command failed"
+    assert reader.cached is False
+    assert reader._top_commit is None
+
+
 @patch('cola.models.dag.core')
 def test_repo_reader(core, dag_context):
     commit_files()

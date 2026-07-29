@@ -76,8 +76,8 @@ def managed_qobject(qapp):
     QtCore.QCoreApplication.sendPostedEvents(None, QtCore.QEvent.DeferredDelete)
 
 
-def _commit(context, oid, parents=()):
-    commit = dag.Commit(context, oid=oid)
+def _commit(context, factory, oid, parents=()):
+    commit = dag.Commit(context, factory, oid=oid)
     commit.summary = f"commit {oid}"
     commit.author = "A U Thor"
     commit.authdate = "2026-07-28"
@@ -119,9 +119,10 @@ def test_display_inline_graph_installs_and_removes_delegate(
 def test_linear_history_items_expose_graph_and_commit_roles(
     qapp, app_context, managed_qobject
 ):
-    root = _commit(app_context, "A")
-    middle = _commit(app_context, "B", (root,))
-    tip = _commit(app_context, "C", (middle,))
+    factory = dag.CommitFactory()
+    root = _commit(app_context, factory, "A")
+    middle = _commit(app_context, factory, "B", (root,))
+    tip = _commit(app_context, factory, "C", (middle,))
     tree = _tree(app_context, managed_qobject)
 
     tree.add_commits([root, middle, tip])
@@ -140,9 +141,10 @@ def test_linear_history_items_expose_graph_and_commit_roles(
 def test_fork_history_items_expose_graph_and_commit_roles(
     qapp, app_context, managed_qobject
 ):
-    root = _commit(app_context, "A")
-    left = _commit(app_context, "B", (root,))
-    right = _commit(app_context, "C", (root,))
+    factory = dag.CommitFactory()
+    root = _commit(app_context, factory, "A")
+    left = _commit(app_context, factory, "B", (root,))
+    right = _commit(app_context, factory, "C", (root,))
     tree = _tree(app_context, managed_qobject)
 
     tree.add_commits([root, left, right])
@@ -159,8 +161,9 @@ def test_fork_history_items_expose_graph_and_commit_roles(
 
 
 def test_tree_selection_emits_selected_commits(qapp, app_context, managed_qobject):
-    root = _commit(app_context, "A")
-    tip = _commit(app_context, "B", (root,))
+    factory = dag.CommitFactory()
+    root = _commit(app_context, factory, "A")
+    tip = _commit(app_context, factory, "B", (root,))
     tree = _tree(app_context, managed_qobject)
     tree.add_commits([root, tip])
     selected = QtTest.QSignalSpy(tree.commits_selected)
