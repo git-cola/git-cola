@@ -916,7 +916,7 @@ class MainView(standard.MainWindow):
         self.tabifyDockWidget(self.actionsdock, self.logdock)
 
         # Listen for model notifications
-        self.model.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        self.model.updated.connect(self.model_updated, type=Qt.QueuedConnection)
         self.model.mode_changed.connect(
             lambda mode: self.refresh(), type=Qt.QueuedConnection
         )
@@ -940,6 +940,8 @@ class MainView(standard.MainWindow):
             ),
             type=Qt.QueuedConnection,
         )
+        self._initial_history_started = False
+        self._initial_history_loaded = False
         self.init_state(context.settings, self.set_initial_size)
 
         # Set the UI font size.
@@ -957,6 +959,17 @@ class MainView(standard.MainWindow):
         # The Interaction error handlers are not available until the main view has been
         # fully constructed, so we defer that initializaiton.
         QtCore.QTimer.singleShot(0, self.initialize)
+
+    def _load_initial_history(self):
+        if self.historywidget.stopping or self._initial_history_started:
+            return
+        self._initial_history_started = True
+        self.historywidget.load_if_stale()
+        QtCore.QTimer.singleShot(0, self._finish_initial_history_load)
+
+    def _finish_initial_history_load(self):
+        if not self.historywidget.stopping:
+            self._initial_history_loaded = True
 
     def initialize(self):
         context = self.context
@@ -979,6 +992,8 @@ class MainView(standard.MainWindow):
                 details = git.win32_git_error_hint()
             Interaction.critical(title, message=msg, details=details)
             self.context.app.exit(core.EXIT_UNAVAILABLE)
+            return
+        QtCore.QTimer.singleShot(0, self._load_initial_history)
 
     def set_initial_size(self):
         # Default size; this is thrown out when save/restore is used
@@ -1143,6 +1158,12 @@ class MainView(standard.MainWindow):
     def get_config_actions(self):
         actions = cfgactions.get_config_actions(self.context)
         self.config_actions_changed.emit(actions)
+
+    def model_updated(self):
+        """Refresh repository-owned views after a complete model update."""
+        if self._initial_history_loaded:
+            self.historywidget.load_if_stale()
+        self.refresh()
 
     def refresh(self):
         """Update the title with the current branch and directory name."""

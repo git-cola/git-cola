@@ -15,13 +15,11 @@ from qtpy.QtCore import Signal
 from .. import cmds
 from .. import core
 from .. import difftool
-from .. import gitcmds
 from .. import guicmds
 from .. import hotkeys
 from .. import icons
 from .. import qtcompat
 from .. import qtutils
-from .. import utils
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
@@ -1383,6 +1381,7 @@ class _HistoryCacheMetadata:
     refs: frozenset[str]
     count: int
     display_status: bool
+    generation: int = 0
 
 
 class CommitHistoryWidget(QtWidgets.QWidget):
@@ -1409,6 +1408,8 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         self.old_display_status = None
         self.last_successful_cache_key = None
         self.force_refresh = False
+        self.repository_generation = 0
+        self.successful_repository_generation = -1
 
         self.active_thread = None
         self.active_request = None
@@ -1610,6 +1611,7 @@ class CommitHistoryWidget(QtWidgets.QWidget):
             self.old_refs = set(metadata.refs)
             self.old_count = metadata.count
             self.old_display_status = metadata.display_status
+            self.successful_repository_generation = metadata.generation
 
     def apply_result(self, commits, graph_result):
         """Atomically apply a complete successful history result."""
@@ -1663,34 +1665,37 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         self.treewidget.setFocus()
 
     def model_updated(self):
-        self.display()
+        self.load_if_stale()
 
     def refresh(self):
         """Unconditionally refresh the history."""
         self.force_refresh = True
         cmds.do(cmds.Refresh, self.context)
 
+    def load_if_stale(self):
+        """Mark repository data stale and use the serialized display pipeline."""
+        self.repository_generation += 1
+        self.display()
+
     def display(self):
-        """Update the view when Git refs or history controls change."""
+        """Update history from GUI/model snapshots without resolving Git refs."""
         ref = get(self.revtext)
         count = get(self.maxresults)
         display_status = get(self.display_status_action)
-        refs = set(
+        refs = frozenset(
             self.model.local_branches + self.model.remote_branches + self.model.tags
         )
-        argv = utils.shell_split(ref or 'HEAD')
-        oids = gitcmds.parse_refs(self.context, argv)
+        key = (ref, count, display_status)
         update = (
             self.force_refresh
-            or count != self.old_count
-            or oids != self.old_oids
-            or refs != self.old_refs
-            or display_status != self.old_display_status
+            or key != self.last_successful_cache_key
+            or refs != frozenset(self.old_refs)
+            or self.repository_generation != self.successful_repository_generation
         )
-        self.controls_changed.emit((ref, count, display_status))
+        self.controls_changed.emit(key)
         if update:
             metadata = _HistoryCacheMetadata(
-                tuple(oids), frozenset(refs), count, display_status
+                (), refs, count, display_status, self.repository_generation
             )
             self.request_history(ref, count, display_status, metadata)
         self.force_refresh = False

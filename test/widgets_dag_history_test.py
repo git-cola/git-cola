@@ -9,6 +9,7 @@ import pytest
 
 from cola import dag as dag_cli
 from cola import main as main_cli
+from cola.interaction import Interaction
 from cola.models import dag
 from cola.models import graph as graph_model
 from cola.widgets import standard
@@ -143,6 +144,30 @@ def test_history_widget_uses_all_refs_without_status(
         1000,
         False,
     )
+
+
+def test_load_if_stale_advances_generation_and_never_parses_refs_on_gui_thread(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    history = _history(app_context, managed_qobject, monkeypatch)
+    gui_thread = QtCore.QThread.currentThread()
+    parse_calls = []
+
+    def forbidden_parse_refs(*_args):
+        parse_calls.append(QtCore.QThread.currentThread())
+        raise AssertionError("history refresh must not resolve refs on the GUI thread")
+
+    monkeypatch.setattr("cola.gitcmds.parse_refs", forbidden_parse_refs)
+
+    history.load_if_stale()
+    first_generation = history.active_cache_metadata.generation
+    history.display()
+    history.model_updated()
+
+    assert QtCore.QThread.currentThread() is gui_thread
+    assert parse_calls == []
+    assert first_generation == 1
+    assert history.pending_cache_metadata.generation == 2
 
 
 def test_current_request_is_a_pure_snapshot(
@@ -1019,8 +1044,10 @@ def test_explicit_parser_current_ref_wins_over_flat_and_nested_foreign_ref(
 
 
 def test_mainview_accepts_legacy_version_2_dock_state(
-    qapp, app_context, managed_qobject
+    qapp, app_context, managed_qobject, monkeypatch
 ):
+    monkeypatch.setattr(Interaction, "log", lambda *_args: None)
+    monkeypatch.setattr(Interaction, "log_status", lambda *_args: None)
     app_context.settings.get_gui_state.return_value = {}
     app_context.settings.bookmarks = []
     app_context.settings.recent = []
@@ -1204,10 +1231,10 @@ def test_active_same_key_with_new_metadata_schedules_followup(
 ):
     widget = _history(app_context, managed_qobject, monkeypatch)
     old_metadata = _HistoryCacheMetadata(
-        ("old-oid",), frozenset({"old-ref"}), 10, False
+        (), frozenset({"old-ref"}), 10, False, generation=1
     )
     new_metadata = _HistoryCacheMetadata(
-        ("new-oid",), frozenset({"new-ref"}), 10, False
+        (), frozenset({"new-ref"}), 10, False, generation=2
     )
     assert widget.request_history("same", 10, False, old_metadata)
     active = ManualReaderThread.instances[-1]
@@ -1227,8 +1254,51 @@ def test_active_same_key_with_new_metadata_schedules_followup(
         dag.HistoryResult(followup.request.run_id, True, 0, "", (), None)
     )
     qapp.processEvents()
-    assert widget.old_oids == ["new-oid"]
+    assert widget.successful_repository_generation == 2
     assert widget.old_refs == {"new-ref"}
+
+
+def test_same_key_generations_coalesce_latest_and_duplicate_generation_dedupes(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    widget = _history(app_context, managed_qobject, monkeypatch)
+    widget.load_if_stale()
+    active = ManualReaderThread.instances[-1]
+
+    widget.model_updated()
+    pending = widget.pending_request
+    assert pending is not None
+    assert widget.pending_cache_metadata.generation == 2
+
+    widget.display()
+    assert widget.pending_request is pending
+    assert widget.pending_cache_metadata.generation == 2
+
+    widget.model_updated()
+    widget.model_updated()
+    assert widget.pending_request is pending
+    assert widget.pending_cache_metadata.generation == 4
+    assert len(ManualReaderThread.instances) == 1
+
+    active.complete(dag.HistoryResult(active.request.run_id, True, 0, "", (), None))
+    qapp.processEvents()
+    assert len(ManualReaderThread.instances) == 2
+    assert widget.active_cache_metadata.generation == 4
+
+
+def test_control_request_a_b_a_discards_pending_without_new_generation(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    widget = _history(app_context, managed_qobject, monkeypatch)
+    assert widget.request_history("A", 10, False)
+    active = ManualReaderThread.instances[-1]
+    assert widget.request_history("B", 10, False)
+    assert not widget.request_history("A", 10, False)
+    assert widget.pending_request is None
+
+    active.complete(dag.HistoryResult(active.request.run_id, True, 0, "", (), None))
+    qapp.processEvents()
+    assert len(ManualReaderThread.instances) == 1
 
 
 def test_history_requests_deduplicate_and_coalesce_last_different_request(
@@ -1258,10 +1328,10 @@ def test_pending_same_key_uses_latest_non_none_cache_metadata(
 ):
     widget = _history(app_context, managed_qobject, monkeypatch)
     old_metadata = _HistoryCacheMetadata(
-        ("old-oid",), frozenset({"old-ref"}), 10, False
+        (), frozenset({"old-ref"}), 10, False, generation=1
     )
     new_metadata = _HistoryCacheMetadata(
-        ("new-oid",), frozenset({"new-ref"}), 10, False
+        (), frozenset({"new-ref"}), 10, False, generation=3
     )
     widget.request_history("blocker", 1, False)
     blocker = ManualReaderThread.instances[-1]
@@ -1278,7 +1348,7 @@ def test_pending_same_key_uses_latest_non_none_cache_metadata(
         dag.HistoryResult(pending.request.run_id, True, 0, "", (), None)
     )
     qapp.processEvents()
-    assert widget.old_oids == ["new-oid"]
+    assert widget.successful_repository_generation == 3
     assert widget.old_refs == {"new-ref"}
 
 
@@ -1593,17 +1663,16 @@ def test_display_cache_changes_only_after_current_success_and_failure_retries(
     qapp, app_context, managed_qobject, monkeypatch
 ):
     widget = _history(app_context, managed_qobject, monkeypatch)
-    monkeypatch.setattr("cola.widgets.dag.gitcmds.parse_refs", lambda *_args: ["oid-A"])
     widget.model.local_branches = ["main"]
     widget.model.remote_branches = []
     widget.model.tags = []
 
-    widget.display()
+    widget.load_if_stale()
     first = ManualReaderThread.instances[-1]
-    assert widget.old_oids is None
     assert widget.old_refs == set()
     assert widget.old_count == 0
     assert widget.old_display_status is None
+    assert widget.successful_repository_generation == -1
     assert widget.last_successful_cache_key is None
 
     first.emit_result(
@@ -1611,17 +1680,17 @@ def test_display_cache_changes_only_after_current_success_and_failure_retries(
     )
     first.finish()
     qapp.processEvents()
-    assert widget.old_oids is None
+    assert widget.successful_repository_generation == -1
     assert widget.last_successful_cache_key is None
 
-    widget.model_updated()
+    widget.display()
     retry = ManualReaderThread.instances[-1]
     assert retry is not first
     retry.emit_result(
         dag.HistoryResult(retry.request.run_id, True, 0, "", (), None)
     )
     qapp.processEvents()
-    assert widget.old_oids == ["oid-A"]
+    assert widget.successful_repository_generation == 1
     assert widget.old_refs == {"main"}
     assert widget.old_count == widget.maxresults.value()
     assert widget.old_display_status == widget.display_status_action.isChecked()
