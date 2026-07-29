@@ -19,9 +19,14 @@ from cola.widgets.dag import (
     GRAPH_ROW_ROLE,
     CommitHistoryWidget,
     CommitTreeWidget,
+    EdgeColor,
     GitDAG,
+    GraphDelegate,
     ReaderThread,
+    _best_contrast,
     _HistoryCacheMetadata,
+    _opaque_color,
+    inline_graph_style,
 )
 from cola.widgets.main import MainView
 from qtpy import QtCore, QtGui, QtTest, QtWidgets
@@ -491,6 +496,503 @@ def test_gitdag_close_delegates_stop_to_history_widget(
     assert window.close()
 
     assert calls == [window.historywidget]
+
+
+def _palette(window, window_text, base, alternate, highlight, highlighted_text):
+    palette = QtGui.QPalette()
+    for role, color in (
+        (QtGui.QPalette.Window, window),
+        (QtGui.QPalette.WindowText, window_text),
+        (QtGui.QPalette.Base, base),
+        (QtGui.QPalette.AlternateBase, alternate),
+        (QtGui.QPalette.Text, window_text),
+        (QtGui.QPalette.Button, alternate),
+        (QtGui.QPalette.ButtonText, window_text),
+        (QtGui.QPalette.Highlight, highlight),
+        (QtGui.QPalette.HighlightedText, highlighted_text),
+    ):
+        palette.setColor(role, QtGui.QColor(color))
+    return palette
+
+
+def _contrast(first, second):
+    def luminance(color):
+        channels = []
+        for value in (color.redF(), color.greenF(), color.blueF()):
+            channels.append(
+                value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
+            )
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+    lighter, darker = sorted((luminance(first), luminance(second)), reverse=True)
+    return (lighter + 0.05) / (darker + 0.05)
+
+
+@pytest.mark.parametrize(
+    "palette",
+    [
+        _palette("#f4f5f7", "#202124", "#ffffff", "#edf0f4", "#3268b2", "#ffffff"),
+        _palette("#202328", "#e8eaed", "#17191d", "#292d33", "#6ea8fe", "#101216"),
+    ],
+)
+def test_inline_graph_style_is_palette_derived_distinct_and_repeatable(palette):
+    first = inline_graph_style(palette)
+    second = inline_graph_style(QtGui.QPalette(palette))
+
+    assert first == second
+    assert first is not second
+    with pytest.raises(AttributeError):
+        first.normal_fill = QtGui.QColor("#000000")
+    assert len(first.lane_colors) >= 4
+    assert len({color.rgba() for color in first.lane_colors}) == len(first.lane_colors)
+    assert (
+        len({first.normal_fill.rgba(), first.merge_fill.rgba(), first.head_fill.rgba()})
+        == 3
+    )
+    assert first.head_accent != first.head_fill
+    for color in (
+        first.normal_fill,
+        first.merge_fill,
+        first.head_fill,
+        first.head_accent,
+        first.outline,
+        first.text,
+        first.chip_text,
+        *first.lane_colors,
+    ):
+        assert color.isValid()
+    backgrounds = (
+        palette.base().color(),
+        palette.alternateBase().color(),
+        palette.highlight().color(),
+    )
+    for color in first.lane_colors:
+        assert min(_contrast(color, background) for background in backgrounds) >= 1.6
+
+
+def test_lane_colors_handle_adversarial_achromatic_palette():
+    palette = _palette("#000000", "#c0c0c0", "#000000", "#404040", "#808080", "#000000")
+
+    lanes = inline_graph_style(palette).lane_colors
+
+    assert len(lanes) == 5
+    assert all(color.isValid() for color in lanes)
+    assert len({color.rgba() for color in lanes}) == 5
+    backgrounds = (
+        palette.base().color(),
+        palette.alternateBase().color(),
+        palette.highlight().color(),
+    )
+    assert all(
+        min(_contrast(color, background) for background in backgrounds) >= 1.6
+        for color in lanes
+    )
+
+
+def test_lane_colors_expand_fully_collapsed_palette_to_distinct_strong_colors():
+    palette = _palette("#000000", "#000000", "#000000", "#000000", "#000000", "#000000")
+
+    lanes = inline_graph_style(palette).lane_colors
+
+    assert len(lanes) == 5
+    assert all(color.isValid() for color in lanes)
+    assert len({color.rgba() for color in lanes}) == 5
+    assert all(_contrast(color, palette.base().color()) >= 4.5 for color in lanes)
+
+
+def test_lane_colors_expand_fully_collapsed_white_palette():
+    palette = _palette("#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff")
+
+    lanes = inline_graph_style(palette).lane_colors
+    backgrounds = (
+        palette.base().color(),
+        palette.alternateBase().color(),
+        palette.highlight().color(),
+    )
+
+    assert len(lanes) == 5
+    assert all(color.isValid() and color.alpha() == 255 for color in lanes)
+    assert len({color.rgba() for color in lanes}) == 5
+    assert all(
+        min(_contrast(color, background) for background in backgrounds) >= 1.6
+        for color in lanes
+    )
+
+
+def test_lane_colors_from_transparent_roles_are_opaque_visible_and_distinct():
+    palette = QtGui.QPalette()
+    role_colors = (
+        (QtGui.QPalette.Base, QtGui.QColor(255, 255, 255, 0)),
+        (QtGui.QPalette.AlternateBase, QtGui.QColor(128, 128, 128, 0)),
+        (QtGui.QPalette.Highlight, QtGui.QColor(0, 0, 0, 0)),
+        (QtGui.QPalette.Text, QtGui.QColor(255, 0, 0, 0)),
+        (QtGui.QPalette.HighlightedText, QtGui.QColor(0, 0, 255, 0)),
+    )
+    for role, color in role_colors:
+        palette.setColor(role, color)
+
+    style = inline_graph_style(palette)
+    lanes = style.lane_colors
+    white = QtGui.QColor(255, 255, 255)
+
+    assert style.selected_text.isValid()
+    assert style.selected_text.alpha() == 255
+    assert len(lanes) == 5
+    assert all(color.isValid() and color.alphaF() == 1.0 for color in lanes)
+    assert len({color.rgba() for color in lanes}) == 5
+    assert all(_contrast(color, white) >= 1.6 for color in lanes)
+
+
+def test_inline_graph_style_changes_with_palette_and_ignores_global_edge_colors(
+    monkeypatch,
+):
+    light = _palette("#ffffff", "#191919", "#ffffff", "#eeeeee", "#2468a2", "#ffffff")
+    changed = QtGui.QPalette(light)
+    changed.setColor(QtGui.QPalette.Highlight, QtGui.QColor("#a23872"))
+    expected = inline_graph_style(light)
+    empty = []
+    monkeypatch.setattr(EdgeColor, "colors", empty)
+    assert inline_graph_style(light) == expected
+    assert EdgeColor.colors is empty
+    assert empty == []
+    replacement = [QtGui.QColor("#010203")]
+    monkeypatch.setattr(EdgeColor, "colors", replacement)
+    assert inline_graph_style(light) == expected
+    assert EdgeColor.colors is replacement
+    assert replacement == [QtGui.QColor("#010203")]
+    assert inline_graph_style(changed) != expected
+
+
+def _paint_graph_row(tree, row_color, palette, selected=False):
+    item = tree.topLevelItem(0)
+    item.data(0, GRAPH_ROW_ROLE).color = row_color
+    option = QtWidgets.QStyleOptionViewItem()
+    option.rect = QtCore.QRect(0, 0, 240, 26)
+    option.palette = QtGui.QPalette(palette)
+    option.font = tree.font()
+    option.fontMetrics = QtGui.QFontMetrics(option.font)
+    if selected:
+        option.state |= QtWidgets.QStyle.State_Selected
+    image = QtGui.QImage(option.rect.size(), QtGui.QImage.Format_ARGB32)
+    image.fill(palette.base().color())
+    painter = QtGui.QPainter(image)
+    tree.graph_delegate.paint(painter, option, tree.indexFromItem(item, 0))
+    painter.end()
+    return image
+
+
+def test_graph_delegate_offscreen_nodes_selection_lanes_and_size(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    palette = _palette("#f8f8f8", "#202020", "#ffffff", "#ececec", "#315f9c", "#fff7df")
+    factory = dag.CommitFactory()
+    parent = _commit(app_context, factory, "parent")
+    commit = _commit(app_context, factory, "commit", (parent,))
+    commit.tags = ["heads/main"]
+    tree = _tree(app_context, managed_qobject)
+    tree.add_commits([parent, commit], _graph_result([parent, commit]))
+    tree.setPalette(palette)
+    tree.display_inline_graph(True)
+    original = list(EdgeColor.colors)
+    monkeypatch.setattr(EdgeColor, "colors", [])
+
+    images = {
+        color: _paint_graph_row(tree, color, palette)
+        for color in (
+            graph_model.GraphRowColor.NORMAL,
+            graph_model.GraphRowColor.MERGE,
+            graph_model.GraphRowColor.HEAD,
+        )
+    }
+    center = QtCore.QPoint(GraphDelegate.LANE_WIDTH // 2, 13)
+    centers = {
+        color: image.pixelColor(center).rgba() for color, image in images.items()
+    }
+    assert len(set(centers.values())) == 3
+    head = images[graph_model.GraphRowColor.HEAD]
+    assert (
+        head.pixelColor(center.x() + GraphDelegate.DOT_RADIUS + 2, center.y()).rgba()
+        != palette.base().color().rgba()
+    )
+    selected = _paint_graph_row(
+        tree, graph_model.GraphRowColor.NORMAL, palette, selected=True
+    )
+    assert selected.pixelColor(230, 2) == palette.highlight().color()
+    assert EdgeColor.colors == []
+    assert original
+
+    option = QtWidgets.QStyleOptionViewItem()
+    option.font = tree.font()
+    option.fontMetrics = QtGui.QFontMetrics(option.font)
+    hint = tree.graph_delegate.sizeHint(
+        option, tree.indexFromItem(tree.topLevelItem(0), 0)
+    )
+    assert GraphDelegate.LANE_WIDTH == 18
+    assert hint.height() == 26
+    assert 24 <= hint.height() <= 28
+
+
+@pytest.mark.parametrize("point_size", (18, 24))
+def test_graph_delegate_large_font_size_and_label_hit_area_stay_coherent(
+    point_size, qapp, app_context, managed_qobject
+):
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, "commit")
+    commit.tags = ["heads/main"]
+    tree = _tree(app_context, managed_qobject)
+    tree.add_commits([commit], _graph_result([commit]))
+    item = tree.topLevelItem(0)
+    index = tree.indexFromItem(item, 0)
+    option = QtWidgets.QStyleOptionViewItem()
+    option.font = QtGui.QFont(tree.font())
+    option.font.setPointSize(point_size)
+    option.fontMetrics = QtGui.QFontMetrics(option.font)
+
+    hint = tree.graph_delegate.sizeHint(option, index)
+
+    assert hint.height() >= option.fontMetrics.height() + 4
+    rect = QtCore.QRectF(0, 0, hint.width(), hint.height())
+    label_x = GraphDelegate.LANE_WIDTH + 8
+    label_index, _condensed = tree.graph_delegate._label_hit_test(
+        QtCore.QPointF(label_x, rect.center().y()),
+        rect,
+        option.fontMetrics,
+        index,
+        item,
+    )
+    assert label_index == 0
+
+
+class _TextRecordingPainter:
+    def __init__(self):
+        self.pen = QtGui.QPen()
+        self.text_colors = []
+        self.fills = []
+        self.brush = QtGui.QBrush()
+        self.rounded_styles = []
+        self.rounded_rects = []
+
+    def save(self):
+        pass
+
+    def restore(self):
+        pass
+
+    def setRenderHint(self, *_args):
+        pass
+
+    def setClipRect(self, *_args):
+        pass
+
+    def fillRect(self, _rect, brush):
+        self.fills.append(brush.color())
+
+    def setPen(self, pen):
+        self.pen = QtGui.QPen(pen)
+
+    def setBrush(self, brush):
+        self.brush = QtGui.QBrush(brush)
+
+    def setFont(self, *_args):
+        pass
+
+    def drawLine(self, *_args):
+        pass
+
+    def drawPath(self, *_args):
+        pass
+
+    def drawEllipse(self, *_args):
+        pass
+
+    def drawRoundedRect(self, *args):
+        self.rounded_rects.append(QtCore.QRectF(args[0]))
+        self.rounded_styles.append((self.pen.color(), self.brush.color()))
+
+    def drawText(self, *args):
+        self.text_colors.append((str(args[-1]), self.pen.color()))
+
+
+def test_24pt_visible_chip_and_hit_area_have_identical_boundaries(
+    qapp, app_context, managed_qobject
+):
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, "commit")
+    commit.tags = ["heads/main"]
+    tree = _tree(app_context, managed_qobject)
+    tree.add_commits([commit], _graph_result([commit]))
+    item = tree.topLevelItem(0)
+    index = tree.indexFromItem(item, 0)
+    font = QtGui.QFont(tree.font())
+    font.setPointSize(24)
+    metrics = QtGui.QFontMetrics(font)
+    option = QtWidgets.QStyleOptionViewItem()
+    option.font = font
+    option.fontMetrics = metrics
+    hint = tree.graph_delegate.sizeHint(option, index)
+    rect = QtCore.QRectF(0, 0, hint.width(), hint.height())
+    painter = _TextRecordingPainter()
+    label_x = GraphDelegate.LANE_WIDTH + 8
+    tree.graph_delegate._draw_labels(
+        painter,
+        rect.center().y(),
+        commit.tags,
+        label_x,
+        metrics,
+        item,
+        inline_graph_style(tree.palette()),
+    )
+    chip = painter.rounded_rects[0]
+    x = chip.center().x()
+
+    assert hint.height() == max(26, metrics.height() + 4)
+    for y in (chip.top(), chip.bottom()):
+        assert (
+            tree.graph_delegate._label_hit_test(
+                QtCore.QPointF(x, y), rect, metrics, index, item
+            )[0]
+            == 0
+        )
+    for y in (chip.top() - 0.01, chip.bottom() + 0.01):
+        assert (
+            tree.graph_delegate._label_hit_test(
+                QtCore.QPointF(x, y), rect, metrics, index, item
+            )[0]
+            == -1
+        )
+
+
+def _adversarial_chip_palettes():
+    invalid = QtGui.QColor()
+    transparent = QtGui.QColor(127, 127, 127, 0)
+    return [
+        _palette(*(QtGui.QColor(value, value, value) for _ in range(6)))
+        for value in (0, 127, 255)
+    ] + [
+        _palette(*(transparent for _ in range(6))),
+        _palette(*(invalid for _ in range(6))),
+    ]
+
+
+@pytest.mark.parametrize("selected", (False, True))
+@pytest.mark.parametrize("palette", _adversarial_chip_palettes())
+def test_draw_labels_makes_every_adversarial_chip_opaque_and_contrasting(
+    qapp, managed_qobject, selected, palette
+):
+    parent = managed_qobject(QtWidgets.QWidget())
+    delegate = managed_qobject(GraphDelegate(parent))
+    painter = _TextRecordingPainter()
+    style = inline_graph_style(palette)
+    selected_text = palette.highlightedText().color() if selected else None
+
+    delegate._draw_labels(
+        painter,
+        20,
+        ["other", "tags/v1", "heads/main"],
+        20,
+        QtGui.QFontMetrics(qapp.font()),
+        None,
+        style,
+        selected_text,
+    )
+
+    assert len(painter.rounded_styles) == 3
+    assert len({brush.rgba() for _pen, brush in painter.rounded_styles}) == 3
+    assert (
+        _contrast(style.selected_text, _opaque_color(palette.highlight().color()))
+        >= 4.5
+    )
+    for pen, brush in painter.rounded_styles:
+        assert pen.isValid() and pen.alpha() == 255
+        assert brush.isValid() and brush.alpha() == 255
+        assert _contrast(pen, brush) >= 4.5
+    for color in style.__dict__.values():
+        colors = color if isinstance(color, tuple) else (color,)
+        assert all(item.isValid() and item.alpha() == 255 for item in colors)
+
+
+def test_best_contrast_empty_inputs_return_valid_opaque_fallbacks():
+    fallback = _best_contrast([], [])
+    without_background = _best_contrast([QtGui.QColor()], [])
+
+    assert fallback.isValid() and fallback.alpha() == 255
+    assert without_background.isValid() and without_background.alpha() == 255
+
+
+@pytest.mark.parametrize(
+    "palette",
+    [
+        _palette("#f4f5f7", "#202124", "#ffffff", "#edf0f4", "#3268b2", "#ffffff"),
+        _palette("#202328", "#e8eaed", "#17191d", "#292d33", "#6ea8fe", "#101216"),
+    ],
+)
+def test_selected_inline_summary_and_each_chip_have_contrasting_text(
+    qapp, app_context, managed_qobject, palette
+):
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, "commit")
+    commit.tags = ["other", "tags/v1", "heads/main"]
+    tree = _tree(app_context, managed_qobject)
+    tree.add_commits([commit], _graph_result([commit]))
+    option = QtWidgets.QStyleOptionViewItem()
+    option.rect = QtCore.QRect(0, 0, 420, 26)
+    option.palette = palette
+    option.font = tree.font()
+    option.fontMetrics = QtGui.QFontMetrics(option.font)
+    option.state |= QtWidgets.QStyle.State_Selected
+    painter = _TextRecordingPainter()
+
+    tree.graph_delegate.paint(
+        painter, option, tree.indexFromItem(tree.topLevelItem(0), 0)
+    )
+
+    style = inline_graph_style(palette)
+    assert painter.fills == [palette.highlight().color()]
+    assert [background for _pen, background in painter.rounded_styles] == [
+        style.chip_other,
+        style.chip_remote,
+        style.chip_head,
+    ]
+    for pen, background in painter.rounded_styles:
+        assert _contrast(pen, background) >= 4.5
+    text_colors = dict(painter.text_colors)
+    assert set(text_colors) >= {"other", "v1", "main", "commit commit"}
+    assert text_colors["commit commit"] == palette.highlightedText().color()
+
+
+def test_commit_tree_palette_change_updates_viewport_and_next_paint_style(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    import cola.widgets.dag as dag_widget
+
+    first = _palette("#ffffff", "#202020", "#ffffff", "#eeeeee", "#225f99", "#ffffff")
+    second = _palette("#181818", "#eeeeee", "#151515", "#292929", "#b66d24", "#111111")
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, "commit")
+    tree = _tree(app_context, managed_qobject)
+    tree.add_commits([commit], _graph_result([commit]))
+    calls = []
+    updates = []
+    real_factory = dag_widget.inline_graph_style
+    monkeypatch.setattr(
+        dag_widget,
+        "inline_graph_style",
+        lambda palette: calls.append(real_factory(palette)) or calls[-1],
+    )
+    monkeypatch.setattr(tree.viewport(), "update", lambda: updates.append(True))
+
+    tree.setPalette(first)
+    before = _paint_graph_row(tree, graph_model.GraphRowColor.NORMAL, first)
+    updates.clear()
+    tree.setPalette(second)
+    QtWidgets.QApplication.sendEvent(tree, QtCore.QEvent(QtCore.QEvent.PaletteChange))
+    after = _paint_graph_row(tree, graph_model.GraphRowColor.NORMAL, second)
+
+    assert updates
+    assert len(calls) == 2
+    assert calls[0] != calls[1]
+    center = QtCore.QPoint(GraphDelegate.LANE_WIDTH // 2, 13)
+    assert before.pixelColor(center) != after.pixelColor(center)
 
 
 def test_display_inline_graph_installs_and_removes_delegate(

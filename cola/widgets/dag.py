@@ -782,28 +782,209 @@ def _prepare_labels(refs: list[str]) -> list[tuple[str, str, str | None]]:
     return result
 
 
+@dataclass(frozen=True)
+class InlineGraphStyle:
+    """Palette-derived colors for the inline commit graph."""
+
+    normal_fill: QtGui.QColor
+    merge_fill: QtGui.QColor
+    head_fill: QtGui.QColor
+    head_accent: QtGui.QColor
+    outline: QtGui.QColor
+    text: QtGui.QColor
+    selected_text: QtGui.QColor
+    chip_text: QtGui.QColor
+    chip_text_candidates: tuple[QtGui.QColor, ...]
+    chip_other: QtGui.QColor
+    chip_remote: QtGui.QColor
+    chip_head: QtGui.QColor
+    lane_colors: tuple[QtGui.QColor, ...]
+
+
+def _opaque_color(color, fallback_value=0.5):
+    """Return a valid opaque copy, synthesizing only for an invalid color."""
+    if not color.isValid():
+        return QtGui.QColor.fromHsvF(0.0, 0.0, fallback_value, 1.0)
+    result = QtGui.QColor(color)
+    result.setAlphaF(1.0)
+    return result
+
+
+def _mix_color(first, second, second_weight):
+    """Return an opaque palette color blended towards another palette color."""
+    first = _opaque_color(first)
+    second = _opaque_color(second)
+    first_weight = 1.0 - second_weight
+    return QtGui.QColor.fromRgbF(
+        first.redF() * first_weight + second.redF() * second_weight,
+        first.greenF() * first_weight + second.greenF() * second_weight,
+        first.blueF() * first_weight + second.blueF() * second_weight,
+        1.0,
+    )
+
+
+def _color_luminance(color):
+    channels = []
+    for value in (color.redF(), color.greenF(), color.blueF()):
+        if value <= 0.04045:
+            channels.append(value / 12.92)
+        else:
+            channels.append(((value + 0.055) / 1.055) ** 2.4)
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+
+def _color_contrast(first, second):
+    lighter, darker = sorted(
+        (_color_luminance(first), _color_luminance(second)), reverse=True
+    )
+    return (lighter + 0.05) / (darker + 0.05)
+
+
+def _best_contrast(candidates, backgrounds):
+    candidates = tuple(_opaque_color(color) for color in candidates)
+    if not candidates:
+        candidates = (_opaque_color(QtGui.QColor()),)
+    backgrounds = tuple(_opaque_color(color) for color in backgrounds)
+    if not backgrounds:
+        return candidates[0]
+    return max(
+        candidates,
+        key=lambda color: min(_color_contrast(color, bg) for bg in backgrounds),
+    )
+
+
+def _lane_colors(palette):
+    base_colors = tuple(
+        _opaque_color(color)
+        for color in (
+            palette.base().color(),
+            palette.alternateBase().color(),
+            palette.highlight().color(),
+        )
+    )
+    palette_colors = base_colors + tuple(
+        _opaque_color(color)
+        for color in (palette.text().color(), palette.highlightedText().color())
+    )
+    hsv = [color.getHsvF() for color in palette_colors]
+    hues = [hue for hue, _saturation, _value, _alpha in hsv if hue >= 0.0]
+    hue = hues[0] if hues else 0.0
+    palette_saturation = max(saturation for _hue, saturation, _value, _alpha in hsv)
+    palette_value = max(value for _hue, _saturation, value, _alpha in hsv)
+    saturations = (
+        max(0.12, palette_saturation * 0.35),
+        max(0.38, palette_saturation * 0.65),
+        max(0.68, palette_saturation),
+    )
+    values = (0.16, 0.34, 0.56, max(0.78, palette_value), 1.0)
+
+    result = []
+    used = set()
+    for shift in (0.0, 0.21, 0.43, 0.67, 0.83):
+        shifted_hue = (hue + shift) % 1.0
+        candidates = [
+            QtGui.QColor.fromHsvF(shifted_hue, saturation, value, 1.0)
+            for saturation in saturations
+            for value in values
+        ]
+        seed = QtGui.QColor.fromHsvF(shifted_hue, saturations[-1], values[0], 1.0)
+        for foreground in palette_colors:
+            candidates.extend(
+                _mix_color(seed, foreground, weight) for weight in (0.35, 0.55, 0.72)
+            )
+        distinct_candidates = {
+            candidate.rgba(): candidate
+            for candidate in candidates
+            if candidate.rgba() not in used
+        }
+        lane = _best_contrast(distinct_candidates.values(), base_colors)
+        result.append(lane)
+        used.add(lane.rgba())
+
+    # QColor quantizes channels, so validate uniqueness after all HSV fallbacks.
+    if len({color.rgba() for color in result}) != len(result):
+        raise AssertionError("lane color fallback did not produce distinct colors")
+    return tuple(result)
+
+
+def _distinct_chip_backgrounds(colors, palette_colors):
+    """Return three semantic chip colors, expanding collapsed palette roles."""
+    colors = tuple(_opaque_color(color) for color in colors)
+    if len({color.rgba() for color in colors}) == len(colors):
+        return colors
+    hsv = [color.getHsvF() for color in palette_colors]
+    hues = [hue for hue, _saturation, _value, _alpha in hsv if hue >= 0.0]
+    hue = hues[0] if hues else 0.0
+    saturation = max(
+        0.58, max(value[1] for value in hsv)
+    )
+    average_luminance = sum(_color_luminance(color) for color in palette_colors) / len(
+        palette_colors
+    )
+    value = 0.34 if average_luminance > 0.45 else 0.76
+    return tuple(
+        QtGui.QColor.fromHsvF((hue + shift) % 1.0, saturation, value, 1.0)
+        for shift in (0.0, 0.34, 0.67)
+    )
+
+
+def inline_graph_style(palette):
+    """Build inline graph colors from the current widget palette without caching."""
+    base = _opaque_color(palette.base().color())
+    alternate = _opaque_color(palette.alternateBase().color())
+    text = _opaque_color(palette.text().color())
+    highlight = _opaque_color(palette.highlight().color())
+    highlighted_text = _opaque_color(palette.highlightedText().color())
+    chip_other, chip_remote, chip_head = _distinct_chip_backgrounds(
+        (
+            _mix_color(base, alternate, 0.72),
+            _mix_color(alternate, highlight, 0.38),
+            _mix_color(highlight, base, 0.24),
+        ),
+        (base, alternate, highlight, text, highlighted_text),
+    )
+    neutral_low = QtGui.QColor.fromHsvF(0.0, 0.0, 0.0, 1.0)
+    neutral_high = QtGui.QColor.fromHsvF(0.0, 0.0, 1.0, 1.0)
+    chip_text_candidates = (text, highlighted_text, neutral_low, neutral_high)
+    raw_highlight = palette.highlight().color()
+    raw_highlighted_text = palette.highlightedText().color()
+    if (
+        raw_highlight.isValid()
+        and raw_highlight.alpha() == 255
+        and raw_highlighted_text.isValid()
+        and raw_highlighted_text.alpha() == 255
+        and _color_contrast(highlighted_text, highlight) >= 4.5
+    ):
+        selected_text = highlighted_text
+    else:
+        selected_text = _best_contrast(
+            chip_text_candidates, (highlight, base, alternate)
+        )
+    chip_text = _best_contrast(
+        chip_text_candidates, (chip_other, chip_remote, chip_head)
+    )
+    return InlineGraphStyle(
+        normal_fill=_mix_color(base, text, 0.18),
+        merge_fill=_mix_color(alternate, highlight, 0.44),
+        head_fill=_mix_color(highlight, base, 0.16),
+        head_accent=_mix_color(highlight, highlighted_text, 0.52),
+        outline=_mix_color(text, base, 0.18),
+        text=text,
+        selected_text=selected_text,
+        chip_text=chip_text,
+        chip_text_candidates=chip_text_candidates,
+        chip_other=chip_other,
+        chip_remote=chip_remote,
+        chip_head=chip_head,
+        lane_colors=_lane_colors(palette),
+    )
+
+
 class GraphDelegate(QtWidgets.QStyledItemDelegate):
-    LANE_WIDTH = 16
+    LANE_WIDTH = 18
     DOT_RADIUS = 5
     EDGE_WIDTH = 3
-    commit_color = QtGui.QColor(Qt.white)
-    merge_color = QtGui.QColor(Qt.lightGray)
-    head_color = QtGui.QColor(Qt.green)
-    current_head_color = QtGui.QColor(255, 215, 0)  # Gold color. Plain yellow is too close to white
-    outline_pen = QtGui.QPen()
-    outline_pen.setWidth(2)
-    outline_pen.setColor(QtGui.QColor(Qt.white).darker())
-
-    other_color = QtGui.QColor(Qt.white)
-    remote_color = QtGui.QColor(Qt.yellow)
-
-    text_pen = QtGui.QPen()
-    text_pen.setColor(QtGui.QColor(Qt.black))
-    text_pen.setWidth(1)
-
-    head_pen = QtGui.QPen()
-    head_pen.setColor(QtGui.QColor(Qt.black))
-    head_pen.setWidth(1)
+    ROW_HEIGHT = 26
 
     LABEL_BORDER = 3
     LABEL_SPACING = 4
@@ -847,6 +1028,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             self._animation.start()
 
     def paint(self, painter, option, index):
+        style = inline_graph_style(option.palette)
         row = index.data(GRAPH_ROW_ROLE)
         prev_row = index.data(GRAPH_PREV_ROW_ROLE)
 
@@ -861,7 +1043,8 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         bottom_y = rect.bottom() + 1
         lane_w = self.LANE_WIDTH
 
-        if option.state & QtWidgets.QStyle.State_Selected:
+        selected = bool(option.state & QtWidgets.QStyle.State_Selected)
+        if selected:
             painter.fillRect(rect, option.palette.highlight())
 
         # Draw the graph if we have graph data.
@@ -873,7 +1056,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             # Top half: edges from the previous row arrive vertically.
             if prev_row is not None:
                 for edge in prev_row.edges_to_parent:
-                    color = EdgeColor.colors[edge.color_index % len(EdgeColor.colors)]
+                    color = style.lane_colors[edge.color_index % len(style.lane_colors)]
                     pen.setColor(color)
                     painter.setPen(pen)
                     to_x = rect.left() + edge.to_column * lane_w + lane_w // 2
@@ -882,7 +1065,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             # Bottom half: straight or spline depending on diagonal.
             if row is not None:
                 for edge in row.edges_to_parent:
-                    color = EdgeColor.colors[edge.color_index % len(EdgeColor.colors)]
+                    color = style.lane_colors[edge.color_index % len(style.lane_colors)]
                     pen.setColor(color)
                     painter.setPen(pen)
                     from_x = rect.left() + edge.from_column * lane_w + lane_w // 2
@@ -905,11 +1088,23 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             if row is not None:
                 cx = rect.left() + row.commit_column * lane_w + lane_w // 2
                 color_map = {
-                    GraphRowColor.NORMAL: self.commit_color,
-                    GraphRowColor.MERGE: self.merge_color,
-                    GraphRowColor.HEAD: self.current_head_color,
+                    GraphRowColor.NORMAL: style.normal_fill,
+                    GraphRowColor.MERGE: style.merge_fill,
+                    GraphRowColor.HEAD: style.head_fill,
                 }
-                painter.setPen(self.outline_pen)
+                if row.color == GraphRowColor.HEAD:
+                    accent_pen = QtGui.QPen(style.head_accent)
+                    accent_pen.setWidth(2)
+                    painter.setPen(accent_pen)
+                    painter.setBrush(Qt.NoBrush)
+                    painter.drawEllipse(
+                        QtCore.QPointF(cx, mid_y),
+                        self.DOT_RADIUS + 2,
+                        self.DOT_RADIUS + 2,
+                    )
+                outline_pen = QtGui.QPen(style.outline)
+                outline_pen.setWidth(2)
+                painter.setPen(outline_pen)
                 painter.setBrush(color_map[row.color])
                 painter.drawEllipse(
                     QtCore.QPointF(cx, mid_y), self.DOT_RADIUS, self.DOT_RADIUS
@@ -925,14 +1120,23 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             tree = self.parent()
             item = tree.itemFromIndex(index) if tree else None
             labels_width = self._draw_labels(
-                painter, mid_y, commit.tags, label_x, option.fontMetrics, item
+                painter,
+                mid_y,
+                commit.tags,
+                label_x,
+                option.fontMetrics,
+                item,
+                style,
+                style.selected_text if selected else None,
             )
 
         text = index.data(Qt.DisplayRole)
         if text:
             text_x = int(label_x + labels_width + 8)
             text_rect = rect.adjusted(text_x - rect.left(), 0, 0, 0)
-            painter.setPen(option.palette.text().color())
+            painter.setPen(
+                style.selected_text if selected else style.text
+            )
             painter.drawText(
                 text_rect,
                 Qt.AlignLeft | Qt.AlignVCenter,
@@ -954,6 +1158,8 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         start_x: int,
         font_metrics: QtGui.QFontMetrics,
         item: object | None,
+        style: InlineGraphStyle | None = None,
+        selected_text: QtGui.QColor | None = None,
     ):
         """Draw branch/tag labels and return total width used."""
         current_x = start_x
@@ -961,28 +1167,23 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         y_offset = 0
 
         for i, (tag, display_text, condensed_text) in enumerate(_prepare_labels(tags)):
-            pen = self.text_pen
-            brush = self.other_color
-
-            if tag == 'HEAD':
-                brush = self.remote_color
-            elif tag.startswith(_REMOTES_PREFIX):
-                pass
-            elif tag.startswith(_TAGS_PREFIX):
-                brush = self.remote_color
-            elif tag.startswith(_HEADS_PREFIX):
-                pen = self.head_pen
-                brush = self.head_color
-
             if painter is not None:
-                painter.setPen(pen)
+                brush = style.chip_other
+                if tag == "HEAD" or tag.startswith(_TAGS_PREFIX):
+                    brush = style.chip_remote
+                elif tag.startswith(_HEADS_PREFIX):
+                    brush = style.chip_head
+                candidates = style.chip_text_candidates
+                if selected_text is not None:
+                    candidates = (_opaque_color(selected_text),) + candidates
+                chip_text = _best_contrast(candidates, (brush,))
+                painter.setPen(QtGui.QPen(chip_text))
                 painter.setBrush(brush)
 
             shown, text_width = self._label_shown_text(
                 condensed_text, display_text, font_metrics, item, i
             )
-            # Use 80% of font height for tighter vertical fit
-            text_height = font_metrics.height() * 0.8
+            text_height = font_metrics.height()
 
             text_rect = QtCore.QRectF(
                 current_x, y - text_height / 2, text_width, text_height
@@ -1061,9 +1262,8 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             text_width = 0
 
         total_width = graph_width + 8 + labels_width + 8 + text_width
-        if total_width < self.LANE_WIDTH * 4:
-            total_width = self.LANE_WIDTH * 4
-        height = option.fontMetrics.height()
+        total_width = max(total_width, self.LANE_WIDTH * 4)
+        height = max(self.ROW_HEIGHT, option.fontMetrics.height() + 4)
         return QtCore.QSize(total_width, height)
 
     def _label_hit_test(
@@ -1213,6 +1413,11 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             # Set initial SUMMARY column width; it will be adjusted when graph loads.
             self.setColumnWidth(CommitTreeWidgetItem.SUMMARY, one_half)
             self.setColumnWidth(CommitTreeWidgetItem.AUTHOR, one_quarter)
+
+    def changeEvent(self, event):
+        if event.type() == QtCore.QEvent.PaletteChange:
+            self.viewport().update()
+        super().changeEvent(event)
 
     def display_inline_graph(self, enabled):
         """Enable and disable the display of inline graph in the commit list"""
