@@ -46,7 +46,12 @@ jobs:
           git config --global user.name "Git Cola"
           git config --global user.email git-cola@localhost
       - name: Run tests
-        run: garden test -vv
+        run: garden test -vv -- -p no:ruff
+      - name: Ruff history tests
+        run: >-
+          env3/bin/python -m ruff check
+          test/widgets_dag_history_test.py
+          test/widgets_main_history_test.py
       - name: Run doc build
         run: garden doc/html -vv
       - name: Build Windows git-cola.exe installer

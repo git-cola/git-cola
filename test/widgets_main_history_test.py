@@ -12,12 +12,14 @@ from unittest.mock import Mock
 import pytest
 
 from cola import cmds
+from cola import qtutils
 from cola.interaction import Interaction
 from cola.models import dag as dag_model
 from cola.models import graph as graph_model
 from cola.widgets import standard
 from cola.widgets.dag import GRAPH_ROW_ROLE
 from cola.widgets.dag import CommitHistoryWidget
+from cola.widgets.main import HISTORY_INLINE_GRAPH_DEFAULT_VERSION
 from cola.widgets.main import MainView
 from qtpy import QtCore
 from qtpy import QtGui
@@ -34,6 +36,39 @@ HISTORY_KEYS = {
     'display_inline_graph',
     'display_status',
     'log',
+}
+
+VIEWER_ACTION_KEYS = {
+    'checkout_branch',
+    'checkout_detached',
+    'cherry_pick',
+    'copy',
+    'copy_short',
+    'create_branch',
+    'create_patch',
+    'create_tag',
+    'create_tarball',
+    'diff_commit',
+    'diff_commit_all',
+    'diff_selected_this',
+    'diff_this_selected',
+    'rebase_to_commit',
+    'reset_hard',
+    'reset_keep',
+    'reset_merge',
+    'reset_mixed',
+    'reset_soft',
+    'restore_worktree',
+    'revert',
+    'save_blob',
+    'save_blob_from_parent',
+    'search_line_range',
+}
+
+UNSUPPORTED_MAIN_VIEWER_ACTION_KEYS = {
+    'diff_selected_this',
+    'diff_this_selected',
+    'search_line_range',
 }
 
 LEGACY_MAINVIEW_V2_WINDOWSTATE = 'AAAA/wAAAAL9AAAAAgAAAAIAAAKAAAAA7vwBAAAAA/sAAAAMAFMAdABhAHQAdQBz' 'AQAAAAAAAADRAAAAXAAAAN77AAAADABDAG8AbQBtAGkAdAEAAADXAAAA0gAAAEoA' '/////AAAAa8AAADRAAAAggD////6AAAAAAEAAAAE+wAAABAAQgByAGEAbgBjAGgA' 'ZQBzAQAAAAD/////AAAAggD////7AAAAFABTAHUAYgBtAG8AZAB1AGwAZQBzAQAA' 'AAD/////AAAAbAD////7AAAAEgBGAGEAdgBvAHIAaQB0AGUAcwAAAAAA/////wAA' 'AFYA////+wAAAAwAUgBlAGMAZQBuAHQAAAAAAP////8AAABIAP///wAAAAMAAAKA' 'AAAA2fwBAAAAAvsAAAAIAEQAaQBmAGYBAAAAAAAAAoAAAABGAP////wAAAAA////' '/wAAAAAA////+v////8BAAAAAvsAAAAOAEEAYwB0AGkAbwBuAHMAAAAAAP////8A' 'AABLAP////sAAAAOAEMAbwBuAHMAbwBsAGUAAAAAAP////8AAAATAP///wAAAoAA' 'AAAAAAAABAAAAAQAAAAIAAAACPwAAAAA'
@@ -233,6 +268,7 @@ def _legacy_v2_state(window):
     state['windowstate'] = LEGACY_MAINVIEW_V2_WINDOWSTATE
     state.pop('show_history', None)
     state.pop('history', None)
+    state.pop('history_inline_graph_default_version', None)
     return state
 
 
@@ -304,7 +340,92 @@ def test_mainview_history_defaults_are_explicit(qapp, main_context, managed_qobj
     assert request.count == 1000
     assert request.display_status is False
     assert window.historywidget.display_status_action.isChecked() is False
-    assert window.historywidget.display_inline_graph_action.isChecked() is False
+    assert window.historywidget.display_inline_graph_action.isChecked() is True
+    assert (
+        window.historywidget.treewidget.itemDelegateForColumn(0)
+        is window.historywidget.treewidget.graph_delegate
+    )
+
+
+def test_mainview_history_context_actions_are_composed_once_and_disable_off_item(
+    qapp, main_context, managed_qobject
+):
+    window = managed_qobject(MainView(main_context))
+    tree = window.historywidget.treewidget
+
+    assert isinstance(tree.menu_actions, dict)
+    assert set(tree.menu_actions) == VIEWER_ACTION_KEYS
+    assert len(tree.menu_actions) == 24
+    assert len(set(tree.menu_actions.values())) == 24
+    assert {
+        name for name, action in tree.menu_actions.items() if not action.isVisible()
+    } == UNSUPPORTED_MAIN_VIEWER_ACTION_KEYS
+    assert all(
+        action.shortcut().isEmpty()
+        for name, action in tree.menu_actions.items()
+        if name in UNSUPPORTED_MAIN_VIEWER_ACTION_KEYS
+    )
+    assert all(
+        action.isVisible()
+        for name, action in tree.menu_actions.items()
+        if name not in UNSUPPORTED_MAIN_VIEWER_ACTION_KEYS
+    )
+    event = QtGui.QContextMenuEvent(
+        QtGui.QContextMenuEvent.Mouse,
+        QtCore.QPoint(-1, -1),
+        QtCore.QPoint(-1, -1),
+    )
+    tree.update_menu_actions(event)
+
+    assert all(not action.isEnabled() for action in tree.menu_actions.values())
+
+
+def test_mainview_history_supported_copy_action_uses_selected_commit(
+    qapp, main_context, managed_qobject, monkeypatch
+):
+    monkeypatch.setattr(CommitHistoryWidget, 'load_if_stale', lambda _history: None)
+    window = managed_qobject(MainView(main_context))
+    _show(qapp, window)
+    tree = window.historywidget.treewidget
+    commit = _commit(main_context, 'selected-oid')
+    window.historywidget.apply_result((commit,), _graph((commit,)))
+    item = tree.oidmap[commit.oid]
+    item.setSelected(True)
+    tree.scrollToItem(item)
+    qapp.processEvents()
+    copied = []
+    monkeypatch.setattr(qtutils, 'set_clipboard', copied.append)
+    position = tree.visualItemRect(item).center()
+    assert tree.itemAt(position) is item
+    event = QtGui.QContextMenuEvent(
+        QtGui.QContextMenuEvent.Mouse,
+        position,
+        tree.viewport().mapToGlobal(position),
+    )
+
+    tree.update_menu_actions(event)
+    assert tree.menu_actions['copy'].isEnabled()
+    tree.menu_actions['copy'].trigger()
+    qapp.processEvents()
+
+    assert copied == [commit.oid]
+
+
+def test_mainview_history_context_menu_outside_items_does_not_crash(
+    qapp, main_context, managed_qobject, monkeypatch
+):
+    window = managed_qobject(MainView(main_context))
+    tree = window.historywidget.treewidget
+    monkeypatch.setattr(QtWidgets.QMenu, 'exec_', lambda *_args: None)
+    event = QtGui.QContextMenuEvent(
+        QtGui.QContextMenuEvent.Mouse,
+        QtCore.QPoint(-1, -1),
+        QtCore.QPoint(-1, -1),
+    )
+
+    tree.contextMenuEvent(event)
+
+    assert all(not action.isEnabled() for action in tree.menu_actions.values())
 
 
 def test_successful_initialize_loads_history_once_after_git_check_and_state_restore(
@@ -468,7 +589,7 @@ def test_mainview_owns_no_history_reader_or_cache_implementation():
         'RepoReader',
         'ReaderThread',
         'request_history',
-        'historywidget.display',
+        'historywidget.display(',
         'active_request',
         'pending_request',
         'last_successful_cache_key',
@@ -860,6 +981,11 @@ def test_export_owns_visibility_and_nests_exact_canonical_history_state(
     state = window.export_state()
 
     assert state['show_history'] is (not window.historydock.isHidden())
+    assert (
+        state['history_inline_graph_default_version']
+        == HISTORY_INLINE_GRAPH_DEFAULT_VERSION
+        == 1
+    )
     assert set(state['history']) == HISTORY_KEYS
     assert state['history'] == history.export_state()
     assert state['history'] == {
@@ -979,6 +1105,86 @@ def test_missing_history_child_is_valid_legacy_state(
     assert _history_is_active(window.historydock)
 
 
+@pytest.mark.parametrize('marker', (None, 0))
+def test_old_mainview_false_inline_graph_state_is_migrated_without_mutating_input(
+    marker, qapp, main_context, managed_qobject
+):
+    window = managed_qobject(MainView(main_context))
+    state = _legacy_v2_state(window)
+    state['history'] = window.historywidget.export_state()
+    state['history']['display_inline_graph'] = False
+    if marker is not None:
+        state['history_inline_graph_default_version'] = marker
+    original_history = dict(state['history'])
+
+    assert window.apply_state(state)
+
+    assert state['history'] == original_history
+    assert window.historywidget.display_inline_graph_action.isChecked() is True
+    assert (
+        window.historywidget.treewidget.itemDelegateForColumn(0)
+        is window.historywidget.treewidget.graph_delegate
+    )
+
+
+def test_current_mainview_inline_graph_false_state_round_trips_without_migration(
+    qapp, main_context, managed_qobject
+):
+    first = managed_qobject(MainView(main_context))
+    first.historywidget.display_inline_graph_action.trigger()
+    state = first.export_state()
+    second = managed_qobject(MainView(main_context))
+
+    assert state['history_inline_graph_default_version'] == 1
+    assert state['history']['display_inline_graph'] is False
+    assert second.apply_state(state)
+    assert second.historywidget.display_inline_graph_action.isChecked() is False
+    assert second.historywidget.treewidget.itemDelegateForColumn(0) is None
+    assert second.export_state()['history']['display_inline_graph'] is False
+
+
+@pytest.mark.parametrize('marker', (True, False, None, '1', -1))
+def test_malformed_inline_graph_migration_marker_is_rejected_atomically(
+    marker, qapp, main_context, managed_qobject
+):
+    window = managed_qobject(MainView(main_context))
+    window.statuswidget.filter_widget.hide()
+    before = window.historywidget.export_state()
+    state = _legacy_v2_state(window)
+    state.update(
+        history=window.historywidget.export_state(),
+        history_inline_graph_default_version=marker,
+        show_status_filter=True,
+    )
+
+    assert window.apply_state(state) is False
+
+    assert window.statuswidget.filter_widget.isVisible() is False
+    assert window.historywidget.export_state() == before
+
+
+def test_future_inline_graph_marker_restores_compatible_state_without_migration(
+    qapp, main_context, managed_qobject
+):
+    window = managed_qobject(MainView(main_context))
+    _show(qapp, window)
+    state = _legacy_v2_state(window)
+    state.update(
+        history=window.historywidget.export_state(),
+        history_inline_graph_default_version=2,
+        show_status_filter=True,
+    )
+    state['history']['display_inline_graph'] = False
+    original = {**state, 'history': dict(state['history'])}
+
+    assert window.apply_state(state)
+
+    assert state == original
+    assert window.statuswidget.filter_widget.isVisible() is True
+    assert window.historywidget.display_inline_graph_action.isChecked() is False
+    assert window.historywidget.treewidget.itemDelegateForColumn(0) is None
+
+
 @pytest.mark.parametrize('state', [None, [], 'invalid'])
 def test_non_dict_state_returns_false_with_usable_history_fallback(
     qapp, main_context, managed_qobject, state
@@ -1018,6 +1224,7 @@ def test_view_menu_is_rebuilt_without_duplicates_and_finds_dynamic_toolbars(
 ):
     window = managed_qobject(MainView(main_context))
     history_toggle = window.historydock.toggleViewAction()
+    inline_graph = window.historywidget.display_inline_graph_action
 
     window.build_view_menu(window.view_menu)
     qapp.processEvents()
@@ -1035,6 +1242,10 @@ def test_view_menu_is_rebuilt_without_duplicates_and_finds_dynamic_toolbars(
         assert [action for action in actions if action is history_toggle] == [
             history_toggle
         ]
+        assert [action for action in actions if action is inline_graph] == [
+            inline_graph
+        ]
+        assert inline_graph.isChecked() is True
         assert [action for action in actions if action is dynamic_toggle] == [
             dynamic_toggle
         ]
@@ -1043,6 +1254,18 @@ def test_view_menu_is_rebuilt_without_duplicates_and_finds_dynamic_toolbars(
     assert [action for action in window.actions() if action is history_toggle] == [
         history_toggle
     ]
+
+    inline_graph.trigger()
+    qapp.processEvents()
+    assert inline_graph.isChecked() is False
+    assert window.historywidget.treewidget.itemDelegateForColumn(0) is None
+    inline_graph.trigger()
+    qapp.processEvents()
+    assert inline_graph.isChecked() is True
+    assert (
+        window.historywidget.treewidget.itemDelegateForColumn(0)
+        is window.historywidget.treewidget.graph_delegate
+    )
 
 
 def test_mainview_close_waits_for_real_blocked_history_and_discards_pending(

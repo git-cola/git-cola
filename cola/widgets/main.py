@@ -54,6 +54,14 @@ from . import status
 from . import submodules
 from . import toolbar
 
+HISTORY_INLINE_GRAPH_DEFAULT_VERSION = 1
+_HISTORY_INLINE_GRAPH_DEFAULT_VERSION_KEY = 'history_inline_graph_default_version'
+_MAIN_HISTORY_UNSUPPORTED_ACTIONS = (
+    'diff_this_selected',
+    'diff_selected_this',
+    'search_line_range',
+)
+
 
 class MainView(standard.MainWindow):
     config_actions_changed = Signal(object)
@@ -109,10 +117,17 @@ class MainView(standard.MainWindow):
                 ref='--all',
                 count=1000,
                 display_status=False,
+                display_inline_graph=True,
                 parent=dock,
             ),
         )
         self.historywidget = self.historydock.widget()
+        history_tree = self.historywidget.treewidget
+        history_tree.menu_actions = dag.viewer_actions(history_tree, history_tree)
+        for action_name in _MAIN_HISTORY_UNSUPPORTED_ACTIONS:
+            menu_action = history_tree.menu_actions[action_name]
+            menu_action.setVisible(False)
+            menu_action.setShortcut(QtGui.QKeySequence())
         self.model.updated.disconnect(self.historywidget.model_updated)
 
         # "Switch Repository" widgets
@@ -1032,6 +1047,7 @@ class MainView(standard.MainWindow):
             menu.addAction(self.minimize_action)
         menu.addAction(self.browse_action)
         menu.addAction(self.dag_action)
+        menu.addAction(self.historywidget.display_inline_graph_action)
         menu.addSeparator()
 
         popup_menu = self.createPopupMenu()
@@ -1290,6 +1306,9 @@ class MainView(standard.MainWindow):
         state['show_status_filter'] = show_status_filter
         state['show_history'] = not self.historydock.isHidden()
         state['history'] = self.historywidget.export_state()
+        state[
+            _HISTORY_INLINE_GRAPH_DEFAULT_VERSION_KEY
+        ] = HISTORY_INLINE_GRAPH_DEFAULT_VERSION
         state['toolbars'] = self.toolbar_state.export_state()
         state['ref_sort'] = self.model.ref_sort
         self.diffviewer.export_state(state)
@@ -1303,6 +1322,20 @@ class MainView(standard.MainWindow):
             self.historydock.show()
             self.historydock.raise_()
             return False
+        marker = state.get(_HISTORY_INLINE_GRAPH_DEFAULT_VERSION_KEY, 0)
+        if type(marker) is not int or marker < 0:
+            self.historydock.show()
+            self.historydock.raise_()
+            return False
+
+        if marker < HISTORY_INLINE_GRAPH_DEFAULT_VERSION and 'history' in state:
+            state = dict(state)
+            history_state = state['history']
+            if isinstance(history_state, dict):
+                history_state = dict(history_state)
+                history_state['display_inline_graph'] = True
+                state['history'] = history_state
+
         if 'history' in state and not self.historywidget.is_valid_state(
             state['history']
         ):

@@ -1593,7 +1593,13 @@ class CommitHistoryWidget(QtWidgets.QWidget):
     controls_changed = Signal(object)
 
     def __init__(
-        self, context, ref='--all', count=1000, display_status=False, parent=None
+        self,
+        context,
+        ref='--all',
+        count=1000,
+        display_status=False,
+        parent=None,
+        display_inline_graph=False,
     ):
         super().__init__(parent)
         self.context = context
@@ -1639,8 +1645,9 @@ class CommitHistoryWidget(QtWidgets.QWidget):
             self,
             N_('Display Inline Graph'),
             self.treewidget.display_inline_graph,
-            False,
+            display_inline_graph,
         )
+        self.treewidget.display_inline_graph(display_inline_graph)
         self.display_status_action = qtutils.add_action_bool(
             self,
             N_('Display Worktree Status'),

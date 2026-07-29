@@ -297,6 +297,10 @@ def test_gitdag_composes_history_with_window_only_views(
     assert isinstance(window.graphview, QtWidgets.QGraphicsView)
     assert window.diffwidget is not None
     assert window.filewidget is not None
+    assert window.historywidget.display_inline_graph_action.isChecked() is False
+    assert window.historywidget.treewidget.itemDelegateForColumn(0) is None
+    assert len(window.historywidget.treewidget.menu_actions) == 24
+    assert len(set(window.historywidget.treewidget.menu_actions.values())) == 24
     for name in (
         'active_thread',
         'pending_request',
@@ -1297,6 +1301,33 @@ def test_display_inline_graph_installs_and_removes_delegate(
 
     tree.display_inline_graph(False)
     assert tree.itemDelegateForColumn(0) is None
+
+
+def test_history_widget_preserves_positional_parent_constructor_compatibility(
+    qapp, app_context, managed_qobject
+):
+    parent = managed_qobject(QtWidgets.QWidget())
+    history = managed_qobject(
+        CommitHistoryWidget(app_context, '--all', 1000, False, parent)
+    )
+
+    assert history.parent() is parent
+    assert history.display_inline_graph_action.isChecked() is False
+
+
+@pytest.mark.parametrize('display_inline_graph', (False, True))
+def test_history_widget_inline_graph_constructor_owns_action_and_delegate_default(
+    display_inline_graph, qapp, app_context, managed_qobject
+):
+    history = managed_qobject(
+        CommitHistoryWidget(app_context, display_inline_graph=display_inline_graph)
+    )
+
+    assert history.display_inline_graph_action.isChecked() is display_inline_graph
+    expected_delegate = (
+        history.treewidget.graph_delegate if display_inline_graph else None
+    )
+    assert history.treewidget.itemDelegateForColumn(0) is expected_delegate
 
 
 def test_linear_history_items_expose_graph_and_commit_roles(
