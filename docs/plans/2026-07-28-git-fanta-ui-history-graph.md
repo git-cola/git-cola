@@ -1,12 +1,135 @@
-# Git-Fanta: Sichtbarer Commit-Graph – überarbeiteter Implementierungsplan
+---
+status: completed
+completed_at: 2026-07-29
+plan_commit: 84c4029441bb7ff9c38a59dfef684097625392b2
+implementation_branch: ag-tree-ui-01
+implementation_head: c98b4aefa7e70e39e0eff12f419c5eeb67d5031d
+ci_run: https://github.com/hermes-agent-ak/git-fanta/actions/runs/30469948165
+manual_verification: passed
+---
 
-> **For implementing agents:** Execute this plan task-by-task with strict RED-GREEN-REFACTOR cycles and preserve a green tree after every task.
+# Git-Fanta: Sichtbarer Commit-Graph – Implementierungsplan (ABGESCHLOSSEN)
+
+> **Historischer Ausführungsvertrag (erfüllt):** Die Umsetzung erfolgte taskweise mit strikten RED-GREEN-REFACTOR-Zyklen und grünem Gate nach jedem Task.
 
 **Goal:** Den vorhandenen Commit-Graphen direkt im Hauptfenster anzeigen und zurückhaltend GitKraken-inspiriert aufwerten, ohne die bestehende Qt-Architektur oder das separate DAG-Fenster zu beschädigen.
 
 **Architecture:** Vor der UI-Integration werden der prozessglobale `CommitFactory`-State, der Worker-Lifecycle und die fehlerhafte Graphberechnung über Reader-Chunks testgetrieben korrigiert. Danach wird die bestehende Inline-History als `CommitHistoryWidget` extrahiert und von `GitDAG` sowie `MainView` gemeinsam verwendet. `build_graph()` bleibt die einzige Graph-Engine.
 
 **Tech Stack:** Python 3.9+, `qtpy` mit PyQt5/PyQt6, vorhandene `QDockWidget`-Architektur, `pytest`, Qt-Offscreen-Tests, `garden`, `mypy`.
+
+---
+
+## 0. Abschluss- und As-built-Nachweis
+
+> [!IMPORTANT]
+> Dieser Plan ist vollständig umgesetzt. Er bleibt an seinem stabilen Pfad als
+> Design-, Entscheidungs- und Verifikationsdokument erhalten. Der
+> Implementierungsbranch `ag-tree-ui-01` endete funktional in `c98b4aef`; der
+> erfolgreiche CI-Lauf ist oben im maschinenlesbaren Statusblock verlinkt.
+
+### Geliefertes Ergebnis
+
+- Das Hauptfenster besitzt ein direkt sichtbares, standardmäßig aktiviertes
+  History-Dock mit Inline-Commitgraph, `ref='--all'`, maximal 1.000 Commits und
+  ohne WORKTREE-/STAGE-Pseudo-Commits.
+- `MainView` und das separate `GitDAG` verwenden dasselbe
+  `CommitHistoryWidget`, denselben `RepoReader`-Pfad und ausschließlich
+  `cola.models.graph.build_graph()` als Graph-Engine.
+- Initialer Load und Repository-Updates laufen serialisiert im Worker; Qt-Items,
+  Selection und große `GraphView`-Scenes bleiben im GUI-Thread.
+- Fehler behalten die letzte erfolgreiche Historie und zeigen Returncode plus
+  exakten Fehlertext nichtmodal an; ein erfolgreicher leerer Verlauf leert den
+  sichtbaren Zustand atomar.
+- Der Inline-Graph ist palettebasiert, cachefrei, Light-/Dark-tauglich und unter
+  PyQt5/PyQt6 semantisch offscreen getestet. HEAD, Merge, normale Nodes,
+  Ref-Chips und Lanes sind unterscheidbar; große Fonts skalieren die Zeilenhöhe.
+- Das separate DAG-Fenster, seine große GraphView, Diff-/Files-Docks und seine
+  Pseudo-Commit-Option bleiben erhalten.
+
+### Wichtigste technische Findings und Entscheidungen
+
+1. **Reader-Isolation:** Ein prozessglobaler Commit-Cache kollidierte zwischen
+   parallelen Reads. Jeder `RepoReader` besitzt deshalb eine eigene
+   `CommitFactory`; Reset, stderr und Erfolgszustand sind symmetrisch.
+2. **Vollständiger Graph statt Chunk-Graphen:** Kanten über die frühere
+   2.048-Commit-Grenze gingen bei chunkweiser Berechnung verloren. Der Worker
+   sammelt die vollständige Commitliste und ruft `build_graph()` genau einmal
+   auf; sichtbar angewendet wird nur das finale Resultat.
+3. **Latest-desired-state:** Immutable `HistoryRequest`/`HistoryResult`, Run-ID,
+   ein aktiver Worker und genau ein coalesced Pending-Wunsch verhindern stale
+   Applies, Doppel-Refreshes und progressive Teilzustände.
+4. **Echte Close-Barriere:** `stop_and_wait()` wartet ohne Timeout auf den
+   synchronen Git-Read. Es verspricht keinen Hard-Kill, verhindert aber Worker
+   nach dem Schließen und verwirft Pending-Arbeit sicher.
+5. **Klare Ownership-Grenze:** `CommitHistoryWidget` besitzt Controls, Tree,
+   Cache, Worker, Selection und Child-State. `MainView`/`GitDAG` besitzen
+   Fenster-, Dock- und GraphView-State. `MainView.widget_version` bleibt `2`.
+6. **State-Provenance:** Explizite CLI-Optionen gewinnen anhand ihrer Präsenz,
+   auch bei defaultgleichen Werten. Alter flacher GitDAG-State und MainView-v2-
+   Layouts werden atomar migriert; malformed State mutiert nichts.
+7. **Palette und Accessibility:** Selection folgt Qt-Palettenrollen; Chiptext
+   wird pro Hintergrund kontrastiert. Adversariale weiße, schwarze,
+   achromatische, transparente und ungültige Rollen besitzen opake Fallbacks.
+   Lane-Farben sind unabhängig von `EdgeColor.colors`.
+8. **Manueller Integrationsfund:** Der erste Desktop-Test zeigte einen
+   deaktivierten Main-Inline-Default, eine fehlende View-Action und
+   `menu_actions=None` beim Rechtsklick. `c98b4aef` aktivierte den Graph,
+   ergänzte `View > Display Inline Graph`, komponierte Main-Tree-Actions und
+   migriert alten bugbedingten `history.display_inline_graph=False`-State ohne
+   Versionsmarker einmalig. Receiverlose DAG-only-
+   Actions bleiben im Main-Kontext verborgen.
+9. **Tooling-Baseline:** Das Repository besitzt 102 bestehende pytest-ruff-
+   Baselinefehler und einen Konflikt zwischen Gardens
+   `--force-single-line-imports` und Ruff-I001. CI führt deshalb die vollständige
+   funktionale Suite mit `-p no:ruff` aus und prüft die geänderten History-Tests
+   anschließend separat strikt mit Ruff.
+
+### Task- und Commit-Nachweis
+
+| Task | Ergebnis | Commit |
+|---|---|---|
+| 1 | DAG-/History-Verträge charakterisiert | `62207e1c` |
+| 2 | CommitFactory und Reader-State isoliert | `82c02cf5` |
+| 3 | Immutable Result-/Worker-Verträge | `8bf44a99` |
+| 4 | Vollständiger Graph über Reader-Batches | `8938b86f` |
+| 5 | `CommitHistoryWidget` extrahiert | `a670d8be` |
+| 6 | CLI-/State-Priorität und Migration | `5dc167fe` |
+| 7 | Main-History-Dock und v2-Layout | `9d6c4035` |
+| 8 | Initial-Load und Update-Coalescing | `266f9cd4` |
+| 9 | Palettebewusstes Inline-Styling | `4b43e4d0` |
+| 10 | PyQt5-/PyQt6-Paint-Matrix | `2c6f9b00` |
+| 11 | Abschlussgates und Typverträge | `b75328c6` |
+| Desktop-Closure | Main-Default, View-Action, Context-Menü, State-Migration | `c98b4aef` |
+
+`53fe60df` war ausschließlich ein leerer CI-Trigger und enthält keine
+Produktänderung.
+
+### Finale Verifikation
+
+- GitHub Actions Run
+  [`30469948165`](https://github.com/hermes-agent-ak/git-fanta/actions/runs/30469948165):
+  **SUCCESS**.
+- Linux-Funktionssuite in CI: **512 passed**.
+- CI-Matrix: semantische History-Paint-Smokes unter **PyQt5** und **PyQt6**.
+- macOS-App-Build, Windows-Installer, Dokumentations-Build und
+  Installationsprüfung: **PASS**.
+- Mypy: **96 Quelldateien ohne Befund**.
+- Lokale finale Gates: PyQt6 fokussiert **254 passed**, PySide6 History/Main
+  **202 passed**, PyQt5 Paint-Smokes **8 passed**, Garden fmt/pyupgrade und
+  strikter Ruff-Check der geänderten History-Tests: **PASS**.
+- Manueller Desktop-Test am 2026-07-29: Inline-Graph sichtbar,
+  `View > Display Inline Graph` schaltbar und Context-Menü ohne Traceback:
+  **PASS**.
+
+### Bewusst verbleibende Grenzen
+
+- Ein bereits laufender synchroner Git-Unterprozess wird nicht hart beendet;
+  Close wartet stattdessen als vollständige Barriere.
+- Die 102 repositoryweiten Ruff-Baselinebefunde sind nicht Teil dieses Features
+  und bleiben separat zu bereinigen.
+- Dieser Abschluss ist kein vollständiger GitKraken-Klon und führt weder ein
+  neues UI-Toolkit noch eine zweite Graph-Engine ein.
 
 ---
 
@@ -565,9 +688,10 @@ History direkt sichtbar/gefüllt, `--all`, HEAD/Refs lesbar, keine Pseudo-Zeilen
 - Qt5/Qt6-Unterschiede: semantische Tests behalten, keine plattformspezifischen Golden Files.
 - Altes Version-2-Layout scheitert: Restore-Vertrag korrigieren, keinen Versions-Bump verwenden.
 
-## 10. Review-Gate
+## 10. Historisches Review-Gate (erfüllt)
 
-Vor Implementierung muss `critical-plan-review` bestätigen:
+Vor der Implementierung musste `critical-plan-review` die folgenden Punkte
+bestätigen; dieses Gate wurde vor dem ersten Implementierungscommit erfüllt:
 
 - kein BLOCKER;
 - Factory-Isolation vor UI-Komposition;
