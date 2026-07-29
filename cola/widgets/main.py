@@ -99,6 +99,22 @@ class MainView(standard.MainWindow):
         )
         self.statuswidget = self.statusdock.widget()
 
+        # "History" widget
+        self.historydock = create_dock(
+            'History',
+            N_('History'),
+            self,
+            func=lambda dock: dag.CommitHistoryWidget(
+                context,
+                ref='--all',
+                count=1000,
+                display_status=False,
+                parent=dock,
+            ),
+        )
+        self.historywidget = self.historydock.widget()
+        self.model.updated.disconnect(self.historywidget.model_updated)
+
         # "Switch Repository" widgets
         self.bookmarksdock = create_dock(
             'Favorites',
@@ -878,6 +894,7 @@ class MainView(standard.MainWindow):
         top = Qt.TopDockWidgetArea
 
         self.addDockWidget(top, self.statusdock)
+        self.addDockWidget(top, self.historydock)
         self.addDockWidget(top, self.commitdock)
         if self.browser_dockable:
             self.addDockWidget(top, self.browserdock)
@@ -980,6 +997,8 @@ class MainView(standard.MainWindow):
         self.model.save_commitmsg(msg=commit_msg)
         for browser in list(self.context.browser_windows):
             browser.close()
+        self.historywidget.close_popup()
+        self.historywidget.stop_and_wait()
         standard.MainWindow.closeEvent(self, event)
         if self.dag is not None and self.dag.isVisible():
             self.context.reset_view(self.dag)
@@ -990,6 +1009,9 @@ class MainView(standard.MainWindow):
         return menu
 
     def build_view_menu(self, menu):
+        for menu_action in menu.actions():
+            if menu_action.parent() is not menu:
+                menu.removeAction(menu_action)
         menu.clear()
         if utils.is_darwin():
             menu.addAction(self.minimize_action)
@@ -999,8 +1021,11 @@ class MainView(standard.MainWindow):
 
         popup_menu = self.createPopupMenu()
         for menu_action in popup_menu.actions():
-            menu_action.setParent(menu)
+            popup_menu.removeAction(menu_action)
+            if menu_action.parent() is popup_menu:
+                menu_action.setParent(menu)
             menu.addAction(menu_action)
+        popup_menu.deleteLater()
 
         context = self.context
         menu_action = menu.addAction(
@@ -1011,6 +1036,7 @@ class MainView(standard.MainWindow):
 
         dockwidgets = [
             self.logdock,
+            self.historydock,
             self.commitdock,
             self.statusdock,
             self.diffdock,
@@ -1026,7 +1052,8 @@ class MainView(standard.MainWindow):
         for dockwidget in dockwidgets:
             # Associate the action with the shortcut
             toggleview = dockwidget.toggleViewAction()
-            menu.addAction(toggleview)
+            if toggleview not in menu.actions():
+                menu.addAction(toggleview)
 
         menu.addSeparator()
         menu.addAction(self.lock_layout_action)
@@ -1240,6 +1267,8 @@ class MainView(standard.MainWindow):
         state = standard.MainWindow.export_state(self)
         show_status_filter = self.statuswidget.filter_widget.isVisible()
         state['show_status_filter'] = show_status_filter
+        state['show_history'] = not self.historydock.isHidden()
+        state['history'] = self.historywidget.export_state()
         state['toolbars'] = self.toolbar_state.export_state()
         state['ref_sort'] = self.model.ref_sort
         self.diffviewer.export_state(state)
@@ -1249,6 +1278,21 @@ class MainView(standard.MainWindow):
 
     def apply_state(self, state):
         """Apply persistent UI state on startup"""
+        if not isinstance(state, dict):
+            self.historydock.show()
+            self.historydock.raise_()
+            return False
+        if 'history' in state and not self.historywidget.is_valid_state(
+            state['history']
+        ):
+            self.historydock.show()
+            self.historydock.raise_()
+            return False
+        if 'show_history' in state and not isinstance(state['show_history'], bool):
+            self.historydock.show()
+            self.historydock.raise_()
+            return False
+
         toolbars = state.get('toolbars', [])
         self.toolbar_state.apply_state(toolbars)
 
@@ -1264,7 +1308,24 @@ class MainView(standard.MainWindow):
 
         diff_ok = self.diffviewer.apply_state(state)
         commitmsg_ok = self.commiteditor.apply_state(state)
-        return base_ok and diff_ok and commitmsg_ok
+
+        history_ok = True
+        if 'history' in state:
+            history_state = state['history']
+            history_ok = isinstance(history_state, dict) and (
+                self.historywidget.apply_state(history_state)
+            )
+        show_history = state.get('show_history', True)
+        visibility_ok = isinstance(show_history, bool)
+        if base_ok and history_ok and visibility_ok:
+            self.historydock.setVisible(show_history)
+            if show_history:
+                self.historydock.raise_()
+        else:
+            self.historydock.show()
+            self.historydock.raise_()
+
+        return base_ok and diff_ok and commitmsg_ok and history_ok and visibility_ok
 
     def setup_dockwidget_view_menu(self):
         # Hotkeys for toggling the dock widgets
@@ -1274,6 +1335,7 @@ class MainView(standard.MainWindow):
             optkey = 'Ctrl'
         dockwidgets = (
             (optkey + '+0', self.logdock),
+            (optkey + '+9', self.historydock),
             (optkey + '+1', self.commitdock),
             (optkey + '+2', self.statusdock),
             (optkey + '+3', self.diffdock),
