@@ -490,3 +490,37 @@ def test_prepare_labels_two_groups_with_locals():
         ('remotes/origin/main', 'origin/main', 'origin/\u2026'),
         ('heads/main', 'main', None),
     ]
+
+
+def test_history_request_is_frozen_and_cache_key_ignores_run_id():
+    request = dag.HistoryRequest(7, "HEAD", 100, True)
+
+    assert tuple(request.__dataclass_fields__) == (
+        "run_id",
+        "ref",
+        "count",
+        "display_status",
+    )
+    assert request.cache_key == ("HEAD", 100, True)
+    assert dag.HistoryRequest(8, "HEAD", 100, True).cache_key == request.cache_key
+    with pytest.raises(AttributeError):
+        request.ref = "main"
+
+
+def test_history_result_is_frozen_and_has_exact_graph_contract():
+    result = dag.HistoryResult(7, True, 0, "", (), None)
+
+    from dataclasses import fields
+    from typing import get_type_hints
+
+    from cola.models.graph import GraphResult
+
+    assert [field.name for field in fields(dag.HistoryResult)] == [
+        "run_id", "successful", "returncode", "error", "commits", "graph"
+    ]
+    assert get_type_hints(dag.HistoryResult)["graph"] == GraphResult | None
+    assert result.graph is None
+    with pytest.raises(TypeError):
+        dag.HistoryResult(7, True, 0, "", ())
+    with pytest.raises(AttributeError):
+        result.successful = False

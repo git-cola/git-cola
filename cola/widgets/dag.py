@@ -3,6 +3,7 @@ import collections
 import enum
 import itertools
 import math
+from dataclasses import dataclass
 from functools import partial
 
 from qtpy import QtCore
@@ -1388,6 +1389,14 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         QtWidgets.QTreeWidget.leaveEvent(self, event)
 
 
+@dataclass(frozen=True)
+class _HistoryCacheMetadata:
+    oids: tuple[str, ...]
+    refs: frozenset[str]
+    count: int
+    display_status: bool
+
+
 class GitDAG(standard.MainWindow):
     """The git-dag widget."""
 
@@ -1412,11 +1421,26 @@ class GitDAG(standard.MainWindow):
         self.old_oids = None
         self.old_count = 0
         self.old_display_status = None
+        self.last_successful_cache_key = None
         self.force_refresh = False
         self._widgets_initialized = False
 
-        self.thread = None
+        self.active_thread = None
+        self.active_request = None
+        self.active_run_id = None
+        self.active_result = None
+        self.active_cache_metadata = None
+        self.pending_request = None
+        self.pending_cache_metadata = None
+        self._next_run_id = 1
+        self.stopping = False
+        self.loading = False
+        self.error_status = None
         self.revtext = GitDagLineEdit(context)
+        self.history_error_status = QtWidgets.QLabel()
+        self.history_error_status.setObjectName('HistoryErrorStatus')
+        self.history_error_status.setStyleSheet('QLabel { color: #c01c28; }')
+        self.history_error_status.hide()
         self.maxresults = standard.SpinBox(digits=None, maxi=9999999, wrap=True)
 
         self.zoom_out = qtutils.create_action_button(
@@ -1484,7 +1508,11 @@ class GitDAG(standard.MainWindow):
         self.diffwidget.diff.menu_actions.append(self.diffwidget_copy_commit)
 
         self.controls_layout = qtutils.hbox(
-            defs.no_margin, defs.spacing, self.revtext, self.maxresults
+            defs.no_margin,
+            defs.spacing,
+            self.revtext,
+            self.history_error_status,
+            self.maxresults,
         )
         self.controls_layout.setAlignment(self.maxresults, Qt.AlignTop)
 
@@ -1619,26 +1647,183 @@ class GitDAG(standard.MainWindow):
         self.set_params(params)
 
     def set_params(self, params):
-        context = self.context
         self.params = params
-        # Update fields affected by model
         self.revtext.setText(params.ref)
         self.maxresults.setValue(params.count)
         self.update_window_title()
 
-        self._stop_reader_thread()
-        self.thread = ReaderThread(context, params)
-        self.thread.begin.connect(self.thread_begin, type=Qt.QueuedConnection)
-        self.thread.status.connect(self.thread_status, type=Qt.QueuedConnection)
-        self.thread.add.connect(self.add_commits, type=Qt.QueuedConnection)
-        self.thread.end.connect(self.thread_end, type=Qt.QueuedConnection)
+    def request_history(
+        self, ref=None, count=None, display_status=None, cache_metadata=None
+    ):
+        """Request a serialized history load from an immutable UI snapshot."""
+        if self.stopping:
+            return False
+        if ref is None:
+            ref = get(self.revtext)
+        if count is None:
+            count = get(self.maxresults)
+        if display_status is None:
+            display_status = get(self.display_status_action)
+        key = (ref, count, display_status)
+        if self.active_request and key == self.active_request.cache_key:
+            same_snapshot = (
+                cache_metadata is None
+                or cache_metadata == self.active_cache_metadata
+            )
+            if same_snapshot:
+                # The active request is again the latest desired state.
+                self.pending_request = None
+                self.pending_cache_metadata = None
+                result = self.active_result
+                if result is not None:
+                    self.thread_result(result)
+                return False
+        if self.pending_request and key == self.pending_request.cache_key:
+            if cache_metadata is not None:
+                self.pending_cache_metadata = cache_metadata
+            return False
 
-    def _stop_reader_thread(self):
-        """Stop the reader thread if it is currently running"""
-        if self.thread is not None and self.thread.isRunning():
-            self.thread.requestInterruption()
-            QtCore.QThread.currentThread().yieldCurrentThread()
-            self.thread.wait(100)
+        request = dag.HistoryRequest(
+            self._next_run_id,
+            ref,
+            count,
+            display_status,
+        )
+        self._next_run_id += 1
+        if self.active_thread is not None:
+            self.pending_request = request
+            self.pending_cache_metadata = cache_metadata
+        else:
+            self._start_request(request, cache_metadata)
+        return True
+
+    def _start_request(self, request, cache_metadata=None):
+        if self.stopping:
+            return
+        thread = ReaderThread(self.context, request)
+        self.active_thread = thread
+        self.active_request = request
+        self.active_run_id = request.run_id
+        self.active_result = None
+        self.active_cache_metadata = cache_metadata
+        self.loading = True
+        thread.result.connect(self.thread_result, type=Qt.QueuedConnection)
+        thread.finished.connect(
+            partial(self._thread_finished, thread), type=Qt.QueuedConnection
+        )
+        thread.start()
+
+    def _finalize_thread(self, thread):
+        """Finalize the active thread exactly once."""
+        if thread is not self.active_thread:
+            return False
+        self.active_thread = None
+        self.active_request = None
+        self.active_run_id = None
+        self.active_result = None
+        self.active_cache_metadata = None
+        thread.deleteLater()
+        return True
+
+    def _thread_finished(self, thread):
+        if not self._finalize_thread(thread):
+            return
+        if self.stopping:
+            self.loading = False
+            return
+        pending = self.pending_request
+        pending_metadata = self.pending_cache_metadata
+        self.pending_request = None
+        self.pending_cache_metadata = None
+        if pending is not None:
+            self._start_request(pending, pending_metadata)
+        else:
+            self.loading = False
+
+    def _set_error_status(self, status):
+        self.error_status = status
+        text = status or ''
+        self.history_error_status.setText(text)
+        self.history_error_status.setToolTip(text)
+        self.history_error_status.setVisible(bool(status))
+        self.revtext.setToolTip(text)
+        self.revtext.hint.set_error(bool(status))
+
+    def thread_result(self, result):
+        if self.stopping or result.run_id != self.active_run_id:
+            return
+        if self.pending_request is not None:
+            self.active_result = result
+            return
+        self.active_result = None
+        self.loading = False
+        if not result.successful:
+            self._set_error_status(
+                f"returncode {result.returncode}: {result.error or ''}"
+            )
+            return
+        self._set_error_status(None)
+        self._apply_history_result(result.commits)
+        request = self.active_request
+        if request is None:
+            return
+        self.last_successful_cache_key = request.cache_key
+        metadata = self.active_cache_metadata
+        if metadata is not None:
+            self.old_oids = list(metadata.oids)
+            self.old_refs = set(metadata.refs)
+            self.old_count = metadata.count
+            self.old_display_status = metadata.display_status
+
+    def _apply_history_result(self, commits):
+        previous_oids = [commit.oid for commit in self.selection or self.old_selection]
+        commit_list = list(commits)
+        commit_map = {}
+        for commit_obj in commit_list:
+            commit_map[commit_obj.oid] = commit_obj
+            for tag in commit_obj.tags:
+                commit_map[tag] = commit_obj
+        selection = [commit_map[oid] for oid in previous_oids if oid in commit_map]
+        if not selection and commit_list:
+            selection = [commit_list[-1]]
+        selection = sort_by_generation(selection)
+
+        with (
+            qtutils.BlockSignals(self.graphview.scene()),
+            qtutils.BlockSignals(self.treewidget),
+        ):
+            self.clear()
+            self.commit_list = commit_list
+            self.commits.update(commit_map)
+            if commit_list:
+                self.treewidget.add_commits(commit_list)
+                self.graphview.add_commits(commit_list)
+
+        self.selection = list(selection)
+        self.old_selection = list(selection)
+        self.diffwidget_copy_commit.setEnabled(bool(selection))
+        if not selection:
+            self.diffwidget.oid = None
+            self.diffwidget.oid_start = None
+            self.diffwidget.oid_end = None
+        self.commits_selected.emit(list(selection))
+        if commit_list:
+            self.graphview.set_initial_view()
+
+    def stop_and_wait(self):
+        """Stop scheduling work and wait fully for the active worker."""
+        if self.stopping:
+            return
+        self.stopping = True
+        self.pending_request = None
+        self.pending_cache_metadata = None
+        thread = self.active_thread
+        if thread is not None:
+            if thread.isRunning():
+                thread.requestInterruption()
+                thread.wait()
+            self._finalize_thread(thread)
+        self.loading = False
 
     def _display_worktree_status(self, enabled):
         """Enable and disable the display of the WORKTREE and STAGE pseudo-commits"""
@@ -1782,16 +1967,14 @@ class GitDAG(standard.MainWindow):
             or display_status != self.old_display_status
         )
         if update:
-            self._stop_reader_thread()
             self.params.set_ref(ref)
             self.params.set_count(count)
             self.params.set_display_status(display_status)
-            self.thread.start()
+            metadata = _HistoryCacheMetadata(
+                tuple(oids), frozenset(refs), count, display_status
+            )
+            self.request_history(ref, count, display_status, metadata)
 
-        self.old_oids = oids
-        self.old_count = count
-        self.old_refs = refs
-        self.old_display_status = self.params.display_status
         self.force_refresh = False
 
     def select_commits(self, commits):
@@ -1806,55 +1989,6 @@ class GitDAG(standard.MainWindow):
         self.commit_list = []
         self.graphview.clear()
         self.treewidget.clear()
-
-    def add_commits(self, commits):
-        """Add new commits from the reader thread"""
-        self.commit_list.extend(commits)
-        # Keep track of commits
-        for commit_obj in commits:
-            self.commits[commit_obj.oid] = commit_obj
-            for tag in commit_obj.tags:
-                self.commits[tag] = commit_obj
-        # The treewidget is quick to update.  The graphview is slower when updating
-        # incrementally so it is updated just once at thread_end() once all commits have
-        # been gathered.
-        self.treewidget.add_commits(commits)
-
-    def thread_begin(self):
-        """The reader thread has begun"""
-        if self.selection:
-            self.old_selection = self.selection
-        self.clear()
-
-    def thread_end(self):
-        """The reader thread has completed"""
-        self.graphview.add_commits(self.commit_list)
-        self.restore_selection()
-
-    def thread_status(self, successful):
-        """Indicate an error when the revision input contains an invalid ref"""
-        self.revtext.hint.set_error(not successful)
-
-    def restore_selection(self):
-        """Restore the selection before the display was refreshed"""
-        # The selection can become empty when the widgets are cleared.
-        selection = self.selection or self.old_selection
-        try:
-            commit_obj = self.commit_list[-1]
-        except IndexError:
-            # No commits, exist, early-out
-            return
-
-        raw_commits = [self.commits.get(commit.oid, None) for commit in selection]
-        new_commits = [commit for commit in raw_commits if commit is not None]
-        if new_commits:
-            # The old selection exists in the new state
-            self.commits_selected.emit(sort_by_generation(new_commits))
-        else:
-            # The old selection is now empty.  Select the top-most commit
-            self.commits_selected.emit([commit_obj])
-
-        self.graphview.set_initial_view()
 
     def diff_commits(self, left, right):
         """React to diff_commits signals by displaying a difftool interface"""
@@ -1931,7 +2065,7 @@ class GitDAG(standard.MainWindow):
     def closeEvent(self, event):
         """Ensure the revision text popup is closed"""
         self.revtext.close_popup()
-        self._stop_reader_thread()
+        self.stop_and_wait()
         standard.MainWindow.closeEvent(self, event)
 
     def showEvent(self, event):
@@ -1943,43 +2077,61 @@ class GitDAG(standard.MainWindow):
 
 
 class ReaderThread(QtCore.QThread):
-    begin = Signal()
-    add = Signal(object)
-    end = Signal()
-    status = Signal(object)
+    result = Signal(object)
 
-    def __init__(self, context, params):
+    def __init__(self, context, request):
         super().__init__()
         self.context = context
-        self.params = params
+        self.request = request
 
     def run(self):
-        """Gather commits and emit them to the main thread"""
-        context = self.context
-        repo = dag.RepoReader(context, self.params)
-        repo.reset()
-        self.begin.emit()
-
+        """Gather a complete immutable history result in the worker thread."""
+        request = self.request
         commits = []
-        for commit in repo.get():
+        repo = None
+        successful = False
+        returncode = -1
+        error = ''
+        try:
+            params = dag.DAG(request.ref, request.count)
+            params.set_display_status(request.display_status)
+            repo = dag.RepoReader(self.context, params)
+            interrupted = False
+            for commit in repo.get():
+                if self.isInterruptionRequested():
+                    interrupted = True
+                    break
+                commits.append(commit)
             if self.isInterruptionRequested():
-                repo.reset()
-                return
-            commits.append(commit)
-            if len(commits) >= 2048:
-                self.add.emit(commits)
-                commits = []
+                interrupted = True
 
-        stage, worktree = repo.get_worktree_commits()
-        if stage:
-            commits.append(stage)
-        if worktree:
-            commits.append(worktree)
-        if commits:
-            self.add.emit(commits)
+            if not interrupted and repo.returncode == 0:
+                stage, worktree = repo.get_worktree_commits()
+                if stage:
+                    commits.append(stage)
+                if worktree:
+                    commits.append(worktree)
+            successful = repo.returncode == 0 and not interrupted
+            returncode = repo.returncode if not interrupted else -1
+            error = repo.error
+        except Exception as exc:  # noqa: BLE001 - worker exception barrier
+            commits = []
+            successful = False
+            returncode = -1
+            error = repo.error if repo is not None and repo.error else str(exc)
+        if not successful:
+            commits = []
+        self.result.emit(
+            dag.HistoryResult(
+                request.run_id,
+                successful,
+                returncode,
+                error,
+                tuple(commits),
+                None,
+            )
+        )
 
-        self.status.emit(repo.returncode == 0)
-        self.end.emit()
 
 
 class Cache:

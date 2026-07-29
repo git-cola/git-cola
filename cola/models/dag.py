@@ -1,12 +1,14 @@
 from __future__ import annotations
 import datetime
 import json
+from dataclasses import dataclass
 from collections.abc import Iterator
 
 from .. import core
 from .. import utils
 from ..i18n import N_
 from ..models import prefs
+from .graph import GraphResult
 
 # put summary at the end b/c it can contain
 # any number of funky characters, including the separator
@@ -14,6 +16,28 @@ LOGFMT = r'format:%H%x01%P%x01%d%x01%an%x01%ad%x01%ae%x01%s'
 LOGSEP = chr(0x01)
 STAGE = 'STAGE'
 WORKTREE = 'WORKTREE'
+
+
+@dataclass(frozen=True)
+class HistoryRequest:
+    run_id: int
+    ref: str
+    count: int
+    display_status: bool
+
+    @property
+    def cache_key(self) -> tuple[str, int, bool]:
+        return (self.ref, self.count, self.display_status)
+
+
+@dataclass(frozen=True)
+class HistoryResult:
+    run_id: int
+    successful: bool
+    returncode: int
+    error: str | None
+    commits: tuple[Commit, ...]
+    graph: GraphResult | None
 
 
 class CommitFactory:
