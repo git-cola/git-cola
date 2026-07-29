@@ -25,10 +25,10 @@ from .. import utils
 from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
+from ..models import graph
 from ..models import main
 from ..models import prefs
 from ..models.graph import GraphRowColor
-from ..models.graph import build_graph
 from ..qtutils import get
 from . import archive
 from . import browse
@@ -1292,30 +1292,18 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.oidmap.clear()
         self.commits = []
 
-    def add_commits(self, commits):
-        """Add commits to the tree"""
+    def add_commits(self, commits, graph_result):
+        """Add commits and their precomputed graph rows to the tree."""
         self.commits.extend(commits)
         items = []
-        head = 'HEAD'
-        head_oid = None
         for commit in reversed(commits):
             item = CommitTreeWidgetItem(commit)
             items.append(item)
             self.oidmap[commit.oid] = item
             for tag in commit.tags:
                 self.oidmap[tag] = item
-                if tag == head:
-                    head_oid = commit.oid
 
         self.insertTopLevelItems(0, items)
-
-        graph_result = build_graph(
-            [
-                (commit.oid, [parent.oid for parent in commit.parents])
-                for commit in commits
-            ],
-            head_oid=head_oid,
-        )
         self.apply_graph_result(graph_result)
 
     def apply_graph_result(self, graph_result) -> None:
@@ -1762,8 +1750,12 @@ class GitDAG(standard.MainWindow):
                 f"returncode {result.returncode}: {result.error or ''}"
             )
             return
+        if result.graph is None and result.commits:
+            self._set_error_status('successful history result is missing graph data')
+            return
+        graph_result = result.graph or graph.GraphResult(rows=[], max_columns=0)
         self._set_error_status(None)
-        self._apply_history_result(result.commits)
+        self._apply_history_result(result.commits, graph_result)
         request = self.active_request
         if request is None:
             return
@@ -1775,7 +1767,7 @@ class GitDAG(standard.MainWindow):
             self.old_count = metadata.count
             self.old_display_status = metadata.display_status
 
-    def _apply_history_result(self, commits):
+    def _apply_history_result(self, commits, graph_result):
         previous_oids = [commit.oid for commit in self.selection or self.old_selection]
         commit_list = list(commits)
         commit_map = {}
@@ -1795,9 +1787,8 @@ class GitDAG(standard.MainWindow):
             self.clear()
             self.commit_list = commit_list
             self.commits.update(commit_map)
-            if commit_list:
-                self.treewidget.add_commits(commit_list)
-                self.graphview.add_commits(commit_list)
+            self.treewidget.add_commits(commit_list, graph_result)
+            self.graphview.add_commits(commit_list)
 
         self.selection = list(selection)
         self.old_selection = list(selection)
@@ -2088,6 +2079,7 @@ class ReaderThread(QtCore.QThread):
         """Gather a complete immutable history result in the worker thread."""
         request = self.request
         commits = []
+        graph_result = None
         repo = None
         successful = False
         returncode = -1
@@ -2107,10 +2099,27 @@ class ReaderThread(QtCore.QThread):
 
             if not interrupted and repo.returncode == 0:
                 stage, worktree = repo.get_worktree_commits()
-                if stage:
-                    commits.append(stage)
-                if worktree:
-                    commits.append(worktree)
+                if self.isInterruptionRequested():
+                    interrupted = True
+                else:
+                    if stage:
+                        commits.append(stage)
+                    if worktree:
+                        commits.append(worktree)
+            if not interrupted and repo.returncode == 0:
+                head_oid = next(
+                    (commit.oid for commit in commits if 'HEAD' in commit.tags), None
+                )
+                graph_result = graph.build_graph(
+                    [
+                        (commit.oid, [parent.oid for parent in commit.parents])
+                        for commit in commits
+                    ],
+                    head_oid=head_oid,
+                )
+                if self.isInterruptionRequested():
+                    interrupted = True
+                    graph_result = None
             successful = repo.returncode == 0 and not interrupted
             returncode = repo.returncode if not interrupted else -1
             error = repo.error
@@ -2121,6 +2130,7 @@ class ReaderThread(QtCore.QThread):
             error = repo.error if repo is not None and repo.error else str(exc)
         if not successful:
             commits = []
+            graph_result = None
         self.result.emit(
             dag.HistoryResult(
                 request.run_id,
@@ -2128,7 +2138,7 @@ class ReaderThread(QtCore.QThread):
                 returncode,
                 error,
                 tuple(commits),
-                None,
+                graph_result,
             )
         )
 

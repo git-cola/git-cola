@@ -8,6 +8,7 @@ from typing import ClassVar
 import pytest
 
 from cola.models import dag
+from cola.models import graph as graph_model
 from cola.widgets.dag import (
     COMMIT_ROLE,
     GRAPH_PREV_ROW_ROLE,
@@ -94,6 +95,18 @@ def _commit(context, factory, oid, parents=()):
     return commit
 
 
+def _graph_result(commits):
+    commits = list(commits)
+    head_oid = next((commit.oid for commit in commits if "HEAD" in commit.tags), None)
+    return graph_model.build_graph(
+        [
+            (commit.oid, [parent.oid for parent in commit.parents])
+            for commit in commits
+        ],
+        head_oid=head_oid,
+    )
+
+
 def _tree(app_context, managed_qobject):
     return managed_qobject(CommitTreeWidget(app_context, None))
 
@@ -131,7 +144,7 @@ def test_linear_history_items_expose_graph_and_commit_roles(
     tip = _commit(app_context, factory, "C", (middle,))
     tree = _tree(app_context, managed_qobject)
 
-    tree.add_commits([root, middle, tip])
+    tree.add_commits([root, middle, tip], _graph_result([root, middle, tip]))
 
     expected = [("C", None), ("B", "C"), ("A", "B")]
     for index, (oid, previous_oid) in enumerate(expected):
@@ -153,7 +166,7 @@ def test_fork_history_items_expose_graph_and_commit_roles(
     right = _commit(app_context, factory, "C", (root,))
     tree = _tree(app_context, managed_qobject)
 
-    tree.add_commits([root, left, right])
+    tree.add_commits([root, left, right], _graph_result([root, left, right]))
 
     expected = [("C", 0, None), ("B", 1, "C"), ("A", 0, "B")]
     for index, (oid, column, previous_oid) in enumerate(expected):
@@ -171,7 +184,7 @@ def test_tree_selection_emits_selected_commits(qapp, app_context, managed_qobjec
     root = _commit(app_context, factory, "A")
     tip = _commit(app_context, factory, "B", (root,))
     tree = _tree(app_context, managed_qobject)
-    tree.add_commits([root, tip])
+    tree.add_commits([root, tip], _graph_result([root, tip]))
     selected = QtTest.QSignalSpy(tree.commits_selected)
 
     tree.topLevelItem(0).setSelected(True)
@@ -480,7 +493,7 @@ def test_successful_empty_result_clears_items_graph_maps_and_selection(
     commit = _commit(app_context, factory, "A")
     widget.request_history("HEAD", 10, False)
     first = ManualReaderThread.instances[-1]
-    first.complete(dag.HistoryResult(first.request.run_id, True, 0, "", (commit,), None))
+    first.complete(dag.HistoryResult(first.request.run_id, True, 0, "", (commit,), _graph_result((commit,))))
     qapp.processEvents()
     QtTest.QTest.qWait(1)
     qapp.processEvents()
@@ -512,7 +525,7 @@ def test_failure_preserves_view_sets_error_and_pending_success_clears_it(
     commit = _commit(app_context, factory, "A")
     widget.request_history("HEAD", 10, False)
     first = ManualReaderThread.instances[-1]
-    first.complete(dag.HistoryResult(first.request.run_id, True, 0, "", (commit,), None))
+    first.complete(dag.HistoryResult(first.request.run_id, True, 0, "", (commit,), _graph_result((commit,))))
     qapp.processEvents()
 
     widget.request_history("bad", 10, False)
@@ -551,7 +564,7 @@ def test_stale_result_does_not_change_view(
     widget.request_history("HEAD", 10, False)
     active = ManualReaderThread.instances[-1]
 
-    widget.thread_result(dag.HistoryResult(active.request.run_id + 99, True, 0, "", (commit,), None))
+    widget.thread_result(dag.HistoryResult(active.request.run_id + 99, True, 0, "", (commit,), _graph_result((commit,))))
 
     assert widget.treewidget.topLevelItemCount() == 0
     assert widget.commits == {}
@@ -570,7 +583,7 @@ def test_stop_discards_pending_and_prevents_scheduled_or_late_updates(
     factory = dag.CommitFactory()
     commit = _commit(app_context, factory, "late")
     active.result.emit(
-        dag.HistoryResult(active.request.run_id, True, 0, "", (commit,), None)
+        dag.HistoryResult(active.request.run_id, True, 0, "", (commit,), _graph_result((commit,)))
     )
     qapp.processEvents()
 
@@ -597,7 +610,7 @@ def test_active_pending_active_discards_pending_and_accepts_active_result(
     assert widget.pending_request is None
 
     active.emit_result(
-        dag.HistoryResult(active.request.run_id, True, 0, "", (commit,), None)
+        dag.HistoryResult(active.request.run_id, True, 0, "", (commit,), _graph_result((commit,)))
     )
     qapp.processEvents()
 
@@ -618,7 +631,7 @@ def test_active_result_can_apply_when_pending_is_later_discarded(
     active = ManualReaderThread.instances[-1]
     widget.request_history("B", 10, False)
     active.emit_result(
-        dag.HistoryResult(active.request.run_id, True, 0, "", (commit,), None)
+        dag.HistoryResult(active.request.run_id, True, 0, "", (commit,), _graph_result((commit,)))
     )
     qapp.processEvents()
     assert widget.commit_list == []
@@ -638,7 +651,7 @@ def test_active_result_is_invisible_until_pending_finishes(
     old = _commit(app_context, factory, "old")
     active_commit = _commit(app_context, factory, "active")
     pending_commit = _commit(app_context, factory, "pending")
-    widget._apply_history_result((old,))
+    widget._apply_history_result((old,), _graph_result((old,)))
     widget.last_successful_cache_key = ("old", 1, False)
     widget.error_status = "existing"
     widget.revtext.setToolTip("existing")
@@ -648,7 +661,7 @@ def test_active_result_is_invisible_until_pending_finishes(
     active = ManualReaderThread.instances[-1]
     widget.request_history("B", 20, True)
     active.emit_result(
-        dag.HistoryResult(active.request.run_id, True, 0, "", (active_commit,), None)
+        dag.HistoryResult(active.request.run_id, True, 0, "", (active_commit,), _graph_result((active_commit,)))
     )
     qapp.processEvents()
 
@@ -665,7 +678,7 @@ def test_active_result_is_invisible_until_pending_finishes(
     pending = ManualReaderThread.instances[-1]
     assert widget.loading is True
     pending.emit_result(
-        dag.HistoryResult(pending.request.run_id, True, 0, "", (pending_commit,), None)
+        dag.HistoryResult(pending.request.run_id, True, 0, "", (pending_commit,), _graph_result((pending_commit,)))
     )
     qapp.processEvents()
     assert widget.commit_list == [pending_commit]
@@ -739,14 +752,14 @@ def test_success_replaces_selection_with_new_commit_objects_synchronously(
     old_factory = dag.CommitFactory()
     old_a = _commit(app_context, old_factory, "A")
     old_b = _commit(app_context, old_factory, "B", (old_a,))
-    widget._apply_history_result((old_a, old_b))
+    widget._apply_history_result((old_a, old_b), _graph_result((old_a, old_b)))
     widget.selection = widget.old_selection = [old_a]
     new_factory = dag.CommitFactory()
     new_a = _commit(app_context, new_factory, "A")
     new_b = _commit(app_context, new_factory, "B", (new_a,))
     selected = QtTest.QSignalSpy(widget.commits_selected)
 
-    widget._apply_history_result((new_a, new_b))
+    widget._apply_history_result((new_a, new_b), _graph_result((new_a, new_b)))
 
     assert widget.selection == [new_a]
     assert widget.old_selection == [new_a]
@@ -761,13 +774,13 @@ def test_empty_success_clears_downstream_and_emits_once(
     widget = _gitdag(app_context, managed_qobject, monkeypatch)
     factory = dag.CommitFactory()
     commit = _commit(app_context, factory, "A")
-    widget._apply_history_result((commit,))
+    widget._apply_history_result((commit,), _graph_result((commit,)))
     qapp.processEvents()
     widget.selection = widget.old_selection = [commit]
     widget.diffwidget_copy_commit.setEnabled(True)
     selected = QtTest.QSignalSpy(widget.commits_selected)
 
-    widget._apply_history_result(())
+    widget._apply_history_result((), graph_model.GraphResult([], 0))
     qapp.processEvents()
 
     assert widget.selection == widget.old_selection == []
@@ -874,6 +887,159 @@ def test_reader_thread_converts_exceptions_to_one_exact_failed_result(
     assert _spy_count(finished) == 1
 
 
+def test_reader_thread_builds_empty_graph_once_in_worker(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    class EmptyReader:
+        returncode = 0
+        error = ""
+
+        def __init__(self, _context, _params):
+            pass
+
+        def get(self):
+            return iter(())
+
+        def get_worktree_commits(self):
+            return (None, None)
+
+    calls = []
+    real_build_graph = graph_model.build_graph
+
+    def recording_build_graph(graph_input, head_oid=None):
+        calls.append((threading.get_ident(), list(graph_input), head_oid))
+        return real_build_graph(graph_input, head_oid=head_oid)
+
+    monkeypatch.setattr("cola.widgets.dag.dag.RepoReader", EmptyReader)
+    monkeypatch.setattr(graph_model, "build_graph", recording_build_graph)
+    thread = managed_qobject(
+        ReaderThread(app_context, dag.HistoryRequest(20, "HEAD", 10, False))
+    )
+    results = QtTest.QSignalSpy(thread.result)
+    gui_thread_id = threading.get_ident()
+
+    thread.start()
+    assert thread.wait(5000)
+    qapp.processEvents()
+
+    assert calls == [(calls[0][0], [], None)]
+    assert calls[0][0] != gui_thread_id
+    result = _spy_payload(results, 0)[0]
+    assert result.successful
+    assert result.commits == ()
+    assert result.graph == graph_model.GraphResult([], 0)
+
+
+def test_reader_thread_interruption_after_worktree_skips_graph(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, "A")
+    worktree_entered = threading.Event()
+    release_worktree = threading.Event()
+    build_called = threading.Event()
+
+    class WorktreeBlockingReader:
+        returncode = 0
+        error = ""
+
+        def __init__(self, _context, _params):
+            pass
+
+        def get(self):
+            return iter((commit,))
+
+        def get_worktree_commits(self):
+            worktree_entered.set()
+            release_worktree.wait()
+            return (None, None)
+
+    def forbidden_build_graph(_graph_input, head_oid=None):
+        build_called.set()
+        raise AssertionError((head_oid, "graph phase must be skipped"))
+
+    monkeypatch.setattr("cola.widgets.dag.dag.RepoReader", WorktreeBlockingReader)
+    monkeypatch.setattr(graph_model, "build_graph", forbidden_build_graph)
+    thread = managed_qobject(
+        ReaderThread(app_context, dag.HistoryRequest(22, "HEAD", 10, True))
+    )
+    results = QtTest.QSignalSpy(thread.result)
+    thread.start()
+    assert worktree_entered.wait(2)
+
+    thread.requestInterruption()
+    release_worktree.set()
+
+    assert thread.wait(5000)
+    qapp.processEvents()
+    assert not build_called.is_set()
+    assert _spy_payload(results, 0)[0] == dag.HistoryResult(
+        22, False, -1, "", (), None
+    )
+
+
+def test_reader_thread_builds_graph_from_commits_and_status_pseudo_commits(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    factory = dag.CommitFactory()
+    root = _commit(app_context, factory, "root")
+    root.tags = ["HEAD"]
+    stage = _commit(app_context, factory, dag.STAGE, (root,))
+    worktree = _commit(app_context, factory, dag.WORKTREE, (stage,))
+
+    class StatusReader:
+        returncode = 0
+        error = ""
+
+        def __init__(self, _context, _params):
+            pass
+
+        def get(self):
+            return iter((root,))
+
+        def get_worktree_commits(self):
+            return (stage, worktree)
+
+    calls = []
+    real_build_graph = graph_model.build_graph
+
+    def recording_build_graph(graph_input, head_oid=None):
+        graph_input = list(graph_input)
+        calls.append((threading.get_ident(), graph_input, head_oid))
+        return real_build_graph(graph_input, head_oid=head_oid)
+
+    monkeypatch.setattr("cola.widgets.dag.dag.RepoReader", StatusReader)
+    monkeypatch.setattr(graph_model, "build_graph", recording_build_graph)
+    thread = managed_qobject(
+        ReaderThread(app_context, dag.HistoryRequest(24, "HEAD", 10, True))
+    )
+    results = QtTest.QSignalSpy(thread.result)
+    gui_thread_id = threading.get_ident()
+
+    thread.start()
+    assert thread.wait(5000)
+    qapp.processEvents()
+
+    assert len(calls) == 1
+    assert calls[0] == (
+        calls[0][0],
+        [
+            ("root", []),
+            (dag.STAGE, ["root"]),
+            (dag.WORKTREE, [dag.STAGE]),
+        ],
+        "root",
+    )
+    assert calls[0][0] != gui_thread_id
+    result = _spy_payload(results, 0)[0]
+    assert result.commits == (root, stage, worktree)
+    assert {row.commit_oid for row in result.graph.rows} == {
+        "root",
+        dag.STAGE,
+        dag.WORKTREE,
+    }
+
+
 def test_reader_thread_emits_complete_multi_commit_tuple_and_has_no_add_signal(
     qapp, app_context, managed_qobject, monkeypatch
 ):
@@ -906,7 +1072,157 @@ def test_reader_thread_emits_complete_multi_commit_tuple_and_has_no_add_signal(
 
     assert _spy_count(results) == 1
     assert _spy_payload(results, 0)[0].commits == commits
-    assert _spy_payload(results, 0)[0].graph is None
+    result = _spy_payload(results, 0)[0]
+    assert result.graph == _graph_result(commits)
+
+
+def test_large_history_graph_is_built_once_in_worker_and_applied_atomically(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    factory = dag.CommitFactory()
+    commits = []
+    parent = None
+    for index in range(2050):
+        commit = _commit(
+            app_context,
+            factory,
+            f"{index:040x}",
+            (parent,) if parent is not None else (),
+        )
+        commits.append(commit)
+        parent = commit
+    commits[-1].tags = ["HEAD"]
+    boundary_parent = commits[2047]
+    boundary_child = commits[2048]
+    partial_read = threading.Event()
+    release = threading.Event()
+
+    class LargeReader:
+        returncode = 0
+        error = ""
+
+        def __init__(self, _context, _params):
+            pass
+
+        def get(self):
+            for index, commit in enumerate(commits):
+                yield commit
+                if index == 2047:
+                    partial_read.set()
+                    release.wait()
+
+        def get_worktree_commits(self):
+            return (None, None)
+
+    build_calls = []
+    real_build_graph = graph_model.build_graph
+
+    def recording_build_graph(graph_input, head_oid=None):
+        build_calls.append((threading.get_ident(), list(graph_input), head_oid))
+        return real_build_graph(graph_input, head_oid=head_oid)
+
+    monkeypatch.setattr("cola.widgets.dag.dag.RepoReader", LargeReader)
+    monkeypatch.setattr(graph_model, "build_graph", recording_build_graph)
+    widget = _real_gitdag(app_context, managed_qobject)
+    existing_factory = dag.CommitFactory()
+    existing = _commit(app_context, existing_factory, "existing")
+    existing_graph = real_build_graph([("existing", [])])
+    widget._apply_history_result((existing,), existing_graph)
+    widget.selection = widget.old_selection = [existing]
+    before = (
+        list(widget.commit_list),
+        dict(widget.commits),
+        dict(widget.treewidget.oidmap),
+        dict(widget.graphview.items),
+        list(widget.selection),
+    )
+    graph_add_calls = []
+    real_graph_add_commits = widget.graphview.add_commits
+
+    def recording_graph_add_commits(added_commits):
+        graph_add_calls.append((threading.get_ident(), list(added_commits)))
+        return real_graph_add_commits(added_commits)
+
+    monkeypatch.setattr(widget.graphview, "add_commits", recording_graph_add_commits)
+    gui_thread_id = threading.get_ident()
+
+    assert widget.request_history("large", len(commits), False)
+    thread = widget.active_thread
+    assert partial_read.wait(2)
+    assert (
+        list(widget.commit_list),
+        dict(widget.commits),
+        dict(widget.treewidget.oidmap),
+        dict(widget.graphview.items),
+        list(widget.selection),
+    ) == before
+
+    release.set()
+    assert thread.wait(5000)
+    assert len(build_calls) == 1
+    assert build_calls[0][0] != gui_thread_id
+    assert len(build_calls[0][1]) == len(commits)
+    assert build_calls[0][2] == commits[-1].oid
+    # The queued final result has not reached the GUI thread yet.
+    assert (
+        list(widget.commit_list),
+        dict(widget.commits),
+        dict(widget.treewidget.oidmap),
+        dict(widget.graphview.items),
+        list(widget.selection),
+    ) == before
+
+    qapp.processEvents()
+
+    assert widget.commit_list == commits
+    assert set(widget.treewidget.oidmap) >= {commit.oid for commit in commits}
+    rows = {
+        item.data(0, GRAPH_ROW_ROLE).commit_oid: item.data(0, GRAPH_ROW_ROLE)
+        for item in (
+            widget.treewidget.topLevelItem(index)
+            for index in range(widget.treewidget.topLevelItemCount())
+        )
+    }
+    assert set(rows) == {commit.oid for commit in commits}
+    child_row = rows[boundary_child.oid]
+    parent_row = rows[boundary_parent.oid]
+    assert any(
+        edge.from_column == child_row.commit_column
+        and edge.to_column == parent_row.commit_column
+        for edge in child_row.edges_to_parent
+    )
+    assert len(graph_add_calls) == 1
+    assert graph_add_calls[0] == (gui_thread_id, commits)
+    assert widget.graphview.commits == commits
+
+
+def test_successful_nonempty_result_without_graph_is_rejected(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    widget = _gitdag(app_context, managed_qobject, monkeypatch)
+    factory = dag.CommitFactory()
+    existing = _commit(app_context, factory, "existing")
+    widget._apply_history_result((existing,), _graph_result((existing,)))
+    before = (
+        list(widget.commit_list),
+        dict(widget.treewidget.oidmap),
+        dict(widget.graphview.items),
+    )
+    widget.request_history("missing-graph", 10, False)
+    active = ManualReaderThread.instances[-1]
+
+    active.emit_result(
+        dag.HistoryResult(active.request.run_id, True, 0, "", (existing,), None)
+    )
+    qapp.processEvents()
+
+    assert (
+        list(widget.commit_list),
+        dict(widget.treewidget.oidmap),
+        dict(widget.graphview.items),
+    ) == before
+    assert widget.last_successful_cache_key is None
+    assert widget.error_status == "successful history result is missing graph data"
 
 
 def test_stale_result_preserves_loading_error_cache_and_selection(
@@ -916,7 +1232,7 @@ def test_stale_result_preserves_loading_error_cache_and_selection(
     factory = dag.CommitFactory()
     existing = _commit(app_context, factory, "existing")
     stale = _commit(app_context, factory, "stale")
-    widget._apply_history_result((existing,))
+    widget._apply_history_result((existing,), _graph_result((existing,)))
     qapp.processEvents()
     widget.selection = widget.old_selection = [existing]
     widget._set_error_status("existing error")
@@ -928,7 +1244,7 @@ def test_stale_result_preserves_loading_error_cache_and_selection(
     active = ManualReaderThread.instances[-1]
 
     widget.thread_result(
-        dag.HistoryResult(active.request.run_id + 1, True, 0, "", (stale,), None)
+        dag.HistoryResult(active.request.run_id + 1, True, 0, "", (stale,), _graph_result((stale,)))
     )
 
     assert widget.loading is True
@@ -947,7 +1263,7 @@ def test_failure_preserves_all_applied_state_and_cache(
     widget = _gitdag(app_context, managed_qobject, monkeypatch)
     factory = dag.CommitFactory()
     commit = _commit(app_context, factory, "A")
-    widget._apply_history_result((commit,))
+    widget._apply_history_result((commit,), _graph_result((commit,)))
     qapp.processEvents()
     widget.selection = widget.old_selection = [commit]
     widget.last_successful_cache_key = ("old", 1, False)
@@ -978,6 +1294,85 @@ def test_failure_preserves_all_applied_state_and_cache(
         list(widget.old_oids),
     )
     assert after == before
+
+
+@pytest.mark.parametrize("outcome", ["failure", "stale", "stop"])
+def test_partial_real_reader_outcomes_preserve_last_successful_view(
+    outcome, qapp, app_context, managed_qobject, monkeypatch
+):
+    factory = dag.CommitFactory()
+    replacement = _commit(app_context, factory, "replacement")
+    partial_read = threading.Event()
+    release = threading.Event()
+
+    class PartialReader:
+        returncode = 0
+        error = ""
+
+        def __init__(self, _context, _params):
+            pass
+
+        def get(self):
+            yield replacement
+            partial_read.set()
+            release.wait()
+            if outcome == "failure":
+                self.returncode = 128
+                self.error = "fatal after partial read"
+
+        def get_worktree_commits(self):
+            return (None, None)
+
+    monkeypatch.setattr("cola.widgets.dag.dag.RepoReader", PartialReader)
+    widget = _real_gitdag(app_context, managed_qobject)
+    existing_factory = dag.CommitFactory()
+    existing = _commit(app_context, existing_factory, "existing")
+    widget._apply_history_result((existing,), _graph_result((existing,)))
+    widget.selection = widget.old_selection = [existing]
+    widget.last_successful_cache_key = ("existing", 1, False)
+    before = (
+        list(widget.commit_list),
+        dict(widget.commits),
+        dict(widget.treewidget.oidmap),
+        dict(widget.graphview.items),
+        list(widget.selection),
+        widget.last_successful_cache_key,
+    )
+
+    assert widget.request_history(outcome, 10, False)
+    thread = widget.active_thread
+    assert partial_read.wait(2)
+    assert (
+        list(widget.commit_list),
+        dict(widget.commits),
+        dict(widget.treewidget.oidmap),
+        dict(widget.graphview.items),
+        list(widget.selection),
+        widget.last_successful_cache_key,
+    ) == before
+
+    if outcome == "stale":
+        widget.active_run_id += 1
+        release.set()
+        assert thread.wait(5000)
+    elif outcome == "stop":
+        helper = threading.Thread(target=lambda: (time.sleep(0.05), release.set()))
+        helper.start()
+        widget.stop_and_wait()
+        helper.join(2)
+    else:
+        release.set()
+        assert thread.wait(5000)
+    qapp.processEvents()
+
+    assert (
+        list(widget.commit_list),
+        dict(widget.commits),
+        dict(widget.treewidget.oidmap),
+        dict(widget.graphview.items),
+        list(widget.selection),
+        widget.last_successful_cache_key,
+    ) == before
 
 
 def _real_gitdag(app_context, managed_qobject):
