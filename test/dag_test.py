@@ -1,13 +1,14 @@
 """Tests DAG functionality"""
+import argparse
 from unittest.mock import patch
 
 import pytest
 
+from cola import dag as dag_cli
 from cola.models import dag
 from cola.widgets.dag import _prepare_labels
 
-from .helper import app_context
-from .helper import commit_files
+from .helper import app_context, commit_files
 
 # Prevent unused imports lint errors.
 assert app_context is not None
@@ -21,7 +22,7 @@ e3f5a2d0248de6197d6e0e63c901810b8a9af2f8^Afa5ad6c38be603e2ffd1f9b722a3a5c675f63d
 fa5ad6c38be603e2ffd1f9b722a3a5c675f63de2^A1ba04ad185cf9f04c56c8482e9a73ef1bd35c695^A^ADavid Aguilar^AFri Nov 30 05:19:05 2007 -0800^Adavvid@gmail.com^AAvoid multiple signoffs
 1ba04ad185cf9f04c56c8482e9a73ef1bd35c695^Aad454b189fe5785af397fd6067cf103268b6626e^A^ADavid Aguilar^AFri Nov 30 05:07:47 2007 -0800^Adavvid@gmail.com^Aupdated model/view/controller api
 ad454b189fe5785af397fd6067cf103268b6626e^A^A (tag: refs/tags/v0.0)^ADavid Aguilar^AFri Nov 30 00:03:28 2007 -0800^Adavvid@gmail.com^Afirst cut of ugit
-""".strip().replace(  # noqa
+""".strip().replace(
     '^A', chr(0x01)
 )
 LOG_LINES = LOG_TEXT.split('\n')
@@ -524,3 +525,48 @@ def test_history_result_is_frozen_and_has_exact_graph_contract():
         dag.HistoryResult(7, True, 0, "", ())
     with pytest.raises(AttributeError):
         result.successful = False
+
+
+def test_standalone_parser_preserves_absent_count():
+    assert dag_cli.parse_args([]).count is None
+
+
+def test_standalone_parser_preserves_explicit_product_default_count():
+    assert dag_cli.parse_args(['--count', '1000']).count == 1000
+
+
+def test_standalone_namespace_without_cli_values_preserves_product_defaults():
+    params = dag.DAG('main --', 1000)
+
+    params.set_arguments(dag_cli.parse_args([]))
+
+    assert params.count == 1000
+    assert not params.overridden('count')
+    assert not params.overridden('ref')
+
+
+def test_standalone_namespace_marks_explicit_default_equal_count_override():
+    params = dag.DAG('main --', 1000)
+
+    params.set_arguments(dag_cli.parse_args(['--count', '1000']))
+
+    assert params.count == 1000
+    assert params.overridden('count')
+
+
+def test_standalone_namespace_marks_explicit_default_equal_ref_override():
+    params = dag.DAG('main --', 1000)
+
+    params.set_arguments(dag_cli.parse_args(['main', '--']))
+
+    assert params.ref == 'main --'
+    assert params.overridden('ref')
+
+
+def test_set_arguments_tolerates_namespace_without_count():
+    params = dag.DAG('main --', 1000)
+
+    params.set_arguments(argparse.Namespace(args=[]))
+
+    assert params.count == 1000
+    assert not params.overridden('count')

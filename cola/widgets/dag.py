@@ -1721,30 +1721,55 @@ class CommitHistoryWidget(QtWidgets.QWidget):
             'log': log_state,
         }
 
+    @staticmethod
+    def is_valid_state(state):
+        """Return whether state can be applied without coercion."""
+        if not isinstance(state, dict):
+            return False
+        ref = state.get('ref', '')
+        count = state.get('count')
+        display_status = state.get('display_status', False)
+        display_inline_graph = state.get('display_inline_graph', False)
+        if not (
+            isinstance(ref, str)
+            and isinstance(count, int)
+            and not isinstance(count, bool)
+            and 1 <= count <= 9_999_999
+            and isinstance(display_status, bool)
+            and isinstance(display_inline_graph, bool)
+        ):
+            return False
+        log_state = state.get('log')
+        if log_state is None:
+            return True
+        if not isinstance(log_state, dict):
+            return False
+        column_widths = log_state.get('column_widths')
+        return isinstance(column_widths, (list, tuple)) and all(
+            isinstance(width, int) and not isinstance(width, bool)
+            for width in column_widths
+        )
+
     def apply_state(self, state):
-        """Apply history-child state independently of any main window."""
-        result = True
-        try:
-            ref = state.get('ref', get(self.revtext))
-            count = state['count']
-        except (KeyError, TypeError, ValueError, AttributeError):
-            ref = get(self.revtext)
-            count = get(self.maxresults)
-            result = False
+        """Validate and atomically apply history-child state."""
+        if not self.is_valid_state(state):
+            return False
+
+        ref = state.get('ref', get(self.revtext))
+        count = state['count']
         display_status = state.get(
             'display_status', self.display_status_action.isChecked()
         )
-        self.set_values(ref, count, display_status)
-
         display_inline_graph = state.get('display_inline_graph', True)
+        log_state = state.get('log')
+
+        self.set_values(ref, count, display_status)
         self.treewidget.display_inline_graph(display_inline_graph)
         with qtutils.BlockSignals(self.display_inline_graph_action):
             self.display_inline_graph_action.setChecked(display_inline_graph)
-
-        log_state = state.get('log')
-        if log_state:
+        if log_state is not None:
             self.treewidget.apply_state(log_state)
-        return result
+        return True
 
     def close_popup(self):
         self.revtext.close_popup()
@@ -1975,9 +2000,9 @@ class GitDAG(standard.MainWindow):
             self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
-        """Store persistent window state plus delegated flat history state."""
+        """Store persistent window state plus canonical nested history state."""
         state = standard.MainWindow.export_state(self)
-        state.update(self.historywidget.export_state())
+        state['history'] = self.historywidget.export_state()
         state['word_wrap'] = self.diffwidget.options.enable_word_wrapping.isChecked()
         state['intraline_diff_preset'] = self.diffwidget.options.intraline_diff_preset()
         state[
@@ -1986,44 +2011,133 @@ class GitDAG(standard.MainWindow):
         return state
 
     def apply_state(self, state):
-        """Apply persistent GUI state without owning history-child state."""
-        result = standard.MainWindow.apply_state(self, state)
-        history_state = dict(state)
-        try:
-            count = state['count']
-            if self.params.overridden('count'):
-                count = self.params.count
-        except (KeyError, TypeError, ValueError, AttributeError):
-            count = self.params.count
-            result = False
-        history_state['count'] = count
-        try:
-            ref = state.get('ref', self.params.ref)
-            if self.params.overridden('ref'):
-                ref = self.params.ref
-        except (TypeError, ValueError, AttributeError):
-            ref = self.params.ref
-            result = False
-        history_state['ref'] = ref
+        """Atomically apply window state and migrated history state."""
+        if not isinstance(state, dict):
+            return False
+        if 'history' in state:
+            nested_history = state['history']
+            if not isinstance(nested_history, dict):
+                return False
+            history_state = dict(nested_history)
+        else:
+            history_keys = (
+                'ref',
+                'count',
+                'display_inline_graph',
+                'display_status',
+                'log',
+            )
+            history_state = {key: state[key] for key in history_keys if key in state}
+
+        if not self.historywidget.is_valid_state(history_state):
+            return False
+        if self.params.overridden('count'):
+            history_state['count'] = self.params.count
+        if self.params.overridden('ref'):
+            history_state['ref'] = self.params.ref
         history_state.setdefault('display_status', True)
-        if not self.historywidget.apply_state(history_state):
-            result = False
-        ref = get(self.historywidget.revtext)
-        self.params.set_ref(ref)
-        self.params.set_count(get(self.historywidget.maxresults))
-        self.params.set_display_status(
-            get(self.historywidget.display_status_action)
+        if not self.historywidget.is_valid_state(history_state):
+            return False
+
+        string_fields = ('geometry', 'windowstate', 'intraline_diff_preset')
+        bool_fields = (
+            'lock_layout',
+            'word_wrap',
+            'intraline_diff_timing',
+        )
+        numeric_fields = ('width', 'height', 'x', 'y')
+        if any(
+            key in state and not isinstance(state[key], str)
+            for key in string_fields
+        ):
+            return False
+        if any(
+            key in state and not isinstance(state[key], bool) for key in bool_fields
+        ):
+            return False
+        if any(
+            key in state
+            and state[key] is not None
+            and not isinstance(state[key], (int, str))
+            for key in numeric_fields
+        ):
+            return False
+
+        window_keys = (
+            'geometry',
+            'width',
+            'height',
+            'x',
+            'y',
+            'windowstate',
+            'lock_layout',
+        )
+        apply_window = any(key in state for key in window_keys)
+        previous_window_state = standard.MainWindow.export_state(self)
+        previous_lock_action = self.lock_layout_action.isChecked()
+        previous_history_state = self.historywidget.export_state()
+        previous_params = (
+            self.params.ref,
+            self.params.count,
+            self.params.display_status,
+        )
+        previous_word_wrap = (
+            self.diffwidget.options.enable_word_wrapping.isChecked()
+        )
+        previous_intraline_preset = (
+            self.diffwidget.options.intraline_diff_preset()
+        )
+        previous_intraline_timing = (
+            self.diffwidget.options.intraline_diff_timing.isChecked()
         )
 
-        self.lock_layout_action.setChecked(state.get('lock_layout', False))
-        self.diffwidget.set_word_wrapping(state.get('word_wrap', False), update=True)
-        intraline_diff_preset = state.get(
-            'intraline_diff_preset', diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
-        )
-        self.diffwidget.set_intraline_diff_preset(intraline_diff_preset, update=True)
-        intraline_diff_timing = bool(state.get('intraline_diff_timing', False))
-        self.set_intraline_diff_timing(intraline_diff_timing, update=True)
-        return result
+        def rollback():
+            if apply_window:
+                standard.MainWindow.apply_state(self, previous_window_state)
+            self.historywidget.apply_state(previous_history_state)
+            self.params.set_ref(previous_params[0])
+            self.params.set_count(previous_params[1])
+            self.params.set_display_status(previous_params[2])
+            self.diffwidget.set_word_wrapping(previous_word_wrap, update=True)
+            self.diffwidget.set_intraline_diff_preset(
+                previous_intraline_preset, update=True
+            )
+            self.set_intraline_diff_timing(
+                previous_intraline_timing, update=True
+            )
+            self.lock_layout_action.setChecked(previous_lock_action)
+
+        try:
+            if apply_window and not standard.MainWindow.apply_state(self, state):
+                rollback()
+                return False
+
+            word_wrap = state.get('word_wrap', False)
+            intraline_diff_preset = state.get(
+                'intraline_diff_preset',
+                diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID,
+            )
+            intraline_diff_timing = state.get('intraline_diff_timing', False)
+            self.diffwidget.set_word_wrapping(word_wrap, update=True)
+            self.diffwidget.set_intraline_diff_preset(
+                intraline_diff_preset, update=True
+            )
+            self.set_intraline_diff_timing(intraline_diff_timing, update=True)
+
+            if not self.historywidget.apply_state(history_state):
+                rollback()
+                return False
+            ref = get(self.historywidget.revtext)
+            self.params.set_ref(ref)
+            self.params.set_count(get(self.historywidget.maxresults))
+            self.params.set_display_status(
+                get(self.historywidget.display_status_action)
+            )
+            self.lock_layout_action.setChecked(self.lock_layout)
+        except Exception:
+            rollback()
+            return False
+        return True
 
     def set_intraline_diff_preset(self, preset_id, update=False):
         self.diffwidget.set_intraline_diff_preset(preset_id, update=update)

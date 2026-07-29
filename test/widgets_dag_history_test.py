@@ -7,8 +7,11 @@ from typing import ClassVar
 
 import pytest
 
+from cola import dag as dag_cli
+from cola import main as main_cli
 from cola.models import dag
 from cola.models import graph as graph_model
+from cola.widgets import standard
 from cola.widgets.dag import (
     COMMIT_ROLE,
     GRAPH_PREV_ROW_ROLE,
@@ -561,16 +564,46 @@ def test_history_widget_state_round_trips_canonically_between_children(
     assert not ({"windowstate", "lock_layout", "graph", "diff", "files"} & state.keys())
 
 
-def test_gitdag_ref_override_wins_over_saved_history_state(
-    qapp, app_context, managed_qobject
-):
+def _new_gitdag(app_context, managed_qobject, params):
     app_context.settings.get_gui_state.return_value = {}
     app_context.app.theme.background_color_rgb.return_value = "#ffffff"
     app_context.app.theme.selection_color.return_value = QtGui.QColor("#4488cc")
-    params = dag.DAG("cli-ref", 1000)
-    params.overrides["ref"] = "cli-ref"
-    widget = managed_qobject(GitDAG(app_context, params))
-    state = {
+    return managed_qobject(GitDAG(app_context, params))
+
+
+def _stored_history_state(history, nested):
+    return {"history": history} if nested else dict(history)
+
+
+def test_gitdag_exports_canonical_nested_history_state(
+    qapp, app_context, managed_qobject
+):
+    widget = _new_gitdag(
+        app_context, managed_qobject, dag.DAG("HEAD", 1000)
+    )
+    widget.historywidget.set_values("stored-ref", 321, False)
+
+    state = widget.export_state()
+
+    assert state["history"] == widget.historywidget.export_state()
+    assert not (
+        {"ref", "count", "display_inline_graph", "display_status", "log"}
+        & state.keys()
+    )
+    assert {
+        "windowstate",
+        "word_wrap",
+        "intraline_diff_preset",
+        "intraline_diff_timing",
+    } <= state.keys()
+
+
+def test_gitdag_applies_and_round_trips_nested_history_state(
+    qapp, app_context, managed_qobject
+):
+    params = dag.DAG("HEAD", 1000)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    history = {
         "ref": "stored-ref",
         "count": 321,
         "display_inline_graph": False,
@@ -578,39 +611,411 @@ def test_gitdag_ref_override_wins_over_saved_history_state(
         "log": {"column_widths": [240, 120]},
     }
 
-    widget.apply_state(state)
+    widget.apply_state({"history": history})
+    exported = widget.export_state()
 
-    assert widget.historywidget.revtext.text() == "cli-ref"
-    assert params.ref == "cli-ref"
+    assert params.ref == "stored-ref"
     assert params.count == 321
+    assert params.display_status is False
+    assert exported["history"] == history
+    assert not (set(history) & exported.keys())
 
 
-def test_gitdag_round_trips_legacy_flat_history_state(
+def test_gitdag_migrates_legacy_flat_history_state_to_canonical_nested_state(
     qapp, app_context, managed_qobject
 ):
-    app_context.settings.get_gui_state.return_value = {}
-    app_context.app.theme.background_color_rgb.return_value = "#ffffff"
-    app_context.app.theme.selection_color.return_value = QtGui.QColor("#4488cc")
     params = dag.DAG("HEAD", 1000)
-    widget = managed_qobject(GitDAG(app_context, params))
-    state = {
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    legacy = {
+        "ref": "legacy-ref",
         "count": 321,
         "display_inline_graph": False,
         "display_status": False,
-        "log": {"column_widths": [240, 120, 999]},
+        "log": {"column_widths": [240, 120]},
     }
 
-    widget.apply_state(state)
+    widget.apply_state(legacy)
     exported = widget.export_state()
 
+    assert params.ref == "legacy-ref"
     assert params.count == 321
     assert params.display_status is False
-    assert widget.historywidget.display_status_action.isChecked() is False
-    assert exported["count"] == 321
-    assert exported["display_inline_graph"] is False
-    assert exported["display_status"] is False
-    assert widget.historywidget.treewidget.itemDelegateForColumn(0) is None
-    assert exported["log"]["column_widths"][:2] == [240, 120]
+    assert exported["history"] == legacy
+    assert not (set(legacy) & exported.keys())
+
+
+@pytest.mark.parametrize("nested", (False, True))
+@pytest.mark.parametrize(
+    ("field", "malformed"),
+    (
+        ("count", None),
+        ("count", "oops"),
+        ("count", {}),
+        ("count", True),
+        ("ref", 123),
+        ("display_inline_graph", "oops"),
+        ("display_status", {}),
+        ("log", "oops"),
+        ("log", {"column_widths": "oops"}),
+        ("log", {"column_widths": [240, {}]}),
+    ),
+)
+def test_gitdag_rejects_malformed_flat_and_nested_history_state(
+    field, malformed, nested, qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+    history = dict(before)
+    history[field] = malformed
+
+    result = widget.apply_state(_stored_history_state(history, nested))
+
+    assert result is False
+    assert widget.historywidget.export_state() == before
+    assert params.ref == before["ref"]
+    assert params.count == before["count"]
+    assert params.display_status == before["display_status"]
+
+
+@pytest.mark.parametrize("nested_history", (None, "oops", [], True))
+def test_gitdag_rejects_non_dict_nested_history_state(
+    nested_history, qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+
+    result = widget.apply_state({"history": nested_history})
+
+    assert result is False
+    assert widget.historywidget.export_state() == before
+    assert (params.ref, params.count, params.display_status) == (
+        before["ref"],
+        before["count"],
+        before["display_status"],
+    )
+
+
+def test_gitdag_rejects_malformed_nested_state_without_legacy_fallback(
+    qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+    state = dict(before)
+    state["ref"] = "flat-ref"
+    state["count"] = 123
+    state["history"] = "malformed"
+
+    result = widget.apply_state(state)
+
+    assert result is False
+    assert widget.historywidget.export_state() == before
+    assert (params.ref, params.count) == (before["ref"], before["count"])
+
+
+def test_gitdag_rejects_history_state_missing_count_atomically(
+    qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+    history = dict(before)
+    history.pop("count")
+    history["ref"] = "stored-ref"
+
+    result = widget.apply_state({"history": history})
+
+    assert result is False
+    assert widget.historywidget.export_state() == before
+    assert (params.ref, params.count) == (before["ref"], before["count"])
+
+
+@pytest.mark.parametrize(
+    ("field", "malformed", "override_value"),
+    (
+        ("count", "malformed", 1000),
+        ("ref", 123, "main --"),
+    ),
+)
+def test_gitdag_rejects_malformed_state_before_cli_override(
+    field, malformed, override_value, qapp, app_context, managed_qobject
+):
+    params = dag.DAG("main --", 1000)
+    params.overrides[field] = override_value
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+    history = dict(before)
+    history[field] = malformed
+    history["display_status"] = not before["display_status"]
+
+    result = widget.apply_state({"history": history})
+
+    assert result is False
+    assert widget.historywidget.export_state() == before
+    assert (params.ref, params.count) == (before["ref"], before["count"])
+
+
+def test_gitdag_rejects_malformed_history_before_window_state_mutation(
+    qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before_lock = widget.lock_layout
+    before_action = widget.lock_layout_action.isChecked()
+
+    result = widget.apply_state({"history": "malformed", "lock_layout": True})
+
+    assert result is False
+    assert widget.lock_layout is before_lock
+    assert widget.lock_layout_action.isChecked() is before_action
+
+
+def test_gitdag_rolls_back_failed_window_apply_before_history_and_params(
+    qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+    history = dict(before)
+    history["ref"] = "stored-ref"
+    history["count"] = 123
+
+    result = widget.apply_state({"history": history, "lock_layout": True})
+
+    assert result is False
+    assert widget.historywidget.export_state() == before
+    assert (params.ref, params.count) == (before["ref"], before["count"])
+    assert widget.lock_layout is False
+    assert widget.lock_layout_action.isChecked() is False
+
+
+def test_history_widget_missing_inline_state_uses_legacy_true_default(
+    qapp, app_context, managed_qobject
+):
+    widget = managed_qobject(
+        CommitHistoryWidget(
+            app_context, ref="current-ref", count=777, display_status=True
+        )
+    )
+    assert widget.display_inline_graph_action.isChecked() is False
+
+    result = widget.apply_state({"ref": "saved-ref", "count": 123})
+
+    assert result is True
+    assert widget.display_inline_graph_action.isChecked() is True
+
+
+def test_gitdag_rejects_malformed_windowstate_before_any_commit(
+    qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before_history = widget.historywidget.export_state()
+    before_geometry = bytes(widget.saveGeometry())
+    state = widget.export_state()
+    state["history"]["ref"] = "stored-ref"
+    state["windowstate"] = {}
+
+    result = widget.apply_state(state)
+
+    assert result is False
+    assert widget.historywidget.export_state() == before_history
+    assert (params.ref, params.count) == (before_history["ref"], before_history["count"])
+    assert bytes(widget.saveGeometry()) == before_geometry
+
+
+def test_gitdag_rejects_malformed_diff_option_before_history_commit(
+    qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+    history = dict(before)
+    history["ref"] = "stored-ref"
+
+    result = widget.apply_state(
+        {"history": history, "intraline_diff_preset": []}
+    )
+
+    assert result is False
+    assert widget.historywidget.export_state() == before
+    assert (params.ref, params.count) == (before["ref"], before["count"])
+
+
+@pytest.mark.parametrize("count", (0, -1, 10_000_000, 2**63))
+def test_history_widget_rejects_count_outside_spinbox_range(
+    count, qapp, app_context, managed_qobject
+):
+    widget = managed_qobject(
+        CommitHistoryWidget(
+            app_context, ref="current-ref", count=777, display_status=True
+        )
+    )
+    before = widget.export_state()
+
+    result = widget.apply_state({"ref": "stored-ref", "count": count})
+
+    assert result is False
+    assert widget.export_state() == before
+
+
+def test_gitdag_rolls_back_unexpected_base_apply_exception(
+    monkeypatch, qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+    state = widget.export_state()
+    state["history"]["ref"] = "stored-ref"
+    original_apply_state = standard.MainWindow.apply_state
+    calls = 0
+
+    def fail_once(window, applied_state):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            window.lock_layout = True
+            raise RuntimeError("injected base failure")
+        return original_apply_state(window, applied_state)
+
+    monkeypatch.setattr(standard.MainWindow, "apply_state", fail_once)
+
+    result = widget.apply_state(state)
+
+    assert result is False
+    assert calls == 2
+    assert widget.lock_layout is False
+    assert widget.historywidget.export_state() == before
+    assert (params.ref, params.count) == (before["ref"], before["count"])
+
+
+def test_gitdag_rolls_back_unexpected_diff_apply_exception(
+    monkeypatch, qapp, app_context, managed_qobject
+):
+    params = dag.DAG("current-ref", 777)
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    before = widget.historywidget.export_state()
+    before_word_wrap = (
+        widget.diffwidget.options.enable_word_wrapping.isChecked()
+    )
+    history = dict(before)
+    history["ref"] = "stored-ref"
+    original_set_preset = widget.diffwidget.set_intraline_diff_preset
+    calls = 0
+
+    def fail_once(preset, update=False):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise RuntimeError("injected diff failure")
+        return original_set_preset(preset, update=update)
+
+    monkeypatch.setattr(widget.diffwidget, "set_intraline_diff_preset", fail_once)
+
+    result = widget.apply_state(
+        {"history": history, "word_wrap": True}
+    )
+
+    assert result is False
+    assert calls == 2
+    assert widget.historywidget.export_state() == before
+    assert (params.ref, params.count) == (before["ref"], before["count"])
+    assert (
+        widget.diffwidget.options.enable_word_wrapping.isChecked()
+        is before_word_wrap
+    )
+
+
+@pytest.mark.parametrize(
+    "state",
+    (
+        None,
+        "oops",
+        [],
+        True,
+        {"ref": 123, "count": 777},
+        {"ref": "current-ref", "count": "oops"},
+        {"ref": "current-ref", "count": 777, "log": "oops"},
+        {
+            "ref": "current-ref",
+            "count": 777,
+            "log": {"column_widths": [240, {}]},
+        },
+    ),
+)
+def test_history_widget_rejects_malformed_direct_child_state(
+    state, qapp, app_context, managed_qobject
+):
+    widget = managed_qobject(
+        CommitHistoryWidget(
+            app_context, ref="current-ref", count=777, display_status=True
+        )
+    )
+    before = widget.export_state()
+
+    result = widget.apply_state(state)
+
+    assert result is False
+    assert widget.export_state() == before
+
+
+@pytest.mark.parametrize(
+    ("parser", "argv"),
+    (
+        (dag_cli.parse_args, ["--count", "1000"]),
+        (main_cli.parse_args, ["dag", "--count", "1000"]),
+    ),
+)
+@pytest.mark.parametrize("nested", (False, True))
+def test_explicit_parser_count_wins_over_flat_and_nested_stored_count(
+    parser, argv, nested, qapp, app_context, managed_qobject
+):
+    params = dag.DAG("main --", 1000)
+    params.set_arguments(parser(argv))
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    history = {
+        "ref": "stored-ref",
+        "count": 500,
+        "display_inline_graph": True,
+        "display_status": False,
+        "log": {"column_widths": [240, 120]},
+    }
+
+    widget.apply_state(_stored_history_state(history, nested))
+
+    assert params.count == 1000
+    assert widget.historywidget.maxresults.value() == 1000
+
+
+@pytest.mark.parametrize(
+    ("parser", "argv"),
+    (
+        (dag_cli.parse_args, ["main", "--"]),
+        (main_cli.parse_args, ["dag", "main", "--"]),
+    ),
+)
+@pytest.mark.parametrize("nested", (False, True))
+def test_explicit_parser_current_ref_wins_over_flat_and_nested_foreign_ref(
+    parser, argv, nested, qapp, app_context, managed_qobject
+):
+    params = dag.DAG("main --", 1000)
+    params.set_arguments(parser(argv))
+    widget = _new_gitdag(app_context, managed_qobject, params)
+    history = {
+        "ref": "foreign-ref",
+        "count": 500,
+        "display_inline_graph": True,
+        "display_status": False,
+        "log": {"column_widths": [240, 120]},
+    }
+
+    widget.apply_state(_stored_history_state(history, nested))
+
+    assert params.ref == "main --"
+    assert widget.historywidget.revtext.text() == "main --"
+    assert params.count == 500
 
 
 def test_mainview_accepts_legacy_version_2_dock_state(

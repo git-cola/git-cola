@@ -158,7 +158,7 @@ def add_dag_command(subparser: argparse._SubParsersAction) -> None:
         '--count',
         metavar='<count>',
         type=int,
-        default=1000,
+        default=None,
         help='number of commits to display',
     )
     parser.add_argument(

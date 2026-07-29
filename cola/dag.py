@@ -33,7 +33,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         '--max-count',
         metavar='<count>',
         type=int,
-        default=1000,
+        default=None,
         help='number of commits to display',
     )
     parser.add_argument(

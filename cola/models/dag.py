@@ -90,13 +90,15 @@ class DAG:
     def set_arguments(self, args) -> None:
         if args is None:
             return
-        if self.set_count(args.count):
-            self.overrides['count'] = args.count
+        count = getattr(args, 'count', None)
+        if count is not None:
+            self.set_count(count)
+            self.overrides['count'] = count
 
         if hasattr(args, 'args') and args.args:
             ref = core.list2cmdline(args.args)
-            if self.set_ref(ref):
-                self.overrides['ref'] = ref
+            self.set_ref(ref)
+            self.overrides['ref'] = ref
 
     def set_display_status(self, enabled: bool) -> None:
         """Should we display the worktree status?"""
