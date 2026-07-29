@@ -69,6 +69,32 @@ jobs:
       - name: Test the garden installation method
         run: garden install -vv -D prefix=dist
 
+  history-paint:
+    name: History paint (${{ matrix.binding }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        binding: [pyqt5, pyqt6]
+    env:
+      QT_QPA_PLATFORM: offscreen
+      QT_API: ${{ matrix.binding }}
+      QT_OPENGL: software
+      LIBGL_ALWAYS_SOFTWARE: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install system paint dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libgl1
+      - name: Install test dependencies
+        run: python -m pip install -e ".[testing,${{ matrix.binding }}]"
+      - name: Run semantic history paint smoke tests
+        run: python -B -m pytest test/widgets_dag_history_test.py -k 'semantic_paint_smoke' -q
+
   macos:
     name: macOS
     runs-on: macos-latest

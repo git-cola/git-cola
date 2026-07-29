@@ -681,6 +681,311 @@ def _paint_graph_row(tree, row_color, palette, selected=False):
     return image
 
 
+_SEMANTIC_PAINT_SCENARIOS = (
+    ("linear", [("root", []), ("tip", ["root"])], None),
+    ("fork", [("root", []), ("left", ["root"]), ("right", ["root"])], None),
+    (
+        "merge",
+        [
+            ("root", []),
+            ("left", ["root"]),
+            ("right", ["root"]),
+            ("merge", ["left", "right"]),
+        ],
+        None,
+    ),
+    ("HEAD", [("root", []), ("tip", ["root"])], "tip"),
+)
+
+# This oracle is deliberately independent of build_graph(). A paint test must fail
+# when graph construction drops or rewrites a segment, rather than merely painting
+# whatever topology the builder happens to return.
+_SEMANTIC_TOPOLOGY_ORACLE = {
+    "linear": (
+        ("tip", 0, graph_model.GraphRowColor.NORMAL, ((0, 0, 0),)),
+        ("root", 0, graph_model.GraphRowColor.NORMAL, ()),
+    ),
+    "fork": (
+        ("right", 0, graph_model.GraphRowColor.NORMAL, ((0, 0, 0),)),
+        (
+            "left",
+            1,
+            graph_model.GraphRowColor.NORMAL,
+            ((0, 0, 0), (1, 0, 0)),
+        ),
+        ("root", 0, graph_model.GraphRowColor.NORMAL, ()),
+    ),
+    "merge": (
+        (
+            "merge",
+            0,
+            graph_model.GraphRowColor.MERGE,
+            ((0, 0, 0), (0, 1, 1)),
+        ),
+        (
+            "right",
+            1,
+            graph_model.GraphRowColor.NORMAL,
+            ((0, 0, 0), (1, 1, 1)),
+        ),
+        (
+            "left",
+            0,
+            graph_model.GraphRowColor.NORMAL,
+            ((1, 1, 1), (0, 1, 1)),
+        ),
+        ("root", 1, graph_model.GraphRowColor.NORMAL, ()),
+    ),
+    "HEAD": (
+        ("tip", 0, graph_model.GraphRowColor.HEAD, ((0, 0, 0),)),
+        ("root", 0, graph_model.GraphRowColor.NORMAL, ()),
+    ),
+}
+
+
+def _region_has_visible_pixel(image, rect):
+    clipped = rect.intersected(image.rect())
+    return any(
+        image.pixelColor(x, y).alpha() > 0
+        for y in range(clipped.top(), clipped.bottom() + 1)
+        for x in range(clipped.left(), clipped.right() + 1)
+    )
+
+
+def _colors_are_close(actual, expected, tolerance=2):
+    return all(
+        abs(actual_channel - expected_channel) <= tolerance
+        for actual_channel, expected_channel in zip(
+            actual.getRgb(), expected.getRgb(), strict=True
+        )
+    )
+
+
+def _region_has_color(image, rect, expected, tolerance=2):
+    clipped = rect.intersected(image.rect())
+    return any(
+        _colors_are_close(image.pixelColor(x, y), expected, tolerance)
+        for y in range(clipped.top(), clipped.bottom() + 1)
+        for x in range(clipped.left(), clipped.right() + 1)
+    )
+
+
+def _render_semantic_graph(
+    delegate, qapp, palette, graph_result, selected_row=None
+):
+    model = QtGui.QStandardItemModel()
+    row_rects = []
+    margin = 8
+    width = 160
+    for row_index, row in enumerate(graph_result.rows):
+        item = QtGui.QStandardItem()
+        item.setData(row, GRAPH_ROW_ROLE)
+        if row_index:
+            item.setData(graph_result.rows[row_index - 1], GRAPH_PREV_ROW_ROLE)
+        model.appendRow(item)
+        row_rects.append(
+            QtCore.QRect(
+                margin,
+                margin + row_index * GraphDelegate.ROW_HEIGHT,
+                width,
+                GraphDelegate.ROW_HEIGHT,
+            )
+        )
+
+    image = QtGui.QImage(
+        width + margin * 3,
+        len(graph_result.rows) * GraphDelegate.ROW_HEIGHT + margin * 2,
+        QtGui.QImage.Format_ARGB32_Premultiplied,
+    )
+    image.fill(QtCore.Qt.transparent)
+    painter = QtGui.QPainter(image)
+    try:
+        for row_index, rect in enumerate(row_rects):
+            option = QtWidgets.QStyleOptionViewItem()
+            option.rect = rect
+            option.palette = QtGui.QPalette(palette)
+            option.font = qapp.font()
+            option.fontMetrics = QtGui.QFontMetrics(option.font)
+            if row_index == selected_row:
+                option.state |= QtWidgets.QStyle.State_Selected
+            delegate.paint(painter, option, model.index(row_index, 0))
+    finally:
+        painter.end()
+    return image, row_rects, model
+
+
+@pytest.mark.parametrize(
+    "palette",
+    [
+        _palette(
+            "#f4f5f7", "#202124", "#ffffff", "#edf0f4", "#3268b2", "#ffffff"
+        ),
+        _palette(
+            "#202328", "#e8eaed", "#17191d", "#292d33", "#6ea8fe", "#101216"
+        ),
+    ],
+    ids=("light", "dark"),
+)
+@pytest.mark.parametrize(
+    ("scenario", "commits", "head_oid"),
+    _SEMANTIC_PAINT_SCENARIOS,
+    ids=("linear", "fork", "merge", "HEAD"),
+)
+def test_semantic_paint_smoke_renders_graph_regions_without_touching_background(
+    qapp, managed_qobject, palette, scenario, commits, head_oid
+):
+    graph_result = graph_model.build_graph(commits, head_oid=head_oid)
+    expected_rows = _SEMANTIC_TOPOLOGY_ORACLE[scenario]
+
+    # Assert the complete semantic topology before painting. In particular, this
+    # catches a missing linear edge and either of the merge commit's two edges.
+    assert [row.commit_oid for row in graph_result.rows] == [
+        expected[0] for expected in expected_rows
+    ]
+    assert [
+        (
+            row.commit_column,
+            row.color,
+            tuple(
+                (edge.from_column, edge.to_column, edge.color_index)
+                for edge in row.edges_to_parent
+            ),
+        )
+        for row in graph_result.rows
+    ] == [(column, color, edges) for _, column, color, edges in expected_rows]
+
+    delegate = managed_qobject(GraphDelegate())
+    image, row_rects, _model = _render_semantic_graph(
+        delegate, qapp, palette, graph_result
+    )
+    style = inline_graph_style(palette)
+
+    assert not _region_has_visible_pixel(
+        image, QtCore.QRect(0, 0, image.width(), row_rects[0].top())
+    )
+    assert not _region_has_visible_pixel(
+        image,
+        QtCore.QRect(
+            row_rects[0].right() + 1,
+            0,
+            image.width() - row_rects[0].right() - 1,
+            image.height(),
+        ),
+    )
+
+    node_guard = GraphDelegate.DOT_RADIUS + max(2, GraphDelegate.EDGE_WIDTH)
+    for row_index, (row, expected) in enumerate(
+        zip(graph_result.rows, expected_rows, strict=True)
+    ):
+        rect = row_rects[row_index]
+        center_x = (
+            rect.left()
+            + row.commit_column * GraphDelegate.LANE_WIDTH
+            + GraphDelegate.LANE_WIDTH // 2
+        )
+        center_y = rect.center().y()
+        assert _region_has_visible_pixel(
+            image, QtCore.QRect(center_x - 2, center_y - 2, 5, 5)
+        )
+
+        for from_column, to_column, color_index in expected[3]:
+            from_x = (
+                rect.left()
+                + from_column * GraphDelegate.LANE_WIDTH
+                + GraphDelegate.LANE_WIDTH // 2
+            )
+            to_x = (
+                rect.left()
+                + to_column * GraphDelegate.LANE_WIDTH
+                + GraphDelegate.LANE_WIDTH // 2
+            )
+            lane_color = style.lane_colors[color_index]
+            if from_column == to_column:
+                # Tiny outgoing and incoming samples are on opposite row edges,
+                # farther from both commit nodes than either pen can reach.
+                outgoing_y = rect.bottom() - 2
+                assert outgoing_y - 1 - center_y > node_guard
+                assert _region_has_color(
+                    image,
+                    QtCore.QRect(from_x - 1, outgoing_y - 1, 3, 3),
+                    lane_color,
+                )
+            else:
+                # At t=0.5 this cubic is halfway between both lanes and row
+                # halves, semantically on the diagonal and away from either node.
+                diagonal_x = round((from_x + to_x) / 2)
+                diagonal_y = round((center_y + rect.bottom() + 1) / 2)
+                assert (
+                    (abs(diagonal_x - center_x) - 1) ** 2
+                    + (abs(diagonal_y - center_y) - 1) ** 2
+                ) ** 0.5 > node_guard
+                assert _region_has_color(
+                    image,
+                    QtCore.QRect(diagonal_x - 1, diagonal_y - 1, 3, 3),
+                    lane_color,
+                )
+
+            next_rect = row_rects[row_index + 1]
+            incoming_y = next_rect.top() + 2
+            assert next_rect.center().y() - (incoming_y + 1) > node_guard
+            assert _region_has_color(
+                image,
+                QtCore.QRect(to_x - 1, incoming_y - 1, 3, 3),
+                lane_color,
+            )
+
+    if scenario == "linear":
+        selected_image, selected_rects, selected_model = _render_semantic_graph(
+            delegate, qapp, palette, graph_result, selected_row=0
+        )
+        selected_rect = selected_rects[0]
+        sample_x = selected_rect.right() - 4
+        sample_y = selected_rect.center().y()
+        graph_right = selected_rect.left() + (
+            graph_result.max_columns * GraphDelegate.LANE_WIDTH
+        )
+        assert sample_x > graph_right + 8
+        assert all(
+            selected_model.index(row, 0).data(QtCore.Qt.DisplayRole) is None
+            and selected_model.index(row, 0).data(COMMIT_ROLE) is None
+            for row in range(selected_model.rowCount())
+        )
+        assert selected_image.pixelColor(sample_x, sample_y).rgba() == (
+            palette.highlight().color().rgba()
+        )
+        assert not _region_has_visible_pixel(
+            selected_image,
+            QtCore.QRect(
+                selected_rect.right() + 1,
+                0,
+                selected_image.width() - selected_rect.right() - 1,
+                selected_image.height(),
+            ),
+        )
+
+    if scenario == "HEAD":
+        head_index = next(
+            index
+            for index, row in enumerate(graph_result.rows)
+            if row.color == graph_model.GraphRowColor.HEAD
+        )
+        head_row = graph_result.rows[head_index]
+        head_rect = row_rects[head_index]
+        center_x = (
+            head_rect.left()
+            + head_row.commit_column * GraphDelegate.LANE_WIDTH
+            + GraphDelegate.LANE_WIDTH // 2
+        )
+        center_y = head_rect.center().y()
+        fill_region = QtCore.QRect(center_x - 2, center_y - 2, 5, 5)
+        annulus_region = QtCore.QRect(
+            center_x + GraphDelegate.DOT_RADIUS + 1, center_y - 2, 3, 5
+        )
+        assert not fill_region.intersects(annulus_region)
+        assert _region_has_color(image, fill_region, style.head_fill)
+        assert _region_has_color(image, annulus_region, style.head_accent)
+
+
 def test_graph_delegate_offscreen_nodes_selection_lanes_and_size(
     qapp, app_context, managed_qobject, monkeypatch
 ):
