@@ -1385,20 +1385,18 @@ class _HistoryCacheMetadata:
     display_status: bool
 
 
-class GitDAG(standard.MainWindow):
-    """The git-dag widget."""
+class CommitHistoryWidget(QtWidgets.QWidget):
+    """Reusable commit history controls, tree, and loading state."""
 
     commits_selected = Signal(object)
+    commits_loaded = Signal(object)
+    controls_changed = Signal(object)
 
-    def __init__(self, context, params, parent=None):
+    def __init__(
+        self, context, ref='--all', count=1000, display_status=False, parent=None
+    ):
         super().__init__(parent)
-
-        self.setMinimumSize(420, 420)
-
-        # change when widgets are added/removed
-        self.widget_version = 2
         self.context = context
-        self.params = params
         self.model = context.model
 
         self.commits = {}
@@ -1411,7 +1409,6 @@ class GitDAG(standard.MainWindow):
         self.old_display_status = None
         self.last_successful_cache_key = None
         self.force_refresh = False
-        self._widgets_initialized = False
 
         self.active_thread = None
         self.active_request = None
@@ -1424,131 +1421,17 @@ class GitDAG(standard.MainWindow):
         self.stopping = False
         self.loading = False
         self.error_status = None
+        self._widgets_initialized = False
+
         self.revtext = GitDagLineEdit(context)
+        self.revtext.setText(ref)
+        self.maxresults = standard.SpinBox(digits=None, maxi=9999999, wrap=True)
+        self.maxresults.setValue(count)
         self.history_error_status = QtWidgets.QLabel()
         self.history_error_status.setObjectName('HistoryErrorStatus')
         self.history_error_status.setStyleSheet('QLabel { color: #c01c28; }')
         self.history_error_status.hide()
-        self.maxresults = standard.SpinBox(digits=None, maxi=9999999, wrap=True)
-
-        self.zoom_out = qtutils.create_action_button(
-            tooltip=N_('Zoom Out'), icon=icons.zoom_out()
-        )
-
-        self.zoom_in = qtutils.create_action_button(
-            tooltip=N_('Zoom In'), icon=icons.zoom_in()
-        )
-
-        self.zoom_to_fit = qtutils.create_action_button(
-            tooltip=N_('Zoom to Fit'), icon=icons.zoom_fit_best()
-        )
-
         self.treewidget = CommitTreeWidget(context, self)
-        self.diffwidget = diff.CommitDiffWidget(context, self, is_commit=True)
-        self.filewidget = filelist.FileWidget(context, self)
-        self.graphview = GraphView(context, self)
-
-        self.treewidget.commits_selected.connect(
-            self.commits_selected, type=Qt.QueuedConnection
-        )
-        self.graphview.commits_selected.connect(
-            self.commits_selected, type=Qt.QueuedConnection
-        )
-
-        self.commits_selected.connect(self.select_commits, type=Qt.QueuedConnection)
-        self.commits_selected.connect(
-            self.diffwidget.commits_selected, type=Qt.QueuedConnection
-        )
-        self.commits_selected.connect(
-            self.filewidget.commits_selected, type=Qt.QueuedConnection
-        )
-        self.commits_selected.connect(
-            self.graphview.select_commits, type=Qt.QueuedConnection
-        )
-        self.commits_selected.connect(
-            self.treewidget.select_commits, type=Qt.QueuedConnection
-        )
-        self.filewidget.files_selected.connect(
-            self.diffwidget.files_selected, type=Qt.QueuedConnection
-        )
-        self.filewidget.difftool_selected.connect(
-            self.difftool_selected, type=Qt.QueuedConnection
-        )
-        self.filewidget.histories_selected.connect(
-            self.histories_selected, type=Qt.QueuedConnection
-        )
-
-        self.proxy = FocusRedirectProxy(
-            self.treewidget, self.graphview, self.filewidget
-        )
-
-        self.treewidget.menu_actions = viewer_actions(self.treewidget, self.proxy)
-        self.graphview.menu_actions = viewer_actions(self.graphview, self.proxy)
-        self.diffwidget_copy_commit = set_icon(
-            icons.copy(),
-            qtutils.add_action(
-                self.diffwidget.diff,
-                N_('Copy Commit'),
-                self.treewidget.copy_to_clipboard,
-                hotkeys.COPY_COMMIT_ID,
-            ),
-        )
-        self.diffwidget.diff.menu_actions.append(self.diffwidget_copy_commit)
-
-        self.controls_layout = qtutils.hbox(
-            defs.no_margin,
-            defs.spacing,
-            self.revtext,
-            self.history_error_status,
-            self.maxresults,
-        )
-        self.controls_layout.setAlignment(self.maxresults, Qt.AlignTop)
-
-        self.controls_widget = QtWidgets.QWidget()
-        self.controls_widget.setLayout(self.controls_layout)
-
-        self.log_dock = qtutils.create_dock(
-            'Log', N_('Log'), self, stretch=False, hide_title=True
-        )
-        self.log_dock.setWidget(self.treewidget)
-        log_dock_titlebar = self.log_dock.titleBarWidget()
-        log_dock_titlebar.add_corner_widget(self.controls_widget)
-
-        self.file_dock = qtutils.create_dock(
-            'Files', N_('Files'), self, hide_title=True
-        )
-        self.file_dock.setWidget(self.filewidget)
-
-        self.diff_panel = diff.DiffPanel(self.diffwidget, self.diffwidget.diff, self)
-        self.diff_options = diff.Options(self.diffwidget)
-        self.diffwidget.set_options(self.diff_options)
-        self.diff_options.hide_advanced_options()
-        self.diff_options.set_diff_type(main.Types.TEXT)
-
-        self.diff_dock = qtutils.create_dock('Diff', N_('Diff'), self, hide_title=True)
-        self.diff_dock.setWidget(self.diff_panel)
-
-        diff_titlebar = self.diff_dock.titleBarWidget()
-        diff_titlebar.add_title_widget(self.diff_options)
-
-        self.graph_controls_layout = qtutils.hbox(
-            defs.no_margin,
-            defs.button_spacing,
-            self.zoom_out,
-            self.zoom_in,
-            self.zoom_to_fit,
-            defs.spacing,
-        )
-
-        self.graph_controls_widget = QtWidgets.QWidget()
-        self.graph_controls_widget.setLayout(self.graph_controls_layout)
-
-        self.graphview_dock = qtutils.create_dock(
-            'Graph', N_('Graph'), self, hide_title=True
-        )
-        self.graphview_dock.setWidget(self.graphview)
-        graph_titlebar = self.graphview_dock.titleBarWidget()
-        graph_titlebar.add_corner_widget(self.graph_controls_widget)
 
         self.display_inline_graph_action = qtutils.add_action_bool(
             self,
@@ -1557,88 +1440,49 @@ class GitDAG(standard.MainWindow):
             False,
         )
         self.display_status_action = qtutils.add_action_bool(
-            self, N_('Display Worktree Status'), self._display_worktree_status, False
-        )
-        self.lock_layout_action = qtutils.add_action_bool(
-            self, N_('Lock Layout'), self.set_lock_layout, False
-        )
-
-        self.refresh_action = qtutils.add_action(
-            self, N_('Refresh'), self.refresh, hotkeys.REFRESH
+            self,
+            N_('Display Worktree Status'),
+            self._display_worktree_status,
+            display_status,
         )
 
-        # Create the application menu
-        self.menubar = QtWidgets.QMenuBar(self)
-        self.setMenuBar(self.menubar)
+        controls_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.spacing,
+            self.revtext,
+            self.history_error_status,
+            self.maxresults,
+        )
+        controls_layout.setAlignment(self.maxresults, Qt.AlignTop)
+        controls_widget = QtWidgets.QWidget(self)
+        controls_widget.setLayout(controls_layout)
+        layout = qtutils.vbox(
+            defs.no_margin, defs.spacing, controls_widget, self.treewidget
+        )
+        self.setLayout(layout)
 
-        # View Menu
-        self.view_menu = qtutils.add_menu(N_('View'), self.menubar)
-        self.view_menu.addAction(self.refresh_action)
-        self.view_menu.addAction(self.display_inline_graph_action)
-        self.view_menu.addAction(self.display_status_action)
-        self.view_menu.addSeparator()
-        self.view_menu.addAction(self.log_dock.toggleViewAction())
-        self.view_menu.addAction(self.graphview_dock.toggleViewAction())
-        self.view_menu.addAction(self.diff_dock.toggleViewAction())
-        self.view_menu.addAction(self.file_dock.toggleViewAction())
-        self.view_menu.addSeparator()
-        self.view_menu.addAction(self.lock_layout_action)
-
-        left = Qt.LeftDockWidgetArea
-        right = Qt.RightDockWidgetArea
-        self.addDockWidget(left, self.log_dock)
-        self.addDockWidget(left, self.diff_dock)
-        self.addDockWidget(right, self.graphview_dock)
-        self.addDockWidget(right, self.file_dock)
-
-        # Also re-loads dag.* from the saved state
-        self.init_state(context.settings, self.resize_to_desktop)
-
-        qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
-        qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
-        qtutils.connect_button(self.zoom_to_fit, self.graphview.zoom_to_fit)
-
-        self.treewidget.zoom_to_fit.connect(
-            self.graphview.zoom_to_fit, type=Qt.QueuedConnection
-        )
-        self.treewidget.diff_commits.connect(
-            self.diff_commits, type=Qt.QueuedConnection
-        )
-        self.treewidget.search_line_range_in_oid.connect(
-            self.search_line_range_in_oid, type=Qt.QueuedConnection
-        )
-        self.graphview.diff_commits.connect(self.diff_commits, type=Qt.QueuedConnection)
-        self.graphview.search_line_range_in_oid.connect(
-            self.search_line_range_in_oid, type=Qt.QueuedConnection
-        )
-        self.filewidget.grab_file.connect(self.grab_file, type=Qt.QueuedConnection)
-        self.filewidget.grab_file_from_parent.connect(
-            self.grab_file_from_parent, type=Qt.QueuedConnection
-        )
-        self.filewidget.select_line_range_for_file.connect(
-            self.search_line_range_for_file, type=Qt.QueuedConnection
-        )
+        self.treewidget.commits_selected.connect(self.select_commits)
         self.maxresults.editingFinished.connect(self.display, type=Qt.QueuedConnection)
-        self.revtext.textChanged.connect(self.text_changed, type=Qt.QueuedConnection)
         self.revtext.activated.connect(self.display, type=Qt.QueuedConnection)
         self.revtext.enter.connect(self.display, type=Qt.QueuedConnection)
         self.revtext.down.connect(self.focus_tree, type=Qt.QueuedConnection)
-        # The model is updated in another thread so use
-        # signals/slots to bring control back to the main GUI thread
         self.model.updated.connect(self.model_updated, type=Qt.QueuedConnection)
 
-        qtutils.add_action(self, 'FocusInput', self.focus_input, hotkeys.FOCUS_INPUT)
-        qtutils.add_action(self, 'FocusTree', self.focus_tree, hotkeys.FOCUS_TREE)
-        qtutils.add_action(self, 'FocusDiff', self.focus_diff, hotkeys.FOCUS_DIFF)
-        qtutils.add_close_action(self)
+    def current_request(self):
+        """Return an immutable snapshot of the current history controls."""
+        return dag.HistoryRequest(
+            self._next_run_id,
+            get(self.revtext),
+            get(self.maxresults),
+            get(self.display_status_action),
+        )
 
-        self.set_params(params)
-
-    def set_params(self, params):
-        self.params = params
-        self.revtext.setText(params.ref)
-        self.maxresults.setValue(params.count)
-        self.update_window_title()
+    def set_values(self, ref, count, display_status):
+        """Set all history controls from an external parameter snapshot."""
+        self.revtext.setText(ref)
+        self.maxresults.setValue(count)
+        with qtutils.BlockSignals(self.display_status_action):
+            self.display_status_action.setChecked(display_status)
 
     def request_history(
         self, ref=None, count=None, display_status=None, cache_metadata=None
@@ -1646,12 +1490,18 @@ class GitDAG(standard.MainWindow):
         """Request a serialized history load from an immutable UI snapshot."""
         if self.stopping:
             return False
-        if ref is None:
-            ref = get(self.revtext)
-        if count is None:
-            count = get(self.maxresults)
-        if display_status is None:
-            display_status = get(self.display_status_action)
+        if ref is None and count is None and display_status is None:
+            snapshot = self.current_request()
+            ref = snapshot.ref
+            count = snapshot.count
+            display_status = snapshot.display_status
+        else:
+            if ref is None:
+                ref = get(self.revtext)
+            if count is None:
+                count = get(self.maxresults)
+            if display_status is None:
+                display_status = get(self.display_status_action)
         key = (ref, count, display_status)
         if self.active_request and key == self.active_request.cache_key:
             same_snapshot = (
@@ -1659,7 +1509,6 @@ class GitDAG(standard.MainWindow):
                 or cache_metadata == self.active_cache_metadata
             )
             if same_snapshot:
-                # The active request is again the latest desired state.
                 self.pending_request = None
                 self.pending_cache_metadata = None
                 result = self.active_result
@@ -1671,12 +1520,7 @@ class GitDAG(standard.MainWindow):
                 self.pending_cache_metadata = cache_metadata
             return False
 
-        request = dag.HistoryRequest(
-            self._next_run_id,
-            ref,
-            count,
-            display_status,
-        )
+        request = dag.HistoryRequest(self._next_run_id, ref, count, display_status)
         self._next_run_id += 1
         if self.active_thread is not None:
             self.pending_request = request
@@ -1755,7 +1599,7 @@ class GitDAG(standard.MainWindow):
             return
         graph_result = result.graph or graph.GraphResult(rows=[], max_columns=0)
         self._set_error_status(None)
-        self._apply_history_result(result.commits, graph_result)
+        self.apply_result(result.commits, graph_result)
         request = self.active_request
         if request is None:
             return
@@ -1767,7 +1611,8 @@ class GitDAG(standard.MainWindow):
             self.old_count = metadata.count
             self.old_display_status = metadata.display_status
 
-    def _apply_history_result(self, commits, graph_result):
+    def apply_result(self, commits, graph_result):
+        """Atomically apply a complete successful history result."""
         previous_oids = [commit.oid for commit in self.selection or self.old_selection]
         commit_list = list(commits)
         commit_map = {}
@@ -1780,26 +1625,17 @@ class GitDAG(standard.MainWindow):
             selection = [commit_list[-1]]
         selection = sort_by_generation(selection)
 
-        with (
-            qtutils.BlockSignals(self.graphview.scene()),
-            qtutils.BlockSignals(self.treewidget),
-        ):
+        with qtutils.BlockSignals(self.treewidget):
             self.clear()
             self.commit_list = commit_list
             self.commits.update(commit_map)
             self.treewidget.add_commits(commit_list, graph_result)
-            self.graphview.add_commits(commit_list)
 
         self.selection = list(selection)
         self.old_selection = list(selection)
-        self.diffwidget_copy_commit.setEnabled(bool(selection))
-        if not selection:
-            self.diffwidget.oid = None
-            self.diffwidget.oid_start = None
-            self.diffwidget.oid_end = None
+        self.treewidget.select_commits(selection)
+        self.commits_loaded.emit(list(commit_list))
         self.commits_selected.emit(list(selection))
-        if commit_list:
-            self.graphview.set_initial_view()
 
     def stop_and_wait(self):
         """Stop scheduling work and wait fully for the active worker."""
@@ -1816,49 +1652,332 @@ class GitDAG(standard.MainWindow):
             self._finalize_thread(thread)
         self.loading = False
 
-    def _display_worktree_status(self, enabled):
-        """Enable and disable the display of the WORKTREE and STAGE pseudo-commits"""
-        self.params.display_status = enabled
+    def _display_worktree_status(self, _enabled):
+        """Reload after toggling WORKTREE and STAGE pseudo-commits."""
         self.display()
 
     def focus_input(self):
-        """Focus the revision input field"""
         self.revtext.setFocus()
 
     def focus_tree(self):
-        """Focus the revision tree list widget"""
         self.treewidget.setFocus()
 
-    def focus_diff(self):
-        """Focus the diff widget"""
-        self.diffwidget.setFocus()
+    def model_updated(self):
+        self.display()
 
-    def text_changed(self, txt):
-        """Respond to changes to the revision input text"""
-        self.params.ref = txt
+    def refresh(self):
+        """Unconditionally refresh the history."""
+        self.force_refresh = True
+        cmds.do(cmds.Refresh, self.context)
+
+    def display(self):
+        """Update the view when Git refs or history controls change."""
+        ref = get(self.revtext)
+        count = get(self.maxresults)
+        display_status = get(self.display_status_action)
+        refs = set(
+            self.model.local_branches + self.model.remote_branches + self.model.tags
+        )
+        argv = utils.shell_split(ref or 'HEAD')
+        oids = gitcmds.parse_refs(self.context, argv)
+        update = (
+            self.force_refresh
+            or count != self.old_count
+            or oids != self.old_oids
+            or refs != self.old_refs
+            or display_status != self.old_display_status
+        )
+        self.controls_changed.emit((ref, count, display_status))
+        if update:
+            metadata = _HistoryCacheMetadata(
+                tuple(oids), frozenset(refs), count, display_status
+            )
+            self.request_history(ref, count, display_status, metadata)
+        self.force_refresh = False
+
+    def select_commits(self, commits):
+        """Apply and publicly relay a complete selection snapshot."""
+        self.selection = list(commits)
+        self.treewidget.select_commits(commits)
+        self.commits_selected.emit(list(commits))
+
+    def clear(self):
+        """Clear the tree and all applied history state."""
+        self.commits.clear()
+        self.commit_list = []
+        self.selection = []
+        self.old_selection = []
+        self.treewidget.clear()
+
+    def export_state(self):
+        """Export history-child state independently of any main window."""
+        log_state = self.treewidget.export_state()
+        log_state['column_widths'] = log_state['column_widths'][:2]
+        return {
+            'ref': get(self.revtext),
+            'count': get(self.maxresults),
+            'display_inline_graph': self.display_inline_graph_action.isChecked(),
+            'display_status': self.display_status_action.isChecked(),
+            'log': log_state,
+        }
+
+    def apply_state(self, state):
+        """Apply history-child state independently of any main window."""
+        result = True
+        try:
+            ref = state.get('ref', get(self.revtext))
+            count = state['count']
+        except (KeyError, TypeError, ValueError, AttributeError):
+            ref = get(self.revtext)
+            count = get(self.maxresults)
+            result = False
+        display_status = state.get(
+            'display_status', self.display_status_action.isChecked()
+        )
+        self.set_values(ref, count, display_status)
+
+        display_inline_graph = state.get('display_inline_graph', True)
+        self.treewidget.display_inline_graph(display_inline_graph)
+        with qtutils.BlockSignals(self.display_inline_graph_action):
+            self.display_inline_graph_action.setChecked(display_inline_graph)
+
+        log_state = state.get('log')
+        if log_state:
+            self.treewidget.apply_state(log_state)
+        return result
+
+    def close_popup(self):
+        self.revtext.close_popup()
+
+    def insert_ref_expression(self, expression):
+        self.revtext.insert(expression)
+        self.display()
+
+    def set_ref(self, ref):
+        self.revtext.setText(ref)
+        self.display()
+
+    def event(self, event):
+        if event.type() == QtCore.QEvent.DeferredDelete:
+            self.close_popup()
+            self.stop_and_wait()
+        return super().event(event)
+
+    def closeEvent(self, event):
+        self.close_popup()
+        self.stop_and_wait()
+        super().closeEvent(event)
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        if not self._widgets_initialized:
+            self._widgets_initialized = True
+            self.maxresults.setMinimumHeight(self.revtext.height())
+
+
+class GitDAG(standard.MainWindow):
+    """Standalone DAG window composed from a reusable history widget."""
+
+    commits_selected = Signal(object)
+
+    def __init__(self, context, params, parent=None):
+        super().__init__(parent)
+        self.setMinimumSize(420, 420)
+        self.widget_version = 2
+        self.context = context
+        self.params = params
+        self.model = context.model
+
+        self.historywidget = CommitHistoryWidget(
+            context,
+            ref=params.ref,
+            count=params.count,
+            display_status=params.display_status,
+            parent=self,
+        )
+        self.diffwidget = diff.CommitDiffWidget(context, self, is_commit=True)
+        self.filewidget = filelist.FileWidget(context, self)
+        self.graphview = GraphView(context, self)
+
+        self.zoom_out = qtutils.create_action_button(
+            tooltip=N_('Zoom Out'), icon=icons.zoom_out()
+        )
+        self.zoom_in = qtutils.create_action_button(
+            tooltip=N_('Zoom In'), icon=icons.zoom_in()
+        )
+        self.zoom_to_fit = qtutils.create_action_button(
+            tooltip=N_('Zoom to Fit'), icon=icons.zoom_fit_best()
+        )
+
+        history = self.historywidget
+        tree = history.treewidget
+        history.commits_loaded.connect(self._history_loaded)
+        history.commits_selected.connect(self._history_selection_changed)
+        history.controls_changed.connect(self._history_controls_changed)
+        self.graphview.commits_selected.connect(history.select_commits)
+        self.commits_selected.connect(self.diffwidget.commits_selected)
+        self.commits_selected.connect(self.filewidget.commits_selected)
+        self.commits_selected.connect(self.graphview.select_commits)
+        self.filewidget.files_selected.connect(
+            self.diffwidget.files_selected, type=Qt.QueuedConnection
+        )
+        self.filewidget.difftool_selected.connect(
+            self.difftool_selected, type=Qt.QueuedConnection
+        )
+        self.filewidget.histories_selected.connect(
+            self.histories_selected, type=Qt.QueuedConnection
+        )
+
+        self.proxy = FocusRedirectProxy(tree, self.graphview, self.filewidget)
+        tree.menu_actions = viewer_actions(tree, self.proxy)
+        self.graphview.menu_actions = viewer_actions(self.graphview, self.proxy)
+        self.diffwidget_copy_commit = set_icon(
+            icons.copy(),
+            qtutils.add_action(
+                self.diffwidget.diff,
+                N_('Copy Commit'),
+                tree.copy_to_clipboard,
+                hotkeys.COPY_COMMIT_ID,
+            ),
+        )
+        self.diffwidget.diff.menu_actions.append(self.diffwidget_copy_commit)
+
+        self.log_dock = qtutils.create_dock(
+            'Log', N_('Log'), self, stretch=False, hide_title=True
+        )
+        self.log_dock.setWidget(history)
+        self.file_dock = qtutils.create_dock(
+            'Files', N_('Files'), self, hide_title=True
+        )
+        self.file_dock.setWidget(self.filewidget)
+
+        self.diff_panel = diff.DiffPanel(self.diffwidget, self.diffwidget.diff, self)
+        self.diff_options = diff.Options(self.diffwidget)
+        self.diffwidget.set_options(self.diff_options)
+        self.diff_options.hide_advanced_options()
+        self.diff_options.set_diff_type(main.Types.TEXT)
+        self.diff_dock = qtutils.create_dock('Diff', N_('Diff'), self, hide_title=True)
+        self.diff_dock.setWidget(self.diff_panel)
+        self.diff_dock.titleBarWidget().add_title_widget(self.diff_options)
+
+        graph_controls_layout = qtutils.hbox(
+            defs.no_margin,
+            defs.button_spacing,
+            self.zoom_out,
+            self.zoom_in,
+            self.zoom_to_fit,
+            defs.spacing,
+        )
+        graph_controls_widget = QtWidgets.QWidget()
+        graph_controls_widget.setLayout(graph_controls_layout)
+        self.graphview_dock = qtutils.create_dock(
+            'Graph', N_('Graph'), self, hide_title=True
+        )
+        self.graphview_dock.setWidget(self.graphview)
+        self.graphview_dock.titleBarWidget().add_corner_widget(graph_controls_widget)
+
+        self.lock_layout_action = qtutils.add_action_bool(
+            self, N_('Lock Layout'), self.set_lock_layout, False
+        )
+        self.refresh_action = qtutils.add_action(
+            self, N_('Refresh'), history.refresh, hotkeys.REFRESH
+        )
+        self.menubar = QtWidgets.QMenuBar(self)
+        self.setMenuBar(self.menubar)
+        self.view_menu = qtutils.add_menu(N_('View'), self.menubar)
+        self.view_menu.addAction(self.refresh_action)
+        self.view_menu.addAction(history.display_inline_graph_action)
+        self.view_menu.addAction(history.display_status_action)
+        self.view_menu.addSeparator()
+        self.view_menu.addAction(self.log_dock.toggleViewAction())
+        self.view_menu.addAction(self.graphview_dock.toggleViewAction())
+        self.view_menu.addAction(self.diff_dock.toggleViewAction())
+        self.view_menu.addAction(self.file_dock.toggleViewAction())
+        self.view_menu.addSeparator()
+        self.view_menu.addAction(self.lock_layout_action)
+
+        left = Qt.LeftDockWidgetArea
+        right = Qt.RightDockWidgetArea
+        self.addDockWidget(left, self.log_dock)
+        self.addDockWidget(left, self.diff_dock)
+        self.addDockWidget(right, self.graphview_dock)
+        self.addDockWidget(right, self.file_dock)
+        self.init_state(context.settings, self.resize_to_desktop)
+
+        qtutils.connect_button(self.zoom_out, self.graphview.zoom_out)
+        qtutils.connect_button(self.zoom_in, self.graphview.zoom_in)
+        qtutils.connect_button(self.zoom_to_fit, self.graphview.zoom_to_fit)
+        tree.zoom_to_fit.connect(self.graphview.zoom_to_fit, type=Qt.QueuedConnection)
+        tree.diff_commits.connect(self.diff_commits, type=Qt.QueuedConnection)
+        tree.search_line_range_in_oid.connect(
+            self.search_line_range_in_oid, type=Qt.QueuedConnection
+        )
+        self.graphview.diff_commits.connect(self.diff_commits, type=Qt.QueuedConnection)
+        self.graphview.search_line_range_in_oid.connect(
+            self.search_line_range_in_oid, type=Qt.QueuedConnection
+        )
+        self.filewidget.grab_file.connect(self.grab_file, type=Qt.QueuedConnection)
+        self.filewidget.grab_file_from_parent.connect(
+            self.grab_file_from_parent, type=Qt.QueuedConnection
+        )
+        self.filewidget.select_line_range_for_file.connect(
+            self.search_line_range_for_file, type=Qt.QueuedConnection
+        )
+
+        qtutils.add_action(self, 'FocusInput', history.focus_input, hotkeys.FOCUS_INPUT)
+        qtutils.add_action(self, 'FocusTree', history.focus_tree, hotkeys.FOCUS_TREE)
+        qtutils.add_action(self, 'FocusDiff', self.focus_diff, hotkeys.FOCUS_DIFF)
+        qtutils.add_close_action(self)
+        self.set_params(params)
+
+    def set_params(self, params):
+        self.params = params
+        self.historywidget.set_values(
+            params.ref, params.count, params.display_status
+        )
         self.update_window_title()
 
+    def _history_controls_changed(self, values):
+        ref, count, display_status = values
+        self.params.set_ref(ref)
+        self.params.set_count(count)
+        self.params.set_display_status(display_status)
+        self.update_window_title()
+
+    def _history_loaded(self, commits):
+        """Apply one complete commit list to the window-only graph view."""
+        with qtutils.BlockSignals(self.graphview.scene()):
+            self.graphview.clear()
+            self.graphview.add_commits(commits)
+        if commits:
+            self.graphview.set_initial_view()
+
+    def _history_selection_changed(self, commits):
+        self.diffwidget_copy_commit.setEnabled(bool(commits))
+        if not commits:
+            self.diffwidget.oid = None
+            self.diffwidget.oid_start = None
+            self.diffwidget.oid_end = None
+        self.commits_selected.emit(list(commits))
+
+    def focus_diff(self):
+        self.diffwidget.setFocus()
+
     def update_window_title(self):
-        """Update the window title to reflect the displayed ref"""
         project = self.model.project
-        if self.params.ref:
+        ref = get(self.historywidget.revtext)
+        if ref:
             self.setWindowTitle(
                 N_('%(project)s: %(ref)s - DAG')
-                % {
-                    'project': project,
-                    'ref': self.params.ref,
-                }
+                % {'project': project, 'ref': ref}
             )
         else:
             self.setWindowTitle(project + N_(' - DAG'))
 
     def export_state(self):
-        """Store persistent GUI state"""
+        """Store persistent window state plus delegated flat history state."""
         state = standard.MainWindow.export_state(self)
-        state['count'] = self.params.count
-        state['display_inline_graph'] = self.display_inline_graph_action.isChecked()
-        state['display_status'] = self.params.display_status
-        state['log'] = self.treewidget.export_state()
+        state.update(self.historywidget.export_state())
         state['word_wrap'] = self.diffwidget.options.enable_word_wrapping.isChecked()
         state['intraline_diff_preset'] = self.diffwidget.options.intraline_diff_preset()
         state[
@@ -1867,8 +1986,9 @@ class GitDAG(standard.MainWindow):
         return state
 
     def apply_state(self, state):
-        """Apply persistent GUI state"""
+        """Apply persistent GUI state without owning history-child state."""
         result = standard.MainWindow.apply_state(self, state)
+        history_state = dict(state)
         try:
             count = state['count']
             if self.params.overridden('count'):
@@ -1876,113 +1996,62 @@ class GitDAG(standard.MainWindow):
         except (KeyError, TypeError, ValueError, AttributeError):
             count = self.params.count
             result = False
-        self.params.set_count(count)
-
-        display_status = state.get('display_status', True)
-        self.params.set_display_status(display_status)
-        with qtutils.BlockSignals(self.display_status_action):
-            self.display_status_action.setChecked(display_status)
-
-        display_inline_graph = state.get('display_inline_graph', True)
-        self.treewidget.display_inline_graph(display_inline_graph)
-        with qtutils.BlockSignals(self.display_inline_graph_action):
-            self.display_inline_graph_action.setChecked(display_inline_graph)
+        history_state['count'] = count
+        try:
+            ref = state.get('ref', self.params.ref)
+            if self.params.overridden('ref'):
+                ref = self.params.ref
+        except (TypeError, ValueError, AttributeError):
+            ref = self.params.ref
+            result = False
+        history_state['ref'] = ref
+        history_state.setdefault('display_status', True)
+        if not self.historywidget.apply_state(history_state):
+            result = False
+        ref = get(self.historywidget.revtext)
+        self.params.set_ref(ref)
+        self.params.set_count(get(self.historywidget.maxresults))
+        self.params.set_display_status(
+            get(self.historywidget.display_status_action)
+        )
 
         self.lock_layout_action.setChecked(state.get('lock_layout', False))
         self.diffwidget.set_word_wrapping(state.get('word_wrap', False), update=True)
-
-        try:
-            log_state = state['log']
-        except (KeyError, ValueError):
-            log_state = None
-        if log_state:
-            self.treewidget.apply_state(log_state)
-
         intraline_diff_preset = state.get(
             'intraline_diff_preset', diff_intraline.INTRALINE_DIFF_PRESET_DEFAULT_ID
         )
         self.diffwidget.set_intraline_diff_preset(intraline_diff_preset, update=True)
-
         intraline_diff_timing = bool(state.get('intraline_diff_timing', False))
         self.set_intraline_diff_timing(intraline_diff_timing, update=True)
-
         return result
 
     def set_intraline_diff_preset(self, preset_id, update=False):
-        """Forward the selected text diff preset to the editor."""
-        # only the text editor
         self.diffwidget.set_intraline_diff_preset(preset_id, update=update)
 
     def set_intraline_diff_timing(self, enabled, update=False):
-        """Forward the intra-line diff timing option to the editor."""
         self.diffwidget.set_intraline_diff_timing(enabled, update=update)
 
     def model_updated(self):
-        """Refresh the view when the model is updated"""
-        self.display()
+        self.historywidget.model_updated()
         self.update_window_title()
 
     def refresh(self):
-        """Unconditionally refresh the DAG"""
-        # self.force_refresh triggers an Unconditional redraw
-        self.force_refresh = True
-        cmds.do(cmds.Refresh, self.context)
+        return self.historywidget.refresh()
 
     def display(self):
-        """Update the view when the Git refs change"""
-        ref = get(self.revtext)
-        count = get(self.maxresults)
-        context = self.context
-        model = self.model
-        display_status = get(self.display_status_action)
-        # The DAG tries to avoid updating when the object IDs have not
-        # changed.  Without doing this the DAG constantly redraws itself
-        # whenever inotify sends update events, which hurts usability.
-        #
-        # To minimize redraws we leverage `git rev-parse`.  The strategy is to
-        # use `git rev-parse` on the input line, which converts each argument
-        # into object IDs.  From there it's a simple matter of detecting when
-        # the object IDs changed.
-        #
-        # In addition to object IDs, we also need to know when the set of
-        # named references (branches, tags) changes so that an update is
-        # triggered when new branches and tags are created.
-        refs = set(model.local_branches + model.remote_branches + model.tags)
-        argv = utils.shell_split(ref or 'HEAD')
-        oids = gitcmds.parse_refs(context, argv)
-        update = (
-            self.force_refresh
-            or count != self.old_count
-            or oids != self.old_oids
-            or refs != self.old_refs
-            or display_status != self.old_display_status
-        )
-        if update:
-            self.params.set_ref(ref)
-            self.params.set_count(count)
-            self.params.set_display_status(display_status)
-            metadata = _HistoryCacheMetadata(
-                tuple(oids), frozenset(refs), count, display_status
-            )
-            self.request_history(ref, count, display_status, metadata)
+        return self.historywidget.display()
 
-        self.force_refresh = False
+    def request_history(self, *args, **kwargs):
+        return self.historywidget.request_history(*args, **kwargs)
 
     def select_commits(self, commits):
-        """Commits were selected"""
-        self.selection = commits
-        enabled = bool(commits)
-        self.diffwidget_copy_commit.setEnabled(enabled)
+        self.historywidget.select_commits(commits)
 
     def clear(self):
-        """Clear the view and the list of known commits"""
-        self.commits.clear()
-        self.commit_list = []
-        self.graphview.clear()
-        self.treewidget.clear()
+        self.historywidget.clear()
+        self._history_loaded([])
 
     def diff_commits(self, left, right):
-        """React to diff_commits signals by displaying a difftool interface"""
         paths = self.params.paths()
         if paths:
             difftool.difftool_launch(self.context, left=left, right=right, paths=paths)
@@ -1990,12 +2059,8 @@ class GitDAG(standard.MainWindow):
             difftool.diff_commits(self.context, self, left, right, detect_renames=True)
 
     def search_line_range_in_oid(self, oid):
-        """Open a dialog for generating "git log -L" line range expressions"""
         all_paths = self.filewidget.selected_paths()
-        if all_paths:
-            paths = all_paths[0]
-        else:
-            paths = None
+        paths = all_paths[0] if all_paths else None
         widget = finder.new_finder(
             self.context,
             paths=paths,
@@ -2012,21 +2077,15 @@ class GitDAG(standard.MainWindow):
         filename = widget.filename
         if not filename:
             return
-        range_expression = f'-L{start},+{span}:{filename}'
-        self.revtext.insert(range_expression)
-        self.display()
+        self.historywidget.insert_ref_expression(f'-L{start},+{span}:{filename}')
 
     def histories_selected(self, histories):
-        """Respond to file-based history selection from the files widget"""
         argv = [self.model.currentbranch, '--']
         argv.extend(histories)
-        rev_text = core.list2cmdline(argv)
-        self.revtext.setText(rev_text)
-        self.display()
+        self.historywidget.set_ref(core.list2cmdline(argv))
 
     def difftool_selected(self, files):
-        """Launch difftool across a commit range"""
-        bottom, top = self.treewidget.selected_commit_range()
+        bottom, top = self.historywidget.treewidget.selected_commit_range()
         if not top:
             return
         difftool.difftool_launch(
@@ -2034,37 +2093,25 @@ class GitDAG(standard.MainWindow):
         )
 
     def grab_file(self, filename):
-        """Save the selected file from the file list widget"""
-        oid = self.treewidget.selected_oid()
+        oid = self.historywidget.treewidget.selected_oid()
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(self.context, filename, model)
 
     def grab_file_from_parent(self, filename):
-        """Save the selected file from parent commit in the file list widget"""
-        oid = self.treewidget.selected_oid() + '^'
+        oid = self.historywidget.treewidget.selected_oid() + '^'
         model = browse.BrowseModel(oid, filename=filename)
         browse.save_path(self.context, filename, model)
 
     def search_line_range_for_file(self, filename):
-        """Generate a line range expression for the specified filename"""
-        oid = self.treewidget.selected_oid()
+        oid = self.historywidget.treewidget.selected_oid()
         if not oid or not filename:
             return
         self.search_line_range_in_oid(oid)
 
-    # Qt overrides
     def closeEvent(self, event):
-        """Ensure the revision text popup is closed"""
-        self.revtext.close_popup()
-        self.stop_and_wait()
+        self.historywidget.close_popup()
+        self.historywidget.stop_and_wait()
         standard.MainWindow.closeEvent(self, event)
-
-    def showEvent(self, event):
-        """Resize widgets once their sizes are known"""
-        standard.MainWindow.showEvent(self, event)
-        if not self._widgets_initialized:
-            self._widgets_initialized = True
-            self.maxresults.setMinimumHeight(self.revtext.height())
 
 
 class ReaderThread(QtCore.QThread):
