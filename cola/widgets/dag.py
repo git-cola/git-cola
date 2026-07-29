@@ -903,7 +903,7 @@ def _lane_colors(palette):
 
     # QColor quantizes channels, so validate uniqueness after all HSV fallbacks.
     if len({color.rgba() for color in result}) != len(result):
-        raise AssertionError("lane color fallback did not produce distinct colors")
+        raise AssertionError('lane color fallback did not produce distinct colors')
     return tuple(result)
 
 
@@ -915,9 +915,7 @@ def _distinct_chip_backgrounds(colors, palette_colors):
     hsv = [color.getHsvF() for color in palette_colors]
     hues = [hue for hue, _saturation, _value, _alpha in hsv if hue >= 0.0]
     hue = hues[0] if hues else 0.0
-    saturation = max(
-        0.58, max(value[1] for value in hsv)
-    )
+    saturation = max(0.58, max(value[1] for value in hsv))
     average_luminance = sum(_color_luminance(color) for color in palette_colors) / len(
         palette_colors
     )
@@ -1134,9 +1132,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         if text:
             text_x = int(label_x + labels_width + 8)
             text_rect = rect.adjusted(text_x - rect.left(), 0, 0, 0)
-            painter.setPen(
-                style.selected_text if selected else style.text
-            )
+            painter.setPen(style.selected_text if selected else style.text)
             painter.drawText(
                 text_rect,
                 Qt.AlignLeft | Qt.AlignVCenter,
@@ -1169,7 +1165,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         for i, (tag, display_text, condensed_text) in enumerate(_prepare_labels(tags)):
             if painter is not None:
                 brush = style.chip_other
-                if tag == "HEAD" or tag.startswith(_TAGS_PREFIX):
+                if tag == 'HEAD' or tag.startswith(_TAGS_PREFIX):
                     brush = style.chip_remote
                 elif tag.startswith(_HEADS_PREFIX):
                     brush = style.chip_head
@@ -1711,8 +1707,7 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         key = (ref, count, display_status)
         if self.active_request and key == self.active_request.cache_key:
             same_snapshot = (
-                cache_metadata is None
-                or cache_metadata == self.active_cache_metadata
+                cache_metadata is None or cache_metadata == self.active_cache_metadata
             )
             if same_snapshot:
                 self.pending_request = None
@@ -2167,9 +2162,7 @@ class GitDAG(standard.MainWindow):
 
     def set_params(self, params):
         self.params = params
-        self.historywidget.set_values(
-            params.ref, params.count, params.display_status
-        )
+        self.historywidget.set_values(params.ref, params.count, params.display_status)
         self.update_window_title()
 
     def _history_controls_changed(self, values):
@@ -2203,8 +2196,7 @@ class GitDAG(standard.MainWindow):
         ref = get(self.historywidget.revtext)
         if ref:
             self.setWindowTitle(
-                N_('%(project)s: %(ref)s - DAG')
-                % {'project': project, 'ref': ref}
+                N_('%(project)s: %(ref)s - DAG') % {'project': project, 'ref': ref}
             )
         else:
             self.setWindowTitle(project + N_(' - DAG'))
@@ -2257,8 +2249,7 @@ class GitDAG(standard.MainWindow):
         )
         numeric_fields = ('width', 'height', 'x', 'y')
         if any(
-            key in state and not isinstance(state[key], str)
-            for key in string_fields
+            key in state and not isinstance(state[key], str) for key in string_fields
         ):
             return False
         if any(
@@ -2291,12 +2282,8 @@ class GitDAG(standard.MainWindow):
             self.params.count,
             self.params.display_status,
         )
-        previous_word_wrap = (
-            self.diffwidget.options.enable_word_wrapping.isChecked()
-        )
-        previous_intraline_preset = (
-            self.diffwidget.options.intraline_diff_preset()
-        )
+        previous_word_wrap = self.diffwidget.options.enable_word_wrapping.isChecked()
+        previous_intraline_preset = self.diffwidget.options.intraline_diff_preset()
         previous_intraline_timing = (
             self.diffwidget.options.intraline_diff_timing.isChecked()
         )
@@ -2312,9 +2299,7 @@ class GitDAG(standard.MainWindow):
             self.diffwidget.set_intraline_diff_preset(
                 previous_intraline_preset, update=True
             )
-            self.set_intraline_diff_timing(
-                previous_intraline_timing, update=True
-            )
+            self.set_intraline_diff_timing(previous_intraline_timing, update=True)
             self.lock_layout_action.setChecked(previous_lock_action)
 
         try:
@@ -2512,7 +2497,6 @@ class ReaderThread(QtCore.QThread):
                 graph_result,
             )
         )
-
 
 
 class Cache:

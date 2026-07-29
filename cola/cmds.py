@@ -868,7 +868,7 @@ class Commit(ResetMode):
         self.author = author
         self.date = date
 
-    def do(self) -> tuple[int, str, str]:
+    def do(self, update_status: bool = True) -> tuple[int, str, str]:
         # Create the commit message file
         context = self.context
         msg = self.msg
@@ -915,7 +915,7 @@ class Commit(ResetMode):
         finally:
             core.unlink(tmp_file)
         if status == 0:
-            super().do(update_status=True)
+            super().do(update_status=update_status)
             if context.cfg.get(prefs.AUTOTEMPLATE):
                 template_loader = LoadCommitMessageFromTemplate(context)
                 template_loader.do()

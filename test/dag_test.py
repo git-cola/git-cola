@@ -1,3 +1,4 @@
+# ruff: noqa: I001  # Garden enforces force-single-line imports.
 """Tests DAG functionality"""
 import argparse
 from unittest.mock import patch
@@ -8,7 +9,8 @@ from cola import dag as dag_cli
 from cola.models import dag
 from cola.widgets.dag import _prepare_labels
 
-from .helper import app_context, commit_files
+from .helper import app_context
+from .helper import commit_files
 
 # Prevent unused imports lint errors.
 assert app_context is not None
@@ -43,30 +45,30 @@ def dag_context(app_context):
     return DAGTestData(app_context)
 
 
-def _log_entry(oid, parents=""):
-    fields = (oid, parents, "", "Author", "Date", "author@example.com", oid)
+def _log_entry(oid, parents=''):
+    fields = (oid, parents, '', 'Author', 'Date', 'author@example.com', oid)
     return dag.LOGSEP.join(fields)
 
 
 def test_repo_readers_isolate_interleaved_commit_graphs(app_context):
-    shared_oid = "1" * 40
-    parent_a_oid = "a" * 40
-    parent_b_oid = "b" * 40
-    output_a = "\n".join(
+    shared_oid = '1' * 40
+    parent_a_oid = 'a' * 40
+    parent_b_oid = 'b' * 40
+    output_a = '\n'.join(
         (_log_entry(shared_oid, parent_a_oid), _log_entry(parent_a_oid))
     )
-    output_b = "\n".join(
+    output_b = '\n'.join(
         (_log_entry(shared_oid, parent_b_oid), _log_entry(parent_b_oid))
     )
-    reader_a = dag.RepoReader(app_context, dag.DAG("reader-a", 2), allow_git_init=False)
-    reader_b = dag.RepoReader(app_context, dag.DAG("reader-b", 2), allow_git_init=False)
+    reader_a = dag.RepoReader(app_context, dag.DAG('reader-a', 2), allow_git_init=False)
+    reader_b = dag.RepoReader(app_context, dag.DAG('reader-b', 2), allow_git_init=False)
 
     with (
         patch(
-            "cola.models.dag.core.run_command",
-            side_effect=((0, output_a, ""), (0, output_b, "")),
+            'cola.models.dag.core.run_command',
+            side_effect=((0, output_a, ''), (0, output_b, '')),
         ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         commits_a = reader_a.get()
         parent_a = next(commits_a)
@@ -89,23 +91,23 @@ def test_repo_readers_isolate_interleaved_commit_graphs(app_context):
 
 
 def test_repo_reader_reset_discards_objects_and_changed_input(app_context):
-    shared_oid = "1" * 40
-    parent_a_oid = "a" * 40
-    parent_b_oid = "b" * 40
-    output_a = "\n".join(
+    shared_oid = '1' * 40
+    parent_a_oid = 'a' * 40
+    parent_b_oid = 'b' * 40
+    output_a = '\n'.join(
         (_log_entry(shared_oid, parent_a_oid), _log_entry(parent_a_oid))
     )
-    output_b = "\n".join(
+    output_b = '\n'.join(
         (_log_entry(shared_oid, parent_b_oid), _log_entry(parent_b_oid))
     )
-    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+    reader = dag.RepoReader(app_context, dag.DAG('history', 2), allow_git_init=False)
 
     with (
         patch(
-            "cola.models.dag.core.run_command",
-            side_effect=((0, output_a, ""), (0, output_b, "")),
+            'cola.models.dag.core.run_command',
+            side_effect=((0, output_a, ''), (0, output_b, '')),
         ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         list(reader.get())
         first_tip = reader[shared_oid]
@@ -131,79 +133,78 @@ def test_repo_reader_reset_discards_objects_and_changed_input(app_context):
 
 
 def test_repo_reader_preserves_command_error(app_context):
-    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+    reader = dag.RepoReader(app_context, dag.DAG('history', 2), allow_git_init=False)
 
     with (
         patch(
-            "cola.models.dag.core.run_command",
-            return_value=(128, "", "fatal: bad revision"),
+            'cola.models.dag.core.run_command',
+            return_value=(128, '', 'fatal: bad revision'),
         ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         assert list(reader.get()) == []
 
     assert reader.returncode == 128
-    assert reader.error == "fatal: bad revision"
+    assert reader.error == 'fatal: bad revision'
 
 
 def test_repo_reader_success_clears_previous_command_error(app_context):
-    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+    reader = dag.RepoReader(app_context, dag.DAG('history', 2), allow_git_init=False)
 
     with (
         patch(
-            "cola.models.dag.core.run_command",
+            'cola.models.dag.core.run_command',
             side_effect=(
-                (128, "", "fatal: bad revision"),
-                (0, "", ""),
+                (128, '', 'fatal: bad revision'),
+                (0, '', ''),
             ),
         ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         list(reader.get())
         reader.reset()
         list(reader.get())
 
     assert reader.returncode == 0
-    assert reader.error == ""
+    assert reader.error == ''
 
 
 def test_repo_reader_reset_clears_previous_command_error(app_context):
-    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+    reader = dag.RepoReader(app_context, dag.DAG('history', 2), allow_git_init=False)
 
     with (
         patch(
-            "cola.models.dag.core.run_command",
-            return_value=(128, "", "fatal: bad revision"),
+            'cola.models.dag.core.run_command',
+            return_value=(128, '', 'fatal: bad revision'),
         ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         list(reader.get())
 
     reader.reset()
 
     assert reader.returncode == 0
-    assert reader.error == ""
-
+    assert reader.error == ''
 
 
 def test_repo_reader_isolates_overlapping_runs(app_context):
-    shared_oid = "1" * 40
-    parent_a_oid = "a" * 40
-    parent_b_oid = "b" * 40
-    output_a = "\n".join(
+    shared_oid = '1' * 40
+    parent_a_oid = 'a' * 40
+    parent_b_oid = 'b' * 40
+    output_a = '\n'.join(
         (_log_entry(shared_oid, parent_a_oid), _log_entry(parent_a_oid))
     )
-    output_b = "\n".join(
+    output_b = '\n'.join(
         (_log_entry(shared_oid, parent_b_oid), _log_entry(parent_b_oid))
     )
-    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+    reader = dag.RepoReader(app_context, dag.DAG('history', 2), allow_git_init=False)
 
     with (
         patch(
-            "cola.models.dag.core.run_command",
-            side_effect=((11, output_a, "old error"), (12, output_b, "new error")),
+            'cola.models.dag.core.run_command',
+            side_effect=((11, output_a, 'old error'), (12, output_b, 'new error')),
         ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         old_commits = reader.get()
         old_parent = next(old_commits)
@@ -235,20 +236,18 @@ def test_repo_reader_isolates_overlapping_runs(app_context):
     assert reader._top_commit is new_tip
     assert reader.cached is True
     assert reader.returncode == 12
-    assert reader.error == "new error"
+    assert reader.error == 'new error'
 
 
 def test_repo_reader_reset_does_not_mutate_partial_run(app_context):
-    tip_oid = "1" * 40
-    parent_oid = "a" * 40
-    output = "\n".join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
-    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+    tip_oid = '1' * 40
+    parent_oid = 'a' * 40
+    output = '\n'.join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
+    reader = dag.RepoReader(app_context, dag.DAG('history', 2), allow_git_init=False)
 
     with (
-        patch(
-            "cola.models.dag.core.run_command", return_value=(0, output, "")
-        ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.core.run_command', return_value=(0, output, '')),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         commits = reader.get()
         parent = next(commits)
@@ -283,50 +282,50 @@ def test_repo_reader_reset_does_not_mutate_partial_run(app_context):
 
 
 def test_repo_reader_publishes_command_status_before_first_yield(app_context):
-    tip_oid = "1" * 40
-    parent_oid = "a" * 40
-    output = "\n".join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
-    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+    tip_oid = '1' * 40
+    parent_oid = 'a' * 40
+    output = '\n'.join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
+    reader = dag.RepoReader(app_context, dag.DAG('history', 2), allow_git_init=False)
 
     with (
         patch(
-            "cola.models.dag.core.run_command",
-            return_value=(17, output, "command failed"),
+            'cola.models.dag.core.run_command',
+            return_value=(17, output, 'command failed'),
         ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         commits = reader.get()
         next(commits)
 
     assert reader.returncode == 17
-    assert reader.error == "command failed"
+    assert reader.error == 'command failed'
     assert reader.cached is False
     assert reader._top_commit is None
 
 
 def test_repo_reader_keeps_command_status_after_processing_exception(app_context):
-    tip_oid = "1" * 40
-    parent_oid = "a" * 40
-    output = "\n".join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
-    reader = dag.RepoReader(app_context, dag.DAG("history", 2), allow_git_init=False)
+    tip_oid = '1' * 40
+    parent_oid = 'a' * 40
+    output = '\n'.join((_log_entry(tip_oid, parent_oid), _log_entry(parent_oid)))
+    reader = dag.RepoReader(app_context, dag.DAG('history', 2), allow_git_init=False)
 
     with (
         patch(
-            "cola.models.dag.core.run_command",
-            return_value=(17, output, "command failed"),
+            'cola.models.dag.core.run_command',
+            return_value=(17, output, 'command failed'),
         ),
-        patch("cola.models.dag.prefs.logdate", return_value="default"),
+        patch('cola.models.dag.prefs.logdate', return_value='default'),
     ):
         commits = reader.get()
         next(commits)
         with (
-            patch.object(reader.factory, "new", side_effect=RuntimeError("boom")),
-            pytest.raises(RuntimeError, match="boom"),
+            patch.object(reader.factory, 'new', side_effect=RuntimeError('boom')),
+            pytest.raises(RuntimeError, match='boom'),
         ):
             next(commits)
 
     assert reader.returncode == 17
-    assert reader.error == "command failed"
+    assert reader.error == 'command failed'
     assert reader.cached is False
     assert reader._top_commit is None
 
@@ -494,22 +493,22 @@ def test_prepare_labels_two_groups_with_locals():
 
 
 def test_history_request_is_frozen_and_cache_key_ignores_run_id():
-    request = dag.HistoryRequest(7, "HEAD", 100, True)
+    request = dag.HistoryRequest(7, 'HEAD', 100, True)
 
     assert tuple(request.__dataclass_fields__) == (
-        "run_id",
-        "ref",
-        "count",
-        "display_status",
+        'run_id',
+        'ref',
+        'count',
+        'display_status',
     )
-    assert request.cache_key == ("HEAD", 100, True)
-    assert dag.HistoryRequest(8, "HEAD", 100, True).cache_key == request.cache_key
+    assert request.cache_key == ('HEAD', 100, True)
+    assert dag.HistoryRequest(8, 'HEAD', 100, True).cache_key == request.cache_key
     with pytest.raises(AttributeError):
-        request.ref = "main"
+        request.ref = 'main'
 
 
 def test_history_result_is_frozen_and_has_exact_graph_contract():
-    result = dag.HistoryResult(7, True, 0, "", (), None)
+    result = dag.HistoryResult(7, True, 0, '', (), None)
 
     from dataclasses import fields
     from typing import get_type_hints
@@ -517,12 +516,17 @@ def test_history_result_is_frozen_and_has_exact_graph_contract():
     from cola.models.graph import GraphResult
 
     assert [field.name for field in fields(dag.HistoryResult)] == [
-        "run_id", "successful", "returncode", "error", "commits", "graph"
+        'run_id',
+        'successful',
+        'returncode',
+        'error',
+        'commits',
+        'graph',
     ]
-    assert get_type_hints(dag.HistoryResult)["graph"] == GraphResult | None
+    assert get_type_hints(dag.HistoryResult)['graph'] == GraphResult | None
     assert result.graph is None
     with pytest.raises(TypeError):
-        dag.HistoryResult(7, True, 0, "", ())
+        dag.HistoryResult(7, True, 0, '', ())
     with pytest.raises(AttributeError):
         result.successful = False
 

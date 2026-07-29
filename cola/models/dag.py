@@ -1,8 +1,8 @@
 from __future__ import annotations
 import datetime
 import json
-from dataclasses import dataclass
 from collections.abc import Iterator
+from dataclasses import dataclass
 
 from .. import core
 from .. import utils
@@ -353,7 +353,7 @@ class RepoReader:
         else:
             # git init
             status = 0
-            command_error = ''
+            command_error = core.UStr('', core.ENCODING)
             if epoch == self._epoch:
                 self.returncode = status
                 self.error = command_error
