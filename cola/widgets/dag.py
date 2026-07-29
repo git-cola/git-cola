@@ -1404,11 +1404,11 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if self._column_init_state < ColumnInitState.SHOW_EVENT:
             self._column_init_state = ColumnInitState.SHOW_EVENT
             width = self.header().width()
-            one_half = width // 2
-            one_quarter = width // 4
+            summary_width = int(width * 0.70)
+            author_width = int(width * 0.15)
             # Set initial SUMMARY column width; it will be adjusted when graph loads.
-            self.setColumnWidth(CommitTreeWidgetItem.SUMMARY, one_half)
-            self.setColumnWidth(CommitTreeWidgetItem.AUTHOR, one_quarter)
+            self.setColumnWidth(CommitTreeWidgetItem.SUMMARY, summary_width)
+            self.setColumnWidth(CommitTreeWidgetItem.AUTHOR, author_width)
 
     def changeEvent(self, event):
         if event.type() == QtCore.QEvent.PaletteChange:

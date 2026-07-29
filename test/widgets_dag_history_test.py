@@ -19,6 +19,7 @@ from cola.widgets.dag import GRAPH_PREV_ROW_ROLE
 from cola.widgets.dag import GRAPH_ROW_ROLE
 from cola.widgets.dag import CommitHistoryWidget
 from cola.widgets.dag import CommitTreeWidget
+from cola.widgets.dag import CommitTreeWidgetItem
 from cola.widgets.dag import EdgeColor
 from cola.widgets.dag import GitDAG
 from cola.widgets.dag import GraphDelegate
@@ -1289,6 +1290,31 @@ def test_commit_tree_palette_change_updates_viewport_and_next_paint_style(
     assert calls[0] != calls[1]
     center = QtCore.QPoint(GraphDelegate.LANE_WIDTH // 2, 13)
     assert before.pixelColor(center) != after.pixelColor(center)
+
+
+def test_default_column_ratio_prioritizes_summary_without_overwriting_saved_widths(
+    qapp, app_context, managed_qobject
+):
+    history = managed_qobject(CommitHistoryWidget(app_context))
+    tree = history.treewidget
+    history.resize(800, 400)
+    history.show()
+    qapp.processEvents()
+
+    assert tree.columnWidth(CommitTreeWidgetItem.SUMMARY) == pytest.approx(
+        tree.header().width() * 0.70, abs=2
+    )
+    assert tree.columnWidth(CommitTreeWidgetItem.AUTHOR) == pytest.approx(
+        tree.header().width() * 0.15, abs=2
+    )
+
+    custom_widths = [301, 201]
+    tree.set_column_widths(custom_widths)
+    saved_state = history.export_state()
+    restored = managed_qobject(CommitHistoryWidget(app_context))
+
+    assert restored.apply_state(saved_state)
+    assert restored.treewidget.column_widths()[:2] == custom_widths
 
 
 def test_display_inline_graph_installs_and_removes_delegate(
