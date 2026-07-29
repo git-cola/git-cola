@@ -9,6 +9,8 @@
 **Tech Stack:** Python 3, PyQt6/PySide6 (via qtpy), Git Cola/Fanta-eigene Widgets (`filelist.FileWidget`, `CommitHistoryWidget`, `qtutils.create_dock`).
 
 ---
+> **Review-Status:** Critical Plan Review abgeschlossen (deleg_c0c66c6c). 4 BLOCKER + 4 MAJOR behoben.
+> Änderungen: Test-Fixtures korrigiert, State-Persistenz mit setVisible/Default, Dock in Menü-Listen, Signal über CommitHistoryWidget, widget_version=3, return False bei Malformed-State.
 
 ## Architektur-Kontext
 
@@ -134,12 +136,10 @@ def test_history_files_dock_lists_changed_files_for_selected_commit(
     subprocess.run(['git', 'add', '.'], cwd=repo, check=True)
     subprocess.run(['git', 'commit', '-m', 'second'], cwd=repo, check=True)
 
-    # Model mit temporärem Repo
+    # Model mit temporärem Repo — patche nur das git-Attribut
     from cola.models.main import MainModel
-    model = MainModel(cwd=repo, mode=app_context.model.mode)
-    mock_model = type(app_context.model)()
-    mock_model.git = model.git
-    monkeypatch.setattr(app_context, 'model', mock_model)
+    tmp_model = MainModel(cwd=repo, mode=app_context.model.mode)
+    monkeypatch.setattr(app_context.model, 'git', tmp_model.git)
 
     view = managed_qobject(MainView(app_context))
     view.show()
@@ -172,17 +172,16 @@ def test_history_files_dock_lists_changed_files_for_selected_commit(
 
 
 def test_history_files_dock_toggle_action_exists(
-    qapp, tmp_app_context, managed_qobject
+    qapp, main_context, managed_qobject
 ):
     """Das View-Menü enthält einen Toggle für den History-Files-Dock."""
-    view = managed_qobject(MainView(tmp_app_context))
+    view = managed_qobject(MainView(main_context))
     view.show()
     # DockToggleAction im View-Menü finden
     view_menu = view.view_menu
     toggle_actions = [
         a for a in view_menu.actions()
-        if 'History Files' in a.text() or 'History-Dateien' in a.text()
-        or 'Dateien' in a.text()
+        if 'History Files' in a.text()
     ]
     assert len(toggle_actions) >= 1
 ```
@@ -238,14 +237,17 @@ Nach der `historydock`-Erzeugung (ca. Zeile 124, nach `self.historywidget = self
 
 **Schritt 3: Signal-Verdrahtung**
 
-Nach der Erzeugung von `history_tree` (ca. Zeile 125):
+Nach der Erzeugung von `history_tree` (ca. Zeile 125), das `commits_selected`-Signal des `CommitHistoryWidget` nutzen (identisch zum `GitDAG`-Muster, Zeile 2052–2055):
 
 ```python
         # Wire history selection to file list (same pattern as GitDAG)
-        history_tree.commits_selected.connect(
+        self.historywidget.commits_selected.connect(
             self.history_files_widget.commits_selected
         )
 ```
+
+Das `CommitHistoryWidget.commits_selected`-Signal ist der dokumentierte Relay-Punkt (via `select_commits()` in Zeile 1910–1914). Direkte Verbindung mit `treewidget.commits_selected` würde zukünftige Filter-/Transform-Logik in `CommitHistoryWidget` umgehen.
+
 
 **Schritt 4: Dock im Layout platzieren**
 
@@ -258,13 +260,22 @@ In der Dock-Anordnung (ca. Zeile 912), füge den Files-Dock hinzu – tabifizier
         self.historydock.raise_()  # History bleibt primär sichtbar
 ```
 
-**Schritt 5: View-Menü-Eintrag**
+**Schritt 5: View-Menü-Eintrag und Dock-Shortcut**
 
-Im View-Menü (nach dem History-Eintrag, ca. Zeile 1050):
+In `build_view_menu()` (ca. Zeile 1055), den Dock der `dockwidgets`-Liste hinzufügen (Konsistenz mit allen anderen Docks):
 
 ```python
-        menu.addAction(self.history_files_dock.toggleViewAction())
+        self.history_files_dock,
 ```
+
+In `setup_dockwidget_view_menu()` (ca. Zeile 1390), Shortcut-Tupel ergänzen:
+
+```python
+        self.history_files_dock,
+```
+
+Damit erhält der Dock automatisch einen Tastatur-Shortcut und ist konsistent mit dem Projekt-Muster.
+
 
 **Schritt 6: State-Persistenz**
 
@@ -277,14 +288,14 @@ In `export_state()` (ca. Zeile 1307):
 In `apply_state()` (ca. Zeile 1322), nach der History-Wiederherstellung:
 
 ```python
-        show_history_files = state.get('show_history_files')
+        show_history_files = state.get('show_history_files', True)
         if isinstance(show_history_files, bool):
+            self.history_files_dock.setVisible(show_history_files)
             if show_history_files:
-                self.history_files_dock.show()
                 self.history_files_dock.raise_()
 ```
 
-Und in der Malformed-State-Validierung (ca. Zeile 1345):
+Und in der Malformed-State-Validierung (ca. Zeile 1345), analog zu `show_history`:
 
 ```python
         if 'show_history_files' in state and not isinstance(
@@ -292,13 +303,31 @@ Und in der Malformed-State-Validierung (ca. Zeile 1345):
         ):
             self.history_files_dock.show()
             self.history_files_dock.raise_()
+            return False
 ```
 
-**Schritt 7: Aufräumen in `close()`**
+**Schritt 7: Fallback bei State-Wiederherstellungsfehlern**
+
+Im `else`-Zweig von `apply_state()` (ca. Zeile 1379–1380), den Files-Dock wie den History-Dock als Fallback sichtbar machen:
+
+```python
+        self.history_files_dock.show()
+        self.history_files_dock.raise_()
+```
+
+**Schritt 8: Widget-Version erhöhen**
+
+Da ein neuer Dock hinzugefügt wurde, muss `widget_version` von 2 auf 3 erhöht werden (ca. Zeile 80), damit alte gespeicherte Qt-Layout-States (`windowstate`) den neuen Dock korrekt initialisieren:
+
+```python
+        self.widget_version = 3
+```
+
+**Schritt 9: Aufräumen in `close()`**
 
 In der `close()`-Methode (ca. Zeile 1030), keine zusätzliche Logik nötig – Qt kümmert sich um Dock-Cleanup via Parent-Ownership.
 
-**Schritt 8: Verifiziere GREEN**
+**Schritt 10: Verifiziere GREEN**
 
 ```bash
 LD_LIBRARY_PATH=/opt/data/sysroot/git-fanta/usr/lib/x86_64-linux-gnu \
@@ -326,14 +355,14 @@ LD_LIBRARY_PATH=/opt/data/sysroot/git-fanta/usr/lib/x86_64-linux-gnu \
   test/widgets_main_history_test.py test/widgets_history_filelist_test.py -p no:ruff -q
 ```
 
-**Schritt 9: Ruff & Diffcheck**
+**Schritt 11: Ruff & Diffcheck**
 
 ```bash
 /opt/data/venvs/git-fanta/bin/ruff check test/widgets_main_history_test.py test/widgets_history_filelist_test.py cola/widgets/main.py
 git diff --check
 ```
 
-**Schritt 10 – Commit:**
+**Schritt 12 – Commit:**
 
 ```bash
 git add cola/widgets/main.py test/widgets_main_history_test.py test/widgets_history_filelist_test.py
@@ -356,7 +385,9 @@ def test_history_files_dock_clears_on_deselection(
     qapp, app_context, tmp_path_factory, managed_qobject, monkeypatch
 ):
     """Files-Dock leert sich, wenn History-Selektion aufgehoben wird."""
-    # Setup wie in Task 2, dann:
+    # Setup via helper fixture (extrahiert aus Task 2, um DRY zu wahren):
+    _setup_tmp_repo_with_commits(monkeypatch, app_context, tmp_path_factory)
+    # dann:
     tree = view.historywidget.treewidget
     tree.setCurrentItem(tree.topLevelItem(0))
     qapp.processEvents()
@@ -377,7 +408,9 @@ def test_show_history_files_persists_across_restart(
     state = view.export_state()
     assert state.get('show_history_files') is False
 
+    # Explizites apply_state mit gespeichertem State
     view2 = managed_qobject(MainView(app_context))
+    view2.apply_state(state)
     view2.show()
     assert view2.history_files_dock.isHidden()  # bleibt hidden
 
@@ -385,7 +418,12 @@ def test_show_history_files_persists_across_restart(
 def test_existing_gitdag_files_dock_unchanged(
     qapp, app_context, managed_qobject
 ):
-    """GitDAG-FileWidget-Verhalten ist unverändert."""
+    """GitDAG-FileWidget-Verhalten ist unverändert.
+    
+    Dieser Test gehört konzeptionell in test/widgets_dag_history_test.py,
+    wird aber hier als Integrations-Gate geführt, um MainView-Änderungen
+    gegen GitDAG-Regressionen abzusichern.
+    """
     from cola.widgets.dag import GitDAG
     params = type('Args', (), {'ref': 'HEAD', 'count': 10, 'display_status': False})()
     dag_window = managed_qobject(GitDAG(app_context, params))
