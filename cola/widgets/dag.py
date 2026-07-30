@@ -1690,6 +1690,10 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         layout = qtutils.vbox(
             defs.no_margin, defs.spacing, controls_widget, self.files_splitter
         )
+        # Pin the controls row to its natural height; give the splitter the
+        # remaining vertical space.
+        layout.setStretchFactor(controls_widget, 0)
+        layout.setStretchFactor(self.files_splitter, 1)
         self.setLayout(layout)
 
         self.treewidget.commits_selected.connect(self.select_commits)
@@ -2097,7 +2101,9 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         super().showEvent(event)
         if not self._widgets_initialized:
             self._widgets_initialized = True
-            self.maxresults.setMinimumHeight(self.revtext.height())
+            # Use sizeHint() rather than height() so the controls row is sized
+            # from its natural geometry, not whatever the splitter assigned.
+            self.maxresults.setMinimumHeight(self.revtext.sizeHint().height())
         self.refresh_files()
 
 
