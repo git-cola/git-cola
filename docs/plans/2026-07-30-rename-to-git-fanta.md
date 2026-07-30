@@ -1,3 +1,17 @@
+---
+status: completed
+completed_at: 2026-07-31
+plan_commit: f57ca256
+implementation_branch: renaming/opus5/minimax-M3
+implementation_head: 3083c9dd
+ci_run: nicht ausgefuehrt (lokal gruen)
+manual_verification: |
+  - ./bin/git-fanta version --brief  -> 4.19.0
+  - App wurde gestartet, Titel und About zeigen "Git Fanta", Fenster-Icon vorhanden
+  - cola.tabwidth aus einer alten .gitconfig wird als fanta.tabwidth gelesen (test_legacy_config_prefix_is_still_read)
+  - ~/.config/git-cola wurde nach ~/.config/git-fanta migriert (test_migration_copies_the_legacy_directory)
+---
+
 # Umbenennung: git-cola → git-fanta
 
 **Erstellt:** 2026-07-30
