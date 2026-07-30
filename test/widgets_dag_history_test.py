@@ -3428,3 +3428,27 @@ def test_invalid_file_panel_state_is_rejected(
     assert not widget.is_valid_state(state)
     assert not widget.apply_state(state)
     assert widget.export_state() == before
+
+
+def test_commit_tree_apply_state_survives_graph_load(
+    qapp, app_context, managed_qobject
+):
+    """Restored column widths survive the post-load resizeColumnToContents pass."""
+    tree = managed_qobject(CommitTreeWidget(app_context, None))
+    tree.setHeaderLabels(['Summary', 'Author', 'Date'])
+    tree.header().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'aaa')
+
+    # Stored widths the user picked manually before closing the app.
+    tree.apply_state({'column_widths': [311, 99]})
+
+    assert tree.columnWidth(CommitTreeWidgetItem.SUMMARY) == 311
+    assert tree.columnWidth(CommitTreeWidgetItem.AUTHOR) == 99
+
+    # add_commits triggers apply_graph_result which calls
+    # resizeColumnToContents(SUMMARY). The persisted widths must survive.
+    tree.add_commits([commit], _graph_result((commit,)))
+
+    assert tree.columnWidth(CommitTreeWidgetItem.SUMMARY) == 311
+    assert tree.columnWidth(CommitTreeWidgetItem.AUTHOR) == 99

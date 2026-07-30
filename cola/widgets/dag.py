@@ -1392,7 +1392,10 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
             # We only care about the first two columns. This allows the final
             # column to stretch and shrink.
             self.set_column_widths(column_widths[:2])
-            self._column_init_state = ColumnInitState.SHOW_EVENT
+            # Skip both the showEvent default resize AND the post-graph-load
+            # resizeColumnToContents() so that user-picked widths stick across
+            # restarts.
+            self._column_init_state = ColumnInitState.GRAPH
         return True
 
     # Qt overrides
