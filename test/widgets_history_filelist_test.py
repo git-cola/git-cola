@@ -5,8 +5,10 @@ import sys
 
 import pytest
 
+from cola import icons
 from cola.widgets.filelist import FileTreeWidgetItem
 from cola.widgets.filelist import FileWidget
+from cola.widgets.filelist import parse_status_and_numstat
 from qtpy import QtCore
 from qtpy import QtWidgets
 
@@ -81,3 +83,59 @@ def test_selection_emits_selected_paths(qapp, app_context, managed_qobject):
     widget.setCurrentItem(widget.topLevelItem(0))
 
     assert emitted == [['src/a.py']]
+
+
+def test_parser_splits_nul_separated_raw_and_numstat():
+    """"git show --raw --numstat -z" yields a status map plus numstat rows."""
+    out = (
+        ':100644 100644 aaa bbb M\0cola/main.py\0'
+        ':000000 100644 000 ccc A\0cola/new.py\0'
+        '33\t0\tcola/main.py\0'
+        '10\t0\tcola/new.py\0'
+    )
+
+    status_by_path, numstat = parse_status_and_numstat(out, '\0')
+
+    assert status_by_path == {'cola/main.py': 'M', 'cola/new.py': 'A'}
+    assert numstat == ['33\t0\tcola/main.py', '10\t0\tcola/new.py']
+
+
+def test_parser_splits_newline_separated_raw_and_numstat():
+    """"git diff-index --raw --numstat" keeps the path inline, newline separated."""
+    out = (
+        ':100644 100644 aaa bbb M\ta.py\n'
+        ':000000 100644 000 ccc A\tb.py\n'
+        '1\t0\ta.py\n'
+        '1\t0\tb.py\n'
+    )
+
+    status_by_path, numstat = parse_status_and_numstat(out, '\n')
+
+    assert status_by_path == {'a.py': 'M', 'b.py': 'A'}
+    assert numstat == ['1\t0\ta.py', '1\t0\tb.py']
+
+
+def test_parser_tolerates_numstat_without_raw():
+    """Merge commits emit numstat only; the status map stays empty."""
+    status_by_path, numstat = parse_status_and_numstat('1\t0\tt.py\0', '\0')
+
+    assert status_by_path == {}
+    assert numstat == ['1\t0\tt.py']
+
+
+@pytest.mark.parametrize(
+    ('status', 'expected'),
+    (
+        ('A', 'plus.svg'),
+        ('M', 'modified.svg'),
+        ('D', 'circle-slash-red.svg'),
+        ('T', 'modified.svg'),
+        ('R', 'git-compare.svg'),
+        ('C', 'git-compare.svg'),
+        ('X', 'file-text.svg'),
+        ('', 'file-text.svg'),
+    ),
+)
+def test_diff_status_basename_maps_known_codes(status, expected):
+    """Each git status code maps to the documented icon basename."""
+    assert icons.diff_status_basename(status, 'src/Makefile') == expected

@@ -5,6 +5,7 @@ from qtpy.QtCore import Signal
 
 from .. import cmds
 from .. import hotkeys
+from .. import icons
 from .. import qtutils
 from ..i18n import N_
 from ..models import dag
@@ -69,7 +70,6 @@ class FileWidget(TreeWidget):
             return
 
         git = self.context.git
-        paths = []
 
         if len(commits) > 1:
             # Get a list of changed files for a commit range.
@@ -78,21 +78,35 @@ class FileWidget(TreeWidget):
             start = start_oid + '~'
             if end == dag.STAGE:
                 status, out, _ = git.diff(
-                    start, cached=True, z=True, numstat=True, no_renames=True
+                    start,
+                    cached=True,
+                    z=True,
+                    numstat=True,
+                    raw=True,
+                    no_renames=True,
                 )
             elif end == dag.WORKTREE:
                 if start_oid == dag.STAGE:
-                    status, out, _ = git.diff(z=True, numstat=True, no_renames=True)
+                    status, out, _ = git.diff(
+                        z=True, numstat=True, raw=True, no_renames=True
+                    )
                 else:
                     status, out, _ = git.diff(
-                        start, z=True, numstat=True, no_renames=True
+                        start,
+                        z=True,
+                        numstat=True,
+                        raw=True,
+                        no_renames=True,
                     )
             else:
                 status, out, _ = git.diff(
-                    start, end, z=True, numstat=True, no_renames=True
+                    start,
+                    end,
+                    z=True,
+                    numstat=True,
+                    raw=True,
+                    no_renames=True,
                 )
-            if status == 0:
-                paths = [f for f in out.rstrip('\0').split('\0') if f]
         else:
             # Get the list of changed files in a single commit.
             commit = commits[0]
@@ -104,35 +118,48 @@ class FileWidget(TreeWidget):
             # This is also true for "git diff-index" as well.
             if oid == dag.STAGE:
                 status, out, _ = git.diff_index(
-                    'HEAD', cached=True, numstat=True, _readonly=True
+                    'HEAD', cached=True, numstat=True, raw=True, _readonly=True
                 )
-                if status == 0:
-                    paths = [f for f in out.split('\n') if f]
             elif oid == dag.WORKTREE:
-                status, out, _ = git.diff_files(numstat=True, _readonly=True)
-                if status == 0:
-                    paths = [f for f in out.split('\n') if f]
+                status, out, _ = git.diff_files(
+                    numstat=True, raw=True, _readonly=True
+                )
             else:
                 status, out, _ = git.show(
                     oid,
                     format='',
                     numstat=True,
+                    raw=True,
                     no_renames=True,
                     z=True,
                     _readonly=True,
                 )
-                if status == 0:
-                    paths = [f for f in out.rstrip('\0').split('\0') if f]
 
-        self.list_files(paths)
+        if status != 0:
+            self.list_files([])
+            return
 
-    def list_files(self, files_log):
+        # git show uses -z; git diff-index / git diff-files do not.
+        # git diff above always uses -z.
+        if oid in (dag.STAGE, dag.WORKTREE):
+            separator = '\n'
+        else:
+            separator = '\0'
+
+        status_by_path, numstat_rows = parse_status_and_numstat(out, separator)
+        self.list_files(numstat_rows, status_by_path=status_by_path)
+
+    def list_files(self, files_log, status_by_path=None):
         self.clear()
         if not files_log:
             return
         files = []
+        status_by_path = status_by_path or {}
         for filename in files_log:
             item = FileTreeWidgetItem(filename)
+            texts = filename.split('\t')
+            path = texts[2] if len(texts) >= 3 else ''
+            item.set_status(status_by_path.get(path, ''))
             files.append(item)
         self.insertTopLevelItems(0, files)
 
@@ -212,6 +239,89 @@ class FileTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
         texts = file_log.split('\t')
         self.path = path = texts[2]
+        self.status = ''
         self.setText(0, path)
         self.setText(1, texts[0])
         self.setText(2, texts[1])
+
+    def set_status(self, status):
+        """Apply a git diff --raw status code (e.g. 'A', 'M', 'D', 'T').
+
+        Updates the row icon and tooltip. Unknown/empty codes fall back to
+        the filename-derived icon, mirroring icons.status().
+        """
+        self.status = status or ''
+        basename = icons.diff_status_basename(self.status, self.path)
+        self.setIcon(0, icons.from_name(basename))
+        labels = {
+            'A': 'Added',
+            'D': 'Deleted',
+            'M': 'Modified',
+            'T': 'Type changed',
+            'R': 'Renamed',
+            'C': 'Copied',
+        }
+        if self.status in labels:
+            self.setToolTip(0, labels[self.status])
+        else:
+            self.setToolTip(0, '')
+
+
+def parse_status_and_numstat(output, separator):
+    """Parse the combined output of "git ... --raw --numstat".
+
+    Returns a ``(status_by_path, numstat_rows)`` tuple.
+
+    The raw block comes first and uses ``:old_mode new_mode old_sha new_sha
+    STATUS\\tpath`` per entry. The numstat block follows and uses
+    ``adds\\tdels\\tpath``. When ``--z`` is used, path is NUL-terminated
+    and appears as a separate token.
+
+    A merge commit emits numstat only; the raw block is empty and the
+    returned status map is empty too.
+    """
+    sep = '\0' if separator == '\0' else '\n'
+    status_by_path = {}
+    numstat_rows = []
+
+    if sep == '\0':
+        # Split into tokens. Raw entries are ":..." lines; raw paths are
+        # the token immediately after the raw entry; numstat entries have
+        # three tab-separated fields, the third being the path.
+        tokens = output.split('\0')
+        i = 0
+        n = len(tokens)
+        while i < n:
+            token = tokens[i]
+            if token.startswith(':'):
+                # ":old_mode new_mode old_sha new_sha STATUS"
+                parts = token.split(' ')
+                if len(parts) >= 5 and i + 1 < n:
+                    status_code = parts[4][:1]
+                    status_by_path[tokens[i + 1]] = status_code
+                    i += 2
+                    continue
+                i += 1
+                continue
+            if not token:
+                i += 1
+                continue
+            # Numstat row: "adds\tdels\tpath"
+            if token.count('\t') >= 2:
+                numstat_rows.append(token)
+            i += 1
+    else:
+        for line in output.split('\n'):
+            if not line:
+                continue
+            if line.startswith(':'):
+                parts = line.split('\t', 1)
+                if len(parts) == 2:
+                    head = parts[0].split(' ')
+                    if len(head) >= 5:
+                        status_by_path[parts[1]] = head[4][:1]
+                continue
+            if line.count('\t') >= 2:
+                numstat_rows.append(line)
+
+    return status_by_path, numstat_rows

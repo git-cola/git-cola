@@ -145,6 +145,30 @@ def status(filename: str, deleted: bool, is_staged: bool, untracked: bool) -> st
     return icon_name
 
 
+# Status codes produced by "git diff --raw" / "git show --raw".
+# https://git-scm.com/docs/git-diff#diff-format-doc
+DIFF_STATUS_ICONS = {
+    'A': 'plus.svg',                # added
+    'D': 'circle-slash-red.svg',    # deleted
+    'M': 'modified.svg',            # modified
+    'T': 'modified.svg',            # type changed
+    'R': 'git-compare.svg',         # renamed (defensive; we pass --no-renames)
+    'C': 'git-compare.svg',         # copied (defensive)
+}
+
+
+def diff_status_basename(status, filename):
+    """Map a git diff --raw status code to an icon basename.
+
+    Falls back to the filename-derived basename for unknown or empty codes,
+    mirroring the else-branch of status().
+    """
+    icon = DIFF_STATUS_ICONS.get(status)
+    if icon is not None:
+        return icon
+    return basename_from_filename(filename)
+
+
 # Icons creators and SVG file references
 
 
