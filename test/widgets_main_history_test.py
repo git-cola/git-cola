@@ -35,6 +35,8 @@ HISTORY_KEYS = {
     'count',
     'display_inline_graph',
     'display_status',
+    'display_files',
+    'files_sizes',
     'log',
 }
 
@@ -988,11 +990,16 @@ def test_export_owns_visibility_and_nests_exact_canonical_history_state(
     )
     assert set(state['history']) == HISTORY_KEYS
     assert state['history'] == history.export_state()
-    assert state['history'] == {
+    # files_sizes is excluded from the hardcoded comparison because it depends
+    # on the live splitter geometry.
+    history_state = dict(state['history'])
+    history_state.pop('files_sizes', None)
+    assert history_state == {
         'ref': 'main --',
         'count': 321,
         'display_inline_graph': True,
         'display_status': True,
+        'display_files': False,
         'log': {'column_widths': [211, 122]},
     }
     assert HISTORY_KEYS.isdisjoint(state.keys())
@@ -1047,7 +1054,10 @@ def test_malformed_task7_state_is_rejected_before_any_existing_state_changes(
     window.lock_layout_action.setChecked(False)
     window.statuswidget.filter_widget.hide()
     window.model.set_ref_sort(0)
+    # files_sizes depends on the live splitter geometry and is therefore
+    # excluded from the atomic-rejection assertion.
     before_history = window.historywidget.export_state()
+    before_history.pop('files_sizes', None)
 
     state = _legacy_v2_state(window)
     state.update(
@@ -1061,12 +1071,14 @@ def test_malformed_task7_state_is_rejected_before_any_existing_state_changes(
     assert window.apply_state(state) is False
     qapp.processEvents()
 
+    after_history = window.historywidget.export_state()
+    after_history.pop('files_sizes', None)
     assert window.dockWidgetArea(window.statusdock) == QtCore.Qt.LeftDockWidgetArea
     assert window.lock_layout is False
     assert window.lock_layout_action.isChecked() is False
     assert window.statuswidget.filter_widget.isVisible() is False
     assert window.model.ref_sort == 0
-    assert window.historywidget.export_state() == before_history
+    assert after_history == before_history
     assert window.historydock.isVisible()
     assert _history_is_active(window.historydock)
 
@@ -1097,10 +1109,15 @@ def test_missing_history_child_is_valid_legacy_state(
     window = managed_qobject(MainView(main_context))
     state = _legacy_v2_state(window)
     _show(qapp, window)
+    # Exclude files_sizes because the live splitter geometry can shift as a
+    # side effect of apply_state setting dock visibility.
     defaults = window.historywidget.export_state()
+    defaults.pop('files_sizes', None)
 
     assert window.apply_state(state)
-    assert window.historywidget.export_state() == defaults
+    after = window.historywidget.export_state()
+    after.pop('files_sizes', None)
+    assert after == defaults
     assert window.historydock.isVisible()
     assert _history_is_active(window.historydock)
 

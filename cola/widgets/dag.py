@@ -1994,6 +1994,8 @@ class CommitHistoryWidget(QtWidgets.QWidget):
             'count': get(self.maxresults),
             'display_inline_graph': self.display_inline_graph_action.isChecked(),
             'display_status': self.display_status_action.isChecked(),
+            'display_files': self.display_files_action.isChecked(),
+            'files_sizes': get(self.files_splitter),
             'log': log_state,
         }
 
@@ -2013,6 +2015,18 @@ class CommitHistoryWidget(QtWidgets.QWidget):
             and 1 <= count <= 9_999_999
             and isinstance(display_status, bool)
             and isinstance(display_inline_graph, bool)
+        ):
+            return False
+        display_files = state.get('display_files', False)
+        if not isinstance(display_files, bool):
+            return False
+        files_sizes = state.get('files_sizes')
+        if files_sizes is not None and not (
+            isinstance(files_sizes, (list, tuple))
+            and all(
+                isinstance(size, int) and not isinstance(size, bool)
+                for size in files_sizes
+            )
         ):
             return False
         log_state = state.get('log')
@@ -2037,12 +2051,21 @@ class CommitHistoryWidget(QtWidgets.QWidget):
             'display_status', self.display_status_action.isChecked()
         )
         display_inline_graph = state.get('display_inline_graph', True)
+        display_files = state.get(
+            'display_files', self.display_files_action.isChecked()
+        )
+        files_sizes = state.get('files_sizes')
         log_state = state.get('log')
 
         self.set_values(ref, count, display_status)
         self.treewidget.display_inline_graph(display_inline_graph)
         with qtutils.BlockSignals(self.display_inline_graph_action):
             self.display_inline_graph_action.setChecked(display_inline_graph)
+        self.display_files(display_files)
+        with qtutils.BlockSignals(self.display_files_action):
+            self.display_files_action.setChecked(display_files)
+        if files_sizes:
+            self.files_splitter.setSizes(list(files_sizes))
         if log_state is not None:
             self.treewidget.apply_state(log_state)
         return True

@@ -1433,11 +1433,17 @@ def test_history_widget_state_round_trips_canonically_between_children(
     state = first.export_state()
     assert second.apply_state(state)
 
-    assert second.export_state() == state
+    # files_sizes is layout-dependent and excluded from this comparison.
+    second_state = second.export_state()
+    second_state.pop('files_sizes', None)
+    expected = dict(state)
+    expected.pop('files_sizes', None)
+    assert second_state == expected
     assert state['ref'] == 'topic -- path'
     assert state['count'] == 4321
     assert state['display_status'] is True
     assert state['display_inline_graph'] is True
+    assert state['display_files'] is False
     assert state['log']['column_widths'] == widths[:2]
     assert not ({'windowstate', 'lock_layout', 'graph', 'diff', 'files'} & state.keys())
 
@@ -1478,11 +1484,13 @@ def test_gitdag_applies_and_round_trips_nested_history_state(
 ):
     params = dag.DAG('HEAD', 1000)
     widget = _new_gitdag(app_context, managed_qobject, params)
+    widget = _new_gitdag(app_context, managed_qobject, params)
     history = {
         'ref': 'stored-ref',
         'count': 321,
         'display_inline_graph': False,
         'display_status': False,
+        'display_files': False,
         'log': {'column_widths': [240, 120]},
     }
 
@@ -1492,7 +1500,8 @@ def test_gitdag_applies_and_round_trips_nested_history_state(
     assert params.ref == 'stored-ref'
     assert params.count == 321
     assert params.display_status is False
-    assert exported['history'] == history
+    for key in history:
+        assert exported['history'][key] == history[key]
     assert not (set(history) & exported.keys())
 
 
@@ -1515,7 +1524,8 @@ def test_gitdag_migrates_legacy_flat_history_state_to_canonical_nested_state(
     assert params.ref == 'legacy-ref'
     assert params.count == 321
     assert params.display_status is False
-    assert exported['history'] == legacy
+    assert {key: exported['history'][key] for key in legacy} == legacy
+    assert exported['history']['display_files'] is False
     assert not (set(legacy) & exported.keys())
 
 
@@ -3347,3 +3357,78 @@ def test_history_panel_runs_only_one_git_show_per_change(
     window.historywidget.select_commits([commit])
 
     assert len(show_calls) == 1
+
+
+def test_history_state_round_trips_the_file_panel(
+    qapp, app_context, managed_qobject
+):
+    """Panel visibility and splitter sizes survive an export/apply round trip."""
+    first = managed_qobject(CommitHistoryWidget(app_context, display_files=True))
+    second = managed_qobject(CommitHistoryWidget(app_context))
+
+    state = first.export_state()
+
+    assert state['display_files'] is True
+    assert state['files_sizes'] == first.files_splitter.sizes()
+    assert second.apply_state(state)
+    assert second.display_files_action.isChecked()
+    assert second.export_state()['display_files'] is True
+
+
+def test_missing_display_files_keeps_the_host_default(
+    qapp, app_context, managed_qobject
+):
+    """Legacy state without the key keeps whatever the host asked for."""
+    enabled = managed_qobject(CommitHistoryWidget(app_context, display_files=True))
+    disabled = managed_qobject(CommitHistoryWidget(app_context))
+    legacy = {
+        'ref': 'HEAD',
+        'count': 100,
+        'display_inline_graph': False,
+        'display_status': False,
+        'log': {'column_widths': [240, 120]},
+    }
+
+    assert enabled.apply_state(dict(legacy))
+    assert disabled.apply_state(dict(legacy))
+
+    assert enabled.display_files_action.isChecked()
+    assert not disabled.display_files_action.isChecked()
+
+
+def test_apply_state_restores_the_splitter_sizes(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    """Stored splitter sizes are handed back to the splitter on restore."""
+    widget = managed_qobject(CommitHistoryWidget(app_context, display_files=True))
+    applied = []
+    monkeypatch.setattr(widget.files_splitter, 'setSizes', applied.append)
+    state = widget.export_state()
+    state['files_sizes'] = [640, 160]
+
+    assert widget.apply_state(state)
+
+    assert applied == [[640, 160]]
+
+
+@pytest.mark.parametrize(
+    ('key', 'value'),
+    (
+        ('display_files', 'yes'),
+        ('files_sizes', 'wide'),
+        ('files_sizes', [240, 'wide']),
+        ('files_sizes', [240, True]),
+    ),
+)
+def test_invalid_file_panel_state_is_rejected(
+    key, value, qapp, app_context, managed_qobject
+):
+    """Corrupt panel state is rejected atomically, like every other key."""
+    widget = managed_qobject(CommitHistoryWidget(app_context, display_files=True))
+    state = widget.export_state()
+    state[key] = value
+    before = widget.export_state()
+
+    assert not widget.is_valid_state(state)
+    assert not widget.apply_state(state)
+    assert widget.export_state() == before
