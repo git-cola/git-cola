@@ -273,9 +273,12 @@ class Settings:
         if core.exists(path):
             values: dict[str, Any] = read_json(path)
         else:
-            # We couldn't find ~/.config/git-fanta, try ~/.cola
+            # We couldn't find ~/.config/git-fanta. Try the pre-rename
+            # git-fanta was renamed from git-cola; ~/.config/git-cola first, then the much older ~/.cola.
             values = {}
-            path = os.path.join(core.expanduser('~'), '.cola')
+            path = resources.legacy_config_home('settings')
+            if not core.exists(path):
+                path = os.path.join(core.expanduser('~'), '.cola')
             if core.exists(path):
                 json_values = read_json(path)
                 for key in self.values:

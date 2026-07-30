@@ -451,7 +451,7 @@ def restore_worktree(context: ApplicationContext) -> None:
 
 def build_layout_menu(widget: QtWidgets.QWidget, menu: QtWidgets.QMenu) -> None:
     """Add layouts from ~/.config/git-fanta/layouts to the specified menu"""
-    directory = resources.xdg_config_home('git-fanta', 'layouts')
+    directory = resources.config_home('layouts')
     if os.path.isdir(directory):
         layouts = sorted(os.listdir(directory))
     else:
@@ -475,9 +475,7 @@ def build_layout_menu(widget: QtWidgets.QWidget, menu: QtWidgets.QMenu) -> None:
 
 def save_layout(widget: QtWidgets.QWidget) -> None:
     """Save the current widget layout to a file"""
-    default_filename = resources.xdg_config_home(
-        'git-fanta', 'layouts', 'default.layout'
-    )
+    default_filename = resources.config_home('layouts', 'default.layout')
     parent_dir = os.path.dirname(default_filename)
     if not os.path.isdir(parent_dir):
         os.makedirs(parent_dir)
@@ -491,7 +489,7 @@ def save_layout(widget: QtWidgets.QWidget) -> None:
 
 def load_layout(widget: QtWidgets.QWidget) -> None:
     """Choose a Qt layout file and apply it to the current widget"""
-    directory = resources.xdg_config_home('git-fanta', 'layouts')
+    directory = resources.config_home('layouts')
     if not os.path.isdir(directory):
         os.makedirs(directory)
     filename = qtutils.existing_file(directory, title=N_('Load Layout'))

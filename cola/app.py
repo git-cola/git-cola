@@ -734,6 +734,8 @@ def startup_message() -> None:
 
 def initialize() -> str:
     """System-level initialization"""
+    # git-fanta was renamed from git-cola: carry ~/.config/git-cola over once.
+    resources.migrate_config_home()
     # We support ~/.config/git-fanta/git-bindir on Windows for configuring
     # a custom location for finding the "git" executable.
     git_path = find_git()
