@@ -178,7 +178,7 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
     """Return the default icon theme names"""
     result = []
 
-    icon_themes_env = core.getenv('GIT_COLA_ICON_THEME')
+    icon_themes_env = compat.getenv_with_legacy('GIT_FANTA_ICON_THEME')
     if icon_themes_env:
         result.extend([x for x in icon_themes_env.split(':') if x])
 
@@ -719,15 +719,15 @@ def async_update(context: ApplicationContext) -> None:
 
 def startup_message() -> None:
     """Print debug startup messages"""
-    trace = git.GIT_COLA_TRACE
+    trace = git.GIT_FANTA_TRACE
     if trace in ('2', 'trace'):
         msg1 = 'info: debug level 2: trace mode enabled'
-        msg2 = 'info: set GIT_COLA_TRACE=1 for less-verbose output'
+        msg2 = 'info: set GIT_FANTA_TRACE=1 for less-verbose output'
         Interaction.log(msg1)
         Interaction.log(msg2)
     elif trace:
         msg1 = 'info: debug level 1'
-        msg2 = 'info: set GIT_COLA_TRACE=2 for trace mode'
+        msg2 = 'info: set GIT_FANTA_TRACE=2 for trace mode'
         Interaction.log(msg1)
         Interaction.log(msg2)
 

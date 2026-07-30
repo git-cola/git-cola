@@ -114,7 +114,7 @@ class MainWindow(standard.MainWindow):
         self.cancelled = True
         self.editor: Any = None
         default_title = '%s - git fanta sequence editor' % core.getcwd()
-        title = core.getenv('GIT_COLA_SEQ_EDITOR_TITLE', default_title)
+        title = compat.getenv_with_legacy('GIT_FANTA_SEQ_EDITOR_TITLE', default_title)
         self.setWindowTitle(title)
         self.show_help_action = qtutils.add_action(
             self, N_('Show Help'), partial(show_help, context), hotkeys.QUESTION
@@ -174,7 +174,7 @@ class Editor(QtWidgets.QWidget):
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
-            text=core.getenv('GIT_COLA_SEQ_EDITOR_ACTION', N_('Rebase')),
+            text=compat.getenv_with_legacy('GIT_FANTA_SEQ_EDITOR_ACTION', N_('Rebase')),
             tooltip=N_('Accept changes and rebase\nShortcut: Ctrl+Enter'),
             icon=icons.ok(),
             default=True,

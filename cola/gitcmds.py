@@ -981,11 +981,16 @@ def rev_list_range(context: ApplicationContext, start, end) -> list[tuple[str, s
     return parse_rev_list(out)
 
 
-def commit_message_path(context: ApplicationContext) -> str:
-    """Return the path to .git/GIT_COLA_MSG"""
-    path = context.git.git_path('GIT_COLA_MSG')
-    if core.exists(path):
-        return path
+def commit_message_path(context: ApplicationContext) -> str | None:
+    """Return the path to .git/GIT_FANTA_MSG, or None when it does not exist
+
+    git-fanta was renamed from git-cola. A pre-rename .git/GIT_COLA_MSG is still
+    honored so that a commit message written before the rename is not lost.
+    """
+    for basename in ('GIT_FANTA_MSG', 'GIT_COLA_MSG'):
+        path = context.git.git_path(basename)
+        if core.exists(path):
+            return path
     return None
 
 

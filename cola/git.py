@@ -11,6 +11,7 @@ from typing import Any
 
 from . import core
 from .compat import WIN32
+from .compat import getenv_with_legacy
 from .compat import int_types
 from .compat import ustr
 from .decorators import memoize
@@ -19,8 +20,8 @@ from .interaction import Interaction
 if TYPE_CHECKING:
     from .types import TextType
 
-GIT_COLA_TRACE = core.getenv('GIT_COLA_TRACE', '')
-GIT = core.getenv('GIT_COLA_GIT', 'git')
+GIT_FANTA_TRACE = getenv_with_legacy('GIT_FANTA_TRACE', '')
+GIT = getenv_with_legacy('GIT_FANTA_GIT', 'git')
 STATUS = 0
 STDOUT = 1
 STDERR = 2
@@ -325,7 +326,7 @@ class Git:
         if not _raw and out is not None:
             out = core.UStr(out.rstrip('\n'), out.encoding)
 
-        cola_trace = GIT_COLA_TRACE
+        cola_trace = GIT_FANTA_TRACE
         if cola_trace == 'trace':
             msg = f'trace: {elapsed_time:.3f}s: {core.list2cmdline(command)}'
             Interaction.log_status(status, msg, '')

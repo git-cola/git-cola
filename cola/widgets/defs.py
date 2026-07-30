@@ -1,8 +1,10 @@
 import math
 import os
 
+from .. import compat
+
 try:
-    scale_factor = float(os.getenv('GIT_COLA_SCALE', '1'))
+    scale_factor = float(compat.getenv_with_legacy('GIT_FANTA_SCALE', '1'))
 except ValueError:
     scale_factor = 1.0
 

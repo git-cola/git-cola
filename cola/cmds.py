@@ -2442,8 +2442,8 @@ class Rebase(ContextCommand):
 
         with SequenceEditorEnvironment(
             self.context,
-            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase onto %s') % upstream_title,
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_TITLE=N_('Rebase onto %s') % upstream_title,
+            GIT_FANTA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             # This blocks the user interface window for the duration
             # of git-fanta-sequence-editor. We would need to run the command
@@ -2468,8 +2468,8 @@ class RebaseEditTodo(ContextCommand):
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
-            GIT_COLA_SEQ_EDITOR_TITLE=N_('Edit Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Save'),
+            GIT_FANTA_SEQ_EDITOR_TITLE=N_('Edit Rebase'),
+            GIT_FANTA_SEQ_EDITOR_ACTION=N_('Save'),
         ):
             status, out, err = self.git.rebase(edit_todo=True)
         Interaction.log_status(status, out, err)
@@ -2485,8 +2485,8 @@ class RebaseContinue(ContextCommand):
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
-            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_TITLE=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             status, out, err = self.git.rebase('--continue')
         Interaction.log_status(status, out, err)
@@ -2502,8 +2502,8 @@ class RebaseSkip(ContextCommand):
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
-            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_TITLE=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             status, out, err = self.git.rebase(skip=True)
         Interaction.log_status(status, out, err)

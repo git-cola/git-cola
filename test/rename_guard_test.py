@@ -31,8 +31,8 @@ UPSTREAM_MARKERS = (
     # Bewusste historische Nennung des Vorgaengerprojekts in Fliesstext. Wer den
     # alten Namen in einer Doku-Zeile erwaehnen muss, benutzt genau eine dieser
     # Formulierungen - dann ist die Absicht am Satz selbst ablesbar.
-    'fork of git-fanta',
-    'renamed from git-fanta',
+    'fork of git-cola',
+    'renamed from git-cola',
 )
 
 # Diese Dateien und Praefixe werden komplett ausgespart.
