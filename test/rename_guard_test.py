@@ -136,3 +136,17 @@ def test_no_legacy_product_name_in_tracked_filenames():
     assert not offenders, 'Diese Dateien muessen umbenannt werden:\n' + '\n'.join(
         offenders
     )
+
+
+def test_garden_build_commands_use_git_fanta():
+    """Die Build-Kommandos des Forks sind umbenannt, die Upstream-Remotes nicht."""
+    text = (REPO_ROOT / 'garden.yaml').read_text(encoding='utf-8')
+
+    # Fork-eigene Build-Artefakte tragen den neuen Namen.
+    assert './bin/git-fanta' in text
+    assert 'cola/icons/git-fanta.svg' in text
+    assert './bin/git-cola' not in text
+
+    # Upstream-Remotes bleiben erhalten.
+    assert 'davvid/git-cola.git' in text
+    assert 'git-cola/git-cola.git' in text
