@@ -76,7 +76,7 @@ pyside6 = [
 ]
 
 [project.scripts]
-cola = "cola.main:main"
+fanta = "cola.main:main"
 git-fanta = "cola.main:main"
 git-dag = "cola.dag:main"
 git-fanta-sequence-editor = "cola.sequenceeditor:main"

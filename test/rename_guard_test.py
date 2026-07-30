@@ -150,3 +150,23 @@ def test_garden_build_commands_use_git_fanta():
     # Upstream-Remotes bleiben erhalten.
     assert 'davvid/git-cola.git' in text
     assert 'git-cola/git-cola.git' in text
+
+
+def test_distribution_name_matches_pyproject():
+    """version.py fragt importlib.metadata mit genau dem Namen aus pyproject.toml.
+
+    Laufen die beiden auseinander, wirft importlib.metadata PackageNotFoundError
+    und die Versionsanzeige faellt still auf den Builtin-Wert zurueck.
+    """
+    import re
+
+    pyproject = (REPO_ROOT / 'pyproject.toml').read_text(encoding='utf-8')
+    match = re.search(r'^name\s*=\s*"([^"]+)"', pyproject, re.MULTILINE)
+    assert match, 'pyproject.toml hat keinen name-Eintrag'
+    distribution = match.group(1)
+
+    version_py = (REPO_ROOT / 'cola' / 'version.py').read_text(encoding='utf-8')
+    assert f"metadata.version('{distribution}')" in version_py, (
+        f'cola/version.py fragt nicht nach "{distribution}"'
+    )
+    assert distribution == 'git-fanta'
