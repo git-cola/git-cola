@@ -36,7 +36,14 @@ UPSTREAM_MARKERS = (
 )
 
 # Diese Dateien und Praefixe werden komplett ausgespart.
-EXEMPT_FILES = frozenset({'CHANGES.rst', 'garden.yaml', 'test/rename_guard_test.py'})
+EXEMPT_FILES = frozenset({
+    'CHANGES.rst',
+    'garden.yaml',
+    'test/rename_guard_test.py',
+    'test/config_home_migration_test.py',
+    'test/env_rename_test.py',
+    'test/prepare_commit_msg_hook_test.py',
+})
 EXEMPT_PREFIXES = ('cola/i18n/', 'docs/plans/', 'qtpy/')
 
 # Der alte Produktname in allen Schreibweisen, die im Repo vorkommen.
@@ -192,3 +199,20 @@ def test_no_legacy_config_key_literals():
     assert (
         not offenders
     ), 'Diese Literale benutzen noch den alten Config-Prefix:\n' + '\n'.join(offenders)
+
+
+def test_translation_template_uses_the_new_product_name():
+    """Die nutzersichtbaren msgid-Strings tragen den neuen Produktnamen."""
+    pot = REPO_ROOT / 'cola' / 'i18n' / 'git-fanta.pot'
+    assert pot.is_file(), 'cola/i18n/git-fanta.pot fehlt'
+
+    msgids = [
+        line
+        for line in pot.read_text(encoding='utf-8').splitlines()
+        if line.startswith('msgid')
+    ]
+    offenders = [line for line in msgids if 'cola' in line.lower()]
+
+    assert not offenders, 'msgid-Strings tragen noch den alten Namen:\n' + '\n'.join(
+        offenders
+    )

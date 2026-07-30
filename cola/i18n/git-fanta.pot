@@ -901,7 +901,7 @@ msgid "Launch Diff Tool"
 msgstr ""
 
 #: cola/difftool.py:86
-msgid "git cola diff"
+msgid "git fanta diff"
 msgstr ""
 
 #: cola/difftool.py:101 cola/widgets/compare.py:69
@@ -966,7 +966,7 @@ msgid ""
 msgstr ""
 
 #: cola/fsmonitor.py:563
-msgid "File system change monitoring: disabled because \"cola.inotify\" is false.\n"
+msgid "File system change monitoring: disabled because \"fanta.inotify\" is false.\n"
 msgstr ""
 
 #: cola/fsmonitor.py:574
@@ -1338,7 +1338,7 @@ msgid ""
 msgstr ""
 
 #: cola/sequenceeditor.py:970
-msgid "Help - git-cola-sequence-editor"
+msgid "Help - git-fanta-sequence-editor"
 msgstr ""
 
 #: cola/themes.py:670
@@ -1513,7 +1513,7 @@ msgid "Stash unstaged changes only, keeping staged changes"
 msgstr ""
 
 #: cola/widgets/about.py:66
-msgid "About git-cola"
+msgid "About git-fanta"
 msgstr ""
 
 #: cola/widgets/about.py:86 cola/widgets/main.py:516
@@ -2170,7 +2170,7 @@ msgstr ""
 
 #: cola/widgets/clone.py:203
 #, python-format
-msgid "\"%s\" already exists, cola will create a new directory"
+msgid "\"%s\" already exists, fanta will create a new directory"
 msgstr ""
 
 #: cola/widgets/clone.py:204
@@ -2808,7 +2808,7 @@ msgstr ""
 
 #: cola/widgets/diff.py:1159 cola/widgets/diff.py:1221
 #: cola/widgets/status.py:856 cola/widgets/status.py:957
-msgid "Launch git-cola"
+msgid "Launch git-fanta"
 msgstr ""
 
 #: cola/widgets/diff.py:1165
@@ -3392,7 +3392,7 @@ msgstr ""
 
 #: cola/widgets/main.py:947
 #, python-format
-msgid "git cola version %s"
+msgid "git fanta version %s"
 msgstr ""
 
 #: cola/widgets/main.py:951 cola/widgets/main.py:957
@@ -4115,7 +4115,7 @@ msgid "Yes"
 msgstr ""
 
 #: cola/widgets/startup.py:34
-msgid "git-cola"
+msgid "git-fanta"
 msgstr ""
 
 #: cola/widgets/startup.py:49
