@@ -999,7 +999,7 @@ def test_export_owns_visibility_and_nests_exact_canonical_history_state(
         'count': 321,
         'display_inline_graph': True,
         'display_status': True,
-        'display_files': False,
+        'display_files': True,
         'log': {'column_widths': [211, 122]},
     }
     assert HISTORY_KEYS.isdisjoint(state.keys())
@@ -1007,7 +1007,12 @@ def test_export_owns_visibility_and_nests_exact_canonical_history_state(
     restored = managed_qobject(MainView(main_context))
     _show(qapp, restored)
     assert restored.apply_state(state)
-    assert restored.historywidget.export_state() == state['history']
+    # files_sizes depends on the live splitter geometry and is excluded.
+    restored_history = dict(restored.historywidget.export_state())
+    restored_history.pop('files_sizes', None)
+    expected_history = dict(state['history'])
+    expected_history.pop('files_sizes', None)
+    assert restored_history == expected_history
 
 
 def test_export_history_visibility_is_independent_of_hidden_parent(
@@ -1242,6 +1247,7 @@ def test_view_menu_is_rebuilt_without_duplicates_and_finds_dynamic_toolbars(
     window = managed_qobject(MainView(main_context))
     history_toggle = window.historydock.toggleViewAction()
     inline_graph = window.historywidget.display_inline_graph_action
+    commit_files = window.historywidget.display_files_action
 
     window.build_view_menu(window.view_menu)
     qapp.processEvents()
@@ -1261,6 +1267,9 @@ def test_view_menu_is_rebuilt_without_duplicates_and_finds_dynamic_toolbars(
         ]
         assert [action for action in actions if action is inline_graph] == [
             inline_graph
+        ]
+        assert [action for action in actions if action is commit_files] == [
+            commit_files
         ]
         assert inline_graph.isChecked() is True
         assert [action for action in actions if action is dynamic_toggle] == [
@@ -1402,3 +1411,93 @@ def test_mainview_close_waits_for_real_blocked_history_and_discards_pending(
     order.clear()
     assert window.close()
     assert order == ['popup', 'stop', 'standard']
+
+
+def _wait_for_commit_files(qapp, window, expected):
+    """Pump the event loop until the debounced file list matches expected."""
+    history = window.historywidget
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        qapp.processEvents()
+        paths = {
+            history.filewidget.topLevelItem(i).path
+            for i in range(history.filewidget.topLevelItemCount())
+        }
+        if not history._files_timer.isActive() and paths == expected:
+            return paths
+        QtTest.QTest.qWait(10)
+    raise AssertionError(f'file list never became {expected}')
+
+
+def test_main_history_lists_files_of_the_selected_commit(
+    qapp, main_context, managed_qobject
+):
+    """The commit file panel lists the files of the selected commit."""
+    _git('commit', '-m', 'base')
+    main_context.model.update_status()
+    window = managed_qobject(MainView(main_context))
+    _show(qapp, window)
+    _wait_for_history(qapp, window)
+
+    _wait_for_commit_files(qapp, window, {'A', 'B'})
+
+    filewidget = window.historywidget.filewidget
+    assert filewidget.isVisible()
+    assert {
+        filewidget.topLevelItem(i).status
+        for i in range(filewidget.topLevelItemCount())
+    } == {'A'}
+
+
+def test_main_history_file_panel_follows_the_selection(
+    qapp, main_context, managed_qobject
+):
+    """Selecting an older commit updates the file list."""
+    _git('commit', '-m', 'base')
+    with open('C', 'w', encoding='utf-8') as handle:
+        handle.write('c\n')
+    _git('add', 'C')
+    _git('commit', '-m', 'second')
+    main_context.model.update_status()
+    window = managed_qobject(MainView(main_context))
+    _show(qapp, window)
+    _wait_for_history(qapp, window)
+    # The newest commit is the top row and is selected automatically.
+    _wait_for_commit_files(qapp, window, {'C'})
+    tree = window.historywidget.treewidget
+
+    # Row 1 is the older commit; itemSelectionChanged is a QueuedConnection,
+    # so the wait helper below pumps the event loop first.
+    tree.setCurrentItem(tree.topLevelItem(1))
+
+    assert _wait_for_commit_files(qapp, window, {'A', 'B'}) == {'A', 'B'}
+
+
+def test_main_history_file_panel_lives_inside_the_history_dock(
+    qapp, main_context, managed_qobject
+):
+    """The panel is part of the history widget, not a dock of its own."""
+    window = managed_qobject(MainView(main_context))
+    _show(qapp, window)
+    history = window.historywidget
+
+    assert window.historydock.widget() is history
+    assert history.files_splitter.indexOf(history.filewidget) == 1
+    assert history.findChildren(QtWidgets.QDockWidget) == []
+    assert window.widget_version == 2
+
+
+def test_main_history_hides_unsupported_file_actions(
+    qapp, main_context, managed_qobject
+):
+    """Context menu entries without a main-window handler are not offered."""
+    window = managed_qobject(MainView(main_context))
+    _show(qapp, window)
+    filewidget = window.historywidget.filewidget
+
+    assert not filewidget.show_history_action.isVisible()
+    assert not filewidget.launch_difftool_action.isVisible()
+    assert not filewidget.grab_file_action.isVisible()
+    assert not filewidget.grab_file_from_parent_action.isVisible()
+    assert not filewidget.select_line_range_action.isVisible()
+    assert filewidget.launch_editor_action.isVisible()

@@ -1867,6 +1867,7 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         self.treewidget.select_commits(selection)
         self.commits_loaded.emit(list(commit_list))
         self.commits_selected.emit(list(selection))
+        self._schedule_files()
 
     def stop_and_wait(self):
         """Stop scheduling work and wait fully for the active worker."""

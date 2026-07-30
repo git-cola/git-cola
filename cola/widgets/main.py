@@ -62,6 +62,14 @@ _MAIN_HISTORY_UNSUPPORTED_ACTIONS = (
     'search_line_range',
 )
 
+_MAIN_HISTORY_UNSUPPORTED_FILE_ACTIONS = (
+    'show_history_action',
+    'launch_difftool_action',
+    'grab_file_action',
+    'grab_file_from_parent_action',
+    'select_line_range_action',
+)
+
 
 class MainView(standard.MainWindow):
     config_actions_changed = Signal(object)
@@ -118,6 +126,7 @@ class MainView(standard.MainWindow):
                 count=1000,
                 display_status=False,
                 display_inline_graph=True,
+                display_files=True,
                 parent=dock,
             ),
         )
@@ -128,6 +137,10 @@ class MainView(standard.MainWindow):
             menu_action = history_tree.menu_actions[action_name]
             menu_action.setVisible(False)
             menu_action.setShortcut(QtGui.QKeySequence())
+        for action_name in _MAIN_HISTORY_UNSUPPORTED_FILE_ACTIONS:
+            file_action = getattr(self.historywidget.filewidget, action_name)
+            file_action.setVisible(False)
+            file_action.setShortcut(QtGui.QKeySequence())
         self.model.updated.disconnect(self.historywidget.model_updated)
 
         # "Switch Repository" widgets
@@ -1048,6 +1061,7 @@ class MainView(standard.MainWindow):
         menu.addAction(self.browse_action)
         menu.addAction(self.dag_action)
         menu.addAction(self.historywidget.display_inline_graph_action)
+        menu.addAction(self.historywidget.display_files_action)
         menu.addSeparator()
 
         popup_menu = self.createPopupMenu()
