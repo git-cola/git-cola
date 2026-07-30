@@ -121,9 +121,7 @@ class FileWidget(TreeWidget):
                     'HEAD', cached=True, numstat=True, raw=True, _readonly=True
                 )
             elif oid == dag.WORKTREE:
-                status, out, _ = git.diff_files(
-                    numstat=True, raw=True, _readonly=True
-                )
+                status, out, _ = git.diff_files(numstat=True, raw=True, _readonly=True)
             else:
                 status, out, _ = git.show(
                     oid,

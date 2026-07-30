@@ -86,13 +86,8 @@ def test_selection_emits_selected_paths(qapp, app_context, managed_qobject):
 
 
 def test_parser_splits_nul_separated_raw_and_numstat():
-    """"git show --raw --numstat -z" yields a status map plus numstat rows."""
-    out = (
-        ':100644 100644 aaa bbb M\0cola/main.py\0'
-        ':000000 100644 000 ccc A\0cola/new.py\0'
-        '33\t0\tcola/main.py\0'
-        '10\t0\tcola/new.py\0'
-    )
+    """ "git show --raw --numstat -z" yields a status map plus numstat rows."""
+    out = ':100644 100644 aaa bbb M\0cola/main.py\0' ':000000 100644 000 ccc A\0cola/new.py\0' '33\t0\tcola/main.py\0' '10\t0\tcola/new.py\0'
 
     status_by_path, numstat = parse_status_and_numstat(out, '\0')
 
@@ -101,13 +96,8 @@ def test_parser_splits_nul_separated_raw_and_numstat():
 
 
 def test_parser_splits_newline_separated_raw_and_numstat():
-    """"git diff-index --raw --numstat" keeps the path inline, newline separated."""
-    out = (
-        ':100644 100644 aaa bbb M\ta.py\n'
-        ':000000 100644 000 ccc A\tb.py\n'
-        '1\t0\ta.py\n'
-        '1\t0\tb.py\n'
-    )
+    """ "git diff-index --raw --numstat" keeps the path inline, newline separated."""
+    out = ':100644 100644 aaa bbb M\ta.py\n' ':000000 100644 000 ccc A\tb.py\n' '1\t0\ta.py\n' '1\t0\tb.py\n'
 
     status_by_path, numstat = parse_status_and_numstat(out, '\n')
 

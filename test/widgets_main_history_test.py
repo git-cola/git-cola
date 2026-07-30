@@ -1444,8 +1444,7 @@ def test_main_history_lists_files_of_the_selected_commit(
     filewidget = window.historywidget.filewidget
     assert filewidget.isVisible()
     assert {
-        filewidget.topLevelItem(i).status
-        for i in range(filewidget.topLevelItemCount())
+        filewidget.topLevelItem(i).status for i in range(filewidget.topLevelItemCount())
     } == {'A'}
 
 

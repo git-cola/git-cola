@@ -3288,8 +3288,6 @@ def test_real_thread_stop_finalizes_once_and_queued_finished_is_noop(
     assert widget.active_thread is None
 
 
-
-
 def test_history_panel_passes_selection_to_the_file_widget(
     qapp, app_context, managed_qobject, monkeypatch
 ):
@@ -3359,9 +3357,7 @@ def test_history_panel_runs_only_one_git_show_per_change(
     assert len(show_calls) == 1
 
 
-def test_history_state_round_trips_the_file_panel(
-    qapp, app_context, managed_qobject
-):
+def test_history_state_round_trips_the_file_panel(qapp, app_context, managed_qobject):
     """Panel visibility and splitter sizes survive an export/apply round trip."""
     first = managed_qobject(CommitHistoryWidget(app_context, display_files=True))
     second = managed_qobject(CommitHistoryWidget(app_context))

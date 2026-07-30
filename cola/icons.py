@@ -148,12 +148,12 @@ def status(filename: str, deleted: bool, is_staged: bool, untracked: bool) -> st
 # Status codes produced by "git diff --raw" / "git show --raw".
 # https://git-scm.com/docs/git-diff#diff-format-doc
 DIFF_STATUS_ICONS = {
-    'A': 'plus.svg',                # added
-    'D': 'circle-slash-red.svg',    # deleted
-    'M': 'modified.svg',            # modified
-    'T': 'modified.svg',            # type changed
-    'R': 'git-compare.svg',         # renamed (defensive; we pass --no-renames)
-    'C': 'git-compare.svg',         # copied (defensive)
+    'A': 'plus.svg',  # added
+    'D': 'circle-slash-red.svg',  # deleted
+    'M': 'modified.svg',  # modified
+    'T': 'modified.svg',  # type changed
+    'R': 'git-compare.svg',  # renamed (defensive; we pass --no-renames)
+    'C': 'git-compare.svg',  # copied (defensive)
 }
 
 
