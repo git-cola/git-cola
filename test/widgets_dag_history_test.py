@@ -1500,8 +1500,8 @@ def test_gitdag_applies_and_round_trips_nested_history_state(
     assert params.ref == 'stored-ref'
     assert params.count == 321
     assert params.display_status is False
-    for key in history:
-        assert exported['history'][key] == history[key]
+    for key, value in history.items():
+        assert exported['history'][key] == value
     assert not (set(history) & exported.keys())
 
 
