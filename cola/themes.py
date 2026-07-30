@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 class EStylesheet:
     DEFAULT = 1
     FLAT = 2
-    CUSTOM = 3  # Files located in ~/.config/git-cola/themes/*.qss
+    CUSTOM = 3  # Files located in ~/.config/git-fanta/themes/*.qss
 
 
 class Theme:

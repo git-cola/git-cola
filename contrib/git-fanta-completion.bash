@@ -1,33 +1,33 @@
-# git-cola extensions for Git's git-completion.bash script
+# git-fanta extensions for Git's git-completion.bash script
 #
 # This script must be sourced *after* Git's git-completion.bash script.
 # Source git.git's git-completion.bash and then source this script from
 # your ~/.bashrc in order to activate the completions.
 #
-# Completion is provided for "git cola ..." and "git dag ..." via the
-# _git_cola() and _git_dag() functions.
+# Completion is provided for "git fanta ..." and "git dag ..." via the
+# _git_fanta() and _git_dag() functions.
 # See git.git's contrib/completion/git-completion.bash for more details.
 
-__git_cola_common_options="--icon-theme --prompt --repo --theme --version"
-__git_cola_subcommands_list=
+__git_fanta_common_options="--icon-theme --prompt --repo --theme --version"
+__git_fanta_subcommands_list=
 
-__git_cola_common_opts () {
-	__gitcomp "$__git_cola_common_options $1"
+__git_fanta_common_opts () {
+	__gitcomp "$__git_fanta_common_options $1"
 }
 
-_git_cola () {
+_git_fanta () {
 	__git_has_doubledash && return
 
-	if test -z "$__git_cola_subcommands_list"
+	if test -z "$__git_fanta_subcommands_list"
 	then
-		__git_cola_subcommands_list=$(
-			git cola --help-commands |
+		__git_fanta_subcommands_list=$(
+			git fanta --help-commands |
 			grep '^    [a-z]' |
 			grep -v cola |
 			cut -d' ' -f5)
 	fi
 
-	local subcommand=$(__git_find_on_cmdline "$__git_cola_subcommands_list")
+	local subcommand=$(__git_find_on_cmdline "$__git_fanta_subcommands_list")
 
 	case "$prev" in
 	--repo)
@@ -38,8 +38,8 @@ _git_cola () {
 	if test -z "$subcommand"
 	then
 		__gitcomp "
-			$__git_cola_subcommands_list
-			$__git_cola_common_options
+			$__git_fanta_subcommands_list
+			$__git_fanta_common_options
 			--amend
 			--help-commands
 			--status-filter
@@ -57,13 +57,13 @@ _git_cola () {
 		;;
 	archive|diff|merge)
 		__git_complete_revlist
-		__git_cola_common_opts
+		__git_fanta_common_opts
 		;;
 	grep)
 		# do nothing
 		;;
 	pull)
-		__git_cola_common_opts --rebase
+		__git_fanta_common_opts --rebase
 		;;
 	rebase)
 		case "$prev" in
@@ -97,7 +97,7 @@ _git_cola () {
 		esac
 
 		__git_complete_revlist
-		__git_cola_common_opts "
+		__git_fanta_common_opts "
 			--abort
 			--autostash
 			--autosquash
@@ -140,7 +140,7 @@ _git_cola () {
 		esac
 		;;
 	*)
-		__git_cola_common_opts
+		__git_fanta_common_opts
 		;;
 	esac
 }
@@ -152,6 +152,6 @@ _git_dag () {
 	then
 		return
 	fi
-	__git_cola_common_opts --max-count
+	__git_fanta_common_opts --max-count
 	__git_complete_revlist
 }

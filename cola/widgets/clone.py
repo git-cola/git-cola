@@ -19,7 +19,7 @@ from . import text
 
 
 def clone(context, spawn=True, show=True):
-    """Clone a repository and spawn a new git-cola instance"""
+    """Clone a repository and spawn a new git-fanta instance"""
     parent = qtutils.active_window()
     progress = standard.progress('', '', parent)
     return clone_repo(context, show, progress, task_finished, spawn)

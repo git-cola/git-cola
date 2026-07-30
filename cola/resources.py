@@ -12,7 +12,7 @@ from . import core
 if TYPE_CHECKING:
     from .types import TextType
 
-# Default git-cola icon theme
+# Default git-fanta icon theme
 _default_icon_theme = 'light'
 
 _resources = core.abspath(core.realpath(__file__))
@@ -90,7 +90,7 @@ def doc(*args) -> str:
     # pyproject.toml does not support data_files in pyproject.toml so we install the
     # hotkey files as cola/data/ package data. This is a fallback location for when
     # users did not use the garden.yaml or Makefile to install cola.
-    path = share('doc', 'git-cola', *args)
+    path = share('doc', 'git-fanta', *args)
     if not os.path.exists(path):
         path = prefix('docs', *args)
     return path
@@ -104,13 +104,13 @@ def i18n(*args) -> str:
 def html_docs() -> str:
     """Return the path to the cola html documentation."""
     # html/index.html only exists after the install-docs target is run.
-    # Fallback to the source tree and lastly git-cola.rst.
+    # Fallback to the source tree and lastly git-fanta.rst.
     paths_to_try = (('html', 'index.html'), ('_build', 'html', 'index.html'))
     for paths in paths_to_try:
         docdir = doc(*paths)
         if core.exists(docdir):
             return docdir
-    return doc('git-cola.rst')
+    return doc('git-fanta.rst')
 
 
 def show_html_docs() -> None:
@@ -152,7 +152,7 @@ def icon_dir(theme: str) -> str:
     directory, e.g. "dark" for the dark icon theme.
 
     When theme is set to an absolute directory path, that directory will be
-    returned, which effectively makes git-cola use those icons.
+    returned, which effectively makes git-fanta use those icons.
     """
     if not theme or theme == _default_icon_theme:
         icons = package_data('icons')
@@ -218,5 +218,5 @@ def find_first(
 
 
 def config_home(*args) -> str:
-    """Return git-cola's configuration directory, e.g. ~/.config/git-cola"""
-    return xdg_config_home('git-cola', *args)
+    """Return git-fanta's configuration directory, e.g. ~/.config/git-fanta"""
+    return xdg_config_home('git-fanta', *args)

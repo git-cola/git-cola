@@ -30,7 +30,7 @@ class StartupDialog(standard.Dialog):
     def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent)
         self.context = context
-        self.setWindowTitle(N_('git-cola'))
+        self.setWindowTitle(N_('git-fanta'))
 
         # Top-most large icon
         self.logo_label = qtutils.pixmap_label(icons.cola(), defs.huge_icon)

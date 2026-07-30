@@ -6,7 +6,7 @@ import sys
 
 
 def activate():
-    """Activate the cola development environment"""
+    """Activate the fanta development environment"""
     initialize_python()
     initialize_version()
 
@@ -74,10 +74,10 @@ def get_version():
 
 
 def update_pkginfo_version(scm_version):
-    """Update git_cola.egg_info/PKG-INFO with the specified version"""
+    """Update git_fanta.egg_info/PKG-INFO with the specified version"""
     from cola import version
 
-    pkginfo = os.path.join(get_prefix(), 'git_cola.egg-info', 'PKG-INFO')
+    pkginfo = os.path.join(get_prefix(), 'git_fanta.egg-info', 'PKG-INFO')
     content, pkginfo_version = get_pkginfo_version(pkginfo)
     # If there's nothing to update then we can set the SCM_VERSION.
     if not content or not pkginfo_version:

@@ -1,11 +1,11 @@
-"""Wächter-Tests für die Umbenennung git-cola -> git-fanta.
+"""Wächter-Tests für die Umbenennung git-fanta -> git-fanta.
 
 Zwei Invarianten werden hier festgeschrieben:
 
 1. Verweise auf das Upstream-Projekt (github.com/git-cola/git-cola und Freunde)
    bleiben unverändert, weil sie auf ein echtes, weiterhin existierendes Projekt
    zeigen.
-2. Der Produktname "git-cola" kommt sonst nirgends mehr in den versionierten
+2. Der Produktname "git-fanta" kommt sonst nirgends mehr in den versionierten
    Quellen vor.
 
 Test 2 wird erst in Task 2 des Umbenennungsplans hinzugefuegt.
@@ -31,12 +31,12 @@ UPSTREAM_MARKERS = (
     # Bewusste historische Nennung des Vorgaengerprojekts in Fliesstext. Wer den
     # alten Namen in einer Doku-Zeile erwaehnen muss, benutzt genau eine dieser
     # Formulierungen - dann ist die Absicht am Satz selbst ablesbar.
-    'fork of git-cola',
-    'renamed from git-cola',
+    'fork of git-fanta',
+    'renamed from git-fanta',
 )
 
 # Diese Dateien und Praefixe werden komplett ausgespart.
-EXEMPT_FILES = frozenset({'CHANGES.rst', 'garden.yaml'})
+EXEMPT_FILES = frozenset({'CHANGES.rst', 'garden.yaml', 'test/rename_guard_test.py'})
 EXEMPT_PREFIXES = ('cola/i18n/', 'docs/plans/', 'qtpy/')
 
 # Der alte Produktname in allen Schreibweisen, die im Repo vorkommen.
@@ -97,3 +97,42 @@ def test_changes_rst_history_is_untouched():
     text = (REPO_ROOT / 'CHANGES.rst').read_text(encoding='utf-8')
     assert 'git-cola' in text
     assert 'git-fanta' not in text
+
+
+def test_product_name_is_git_fanta():
+    """Der alte Produktname kommt ausserhalb der Upstream-Verweise nicht mehr vor."""
+    offenders = []
+    for name, text in tracked_text_files():
+        for number, line in enumerate(text.splitlines(), start=1):
+            if any(marker in line for marker in UPSTREAM_MARKERS):
+                continue
+            if any(legacy in line for legacy in LEGACY_PRODUCT_NAMES):
+                offenders.append(f'{name}:{number}: {line.strip()[:100]}')
+
+    assert (
+        not offenders
+    ), f'{len(offenders)} Zeilen tragen noch den alten Produktnamen:\n' + '\n'.join(
+        offenders[:40]
+    )
+
+
+def test_no_legacy_product_name_in_tracked_filenames():
+    """Kein versionierter Dateiname enthaelt noch "git-cola" oder "_activate_cola"."""
+    listing = subprocess.run(
+        ['git', 'ls-files', '-z'],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    offenders = [
+        name
+        for name in listing.split('\0')
+        if name
+        and not name.startswith(('cola/i18n/', 'docs/plans/'))
+        and ('git-cola' in name or '_activate_cola' in name)
+    ]
+
+    assert not offenders, 'Diese Dateien muessen umbenannt werden:\n' + '\n'.join(
+        offenders
+    )

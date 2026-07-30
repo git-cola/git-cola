@@ -43,8 +43,8 @@ jobs:
           garden dev -vv
       - name: Configure tests
         run: |
-          git config --global user.name "Git Cola"
-          git config --global user.email git-cola@localhost
+          git config --global user.name "Git Fanta"
+          git config --global user.email git-fanta@localhost
       - name: Run tests
         run: garden test -vv -- -p no:ruff
       - name: Ruff history tests
@@ -54,17 +54,17 @@ jobs:
           test/widgets_main_history_test.py
       - name: Run doc build
         run: garden doc/html -vv
-      - name: Build Windows git-cola.exe installer
+      - name: Build Windows git-fanta.exe installer
         run: |
           set -x
           rm -fr build
           garden pynsist -vv
-          mv build/nsis/git-cola*.exe git-cola.exe
-      - name: Upload git-cola.win.zip
+          mv build/nsis/git-fanta*.exe git-fanta.exe
+      - name: Upload git-fanta.win.zip
         uses: actions/upload-artifact@v7
         with:
-          name: git-cola.win
-          path: git-cola.exe
+          name: git-fanta.win
+          path: git-fanta.exe
       - name: Code formatting
         run: garden check/fmt -vv
       - name: Pyupgrade checks
@@ -127,10 +127,10 @@ jobs:
         run: |
           brew untap aws/tap || true
           brew install git-cola
-      - name: Build macOS git-cola.app bundle
-        run: garden macos/app -vv -D cola-app='${TREE_PATH}/local/git-cola.app'
-      - name: Upload git-cola.app.zip
+      - name: Build macOS git-fanta.app bundle
+        run: garden macos/app -vv -D cola-app='${TREE_PATH}/local/git-fanta.app'
+      - name: Upload git-fanta.app.zip
         uses: actions/upload-artifact@v7
         with:
-          name: git-cola.app
+          name: git-fanta.app
           path: local

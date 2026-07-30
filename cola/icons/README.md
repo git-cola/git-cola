@@ -1,4 +1,4 @@
-# Git Cola Icons
+# Git Fanta Icons
 
 ## Guidelines
 
@@ -22,7 +22,7 @@ The following icons are created/re-created by [Guo Yunhe](https://guoyunhe.me/):
 ### Original icons
 
 The following icons are based on the based on the original .png icon designs
-for git-cola's File Browser by Uri Okrent.
+for git-fanta's File Browser by Uri Okrent.
 
 - staged.svg
 - modified.svg
@@ -47,7 +47,7 @@ dissemination and use of licensed materials.
 
 https://git-scm.com/downloads/logos
 
-git-cola.svg is based on the Git Logo.
+git-fanta.svg is based on the Git Logo.
 
 
 ### Octicons

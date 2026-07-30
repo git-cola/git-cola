@@ -217,7 +217,7 @@ class GravatarLabel(QtWidgets.QLabel):
         )
 
     def default_pixmap(self) -> QPixmap:
-        """Return the fallback git-cola icon, decoded once and reused"""
+        """Return the fallback git-fanta icon, decoded once and reused"""
         if self._default_pixmap is None:
             self._default_pixmap = self.pixmap_from_bytes(
                 self.default_pixmap_as_bytes()

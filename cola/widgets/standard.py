@@ -85,7 +85,7 @@ class WidgetMixin:
             shown = self.isVisible()
             # earlier show() fools Windows focus stealing prevention. The main
             # window is blocked for the duration of "git rebase" and we don't
-            # want to present a blocked window with git-cola-sequence-editor
+            # want to present a blocked window with git-fanta-sequence-editor
             # hidden somewhere.
             self.show()
             self.setWindowState(Qt.WindowMaximized)
@@ -97,7 +97,7 @@ class WidgetMixin:
         return self.__class__.__name__.lower()
 
     def save_state(self, settings=None):
-        """Save tool settings to the ~/.config/git-cola/settings file"""
+        """Save tool settings to the ~/.config/git-fanta/settings file"""
         save = True
         sync = True
         context = getattr(self, 'context', None)

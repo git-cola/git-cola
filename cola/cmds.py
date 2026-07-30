@@ -2146,7 +2146,7 @@ class OpenWorktree(OpenDir):
 
 
 class OpenNewRepo(ContextCommand):
-    """Launches git-cola on a repo."""
+    """Launches git-fanta on a repo."""
 
     def __init__(self, context: ApplicationContext, repo_path) -> None:
         super().__init__(context)
@@ -2300,8 +2300,8 @@ def unix_path(path: str, is_win32: Callable = utils.is_win32) -> str:
 
 
 def sequence_editor() -> str:
-    """Set GIT_SEQUENCE_EDITOR for running git-cola-sequence-editor"""
-    xbase = unix_path(resources.command('git-cola-sequence-editor'))
+    """Set GIT_SEQUENCE_EDITOR for running git-fanta-sequence-editor"""
+    xbase = unix_path(resources.command('git-fanta-sequence-editor'))
     if utils.is_win32():
         editor = core.list2cmdline([unix_path(sys.executable), xbase])
     else:
@@ -2310,7 +2310,7 @@ def sequence_editor() -> str:
 
 
 class SequenceEditorEnvironment:
-    """Set environment variables to enable git-cola-sequence-editor"""
+    """Set environment variables to enable git-fanta-sequence-editor"""
 
     def __init__(self, context: ApplicationContext, **kwargs) -> None:
         self.env = {
@@ -2446,7 +2446,7 @@ class Rebase(ContextCommand):
             GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             # This blocks the user interface window for the duration
-            # of git-cola-sequence-editor. We would need to run the command
+            # of git-fanta-sequence-editor. We would need to run the command
             # in a QRunnable task to avoid blocking the main thread.
             # Alternatively, we can hide the main window while rebasing,
             # which doesn't require as much effort.

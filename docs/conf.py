@@ -35,7 +35,7 @@ html_theme = 'default'
 # expand the value manually to avoid the dependency.
 package_url = 'https://gitlab.com/git-cola/git-cola'
 
-project = 'Git Cola'
+project = 'Git Fanta'
 
 # Link dates and other references in the changelog
 if rst_linker is not None:
@@ -78,7 +78,7 @@ release = version  # The full version, including alpha/beta/rc tags.
 
 authors = 'David Aguilar and contributors'
 man_pages = [
-    ('git-cola', 'git-cola', 'The highly caffeinated Git GUI', authors, '1'),
+    ('git-fanta', 'git-fanta', 'The highly caffeinated Git GUI', authors, '1'),
     ('git-dag', 'git-dag', 'The sleek and powerful Git history browser', authors, '1'),
 ]
 

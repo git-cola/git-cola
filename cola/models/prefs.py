@@ -285,7 +285,7 @@ def fallback_editor() -> str:
     """Return a fallback editor for cases where one is not configured
 
     GIT_VISUAL and VISUAL are consulted before GIT_EDITOR and EDITOR to allow
-    configuring a visual editor for Git Cola using $GIT_VISUAL and an alternative
+    configuring a visual editor for Git Fanta using $GIT_VISUAL and an alternative
     editor for the Git CLI.
     """
     editor_variables = (
@@ -329,12 +329,12 @@ def enable_gravatar(context) -> bool:
 def default_history_browser() -> str:
     """Return the default history browser (e.g. git-dag, gitk)"""
     if utils.is_win32():
-        # On Windows, a sensible default is "python git-cola dag"
+        # On Windows, a sensible default is "python git-fanta dag"
         # which is different than `gitk` below, but is preferred
         # because we don't have to guess paths.
-        git_cola = sys.argv[0].replace('\\', '/')
+        git_fanta = sys.argv[0].replace('\\', '/')
         python = sys.executable.replace('\\', '/')
-        argv = core.prep_for_subprocess([python, git_cola, 'dag'])
+        argv = core.prep_for_subprocess([python, git_fanta, 'dag'])
         default = core.list2cmdline(argv)
     else:
         # The `gitk` script can be launched as-is on unix

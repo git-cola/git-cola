@@ -52,14 +52,14 @@ def test_tmp_filename_gives_good_file():
     try:
         first = utils.tmp_filename('test')
         assert core.exists(first)
-        assert os.path.basename(first).startswith('git-cola-test')
+        assert os.path.basename(first).startswith('git-fanta-test')
     finally:
         os.remove(first)
 
     try:
         second = utils.tmp_filename('test')
         assert core.exists(second)
-        assert os.path.basename(second).startswith('git-cola-test')
+        assert os.path.basename(second).startswith('git-fanta-test')
     finally:
         os.remove(second)
 

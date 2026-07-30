@@ -1,4 +1,4 @@
-"""Tests for the git-cola command-line parser."""
+"""Tests for the git-fanta command-line parser."""
 
 from cola import main
 from cola.models import dag

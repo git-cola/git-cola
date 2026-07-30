@@ -133,7 +133,7 @@ then you just add a line saying
 Signed-off-by: Random J Developer <random@developer.example.org>
 
 This line can be automatically added by Git if you run the git-commit
-command with the -s option, or using the `Ctrl+i` hotkey in git-cola's
+command with the -s option, or using the `Ctrl+i` hotkey in git-fanta's
 commit message editor.
 
 Notice that you can place your own Signed-off-by: line when
@@ -152,7 +152,7 @@ for some general tips on bug reporting.
 
 ## Internationalization and Localization
 
-Git Cola is translated to several languages.  When strings are presented to
+Git Fanta is translated to several languages.  When strings are presented to
 the user they must use the `N_('<string>')` function so that `<string>` is
 translated into a localized string.
 
@@ -161,27 +161,27 @@ Adding a new translation entails creating a new language-specific `.po` file.
 
 Please note - it is preferred that git command jargon will be left untranslated.
 
-When new (untranslated) strings are added to the project, the `git-cola.pot`
+When new (untranslated) strings are added to the project, the `git-fanta.pot`
 base template and the language-specific message files need to be updated with
 the new strings.
 
-To regenerate `git-cola.pot` and update `.po` files with new strings run:
+To regenerate `git-fanta.pot` and update `.po` files with new strings run:
 
     garden pot
 
 This will update `.po` files with untranslated strings which translators can
-use to translate `git-cola`.
+use to translate `git-fanta`.
 
 Untranslated strings are denoted by an empty "" string.
 
 Alternate translations can be tested by setting `$LANG` when running, e.g.
 
-    env LANG=zh_TW ./bin/git-cola
+    env LANG=zh_TW ./bin/git-fanta
 
 The [Gettext Language Code](https://www.gnu.org/software/gettext/manual/gettext.html#Language-Codes)
 corresponds to the `.po` filename.  Country-specific suffixes use the
 [Gettext country code](https://www.gnu.org/software/gettext/manual/gettext.html#Country-Codes).
 
-We happily welcome pull requests with improvements to `git-cola`'s translations.
+We happily welcome pull requests with improvements to `git-fanta`'s translations.
 
 ## Fork the repo on Github and create a pull request.

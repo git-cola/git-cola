@@ -1,4 +1,4 @@
-"""i18n and l10n support for git-cola"""
+"""i18n and l10n support for git-fanta"""
 # https://www.linux.com/news/controlling-your-locale-environment-variables/
 # and locale(1) that environment variables are checked in this order:
 #   LANGUAGE, LC_ALL, LC_MESSAGES, LANG
@@ -121,7 +121,7 @@ def uninstall() -> None:
 
 
 def _install_custom_language(lang: str | None) -> str | None:
-    """Allow a custom language to be set in ~/.config/git-cola/language"""
+    """Allow a custom language to be set in ~/.config/git-fanta/language"""
     lang_file = resources.config_home('language')
     if not core.exists(lang_file):
         return lang

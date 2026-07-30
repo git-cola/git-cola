@@ -1,17 +1,17 @@
 ========
-git-cola
+git-fanta
 ========
 
 SYNOPSIS
 ========
 
-``git cola [options] [sub-command]``
+``git fanta [options] [sub-command]``
 
 
 DESCRIPTION
 ===========
 
-Git Cola is a sleek and powerful Git GUI.
+Git Fanta is a sleek and powerful Git GUI.
 
 
 OPTIONS
@@ -20,7 +20,7 @@ OPTIONS
 ``--amend``
 -----------
 
-Start `git cola` in amend mode.
+Start `git fanta` in amend mode.
 
 ``--prompt``
 ------------
@@ -40,7 +40,7 @@ Apply the path filter to the status widget.
 ``--version``
 -------------
 
-Print the `git cola` version and exit.
+Print the `git fanta` version and exit.
 
 ``-h, --help``
 --------------
@@ -56,70 +56,70 @@ Show available sub-commands.
 SUB-COMMANDS
 ============
 
-Run ``git cola --help-commands`` to list all sub-commands.
+Run ``git fanta --help-commands`` to list all sub-commands.
 
 The following sub-commands can be launched directly from the command-line.
-For example, ``git cola diff`` will launch the ``diff`` sub-command.
+For example, ``git fanta diff`` will launch the ``diff`` sub-command.
 
 am
 --
 
 Apply patches. This sub-command is named after the ``git am`` command.
-``git cola am`` is an entry point for the ``File > Patches > Apply Patches...``
+``git fanta am`` is an entry point for the ``File > Patches > Apply Patches...``
 main menu action.
 
 archive
 -------
 
-Export tarballs from Git. ``git cola archive`` is an entry point for the
+Export tarballs from Git. ``git fanta archive`` is an entry point for the
 ``File > Save As Tarball/Zip...`` main menu action.
 
 branch
 ------
 
-Create branches. ``git cola branch`` is an entry point for the ``Branch > Create...``
+Create branches. ``git fanta branch`` is an entry point for the ``Branch > Create...``
 main menu action.
 
 browse
 ------
 
-Browse tracked files. ``git cola browse`` is an entry point for the
+Browse tracked files. ``git fanta browse`` is an entry point for the
 ``View > File Browser...`` main menu action.
 
 config
 ------
 
-Configure settings. ``git cola config`` is an entry point for the
+Configure settings. ``git fanta config`` is an entry point for the
 ``File > Preferences`` main menu action.
 
 dag
 ---
 
-Start the ``git dag`` Git history browser. ``git cola dag`` is an entry point for the
+Start the ``git dag`` Git history browser. ``git fanta dag`` is an entry point for the
 ``View > DAG...`` main menu action and can also be launched as ``git dag`` command.
 
 diff
 ----
 
-Diff changed files. ``git cola diff`` is an entry point for the ``Diff > Expression...``
+Diff changed files. ``git fanta diff`` is an entry point for the ``Diff > Expression...``
 main menu action.
 
 fetch
 -----
 
-Fetch history from remote repositories. ``git cola fetch`` is an entry point for the
+Fetch history from remote repositories. ``git fanta fetch`` is an entry point for the
 ``Actions > Fetch...`` main menu action.
 
 grep
 ----
 
-Use `git grep` to search for content. ``git cola grep`` is an entry point for the
+Use `git grep` to search for content. ``git fanta grep`` is an entry point for the
 ``Actions > Grep`` main menu action.
 
 merge
 -----
 
-Merge branches. ``git cola merge`` is an entry point for the ``Actions > Merge...``
+Merge branches. ``git fanta merge`` is an entry point for the ``Actions > Merge...``
 main menu action.
 
 open
@@ -130,50 +130,50 @@ Launch the "Quick Open" dialog to open bookmarked and recently-opened repositori
 pull
 ----
 
-Fetch and merge remote branches. ``git cola pull`` is an entry point for the
+Fetch and merge remote branches. ``git fanta pull`` is an entry point for the
 ``Actions > Pull...`` main menu action.
 
 push
 ----
 
-Push branches to remotes. ``git cola push`` is an entry point for the
+Push branches to remotes. ``git fanta push`` is an entry point for the
 ``Actions > Push...`` main menu action.
 
 rebase
 ------
 
-Start an interactive rebase. ``git cola rebase`` is an entry point for the
+Start an interactive rebase. ``git fanta rebase`` is an entry point for the
 ``Rebase > Start Interactive Rebase...`` main menu action.
 
 remote
 ------
 
-Create and edit remotes. ``git cola remote`` is an entry point for the
+Create and edit remotes. ``git fanta remote`` is an entry point for the
 ``File > Edit Remotes...`` main menu action.
 
 search
 ------
 
-Search for commits. ``git cola search`` is an entry point for the
+Search for commits. ``git fanta search`` is an entry point for the
 ``Actions > Search...`` main menu action.
 
 stash
 -----
 
-Stash uncommitted modifications. ``git cola stash`` is an entry point for the
+Stash uncommitted modifications. ``git fanta stash`` is an entry point for the
 ``Actions > Stash...`` main menu action.
 
 tag
 ---
 
-Create tags. ``git cola tag`` is an entry point for the ``Actions > Create Tag...``
+Create tags. ``git fanta tag`` is an entry point for the ``Actions > Create Tag...``
 main menu action.
 
 version
 -------
 
-Print the Git Cola version. ``git cola version`` displays has options for printing
-the current version in different formats. Version details about Git Cola and its
+Print the Git Fanta version. ``git fanta version`` displays has options for printing
+the current version in different formats. Version details about Git Fanta and its
 dependencies can also be found in the ``Help > About`` dialog's ``Version`` tab.
 
 
@@ -196,7 +196,7 @@ configure a graphical editor independently of the editor used by the Git CLI.
 *Pro Tip*: Configuring your editor to `gvim -f -p` will open multiple tabs
 when editing files.  `gvim -f -o` uses splits.
 
-`git cola` is {vim, emacs, textpad, notepad++}-aware.
+`git fanta` is {vim, emacs, textpad, notepad++}-aware.
 When you select a line in the diff or grep screens and press any of
 `Enter`, `Ctrl-e`, or the `Edit` button, you are taken to that exact line.
 
@@ -229,9 +229,9 @@ The following are some recommend editor configurations.
 KEYBOARD SHORTCUTS
 ==================
 
-`git cola` has many useful keyboard shortcuts.
+`git fanta` has many useful keyboard shortcuts.
 
-Many of `git cola`'s editors understand vim-style hotkeys, e.g. `{h,j,k,l}`
+Many of `git fanta`'s editors understand vim-style hotkeys, e.g. `{h,j,k,l}`
 for navigating in the diff, status, grep, and file browser widgets.
 
 `{d,u}` move down/up one half page at a time (similar to vim's `ctrl-{d,u}`).
@@ -260,12 +260,12 @@ or by consulting the `git cola keyboard shortcuts reference <https://git-cola.gi
 TOOLS
 =====
 
-The `git cola` interface is composed of various cooperating tools.
+The `git fanta` interface is composed of various cooperating tools.
 Double-clicking a tool opens it in its own subwindow.
 Dragging it around moves and places it within the main window.
 
 Tools can be hidden and rearranged however you like.
-`git cola` carefully remembers your window layout and restores
+`git fanta` carefully remembers your window layout and restores
 it the next time it is launched.
 
 The `Control-{1, 2, 3, ...}` hotkey gives focus to a specific tool.
@@ -445,7 +445,7 @@ The `Ctrl+i` keyboard shortcut adds a standard "Signed-off-by: " line,
 and `Ctrl+Enter` creates a new commit using the commit message and
 staged content.
 
-The commit message is saved to `.git/GIT_COLA_MSG` when `git cola` closes and
+The commit message is saved to `.git/GIT_COLA_MSG` when `git fanta` closes and
 restored from it on the next startup. In addition this file is checked on updates (Ctrl+R)
 and if modified by any tool and not conflicting with manual changes the commit
 message will be updated on the next refresh.
@@ -501,8 +501,8 @@ so please be mindful when writing commit messages.
 Amend Last Commit
 -----------------
 
-Clicking on `Amend Last Commit` makes `git cola` amend the previous commit
-instead of creating a new one.  `git cola` loads the previous commit message
+Clicking on `Amend Last Commit` makes `git fanta` amend the previous commit
+instead of creating a new one.  `git fanta` loads the previous commit message
 into the commit message editor when this option is selected.
 
 The `Status` tool will display all of the changes for the amended commit.
@@ -524,7 +524,7 @@ Prepare Commit Message
 
 The ``Commit > Prepare Commit Message`` action or `Ctrl-Shift-Return` keyboard shortcut
 runs the `cola-prepare-commit-msg` hook if it is available in `.git/hooks/`.
-This is a `git cola`-specific hook that takes the same parameters
+This is a `git fanta`-specific hook that takes the same parameters
 as Git's `prepare-commit-msg hook <https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks>`_
 
 The hook is passed the path to `.git/GIT_COLA_MSG` as the first argument and the hook is expected to write
@@ -633,7 +633,7 @@ APPLY PATCHES
 
 Use the ``File > Apply Patches`` menu item to begin applying patches.
 
-Dragging and dropping patches onto the `git cola` interface
+Dragging and dropping patches onto the `git fanta` interface
 adds the patches to the list of patches to apply using
 `git am <https://git-scm.com/docs/git-am>`_.
 
@@ -641,8 +641,8 @@ You can drag either a set of patches or a directory containing patches.
 Patches can be sorted using in the interface and are applied in the
 same order as is listed in the list.
 
-When a directory is dropped `git cola` walks the directory
-tree in search of patches.  `git cola` sorts the list of
+When a directory is dropped `git fanta` walks the directory
+tree in search of patches.  `git fanta` sorts the list of
 patches after they have all been found.  This allows you
 to control the order in which patches are applied by placing
 patch sets into alphanumerically-sorted directories.
@@ -651,7 +651,7 @@ patch sets into alphanumerically-sorted directories.
 STASH
 =====
 
-Use the ``git cola stash`` sub-command or the ``Actions > Stash...`` menu action
+Use the ``git fanta stash`` sub-command or the ``Actions > Stash...`` menu action
 to open the `Stash` tool.
 
 Stashing is a quick way of removing changes from your worktree so that you
@@ -706,7 +706,7 @@ WORKFLOW FAQ
 
   * **Method 2: Stage the content that you want to stash.**
 
-    This workflow is unique to Git Cola. There is currently no equivalent
+    This workflow is unique to Git Fanta. There is currently no equivalent
     Git builtin command for stashing the staging area.
 
     1) Stage the content that you want to stash using the `Diff` and `Status` tools.
@@ -722,12 +722,12 @@ WORKFLOW FAQ
 CUSTOM WINDOW SETTINGS
 ======================
 
-`git cola` remembers modifications to the layout and arrangement
-of tools within the `git cola` interface.  Changes are saved
+`git fanta` remembers modifications to the layout and arrangement
+of tools within the `git fanta` interface.  Changes are saved
 and restored at application shutdown/startup.
 
-`git cola` can be configured to not save custom layouts by disabling
-the `Save Window Settings` option in the `git cola` preferences.
+`git fanta` can be configured to not save custom layouts by disabling
+the `Save Window Settings` option in the `git fanta` preferences.
 
 You can save your current layout configuration to ``*.layout`` files
 using the ``View > Layouts > Save Layout`` menu action.
@@ -735,7 +735,7 @@ using the ``View > Layouts > Save Layout`` menu action.
 You can load arbitrary layout files using the ``View > Layouts > Load Layout``
 menu action.
 
-By default, layouts are saved to the ``~/.config/git-cola/layouts`` directory.
+By default, layouts are saved to the ``~/.config/git-fanta/layouts`` directory.
 Layouts saved to this directory will appear in the ``View > Layouts`` menu
 for quick loading and switching of layouts.
 
@@ -743,7 +743,7 @@ for quick loading and switching of layouts.
 DARK MODE AND WINDOW MANAGER THEMES
 ===================================
 
-Git Cola contains a ``default`` theme which follows the current Qt style and a
+Git Fanta contains a ``default`` theme which follows the current Qt style and a
 handful of built-in color themes.  See :ref:`cola_theme` for more details.
 
 To use icons appropriate for a dark application theme, configure
@@ -780,23 +780,23 @@ You can activate the theme using the following environment variable::
     export QT_STYLE_OVERRIDE=adwaita-dark
 
 `QT_STYLE_OVERRIDE` may already be set in your Desktop Environment, so check that
-variable for reference if you get unexpected hangs when launching `git-cola` or
+variable for reference if you get unexpected hangs when launching `git-fanta` or
 when the default theme does not follow the desktop's theme on Linux.
 
 If you don't want to set this variable globally then you can set it when launching
 cola from the command-line::
 
-    QT_STYLE_OVERRIDE=adwaita-dark git cola
+    QT_STYLE_OVERRIDE=adwaita-dark git fanta
 
-The following is a user-contributed custom `git-cola.desktop` file that can be used to
-launch Git Cola with these settings preset for you::
+The following is a user-contributed custom `git-fanta.desktop` file that can be used to
+launch Git Fanta with these settings preset for you::
 
     [Desktop Entry]
-    Name=Git Cola (dark)
+    Name=Git Fanta (dark)
     Comment=The highly caffeinated Git GUI
-    TryExec=git-cola
-    Exec=env QT_STYLE_OVERRIDE=adwaita-dark git-cola --prompt --icon-theme dark
-    Icon=git-cola
+    TryExec=git-fanta
+    Exec=env QT_STYLE_OVERRIDE=adwaita-dark git-fanta --prompt --icon-theme dark
+    Icon=git-fanta
     StartupNotify=true
     Terminal=false
     Type=Application
@@ -813,7 +813,7 @@ Please see `#760 <https://github.com/git-cola/git-cola/issues/760>`_ for more de
 Custom Themes
 -------------
 
-To create your own custom theme for Git Cola just create a QSS file and put it in
+To create your own custom theme for Git Fanta just create a QSS file and put it in
 ``~/.config/themes/``. You can add as many files as you want. Each file will become
 an option in ``Menu > File > Preferences > Appearance > GUI theme``.
 
@@ -830,7 +830,7 @@ cola.aspell.enabled
 
 Set to `true` to enable support for ``aspell`` spellcheck dictionaries.
 When `false`, spellcheck dictionaries are read from ``/usr/share/dict/words``
-by default. When `true` Git Cola will run ``aspell dump master --lang=$lang``
+by default. When `true` Git Fanta will run ``aspell dump master --lang=$lang``
 for each of the installed languages to gather words.
 Defaults to `false`.
 
@@ -911,19 +911,19 @@ Defaults to `true`.
 cola.defaultrepo
 ----------------
 
-`git cola`, when run outside of a Git repository, prompts the user for a
+`git fanta`, when run outside of a Git repository, prompts the user for a
 repository.  Set `cola.defaultrepo` to the path of a Git repository to make
-`git cola` attempt to use that repository before falling back to prompting
+`git fanta` attempt to use that repository before falling back to prompting
 the user for a repository.
 
 cola.dictionary
 ---------------
 
-Specifies additional dictionaries for `git cola` to use in its spell checker.
+Specifies additional dictionaries for `git fanta` to use in its spell checker.
 This should be configured to the path of a newline-separated list of words.
 ``*.dic`` dictionary files used by ``hunspell`` are also supported.
 
-By default, `git cola` searches for `dict/words` and `dict/propernames` dictionary
+By default, `git fanta` searches for `dict/words` and `dict/propernames` dictionary
 files in `~/.local/share` and `$XDG_DATA_DIRS`.
 
 If `$XDG_DATA_DIRS` is undefined or set to an empty value then `/usr/local/share` and
@@ -932,7 +932,7 @@ If `$XDG_DATA_DIRS` is undefined or set to an empty value then `/usr/local/share
 Dictionary files are newline-separated and contain one word per line.
 Dictionary files must be UTF-8 encoded.
 
-If you have multiple dictionaries that you would like `git cola` to use then
+If you have multiple dictionaries that you would like `git fanta` to use then
 you can specify multiple dictionaries using ``git config --global --add``.
 ``cola.dictionary`` is a configuration value that can contain multiple values.
 
@@ -963,7 +963,7 @@ cola.expandtab
 --------------
 
 Expand tabs into spaces in the commit message editor.  When set to `true`,
-`git cola` will insert a configurable number of spaces when tab is pressed.
+`git fanta` will insert a configurable number of spaces when tab is pressed.
 The number of spaces is determined by `cola.tabwidth`.
 Defaults to `false`.
 
@@ -980,7 +980,7 @@ cola.fileattributes
 -------------------
 
 Enables per-file gitattributes encoding and binary file support.
-This tells `git cola` to honor the configured encoding when displaying
+This tells `git fanta` to honor the configured encoding when displaying
 and applying diffs.
 
 A `.gitattributes` file can set the ``binary`` attribute in order to force
@@ -1001,7 +1001,7 @@ in the commit message editor.  Defaults to `10`.
 cola.fontdiff
 -------------
 
-Specifies the font to use for `git cola`'s diff display.
+Specifies the font to use for `git fanta`'s diff display.
 
 cola.fontsize
 -------------
@@ -1023,9 +1023,9 @@ for more information.
 cola.icontheme
 --------------
 
-Specifies the icon themes to use throughout `git cola`. The theme specified
+Specifies the icon themes to use throughout `git fanta`. The theme specified
 must be the name of the subdirectory containing the icons, which in turn must
-be placed in the inside the main "icons" directory in `git cola`'s
+be placed in the inside the main "icons" directory in `git fanta`'s
 installation prefix.
 
 If unset, or set either "light" or "default", then the default style will be
@@ -1068,8 +1068,8 @@ Defaults to `888`.
 cola.refreshonfocus
 -------------------
 
-Set to `true` to automatically refresh when `git cola` gains focus.  Defaults
-to `false` because this can cause a pause whenever switching to `git cola` from
+Set to `true` to automatically refresh when `git fanta` gains focus.  Defaults
+to `false` because this can cause a pause whenever switching to `git fanta` from
 another application.
 
 cola.linebreak
@@ -1097,7 +1097,7 @@ for more details.
 cola.maxrecent
 --------------
 
-`git cola` caps the number of recent repositories to avoid cluttering
+`git fanta` caps the number of recent repositories to avoid cluttering
 the start and recent repositories menu.  The maximum number of repositories to
 remember is controlled by `cola.maxrecent` and defaults to `8`.
 
@@ -1118,7 +1118,7 @@ Defaults to ``false``.
 cola.dragencoding
 -----------------
 
-`git cola` encodes paths dragged from its widgets into `utf-16` when adding
+`git fanta` encodes paths dragged from its widgets into `utf-16` when adding
 them to the drag-and-drop mime data (specifically, the `text/x-moz-url` entry).
 `utf-16` is used to make `gnome-terminal` see the right paths, but other
 terminals may expect a different encoding.  If you are using a terminal that
@@ -1127,14 +1127,14 @@ expects a modern encoding, e.g. `terminator`, then set this value to `utf-8`.
 cola.readsize
 -------------
 
-`git cola` avoids reading large binary untracked files.
+`git fanta` avoids reading large binary untracked files.
 The maximum size to read is controlled by `cola.readsize`
 and defaults to `2048`.
 
 cola.resizebrowsercolumns
 -------------------------
 
-`git cola` will automatically resize the file browser columns as folders are
+`git fanta` will automatically resize the file browser columns as folders are
 expanded/collapsed when ``cola.resizebrowsercolumns`` is set to `true`.
 Defaults to `false`.
 
@@ -1148,30 +1148,30 @@ Defaults to `patches`.
 cola.safemode
 -------------
 
-The "Stage" button in the `git cola` Actions panel stages all files when it is
+The "Stage" button in the `git fanta` Actions panel stages all files when it is
 activated and no files are selected.  This can be problematic if it is
 accidentally triggered after carefully preparing the index with staged
 changes.  "Safe Mode" is enabled by setting `cola.safemode` to `true`.
-When enabled, `git cola` will do nothing when "Stage" is activated without a
+When enabled, `git fanta` will do nothing when "Stage" is activated without a
 selection.  Defaults to `false`.
 
 cola.savewindowsettings
 -----------------------
 
-`git cola` will remember its window settings when set to `true`.
-Window settings and X11 sessions are saved in `$HOME/.config/git-cola`.
+`git fanta` will remember its window settings when set to `true`.
+Window settings and X11 sessions are saved in `$HOME/.config/git-fanta`.
 
 cola.showpath
 -------------
 
-`git cola` displays the absolute path of the repository in the window title.
+`git fanta` displays the absolute path of the repository in the window title.
 This can be disabled by setting `cola.showpath` to `false`.
 Defaults to `true`.
 
 cola.signcommits
 ----------------
 
-`git cola` will sign commits by default when set `true`. Defaults to `false`.
+`git fanta` will sign commits by default when set `true`. Defaults to `false`.
 See the section below on setting up GPG for more details.
 
 cola.startupmode
@@ -1213,9 +1213,9 @@ cola.terminal
 The command to use when launching commands within a graphical terminal.
 
 `cola.terminal` defaults to `xterm -e` when unset.
-e.g. when opening a shell, `git cola` will run `xterm -e $SHELL`.
+e.g. when opening a shell, `git fanta` will run `xterm -e $SHELL`.
 
-`git cola` has built-in support for `xterm`, `gnome-terminal`, `konsole`.
+`git fanta` has built-in support for `xterm`, `gnome-terminal`, `konsole`.
 If either `gnome-terminal`, `xfce4-terminal`, or `konsole` are installed
 then they will be preferred over `xterm` when `cola.terminal` is unset.
 
@@ -1259,7 +1259,7 @@ Tabs are counted according to `cola.tabwidth`.
 cola.theme
 ----------
 
-Specifies the GUI theme to use throughout `git cola`. The theme specified
+Specifies the GUI theme to use throughout `git fanta`. The theme specified
 must be one of the following values:
 
 * `default` – default Qt theme, may appear different on various systems
@@ -1350,14 +1350,14 @@ Configure whether commit messages should be stripped of whitespace and comments.
 
 Valid values are ``strip``, ``whitespace``, ``verbatim``, ``scissors`` or ``default``.
 
-The ``default`` mode uses the ``whitespace`` mode when committing through Git Cola
+The ``default`` mode uses the ``whitespace`` mode when committing through Git Fanta
 and the ``strip`` mode when committing using the ``git commit`` command-line.
 
 * ``strip`` - Strip leading and trailing empty lines, trailing whitespace,
   commentary and collapse consecutive empty lines.
 
 * ``whitespace`` - Same as strip except ``# commentary`` is not removed.
-  This is the ``default`` behavior when committing through `Git Cola`.
+  This is the ``default`` behavior when committing through `Git Fanta`.
 
 * ``verbatim`` - Do not change the message at all.
 
@@ -1373,7 +1373,7 @@ lines that begin with comment character ``#`` in your log message, even when
 committing using the command-line ``git commit``.
 
 On the contrary, if you always want to always strip comments, even when
-committing through Git Cola, then configure ``commit.cleanup`` to ``strip``.
+committing through Git Fanta, then configure ``commit.cleanup`` to ``strip``.
 
 Please see the `git commit cleanup mode documentation
 <https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---cleanupltmodegt>`_
@@ -1413,7 +1413,7 @@ The number of diff context lines to display.
 gui.displayuntracked
 --------------------
 
-`git cola` avoids showing untracked files when set to `false`.
+`git fanta` avoids showing untracked files when set to `false`.
 
 gui.editor
 ----------
@@ -1495,8 +1495,8 @@ GIT_COLA_SCALE
     See the `Qt High DPI documentation <https://doc.qt.io/qt-5/highdpi.html>`_
     for more details.
 
-`git cola` can be made to scale its interface for HiDPI displays.
-When defined, `git cola` will scale icons, radio buttons, and checkboxes
+`git fanta` can be made to scale its interface for HiDPI displays.
+When defined, `git fanta` will scale icons, radio buttons, and checkboxes
 according to the scale factor.  The default value is `1`.
 A good value is `2` for high-resolution displays.
 
@@ -1505,9 +1505,9 @@ Fonts are not scaled, as their size can already be set in the settings.
 GIT_COLA_TRACE
 --------------
 
-When defined, `git cola` logs `git` commands to stdout.
-When set to `full`, `git cola` also logs the exit status and output.
-When set to `trace`, `git cola` logs to the `Console` widget.
+When defined, `git fanta` logs `git` commands to stdout.
+When set to `full`, `git fanta` also logs the exit status and output.
+When set to `trace`, `git fanta` logs to the `Console` widget.
 
 VISUAL
 ------
@@ -1518,33 +1518,33 @@ This is ignored when the `gui.editor` configuration variable is defined.
 LANGUAGE SETTINGS
 =================
 
-`git cola` automatically detects your language and presents some
+`git fanta` automatically detects your language and presents some
 translations when available.  This may not be desired, or you
-may want `git cola` to use a specific language.
+may want `git fanta` to use a specific language.
 
-You can make `git cola` use an alternative language by creating a
-`~/.config/git-cola/language` file containing the standard two-letter
+You can make `git fanta` use an alternative language by creating a
+`~/.config/git-fanta/language` file containing the standard two-letter
 gettext language code, e.g. "en", "de", "ja", "zh", etc.::
 
-    mkdir -p ~/.config/git-cola &&
-    echo en >~/.config/git-cola/language
+    mkdir -p ~/.config/git-fanta &&
+    echo en >~/.config/git-fanta/language
 
 Alternatively you may also use LANGUAGE environmental variable to temporarily
-change `git cola`'s language just like any other gettext-based program.  For
-example to temporarily change `git cola`'s language to English::
+change `git fanta`'s language just like any other gettext-based program.  For
+example to temporarily change `git fanta`'s language to English::
 
-    LANGUAGE=en git cola
+    LANGUAGE=en git fanta
 
-To make `git cola` use the zh_TW translation with zh_HK, zh, and en as a
+To make `git fanta` use the zh_TW translation with zh_HK, zh, and en as a
 fallback.::
 
-    LANGUAGE=zh_TW:zh_HK:zh:en git cola
+    LANGUAGE=zh_TW:zh_HK:zh:en git fanta
 
 
 CUSTOM GUI ACTIONS
 ==================
 
-`git cola` allows you to define custom GUI actions by setting `git config`
+`git fanta` allows you to define custom GUI actions by setting `git config`
 variables.  The "name" of the command appears in the "Actions" menu.
 
 guitool.<name>.cmd
@@ -1639,7 +1639,7 @@ The value must be a valid string understood by the `QAction::setShortcut()` API.
 See https://doc.qt.io/qt-6/qkeysequence.html#toString
 for more details about the supported values.
 
-Avoid creating shortcuts that conflict with existing built-in `git cola`
+Avoid creating shortcuts that conflict with existing built-in `git fanta`
 shortcuts.  Creating a conflict will result in no action when the shortcut
 is used.
 
@@ -1650,7 +1650,7 @@ SETTING UP CREDENTIAL HELPERS
 Git has robust support for automatically handling credentials.
 
 The recommended approach is to use SSH keys and an SSH agent, but any of the core Git
-Credentials helpers will get used automatically by Git Cola.
+Credentials helpers will get used automatically by Git Fanta.
 
 See https://git-scm.com/doc/credential-helpers for more details.
 
@@ -1659,7 +1659,7 @@ SETTING UP GPG FOR SIGNED COMMITS
 =================================
 
 When creating signed commits, `gpg` will attempt to read your password from the
-terminal from which `git cola` was launched.
+terminal from which `git fanta` was launched.
 The way to make this work smoothly is to use a GPG agent so that you can avoid
 needing to re-enter your password every time you commit.
 
@@ -1721,17 +1721,17 @@ If you see the following output::
 Then the daemon is already running, and you do not need to start it yourself.
 
 If it is not running, eval the output of ``gpg-agent --daemon`` in your shell
-prior to launching `git cola`.::
+prior to launching `git fanta`.::
 
     eval $(gpg-agent --daemon)
-    git cola
+    git fanta
 
 
 SHELL COMPLETIONS
 =================
 
-Git Cola provides shell completions for zsh and bash.
-The completion scripts and instructions are included in Git Cola's
+Git Fanta provides shell completions for zsh and bash.
+The completion scripts and instructions are included in Git Fanta's
 `contrib` directory.
 
 * `Shell completion scripts <https://gitlab.com/git-cola/git-cola/-/tree/main/contrib>`_
@@ -1742,26 +1742,26 @@ The completion scripts and instructions are included in Git Cola's
 MACOS NOTES
 ===========
 
-A ``git-cola.app`` bundle can be built using ``garden macos/app``.
+A ``git-fanta.app`` bundle can be built using ``garden macos/app``.
 See the ``garden.yaml`` file for more details.
 
-Older versions of the ``git-cola.app`` may have caused macOS to launch Git Cola using
+Older versions of the ``git-fanta.app`` may have caused macOS to launch Git Fanta using
 Rosetta even though Python is arm64 native. This is a macOS / Apple bug.
 
-A stub ``git-cola-macos`` binary is now provided in ``git-cola.app/Contents/MacOS``
+A stub ``git-fanta-macos`` binary is now provided in ``git-fanta.app/Contents/MacOS``
 as a workaround to prevent this behavior.
 
-If you launched an older version of the ``git-cola.app`` bundle you may have encountered
+If you launched an older version of the ``git-fanta.app`` bundle you may have encountered
 this macOS bug:
 
 https://apple.stackexchange.com/questions/457171/shell-script-application-bundle-prompts-for-rosetta-installation
 
 Per the discussion above, you can clear the buggy cache using this command::
 
-    /usr/libexec/PlistBuddy -c 'Delete :"Architectures for arm64":com.justroots.git-cola' \
+    /usr/libexec/PlistBuddy -c 'Delete :"Architectures for arm64":com.justroots.git-fanta' \
     ~/Library/Preferences/com.apple.LaunchServices/com.apple.LaunchServices.plist
 
-Reboot after running this command and Git Cola should launch natively without Rosetta.
+Reboot after running this command and Git Fanta should launch natively without Rosetta.
 
 
 WINDOWS NOTES
@@ -1772,7 +1772,7 @@ Git Installation
 
 If Git is installed in a custom location, e.g. not installed in `C:/Git` or
 Program Files, then the path to Git must be configured by creating a file in
-your home directory `~/.config/git-cola/git-bindir` that points to your git
+your home directory `~/.config/git-fanta/git-bindir` that points to your git
 installation, e.g.::
 
     C:/Tools/Git/bin
@@ -1806,8 +1806,8 @@ FIPS SECURITY MODE
 is available in newer versions of Python. These include Python 3.9+ and the
 patched Python 3.6 used by CentOS8/RHEL8 (and possibly others).
 
-Git Cola uses the ``hashlib.md5`` function and adheres to the FIPS security
-mode when available. Git Cola does not use the MD5 value for security purposes.
+Git Fanta uses the ``hashlib.md5`` function and adheres to the FIPS security
+mode when available. Git Fanta does not use the MD5 value for security purposes.
 MD5 is used only for the purposes of implementing the ``cola/gravatar.py``
 Gravatar client.
 
@@ -1815,13 +1815,13 @@ Gravatar client.
 LINKS
 =====
 
-Git Cola's Git Repository
+Git Fanta's Git Repository
 -------------------------
 * `Primary repository <https://gitlab.com/git-cola/git-cola/>_`.
 * `Mirror repository <https://github.com/git-cola/git-cola/>_`.
 
 
-Git Cola Homepage
+Git Fanta Homepage
 -----------------
 
 https://git-cola.gitlab.io/

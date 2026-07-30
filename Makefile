@@ -4,7 +4,7 @@ all::
 
 # Usage
 # -----
-# make prefix=<path> install           # Install git-cola
+# make prefix=<path> install           # Install git-fanta
 #
 # make doc                             # Build documentation
 # make prefix=<path> install-doc       # Install documentation
@@ -31,7 +31,7 @@ XARGS = xargs
 prefix = $(HOME)
 datadir ?= $(prefix)/share
 appdir ?= $(datadir)/applications
-docdir ?= $(datadir)/doc/git-cola
+docdir ?= $(datadir)/doc/git-fanta
 iconsdir ?= $(datadir)/icons
 icons_scalabledir ?= $(iconsdir)/hicolor/scalable/apps
 metainfodir ?= $(datadir)/metainfo
@@ -39,7 +39,7 @@ python_version := $(shell $(PYTHON) -c 'import sys; print("%s.%s" % sys.version_
 python_lib = python$(python_version)/site-packages
 pythondir = $(prefix)/lib/$(python_lib)
 
-cola_base := git-cola
+cola_base := git-fanta
 cola_app_base= $(cola_base).app
 cola_app = $(CURDIR)/$(cola_app_base)
 cola_app_resources = $(cola_app)/Contents/Resources
@@ -82,7 +82,7 @@ install-desktop-files::
 
 install-icons::
 	$(MKDIR_P) "$(DESTDIR)$(icons_scalabledir)"
-	$(INSTALL) -m 664 cola/icons/git-cola.svg "$(DESTDIR)$(icons_scalabledir)"
+	$(INSTALL) -m 664 cola/icons/git-fanta.svg "$(DESTDIR)$(icons_scalabledir)"
 
 install-htmldocs::
 	$(MKDIR_P) "$(DESTDIR)$(docdir)"
@@ -119,17 +119,17 @@ install-man::
 .PHONY: uninstall
 uninstall::
 	$(RM) "$(DESTDIR)$(prefix)"/bin/cola
-	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola
-	$(RM) "$(DESTDIR)$(prefix)"/bin/git-cola-sequence-editor
+	$(RM) "$(DESTDIR)$(prefix)"/bin/git-fanta
+	$(RM) "$(DESTDIR)$(prefix)"/bin/git-fanta-sequence-editor
 	$(RM) "$(DESTDIR)$(prefix)"/bin/git-dag
-	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-cola.desktop
-	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-cola-folder-handler.desktop
+	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-fanta.desktop
+	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-fanta-folder-handler.desktop
 	$(RM) "$(DESTDIR)$(prefix)"/share/applications/git-dag.desktop
 	$(RM) "$(DESTDIR)$(prefix)"/share/metainfo/git-dag.appdata.xml
-	$(RM) "$(DESTDIR)$(prefix)"/share/metainfo/git-cola.appdata.xml
-	$(RM) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable/apps/git-cola.svg
-	$(RM_R) "$(DESTDIR)$(prefix)"/share/doc/git-cola
-	$(RM_R) "$(DESTDIR)$(pythondir)"/git_cola-*
+	$(RM) "$(DESTDIR)$(prefix)"/share/metainfo/git-fanta.appdata.xml
+	$(RM) "$(DESTDIR)$(prefix)"/share/icons/hicolor/scalable/apps/git-fanta.svg
+	$(RM_R) "$(DESTDIR)$(prefix)"/share/doc/git-fanta
+	$(RM_R) "$(DESTDIR)$(pythondir)"/git_fanta-*
 	$(RM_R) "$(DESTDIR)$(pythondir)"/cola
 	$(RMDIR) -p "$(DESTDIR)$(pythondir)" 2>/dev/null || true
 	$(RMDIR) "$(DESTDIR)$(prefix)"/share/applications 2>/dev/null || true
@@ -147,15 +147,15 @@ uninstall::
 clean::
 	$(FIND) $(ALL_PYTHON_DIRS) -name '*.py[cod]' -print0 | $(XARGS) -0 $(RM)
 	$(FIND) $(ALL_PYTHON_DIRS) -name __pycache__ -print0 | $(XARGS) -0 $(RM_R)
-	$(RM_R) build dist git-cola.app
+	$(RM_R) build dist git-fanta.app
 	$(MAKE) -C docs clean
 
-# Build a git-cola.app bundle.
-.PHONY: git-cola.app
-git-cola.app::
-    cola_full_version := $(shell ./bin/git-cola version --brief)
+# Build a git-fanta.app bundle.
+.PHONY: git-fanta.app
+git-fanta.app::
+    cola_full_version := $(shell ./bin/git-fanta version --brief)
 
-git-cola.app::
+git-fanta.app::
 	$(MKDIR_P) $(cola_app)/Contents/MacOS
 	$(MKDIR_P) $(cola_app_resources)
 	$(PYTHON) -m venv $(cola_app_resources)
@@ -165,8 +165,8 @@ ifneq ($(cola_full_version),)
 	sed -i -e s/0.0.0.0/$(cola_full_version)/ $(cola_app)/Contents/Info.plist
 endif
 	sed -i -e s/0.0.0/$(cola_version)/ $(cola_app)/Contents/Info.plist
-	$(CP) contrib/darwin/git-cola $(cola_app)/Contents/MacOS
-	$(CP) contrib/darwin/git-cola.icns $(cola_app)/Contents/Resources
+	$(CP) contrib/darwin/git-fanta $(cola_app)/Contents/MacOS
+	$(CP) contrib/darwin/git-fanta.icns $(cola_app)/Contents/Resources
 	$(MAKE) PIP=$(cola_app_resources)/bin/pip \
 		prefix=$(cola_app_resources) install
 	$(MAKE) SPHINXBUILD=$(cola_app_resources)/bin/sphinx-build \
@@ -183,4 +183,4 @@ test::
 
 .PHONY: pkg
 pkg::
-	git make-pkg --py 3 --global --name git-cola
+	git make-pkg --py 3 --global --name git-fanta

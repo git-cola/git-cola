@@ -81,7 +81,7 @@ def qapp():
     instance = QtWidgets.QApplication.instance()
     if instance is None:
         instance = QtWidgets.QApplication(
-            sys.argv[:1] if sys.argv else ['git-cola-test']
+            sys.argv[:1] if sys.argv else ['git-fanta-test']
         )
     yield instance
 

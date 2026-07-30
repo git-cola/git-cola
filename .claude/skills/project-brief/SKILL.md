@@ -5,8 +5,8 @@ description: Orientation for the git-fanta repository — what it is, how the co
 
 # git-fanta
 
-A fork of **git-cola**, the Qt desktop GUI for Git. Upstream naming is untouched — the Python
-package is `cola`, `pyproject.toml` still says `git-cola`, and only the remote
+A fork of **git-fanta**, the Qt desktop GUI for Git. Upstream naming is untouched — the Python
+package is `cola`, `pyproject.toml` still says `git-fanta`, and only the remote
 (`hermes-agent-ak/git-fanta`) and the working directory carry the fork name. Do not "fix" that.
 
 The fork's own work so far is UI: making the commit history graph a first-class part of the main
@@ -24,7 +24,7 @@ undo.
 | `cola/icons/` | The SVG assets. Check here before assuming an icon exists |
 | `test/` | 36 `*_test.py` files, flat, plus `helper.py`. No `conftest.py` — fixtures are defined per file or imported from `helper` |
 | `docs/plans/` | Implementation plans (see Workflow below) |
-| `bin/` | Launchers: `git-cola`, `git-dag`, `git-cola-sequence-editor` |
+| `bin/` | Launchers: `git-fanta`, `git-dag`, `git-fanta-sequence-editor` |
 
 ## Architecture in five sentences
 

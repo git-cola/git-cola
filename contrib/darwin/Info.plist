@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>git-cola</string>
+	<string>git-fanta</string>
 	<key>CFBundleName</key>
-	<string>Git Cola</string>
+	<string>Git Fanta</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -20,13 +20,13 @@
 		</dict>
 	</array>
 	<key>CFBundleIconFile</key>
-	<string>git-cola.icns</string>
+	<string>git-fanta.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.justroots.git-cola</string>
+	<string>com.justroots.git-fanta</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>git-cola</string>
+	<string>git-fanta</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

@@ -63,7 +63,7 @@ def icon_themes() -> tuple[tuple[str, str], tuple[str, str], tuple[str, str]]:
 
 
 def name_from_basename(basename: str) -> str:
-    """Prefix the basename with "icons:" so that git-cola's icons are found
+    """Prefix the basename with "icons:" so that git-fanta's icons are found
 
     "icons" is registered with the Qt resource system during install().
 
@@ -218,8 +218,8 @@ def close() -> QtGui.QIcon:
 
 
 def cola() -> QtGui.QIcon:
-    """Git Cola icon"""
-    return icon('git-cola.svg')
+    """Git Fanta icon"""
+    return icon('git-fanta.svg')
 
 
 def commit() -> QtGui.QIcon:

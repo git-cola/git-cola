@@ -3,7 +3,7 @@ from cola import display
 
 def test_shorten_paths():
     paths = (
-        '/usr/src/git-cola/src',
+        '/usr/src/git-fanta/src',
         '/usr/src/example/src',
         '/usr/src/super/lib/src',
         '/usr/src/super/tools/src',
@@ -11,7 +11,7 @@ def test_shorten_paths():
         '/lib/src',
     )
     actual = display.shorten_paths(paths)
-    assert actual[paths[0]] == 'git-cola/src'
+    assert actual[paths[0]] == 'git-fanta/src'
     assert actual[paths[1]] == 'src/example/src'
     assert actual[paths[2]] == 'super/lib/src'
     assert actual[paths[3]] == 'tools/src'

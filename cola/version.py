@@ -1,4 +1,4 @@
-"""Provide git-cola's version number"""
+"""Provide git-fanta's version number"""
 from __future__ import annotations
 
 try:
@@ -69,7 +69,7 @@ def version() -> str:
         return pkg_version
 
     try:
-        metadata_version = metadata.version('git-cola')
+        metadata_version = metadata.version('git-fanta')
     except (ImportError, OSError):
         return pkg_version
 

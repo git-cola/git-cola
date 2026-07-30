@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=Git Cola
+Name=Git Fanta
 Comment=The highly caffeinated Git GUI
 Comment[cs]=Git GUI s vysokým obsahem kofeinu
 Comment[zh_TW]=高咖啡因含量的 Git 圖形介面
-TryExec=git-cola
-Exec=git-cola --prompt
-Icon=git-cola
+TryExec=git-fanta
+Exec=git-fanta --prompt
+Icon=git-fanta
 StartupNotify=true
 Terminal=false
 Type=Application

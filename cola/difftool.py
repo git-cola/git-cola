@@ -88,7 +88,7 @@ class Difftool(standard.Dialog):
         self.detect_renames = detect_renames
 
         if title is None:
-            title = N_('git cola diff')
+            title = N_('git fanta diff')
 
         self.setWindowTitle(title)
         self.setWindowModality(Qt.WindowModal)

@@ -97,7 +97,7 @@ def setup_environment() -> None:
                 compat.setenv('SHELL', shell)
                 break
 
-    # Setup the path so that git finds us when we run 'git cola'
+    # Setup the path so that git finds us when we run 'git fanta'
     path_entries = core.getenv('PATH', '').split(os.pathsep)
     bindir = core.decode(os.path.dirname(sys_argv0))
     path_entries.append(bindir)
@@ -195,7 +195,7 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
 def set_application_name(app_name) -> None:
     """Tell Qt and Cocoa the user-visible application name.
 
-    Without this, a non-bundled launch on macOS (running ``git-cola`` via the
+    Without this, a non-bundled launch on macOS (running ``git-fanta`` via the
     system ``python3``) shows ``python3`` in the menu bar, the Apple menu
     "Hide" / "Quit" items, and in the dock, because Cocoa derives all of
     those from the executable name.
@@ -275,7 +275,7 @@ class ColaApplication:
         icons.install(icon_themes or get_icon_themes(context))
         # Icons must be installed before setting icons.
         self._app.setWindowIcon(icons.cola())
-        self._app.setDesktopFileName('git-cola')
+        self._app.setDesktopFileName('git-fanta')
         self._install_style(gui_theme)
 
     def _install_style(self, theme_str: None) -> None:
@@ -393,7 +393,7 @@ class ColaQApplication(QtWidgets.QApplication):
 def process_args(args: argparse.Namespace, setup_repo: bool = False) -> None:
     """Process and verify command-line arguments"""
     if args.version:
-        # Accept 'git cola --version' or 'git cola version'
+        # Accept 'git fanta --version' or 'git fanta version'
         version.print_version()
         sys.exit(core.EXIT_SUCCESS)
 
@@ -441,11 +441,11 @@ def restore_session(args: argparse.Namespace) -> None:
 def application_init(
     args: argparse.Namespace,
     update: bool = False,
-    app_name: str = 'Git Cola',
+    app_name: str = 'Git Fanta',
     setup_worktree: bool = True,
     setup_repo: bool = False,
 ) -> ApplicationContext:
-    """Parses the command-line arguments and starts git-cola"""
+    """Parses the command-line arguments and starts git-fanta"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     setup_environment()
@@ -469,7 +469,7 @@ def application_init(
 
 
 def new_context(
-    args: argparse.Namespace, app_name: str = 'Git Cola'
+    args: argparse.Namespace, app_name: str = 'Git Fanta'
 ) -> ApplicationContext:
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
@@ -592,7 +592,7 @@ def default_stop(_context: ApplicationContext, _view: ViewType) -> None:
 
 def add_common_arguments(parser: argparse.ArgumentParser) -> None:
     """Add command arguments to the ArgumentParser"""
-    # We also accept 'git cola version'
+    # We also accept 'git fanta version'
     parser.add_argument(
         '--version', default=False, action='store_true', help='print version number'
     )
@@ -709,7 +709,7 @@ def offer_to_create_repo(context, gitdir) -> None:
 def async_update(context: ApplicationContext) -> None:
     """Update the model in the background
 
-    git-cola should startup as quickly as possible.
+    git-fanta should startup as quickly as possible.
     """
     update_index = context.cfg.get('cola.updateindex', True)
     update_status = partial(context.model.update_status, update_index=update_index)
@@ -734,7 +734,7 @@ def startup_message() -> None:
 
 def initialize() -> str:
     """System-level initialization"""
-    # We support ~/.config/git-cola/git-bindir on Windows for configuring
+    # We support ~/.config/git-fanta/git-bindir on Windows for configuring
     # a custom location for finding the "git" executable.
     git_path = find_git()
     if git_path:
@@ -897,7 +897,7 @@ def find_git() -> str | None:
 
     # If the user wants to use a Git/bin/ directory from a non-standard
     # directory then they can write its location into
-    # ~/.config/git-cola/git-bindir
+    # ~/.config/git-fanta/git-bindir
     git_bindir = resources.config_home('git-bindir')
     if core.exists(git_bindir):
         custom_path = core.read(git_bindir).strip()

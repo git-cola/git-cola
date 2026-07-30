@@ -1,6 +1,6 @@
-# git-cola: The highly caffeinated Git GUI
+# git-fanta: The highly caffeinated Git GUI
 
-Git Cola is a powerful Git GUI with a slick and intuitive user interface.
+Git Fanta is a powerful Git GUI with a slick and intuitive user interface.
 
     git clone https://github.com/git-cola/git-cola.git
 
@@ -20,7 +20,7 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
 
 * [HTML documentation](https://git-cola.readthedocs.io/en/latest/)
 
-* [Git Cola documentation](docs/git-cola.rst)
+* [Git Fanta documentation](docs/git-fanta.rst)
 
 * [Git DAG documentation](docs/git-dag.rst)
 
@@ -41,7 +41,7 @@ Git Cola is a powerful Git GUI with a slick and intuitive user interface.
 
 * [QtPy](https://github.com/spyder-ide/qtpy) 2.0.0 or newer.
 
-Git Cola uses QtPy, so you can choose between PyQt6, PyQt5 and PySide2 by setting
+Git Fanta uses QtPy, so you can choose between PyQt6, PyQt5 and PySide2 by setting
 the `QT_API` environment variable to `pyqt6`, `pyqt5` or `pyside2` as desired.
 `qtpy` defaults to `pyqt5` and falls back to `pyqt6` and `pyside2` if `pyqt5`
 is not installed.
@@ -57,7 +57,7 @@ Any of the following Python Qt libraries must be installed:
 
 ## Optional Features
 
-Git Cola enables additional features when the following
+Git Fanta enables additional features when the following
 Python modules are installed.
 
 [Send2Trash](https://pypi.org/project/Send2Trash)
@@ -75,22 +75,22 @@ enables macOS-specific application themes on macOS.
 
 # Installation
 
-There are several ways to install Git Cola but you do not need to "install" Git Cola
+There are several ways to install Git Fanta but you do not need to "install" Git Fanta
 in order to run it.
 
-Git Cola is designed to run directly from its source tree. Installation is optional.
+Git Fanta is designed to run directly from its source tree. Installation is optional.
 
 
 ## From Source
 
-The recommended approach for running the latest Git Cola version is to install its
+The recommended approach for running the latest Git Fanta version is to install its
 PyQt dependencies using your distribution's package manager and then run
-`./bin/git-cola` directly from source.
+`./bin/git-fanta` directly from source.
 
 
 ## Installing PyQt dependencies on Debian / Ubuntu systems
 
-Git Cola works with either PyQt5 or PyQt6 because it uses the
+Git Fanta works with either PyQt5 or PyQt6 because it uses the
 [qtpy](https://github.com/spyder-ide/qtpy) library for PyQt compatibility.
 
 ### PyQt5
@@ -110,61 +110,61 @@ sudo apt install python3-pyqt5 python3-pyqt5.qtopengl python3-pyqt5.qtwebengine 
 
 ### PyQt6
 
-If you'd like to use Git Cola with the newer PyQt6 ecosystem then you can install these
+If you'd like to use Git Fanta with the newer PyQt6 ecosystem then you can install these
 packages instead of PyQt5.
 
 ```bash
 sudo apt install python3-pyqt6 python3-pyqt6.qtsvg python3-pyqt6.qtwebengine
 ```
 
-At this point you should be able to launch `./bin/git-cola` from the source tree and
+At this point you should be able to launch `./bin/git-fanta` from the source tree and
 there is nothing more to do.
 
-The further instructions below detail how to install Git Cola from PyPI or how to
+The further instructions below detail how to install Git Fanta from PyPI or how to
 install it into a location separate from the source tree.
 
 
 ## Linux
 
-Linux is it! Your distro has probably already packaged `git-cola`.
+Linux is it! Your distro has probably already packaged `git-fanta`.
 If not, please file a bug against your distribution ;-)
 
 ### Arch
 
-Available in the [AUR](https://aur.archlinux.org/packages/git-cola/).
+Available in the [AUR](https://aur.archlinux.org/packages/git-fanta/).
 
 ### Debian, Ubuntu
 
-    apt install git-cola
+    apt install git-fanta
 
 ### Fedora
 
-    dnf install git-cola
+    dnf install git-fanta
 
 ### Gentoo
 
-    emerge git-cola
+    emerge git-fanta
 
 ### OpenSUSE, SLE
 
-    zypper install git-cola
+    zypper install git-fanta
 
 ### Slackware
 
-Available in [SlackBuilds.org](http://slackbuilds.org/result/?search=git-cola).
+Available in [SlackBuilds.org](http://slackbuilds.org/result/?search=git-fanta).
 
 ### Ubuntu
 
-[See here](https://packages.ubuntu.com/search?keywords=git-cola) for the
+[See here](https://packages.ubuntu.com/search?keywords=git-fanta) for the
 versions that are available in Ubuntu's repositories.
 
 ## FreeBSD
 
     # Install from official binary packages
-    pkg install -r FreeBSD devel/git-cola
+    pkg install -r FreeBSD devel/git-fanta
 
     # Build from source
-    cd /usr/ports/devel/git-cola && make clean install
+    cd /usr/ports/devel/git-fanta && make clean install
 
 ## Install into a Python Virtualenv from PyPI using pip
 
@@ -179,23 +179,23 @@ One way to install the latest released version is to use `venv` (virtualenv) and
 This installs [git-cola from pypi.org](https://pypi.org/project/git-cola/).
 
     python3 -m venv --system-site-packages env3
-    ./env3/bin/pip install git-cola
-    ./env3/bin/git-cola
+    ./env3/bin/pip install git-fanta
+    ./env3/bin/git-fanta
 
-Add the `env3/bin` directory to your `PATH` or symlink to `bin/git-cola` from
-somewhere in your `PATH` such as `~/.local/bin/git-cola`, and you can launch
-Git Cola like any other built-in `git` command:
+Add the `env3/bin` directory to your `PATH` or symlink to `bin/git-fanta` from
+somewhere in your `PATH` such as `~/.local/bin/git-fanta`, and you can launch
+Git Fanta like any other built-in `git` command:
 
-    git cola
+    git fanta
     git dag
 
 
 ## Install into a Python Virtualenv from Source
 
 If you don't have PyQt installed then the easiest way to get it is to use a Python
-virtualenv and install Git Cola into it in "editable" mode.
+virtualenv and install Git Fanta into it in "editable" mode.
 
-This install method lets you upgrade Git Cola by running `git pull`.
+This install method lets you upgrade Git Fanta by running `git pull`.
 
     # Create a virtualenv called "env3" and activate it.
     python3 -m venv --system-site-packages env3
@@ -203,19 +203,19 @@ This install method lets you upgrade Git Cola by running `git pull`.
     # Install PyQt and (optional) extra packages to enable all features.
     ./env3/bin/pip install --editable '.[extras,pyqt6]'
 
-    # Run Git Cola via the "git-cola" Git subcommand.
+    # Run Git Fanta via the "git-fanta" Git subcommand.
     source env3/bin/activate
-    git cola
+    git fanta
 
-If you add `env3/bin` (or symlink to `env3/bin/git-cola` ) somewhere in your `$PATH` then you can
-run `git cola` as if it were a builtin `git` command from outside of the virtualenv
+If you add `env3/bin` (or symlink to `env3/bin/git-fanta` ) somewhere in your `$PATH` then you can
+run `git fanta` as if it were a builtin `git` command from outside of the virtualenv
 (e.g. after running "deactivate" or when opening a new shell).
 
 
 ## Standalone Installation from Source
 
-Running `garden -D prefix=$HOME/.local install` will install Git Cola in your
-`$HOME/.local` directory (`$HOME/.local/bin/git-cola`, `$HOME/.local/lib`, etc).
+Running `garden -D prefix=$HOME/.local install` will install Git Fanta in your
+`$HOME/.local` directory (`$HOME/.local/bin/git-fanta`, `$HOME/.local/lib`, etc).
 
 This installation method assumes that the `qtpy` and `PyQt*` dependencies have
 been pre-installed.
@@ -239,24 +239,24 @@ variables.
 For most end-users we recommend using either Homebrew or installing into
 a Python virtualenv as described above.
 
-You can install Git Cola from source using the same steps as above.
+You can install Git Fanta from source using the same steps as above.
 
 ### Homebrew
 
-An easy way to install Git Cola is to use [Homebrew](https://brew.sh/) .
-Use Homebrew to install the git-cola recipe:
+An easy way to install Git Fanta is to use [Homebrew](https://brew.sh/) .
+Use Homebrew to install the git-fanta recipe:
 
     brew install git-cola
 
 If you install using Homebrew you can stop at this step.
 You don't need to clone the repo or anything.
 
-### git-cola.app
+### git-fanta.app
 
 If you have all of the dependencies installed, either via `pip` or `brew` then
-you can build a shell `git-cola.app` app bundle wrapper for use in `/Applications`.
+you can build a shell `git-fanta.app` app bundle wrapper for use in `/Applications`.
 
-If you'd like to build a `git-cola.app` bundle for `/Applications` run this command:
+If you'd like to build a `git-fanta.app` bundle for `/Applications` run this command:
 
     garden macos/app
 
@@ -266,14 +266,14 @@ You will need to periodically rebuild the app wrapper whenever Python is upgrade
 
 Updating macOS can often break Homebrew-managed software.
 
-If you update macOS and Git Cola stops working then then you probably need to re-install
-Git Cola's dependencies.
+If you update macOS and Git Fanta stops working then then you probably need to re-install
+Git Fanta's dependencies.
 
 Re-installing from scratch using the instructions below can get things back in shape.
 
     brew update
 
-    brew uninstall git-cola
+    brew uninstall git-fanta
     brew uninstall pyqt
     brew uninstall pyqt@5
     brew autoremove
@@ -292,14 +292,14 @@ Download and install the following:
 
 * [Git Cola](https://github.com/git-cola/git-cola/releases)
 
-Once these are installed you can run Git Cola from the Start menu.
+Once these are installed you can run Git Fanta from the Start menu.
 
 See "Windows (Continued)" below for more details.
 
-If you'd like to install Git Cola with
+If you'd like to install Git Fanta with
 [winget](https://github.com/microsoft/winget-cli) run the following command:
 
-    winget install git-cola.git-cola
+    winget install git-fanta.git-fanta
 
 As there is no dependency resolution yet you have to install Git as well with:
 
@@ -307,18 +307,18 @@ As there is no dependency resolution yet you have to install Git as well with:
 
 # Goodies
 
-Git Cola ships with an interactive rebase editor called `git-cola-sequence-editor`.
-`git-cola-sequence-editor` is used to reorder and choose commits when rebasing.
+Git Fanta ships with an interactive rebase editor called `git-fanta-sequence-editor`.
+`git-fanta-sequence-editor` is used to reorder and choose commits when rebasing.
 Start an interactive rebase through the "Rebase" menu, or through the
-`git cola rebase` sub-command to use the `git-cola-sequence-editor`:
+`git fanta rebase` sub-command to use the `git-fanta-sequence-editor`:
 
-    git cola rebase @{upstream}
+    git fanta rebase @{upstream}
 
-`git-cola-sequence-editor` can be launched independently of git cola by telling
+`git-fanta-sequence-editor` can be launched independently of git fanta by telling
 `git rebase` to use it as its editor through the `GIT_SEQUENCE_EDITOR`
 environment variable:
 
-    export GIT_SEQUENCE_EDITOR="$HOME/git-cola/bin/git-cola-sequence-editor"
+    export GIT_SEQUENCE_EDITOR="$HOME/git-fanta/bin/git-fanta-sequence-editor"
     git rebase -i @{upstream}
 
 ## Shell Completions
@@ -326,22 +326,22 @@ environment variable:
 Shell completion scripts are available for bash and zsh.
 Each script contains instructions on how to install and activate the completions.
 
-* [bash completion script](contrib/git-cola-completion.bash)
+* [bash completion script](contrib/git-fanta-completion.bash)
 
-* [zsh completion script](contrib/_git-cola)
+* [zsh completion script](contrib/_git-fanta)
 
 
-# Git Cola Sub-commands
+# Git Fanta Sub-commands
 
-The `git-cola` command exposes various sub-commands that allow you to quickly
-launch tools that are available from within the git-cola interface.
-For example, `git cola find` launches the file finder,
-and `git cola grep` launches the grep tool.
+The `git-fanta` command exposes various sub-commands that allow you to quickly
+launch tools that are available from within the git-fanta interface.
+For example, `git fanta find` launches the file finder,
+and `git fanta grep` launches the grep tool.
 
-See `git cola --help-commands` for the full list of commands.
+See `git fanta --help-commands` for the full list of commands.
 
-    $ git cola --help-commands
-    usage: git-cola [-h]
+    $ git fanta --help-commands
+    usage: git-fanta [-h]
 
                     {cola,am,archive,branch,browse,config,
                      dag,diff,fetch,find,grep,merge,pull,push,
@@ -353,7 +353,7 @@ See `git cola --help-commands` for the full list of commands.
        dag,diff,fetch,find,grep,merge,pull,push,
        rebase,remote,search,stash,tag,version}
 
-        cola                start git-cola
+        cola                start git-fanta
         am                  apply patches using "git am"
         archive             save an archive
         branch              create a branch
@@ -381,7 +381,7 @@ See `git cola --help-commands` for the full list of commands.
 [![Help Wanted PRs](https://img.shields.io/github/issues-pr/git-cola/git-cola/help%20wanted?style=flat&logo=github&logoColor=b545d1&label=%22Help%20Wanted%22%20PRs)](https://github.com/git-cola/git-cola/pulls?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22)
 [![Open Issues](https://img.shields.io/github/issues/git-cola/git-cola?style=flat&logo=github&logoColor=red&label=Issues)](https://github.com/git-cola/git-cola/issues?q=is%3Aopen)
 
-If you already have Git Cola's dependencies installed then you can
+If you already have Git Fanta's dependencies installed then you can
 start `cola` as a Python module if you have the source code available.
 
     python -m cola
@@ -414,11 +414,11 @@ When submitting patches, consult the
 
 ## Packaging Notes
 
-Git Cola installs its modules into the default Python site-packages directory
+Git Fanta installs its modules into the default Python site-packages directory
 (e.g. `lib/pythonX.Y/site-packages`) using setuptools.
 
-While end-users can use `pip install git-cola` to install Git Cola, distribution
-packagers should use the `garden -D prefix=/usr install` process. Git Cola's Garden
+While end-users can use `pip install git-fanta` to install Git Fanta, distribution
+packagers should use the `garden -D prefix=/usr install` process. Git Fanta's Garden
 recipe wraps `pip install --prefix=<prefix>` to provide a packaging-friendly
 `garden install` target.
 
@@ -427,26 +427,26 @@ recipe wraps `pip install --prefix=<prefix>` to provide a packaging-friendly
 
 ## Microsoft Visual C++ 2015 Redistributable
 
-Earlier versions of Git Cola may have shipped without `vcruntime140.dll`  and may
+Earlier versions of Git Fanta may have shipped without `vcruntime140.dll`  and may
 not run on machines that are missing this DLL.
 
 To fix this, download the
 [Microsoft Visual C++ 2015 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=52685)
 and install it
 
-Git Cola v4.0.0 and newer include this DLL and do not require this to be installed
+Git Fanta v4.0.0 and newer include this DLL and do not require this to be installed
 separately.
 
 ## Development
 
-In order to develop Git Cola on Windows you will need to install
+In order to develop Git Fanta on Windows you will need to install
 Python3 and pip.  Install PyQt5 using `pip install PyQt5`
 to make the PyQt5 bindings available to Python.
 
 Once these are installed you can use `python.exe` to run
 directly from the source tree.  For example, from a Git Bash terminal:
 
-    /c/Python39/python.exe ./bin/git-cola
+    /c/Python39/python.exe ./bin/git-fanta
 
 ## Multiple Python versions
 
@@ -475,7 +475,7 @@ This will generate an installer in `build/nsis/`.
 ## Windows "History Browser" Configuration Upgrade
 
 You may need to configure your history browser if you are upgrading from an
-older version of Git Cola on Windows.
+older version of Git Fanta on Windows.
 
 `gitk` was originally the default history browser, but `gitk` cannot be
 launched as-is on Windows because `gitk` is a shell script.

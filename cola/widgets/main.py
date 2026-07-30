@@ -1,4 +1,4 @@
-"""Main UI for authoring commits and other Git Cola interactions"""
+"""Main UI for authoring commits and other Git Fanta interactions"""
 import os
 from functools import partial
 
@@ -1005,7 +1005,7 @@ class MainView(standard.MainWindow):
         if git_version:
             ok = True
             Interaction.log(
-                git_version + '\n' + N_('git cola version %s') % version.version()
+                git_version + '\n' + N_('git fanta version %s') % version.version()
             )
         else:
             ok = False

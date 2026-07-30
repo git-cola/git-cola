@@ -61,7 +61,7 @@ def write_json(
             if sync:
                 core.fsync(fp.fileno())
     except (ValueError, TypeError, OSError):
-        sys.stderr.write('git-cola: error writing "%s"\n' % path)
+        sys.stderr.write('git-fanta: error writing "%s"\n' % path)
         return False
     return True
 
@@ -71,7 +71,7 @@ def rename_path(old: str, new: str) -> bool:
     try:
         core.rename(old, new)
     except OSError:
-        sys.stderr.write(f'git-cola: error renaming "{old}" to "{new}"\n')
+        sys.stderr.write(f'git-fanta: error renaming "{old}" to "{new}"\n')
         return False
     return True
 
@@ -81,7 +81,7 @@ def remove_path(path: str) -> None:
     try:
         core.remove(path)
     except OSError:
-        sys.stderr.write('git-cola: error removing "%s"\n' % path)
+        sys.stderr.write('git-fanta: error removing "%s"\n' % path)
 
 
 class Settings:
@@ -250,7 +250,7 @@ class Settings:
         return settings
 
     def upgrade_settings(self) -> None:
-        """Upgrade git-cola settings"""
+        """Upgrade git-fanta settings"""
         # Upgrade bookmarks to the new dict-based bookmarks format.
         normalize = display.normalize_path
         if self.bookmarks and not isinstance(self.bookmarks[0], dict):
@@ -273,7 +273,7 @@ class Settings:
         if core.exists(path):
             values: dict[str, Any] = read_json(path)
         else:
-            # We couldn't find ~/.config/git-cola, try ~/.cola
+            # We couldn't find ~/.config/git-fanta, try ~/.cola
             values = {}
             path = os.path.join(core.expanduser('~'), '.cola')
             if core.exists(path):
@@ -359,7 +359,7 @@ class Session(Settings):
     loaded once.
 
     Once the session is loaded, it is removed and further calls to save()
-    will save to the usual $XDG_CONFIG_HOME/git-cola/settings location.
+    will save to the usual $XDG_CONFIG_HOME/git-fanta/settings location.
 
     """
 
@@ -398,7 +398,7 @@ class Session(Settings):
         The use case for sessions is when the user logs out with apps running.
         We will restore their state, and if they then shutdown, it'll be just
         like a normal shutdown and settings will be stored to
-        ~/.config/git-cola/settings instead of the session path.
+        ~/.config/git-fanta/settings instead of the session path.
 
         This is accomplished by "expiring" the session after it has
         been loaded initially.

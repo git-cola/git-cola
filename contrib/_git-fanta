@@ -1,16 +1,16 @@
-#compdef git-cola
-#description zsh completion for git-cola
+#compdef git-fanta
+#description zsh completion for git-fanta
 #
 # The recommended way to install this script is to make a copy of it as a
-# file named '_git-cola' inside any directory in your fpath.
+# file named '_git-fanta' inside any directory in your fpath.
 #
 # For example, create a directory '~/.config/zsh/completion',
-# copy this file to '~/.config/zsh/completion/_git-cola',
+# copy this file to '~/.config/zsh/completion/_git-fanta',
 # and then add the following to your ~/.zshrc file:
 #
 #  fpath=(~/.config/zsh/completion $fpath)
 
-__git-cola_common_options () {
+__git-fanta_common_options () {
 	# these can't be prefixed
 	_arguments '--help[Show help]' \
 		'--icon-theme=-[specify an icon theme name or directory]:theme:(dark light default)' \
@@ -20,7 +20,7 @@ __git-cola_common_options () {
 		'--version[print version number]'
 }
 
-_git-cola_refs () {
+_git-fanta_refs () {
 	typeset -a refs
 	local ref
 
@@ -36,62 +36,62 @@ _git-cola_refs () {
 
 }
 
-_git-cola-am () {
-	__git-cola_common_options
+_git-fanta-am () {
+	__git-fanta_common_options
 	_arguments \
 		'*:patches:_files -g "*.patch"'
 }
 
-_git-cola-archive () {
-	__git-cola_common_options
+_git-fanta-archive () {
+	__git-fanta_common_options
 	_arguments \
-		':ref:_git-cola_refs'
+		':ref:_git-fanta_refs'
 }
 
-_git-cola-cola () {
-	__git-cola_common_options
+_git-fanta-cola () {
+	__git-fanta_common_options
 	_arguments \
 		'--status-filter=-[status path filter]:path:_files'
 }
 
-_git-cola-dag () {
-	__git-cola_common_options
+_git-fanta-dag () {
+	__git-fanta_common_options
 	_arguments \
 		'--all[show all branches]' \
-		'*:refs:_git-cola_refs'
+		'*:refs:_git-fanta_refs'
 }
 
-_git-cola-diff () {
-	__git-cola_common_options
+_git-fanta-diff () {
+	__git-fanta_common_options
 	_arguments \
-		'*:refs:_git-cola_refs'
+		'*:refs:_git-fanta_refs'
 }
 
-_git-cola-find () {
-	__git-cola_common_options
+_git-fanta-find () {
+	__git-fanta_common_options
 	_arguments \
 		':path:_files'
 }
 
-_git-cola-grep () {
-	__git-cola_common_options
+_git-fanta-grep () {
+	__git-fanta_common_options
 	_arguments \
 		'*:path:_files'
 }
 
-_git-cola-merge () {
-	__git-cola_common_options
+_git-fanta-merge () {
+	__git-fanta_common_options
 	_arguments \
-		':ref:_git-cola_refs'
+		':ref:_git-fanta_refs'
 }
 
-_git-cola-rebase () {
-	__git-cola_common_options
+_git-fanta-rebase () {
+	__git-fanta_common_options
 	_arguments \
 		'--autosquash[move commits that begin with squash!/fixup!]' \
 		'--autostash[automatically stash/stash pop before and after]' \
 		'--fork-point[use "merge-base --fork-point" to refine upstream]' \
-		'--onto=-[rebase onto given branch instead of upstream]:ref:_git-cola_refs' \
+		'--onto=-[rebase onto given branch instead of upstream]:ref:_git-fanta_refs' \
 		'--preserve-merges[try to recreate merges instead of ignoring them]' \
 		'--root[rebase all reachable commits up to the root(s)]' \
 		'--strategy=-[use the given merge strategy]:strategy:(recursive resolve octopus ort ours subtree)' \
@@ -100,20 +100,20 @@ _git-cola-rebase () {
 		'--abort[abort and check out the original branch]' \
 		'--skip[skip current patch and continue]' \
 		'--edit-todo[edit the todo list]' \
-		':ref:_git-cola_refs' \
-		':ref:_git-cola_refs'
+		':ref:_git-fanta_refs' \
+		':ref:_git-fanta_refs'
 }
 
-_git-cola-tag () {
-	__git-cola_common_options
+_git-fanta-tag () {
+	__git-fanta_common_options
 	_arguments \
 		'--sign[annotated and GPG-signed tag]' \
 		':tag name:' \
-		':ref:_git-cola_refs'
+		':ref:_git-fanta_refs'
 }
 
 
-_git-cola () {
+_git-fanta () {
 	local curcontext="$curcontext" state line
 	typeset -A opt_args
 	_arguments -C \
@@ -125,13 +125,13 @@ _git-cola () {
 		#breaks if defined outside the func
 		local -a subcommands
 		subcommands=(
-			'about:about git-cola'
+			'about:about git-fanta'
 			'am:apply patches using "git am"'
 			'archive:save an archive'
 			'branch:create a branch'
 			'browse:browse repository'
 			'clone:clone repository'
-			'cola:start git-cola'
+			'cola:start git-fanta'
 			'config:edit configuration'
 			'dag:visualize branch history'
 			'diff:view diffs'
@@ -151,19 +151,19 @@ _git-cola () {
 			'--help-commands:show available sub-commands'
 		)
 
-		_describe -t commands git-cola subcommands
+		_describe -t commands git-fanta subcommands
 	;;
 	(options)
 		local funcname
-		funcname=_git-cola-$line[1]
+		funcname=_git-fanta-$line[1]
 		if type $funcname | grep -q 'shell function'
 		then
 			$funcname
 		else
-			__git-cola_common_options
+			__git-fanta_common_options
 		fi
 	;;
 	esac
 }
 
-_git-cola "$@"
+_git-fanta "$@"
