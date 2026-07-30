@@ -166,7 +166,7 @@ def test_distribution_name_matches_pyproject():
     distribution = match.group(1)
 
     version_py = (REPO_ROOT / 'cola' / 'version.py').read_text(encoding='utf-8')
-    assert f"metadata.version('{distribution}')" in version_py, (
-        f'cola/version.py fragt nicht nach "{distribution}"'
-    )
+    assert (
+        f"metadata.version('{distribution}')" in version_py
+    ), f'cola/version.py fragt nicht nach "{distribution}"'
     assert distribution == 'git-fanta'

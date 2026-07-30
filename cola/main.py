@@ -23,12 +23,12 @@ def main(argv: list[str] | None = None) -> int:
     # we're using argparse with subparsers, but argparse
     # does not allow us to assign a default subparser
     # when none has been specified.  We fake it by injecting
-    # 'cola' into the command-line so that parse_args()
-    # routes them to the 'cola' parser by default.
+    # 'fanta' into the command-line so that parse_args()
+    # routes them to the 'fanta' parser by default.
     help_commands = core.encode('--help-commands')
     args = [core.encode(arg) for arg in argv]
     if not argv or argv[0].startswith('-') and help_commands not in args:
-        argv.insert(0, 'cola')
+        argv.insert(0, 'fanta')
     elif help_commands in argv:
         argv.append('--help')
     args: argparse.Namespace | list[bytes] = parse_args(argv)
@@ -83,10 +83,14 @@ def add_help_options(parser: argparse.ArgumentParser) -> None:
 
 
 def add_command(
-    parent: argparse._SubParsersAction, name: str, description: str, func: Callable
+    parent: argparse._SubParsersAction,
+    name: str,
+    description: str,
+    func: Callable,
+    aliases: tuple = (),
 ) -> argparse.ArgumentParser:
     """Add a "git fanta" command with common arguments"""
-    parser = parent.add_parser(str(name), help=description)
+    parser = parent.add_parser(str(name), help=description, aliases=aliases)
     parser.set_defaults(func=func)
     app.add_common_arguments(parser)
     return parser
@@ -94,7 +98,9 @@ def add_command(
 
 def add_cola_command(subparser: argparse._SubParsersAction) -> None:
     """Add the main "git fanta" command. "git fanta cola" is valid"""
-    parser = add_command(subparser, 'cola', 'launch git-fanta', cmd_cola)
+    parser = add_command(
+        subparser, 'fanta', 'launch git-fanta', cmd_cola, aliases=('cola',)
+    )
     _add_cola_options(parser)
 
 
@@ -797,5 +803,5 @@ def shortcut_launch():
     """
     argv = sys.argv[1:]
     if not argv:
-        argv = ['cola', '--prompt']
+        argv = ['fanta', '--prompt']
     return main(argv=argv)
