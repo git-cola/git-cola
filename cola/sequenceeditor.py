@@ -9,6 +9,7 @@ from typing import Any
 from typing import Callable
 
 from cola import app  # prints a message if Qt cannot be found
+from cola import compat
 from cola import core
 from cola import difftool
 from cola import gitcmds
