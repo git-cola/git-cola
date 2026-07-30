@@ -1600,6 +1600,7 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         display_status=False,
         parent=None,
         display_inline_graph=False,
+        display_files=False,
     ):
         super().__init__(parent)
         self.context = context
@@ -1630,6 +1631,11 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         self.loading = False
         self.error_status = None
         self._widgets_initialized = False
+        self._files_dirty = False
+        self._files_timer = QtCore.QTimer(self)
+        self._files_timer.setSingleShot(True)
+        self._files_timer.setInterval(100)
+        self._files_timer.timeout.connect(self._load_pending_files)
 
         self.revtext = GitDagLineEdit(context)
         self.revtext.setText(ref)
@@ -1655,6 +1661,22 @@ class CommitHistoryWidget(QtWidgets.QWidget):
             display_status,
         )
 
+        self.filewidget = filelist.FileWidget(context, self)
+        self.filewidget.setVisible(display_files)
+        self.files_splitter = qtutils.splitter(
+            Qt.Horizontal, self.treewidget, self.filewidget
+        )
+        self.files_splitter.setChildrenCollapsible(False)
+        self.files_splitter.setStretchFactor(0, 3)
+        self.files_splitter.setStretchFactor(1, 1)
+
+        self.display_files_action = qtutils.add_action_bool(
+            self,
+            N_('Display Commit Files'),
+            self.display_files,
+            display_files,
+        )
+
         controls_layout = qtutils.hbox(
             defs.no_margin,
             defs.spacing,
@@ -1666,7 +1688,7 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         controls_widget = QtWidgets.QWidget(self)
         controls_widget.setLayout(controls_layout)
         layout = qtutils.vbox(
-            defs.no_margin, defs.spacing, controls_widget, self.treewidget
+            defs.no_margin, defs.spacing, controls_widget, self.files_splitter
         )
         self.setLayout(layout)
 
@@ -1860,6 +1882,7 @@ class CommitHistoryWidget(QtWidgets.QWidget):
                 thread.wait()
             self._finalize_thread(thread)
         self.loading = False
+        self._files_timer.stop()
 
     def _display_worktree_status(self, _enabled):
         """Reload after toggling WORKTREE and STAGE pseudo-commits."""
@@ -1912,6 +1935,46 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         self.selection = list(commits)
         self.treewidget.select_commits(commits)
         self.commits_selected.emit(list(commits))
+        self._schedule_files()
+
+    def display_files(self, enabled=None):
+        """Toggle the embedded commit file panel and reload the current selection."""
+        if enabled is None:
+            enabled = self.display_files_action.isChecked()
+        self.filewidget.setVisible(bool(enabled))
+        if enabled and self.selection:
+            self._schedule_files()
+        else:
+            self._files_timer.stop()
+            self._files_dirty = False
+            self.filewidget.clear()
+
+    def _schedule_files(self):
+        """Debounce a file list refresh keyed to the current selection."""
+        if self.stopping:
+            return
+        if not self.filewidget.isVisible():
+            # Defer until the panel becomes visible again.
+            self._files_dirty = True
+            return
+        self._files_dirty = False
+        self._files_timer.start()
+
+    def _load_pending_files(self):
+        """Drive the file widget with the current selection, respecting visibility."""
+        if self.stopping:
+            return
+        if not self.selection or not self.filewidget.isVisible():
+            self._files_dirty = False
+            return
+        self._files_dirty = False
+        self.filewidget.commits_selected(self.selection)
+
+    def refresh_files(self):
+        """Apply a selection that was skipped while the panel was hidden."""
+        if self._files_dirty and self.filewidget.isVisible():
+            self._files_timer.stop()
+            self._load_pending_files()
 
     def clear(self):
         """Clear the tree and all applied history state."""
@@ -1920,6 +1983,7 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         self.selection = []
         self.old_selection = []
         self.treewidget.clear()
+        self.filewidget.clear()
 
     def export_state(self):
         """Export history-child state independently of any main window."""
@@ -2010,6 +2074,7 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         if not self._widgets_initialized:
             self._widgets_initialized = True
             self.maxresults.setMinimumHeight(self.revtext.height())
+        self.refresh_files()
 
 
 class GitDAG(standard.MainWindow):

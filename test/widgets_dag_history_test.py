@@ -207,8 +207,11 @@ def test_history_widget_owns_history_state_without_window_children(
         'maxresults',
         'display_inline_graph_action',
         'display_status_action',
+        'display_files_action',
         'history_error_status',
         'treewidget',
+        'filewidget',
+        'files_splitter',
         'active_thread',
         'pending_request',
         'commit_list',
@@ -220,7 +223,6 @@ def test_history_widget_owns_history_state_without_window_children(
     for name in (
         'graphview',
         'diffwidget',
-        'filewidget',
         'log_dock',
         'diff_dock',
         'file_dock',
@@ -3274,3 +3276,74 @@ def test_real_thread_stop_finalizes_once_and_queued_finished_is_noop(
 
     assert _spy_count(destroyed) == 1
     assert widget.active_thread is None
+
+
+
+
+def test_history_panel_passes_selection_to_the_file_widget(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    """Selecting commits forwards them to the embedded file widget (debounced)."""
+    app_context.settings.get_gui_state.return_value = {}
+    app_context.app.theme.background_color_rgb.return_value = '#ffffff'
+    app_context.app.theme.selection_color.return_value = QtGui.QColor('#4488cc')
+    monkeypatch.setattr(
+        app_context.git,
+        'show',
+        lambda *_a, **_kw: (0, '1\t0\tpanel.txt\0', ''),
+    )
+    history = managed_qobject(CommitHistoryWidget(app_context, display_files=True))
+    history.show()
+    qapp.processEvents()
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'tip')
+
+    history.apply_result((commit,), _graph_result((commit,)))
+    history.select_commits([commit])
+
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        qapp.processEvents()
+        if (
+            history.filewidget.topLevelItemCount() == 1
+            and not history._files_timer.isActive()
+        ):
+            break
+        QtTest.QTest.qWait(10)
+
+    assert history.filewidget.topLevelItemCount() == 1
+
+
+def test_history_panel_hides_when_display_files_is_false(
+    qapp, app_context, managed_qobject
+):
+    """When display_files=False the embedded file widget stays invisible and is not driven."""
+    history = managed_qobject(CommitHistoryWidget(app_context, display_files=False))
+
+    assert not history.filewidget.isVisible()
+
+
+def test_history_panel_runs_only_one_git_show_per_change(
+    qapp, app_context, managed_qobject, monkeypatch
+):
+    """The embedded file panel does not trigger an extra git show on top of the diff widget."""
+    app_context.settings.get_gui_state.return_value = {}
+    app_context.app.theme.background_color_rgb.return_value = '#ffffff'
+    app_context.app.theme.selection_color.return_value = QtGui.QColor('#4488cc')
+    show_calls = []
+    monkeypatch.setattr(
+        app_context.git,
+        'show',
+        lambda *args, **kwargs: (
+            show_calls.append((args, kwargs)) or (0, '1\t0\ttracked.txt\0', '')
+        ),
+    )
+    window = managed_qobject(GitDAG(app_context, dag.DAG('HEAD', 1000)))
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'tip')
+    window.historywidget.apply_result((commit,), _graph_result((commit,)))
+    show_calls.clear()
+
+    window.historywidget.select_commits([commit])
+
+    assert len(show_calls) == 1
