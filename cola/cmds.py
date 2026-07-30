@@ -1958,7 +1958,7 @@ class LoadCommitMessageFromOID(ContextCommand):
 
 
 class PrepareCommitMessageHook(ContextCommand):
-    """Use the cola-prepare-commit-msg hook to prepare the commit message"""
+    """Use the fanta-prepare-commit-msg hook to prepare the commit message"""
 
     UNDOABLE = True
 
@@ -1971,7 +1971,7 @@ class PrepareCommitMessageHook(ContextCommand):
         hook = gitcmds.prepare_commit_message_hook(self.context)
 
         if os.path.exists(hook):
-            Interaction.log('hook cola-prepare-commit-msg exists: "%s"' % hook)
+            Interaction.log('hook fanta-prepare-commit-msg exists: "%s"' % hook)
             filename = self.model.save_commitmsg()
 
             if utils.is_win32():

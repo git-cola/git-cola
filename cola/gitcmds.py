@@ -1016,9 +1016,17 @@ def read_merge_commit_message(context: ApplicationContext, path) -> TextType:
 
 
 def prepare_commit_message_hook(context: ApplicationContext) -> str:
-    """Run the cola.preparecommitmessagehook to prepare the commit message"""
+    """Return the fanta.preparecommitmessagehook to prepare the commit message
+
+    git-fanta was renamed from git-cola. A pre-rename cola-prepare-commit-msg hook
+    is still honored when no fanta-prepare-commit-msg hook is installed.
+    """
     config = context.cfg
-    default_hook = config.hooks_path('cola-prepare-commit-msg')
+    default_hook = config.hooks_path('fanta-prepare-commit-msg')
+    if not core.exists(default_hook):
+        legacy_hook = config.hooks_path('cola-prepare-commit-msg')
+        if core.exists(legacy_hook):
+            default_hook = legacy_hook
     return config.get('fanta.preparecommitmessagehook', default=default_hook)
 
 
