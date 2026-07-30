@@ -1256,7 +1256,7 @@ def mimedata_from_paths(
     mimedata.setText(paths_text)
     if include_urls:
         urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
-        encoding = context.cfg.get('cola.dragencoding', 'utf-16')
+        encoding = context.cfg.get('fanta.dragencoding', 'utf-16')
         encoded_text = core.encode(paths_text, encoding=encoding)
         mimedata.setUrls(urls)
         mimedata.setData('text/x-moz-url', encoded_text)

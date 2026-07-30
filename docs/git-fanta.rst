@@ -445,7 +445,7 @@ The `Ctrl+i` keyboard shortcut adds a standard "Signed-off-by: " line,
 and `Ctrl+Enter` creates a new commit using the commit message and
 staged content.
 
-The commit message is saved to `.git/GIT_COLA_MSG` when `git fanta` closes and
+The commit message is saved to `.git/GIT_FANTA_MSG` when `git fanta` closes and
 restored from it on the next startup. In addition this file is checked on updates (Ctrl+R)
 and if modified by any tool and not conflicting with manual changes the commit
 message will be updated on the next refresh.
@@ -516,7 +516,7 @@ Using this option is equivalent to passing the ``--gpg-sign`` option to
 `git commit <https://git-scm.com/docs/git-commit>`_ and
 `git merge <https://git-scm.com/docs/git-merge>`_.
 
-This option's default value can be configured using the `cola.signcommits`
+This option's default value can be configured using the `fanta.signcommits`
 configuration variable.
 
 Prepare Commit Message
@@ -527,12 +527,12 @@ runs the `cola-prepare-commit-msg` hook if it is available in `.git/hooks/`.
 This is a `git fanta`-specific hook that takes the same parameters
 as Git's `prepare-commit-msg hook <https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks>`_
 
-The hook is passed the path to `.git/GIT_COLA_MSG` as the first argument and the hook is expected to write
+The hook is passed the path to `.git/GIT_FANTA_MSG` as the first argument and the hook is expected to write
 an updated commit message to specified path.  After running this action, the
 commit message editor is updated with the new commit message.
 
 To override the default path to this hook set the
-`cola.prepareCommitMessageHook` `git config` variable to the path to the
+`fanta.prepareCommitMessageHook` `git config` variable to the path to the
 hook script.  This is useful if you would like to use a common hook
 across all repositories.
 
@@ -747,7 +747,7 @@ Git Fanta contains a ``default`` theme which follows the current Qt style and a
 handful of built-in color themes.  See :ref:`cola_theme` for more details.
 
 To use icons appropriate for a dark application theme, configure
-``git config --global cola.icontheme dark`` to use the dark icon theme.
+``git config --global fanta.icontheme dark`` to use the dark icon theme.
 See :ref:`cola_icontheme` for more details.
 
 On macOS, using the ``default`` theme will automatically inherit "Dark Mode"
@@ -805,8 +805,8 @@ launch Git Fanta with these settings preset for you::
 
 You may also want to customize the diff colors when using a dark theme::
 
-    git config --global cola.color.add 86c19f
-    git config --global cola.color.remove c07067
+    git config --global fanta.color.add 86c19f
+    git config --global fanta.color.remove c07067
 
 Please see `#760 <https://github.com/git-cola/git-cola/issues/760>`_ for more details.
 
@@ -825,7 +825,7 @@ CONFIGURATION VARIABLES
 
 These variables can be set using `git config` or from the settings.
 
-cola.aspell.enabled
+fanta.aspell.enabled
 -------------------
 
 Set to `true` to enable support for ``aspell`` spellcheck dictionaries.
@@ -834,21 +834,21 @@ by default. When `true` Git Fanta will run ``aspell dump master --lang=$lang``
 for each of the installed languages to gather words.
 Defaults to `false`.
 
-cola.aspell.lang
+fanta.aspell.lang
 ----------------
 
 Configure the language names that are queried using ``aspell``. For example,
-``git config --global --add cola.aspell.lang en_US`` will make it so that
+``git config --global --add fanta.aspell.lang en_US`` will make it so that
 only the ``en_US`` language is used.
 
 This is a multi-valued configuration value.
-``git config --global --add cola.aspell.lang $lang`` can be run once for each language
+``git config --global --add fanta.aspell.lang $lang`` can be run once for each language
 to specify multiple languages to use.
 
 When unset, all of the two-letter language names from the output of
 ``aspell dicts`` will be used.
 
-cola.autodetectproxy
+fanta.autodetectproxy
 --------------------
 
 Set to `false` to disable auto-configuration of HTTP proxy settings based on
@@ -856,14 +856,14 @@ the configured Gnome and KDE Desktop Environment proxy settings.
 The core Git `http.proxy` configuration overrides this value.
 Defaults to `true`.
 
-cola.autocompletepaths
+fanta.autocompletepaths
 ----------------------
 
 Set to `false` to disable auto-completion of filenames in completion widgets.
 This can speed up operations when working in large repositories.
 Defaults to `true`.
 
-cola.autoloadCommitTemplate
+fanta.autoloadCommitTemplate
 ---------------------------
 
 Set to `true` to automatically load the commit template in the commit message
@@ -871,52 +871,52 @@ editor If the commit.template variable has not been configured, raise the
 corresponding error.
 Defaults to `false`.
 
-cola.blameviewer
+fanta.blameviewer
 ----------------
 
 The command used to blame files.  Defaults to `git gui blame`.
 
-cola.blockcursor
+fanta.blockcursor
 ----------------
 
 Whether to use a "block" cursor in diff editors. The block cursor is easier to
 see compared to a line cursor. Set to `false` to use a thin "line" cursor.
 Defaults to `true`.
 
-cola.boldfonts
+fanta.boldfonts
 --------------
 
 Use bold fonts throughout the entire interface to increase usability on small screens.
 Defaults to `false`.
 
-cola.boldheaders
+fanta.boldheaders
 ----------------
 
 Whether to use bold headers on a dark background instead of italics in the Status tool.
 Defaults to `false`.
 
-cola.browserdockable
+fanta.browserdockable
 --------------------
 
 Whether to create a dock widget with the `Browser` tool.
 Defaults to `false` to speedup startup time.
 
-cola.checkconflicts
+fanta.checkconflicts
 -------------------
 
 Inspect unmerged files for conflict markers before staging them.
 This feature helps prevent accidental staging of unresolved merge conflicts.
 Defaults to `true`.
 
-cola.defaultrepo
+fanta.defaultrepo
 ----------------
 
 `git fanta`, when run outside of a Git repository, prompts the user for a
-repository.  Set `cola.defaultrepo` to the path of a Git repository to make
+repository.  Set `fanta.defaultrepo` to the path of a Git repository to make
 `git fanta` attempt to use that repository before falling back to prompting
 the user for a repository.
 
-cola.dictionary
+fanta.dictionary
 ---------------
 
 Specifies additional dictionaries for `git fanta` to use in its spell checker.
@@ -934,12 +934,12 @@ Dictionary files must be UTF-8 encoded.
 
 If you have multiple dictionaries that you would like `git fanta` to use then
 you can specify multiple dictionaries using ``git config --global --add``.
-``cola.dictionary`` is a configuration value that can contain multiple values.
+``fanta.dictionary`` is a configuration value that can contain multiple values.
 
 .. sourcecode:: sh
 
-   git config --global --add cola.dictionary /path/to/dictionary1
-   git config --global --add cola.dictionary /path/to/dictionary2
+   git config --global --add fanta.dictionary /path/to/dictionary1
+   git config --global --add fanta.dictionary /path/to/dictionary2
 
 Users on Debian-based systems can install additional ``hunspell`` dictionary
 files to make them available in ``/usr/share/hunspell/*.dic``. For example,
@@ -949,25 +949,25 @@ to install the Spanish dictionary, run:
 
    sudo apt install hunspell-es
 
-cola.enablepopups
+fanta.enablepopups
 -----------------
 
 Actions such as "Fetch", "Push", "Pull", "Sync" and "Sync Out" display desktop
 notifications on Linux when either the `notify2` or `notifypy` modules are installed.
 The message are logged to the Console otherwise.
 
-Messages are displayed using popup dialogs when ``cola.enablepopups`` is set to ``true``.
+Messages are displayed using popup dialogs when ``fanta.enablepopups`` is set to ``true``.
 Defaults to `false`.
 
-cola.expandtab
+fanta.expandtab
 --------------
 
 Expand tabs into spaces in the commit message editor.  When set to `true`,
 `git fanta` will insert a configurable number of spaces when tab is pressed.
-The number of spaces is determined by `cola.tabwidth`.
+The number of spaces is determined by `fanta.tabwidth`.
 Defaults to `false`.
 
-cola.gravatar
+fanta.gravatar
 -------------
 
 Use the `gravatar.com` service to lookup icons for author emails.
@@ -976,7 +976,7 @@ when requesting an icon. Warning: this feature can leak information.
 Network requests to `gravatar.com` are disabled when set to `false`.
 Defaults to `true`.
 
-cola.fileattributes
+fanta.fileattributes
 -------------------
 
 Enables per-file gitattributes encoding and binary file support.
@@ -992,24 +992,24 @@ Binary files are displayed using a hex-dump display.
    # Treat *.exr files as binary files.
    *.exr binary
 
-cola.fixupcommitcount
+fanta.fixupcommitcount
 ---------------------
 
 The number of commits to display in the "Fixup Previous Commit" menu
 in the commit message editor.  Defaults to `10`.
 
-cola.fontdiff
+fanta.fontdiff
 -------------
 
 Specifies the font to use for `git fanta`'s diff display.
 
-cola.fontsize
+fanta.fontsize
 -------------
 
 Specifies the font size that is used for the Status, Submodules, Branches, Recent, and
 Favorites widgets.
 
-cola.hidpi
+fanta.hidpi
 ----------
 
 Specifies the High DPI displays scale factor. Set `0` to automatically scaled.
@@ -1020,7 +1020,7 @@ for more information.
 
 .. _cola_icontheme:
 
-cola.icontheme
+fanta.icontheme
 --------------
 
 Specifies the icon themes to use throughout `git fanta`. The theme specified
@@ -1034,9 +1034,9 @@ suitable for a dark window manager theme, will be used.
 
 If set to an absolute directory path then icons in that directory will be used.
 This value can be set to multiple values using,
-``git config --add cola.icontheme $theme``.
+``git config --add fanta.icontheme $theme``.
 
-This setting can be overridden by the `GIT_COLA_ICON_THEME` environment
+This setting can be overridden by the `GIT_FANTA_ICON_THEME` environment
 variable, which can specify multiple themes using a colon-separated value.
 
 The icon theme can also be specified by passing ``--icon-theme=<theme>`` on the
@@ -1044,35 +1044,35 @@ command line, once for each icon theme, in the order that they should be
 searched.  This can be used to override a subset of the icons, and fallback
 to the built-in icons for the remainder.
 
-cola.imagediff.[extension]
+fanta.imagediff.[extension]
 --------------------------
 
 Enable image diffs for the specified file extension.  For example, configuring
-`git config --global cola.imagediff.svg false` will disable use of the visual
+`git config --global fanta.imagediff.svg false` will disable use of the visual
 image diff for `.svg` files in all repos until is is explicitly toggled on.
 Defaults to `true`.
 
-cola.inotify
+fanta.inotify
 ------------
 
 Set to `false` to disable file system change monitoring.  Defaults to `true`,
 but also requires either Linux with inotify support or Windows with `pywin32`
 installed for file system change monitoring to actually function.
 
-cola.inotifydelay
+fanta.inotifydelay
 -----------------
 
 How long to wait, in milliseconds, between file system change notifications.
 Defaults to `888`.
 
-cola.refreshonfocus
+fanta.refreshonfocus
 -------------------
 
 Set to `true` to automatically refresh when `git fanta` gains focus.  Defaults
 to `false` because this can cause a pause whenever switching to `git fanta` from
 another application.
 
-cola.linebreak
+fanta.linebreak
 --------------
 
 Whether to automatically break long lines while editing commit messages.
@@ -1080,13 +1080,13 @@ Defaults to `true`.  This setting is configured using the `Preferences`
 dialog, but it can be toggled for one-off usage using the commit message
 editor's options sub-menu.
 
-cola.loadcommitmsgcount
+fanta.loadcommitmsgcount
 -----------------------
 
 The number of commits to display in the "Load Previous Commit Message" menu
 in the commit message editor.  Defaults to `10`.
 
-cola.logdate
+fanta.logdate
 ------------
 
 Set the default date-time mode for the DAG display. This value is
@@ -1094,28 +1094,28 @@ passed to `git log --date=<format>`.
 See `git log(1) <https://git-scm.com/docs/git-log#Documentation/git-log.txt---dateltformatgt>`_
 for more details.
 
-cola.maxrecent
+fanta.maxrecent
 --------------
 
 `git fanta` caps the number of recent repositories to avoid cluttering
 the start and recent repositories menu.  The maximum number of repositories to
-remember is controlled by `cola.maxrecent` and defaults to `8`.
+remember is controlled by `fanta.maxrecent` and defaults to `8`.
 
-cola.mousezoom
+fanta.mousezoom
 --------------
 
 Controls whether zooming text using Ctrl + MouseWheel scroll is enabled.
 Set to ``false`` to disable scrolling with the mouse wheel.
 Defaults to ``true``.
 
-cola.notifyonpush
+fanta.notifyonpush
 -----------------
 
 Enable desktop notifications when commits are pushed using the "Push" dialog.
 Set to ``true`` to enable desktop notifications.
 Defaults to ``false``.
 
-cola.dragencoding
+fanta.dragencoding
 -----------------
 
 `git fanta` encodes paths dragged from its widgets into `utf-16` when adding
@@ -1124,57 +1124,57 @@ them to the drag-and-drop mime data (specifically, the `text/x-moz-url` entry).
 terminals may expect a different encoding.  If you are using a terminal that
 expects a modern encoding, e.g. `terminator`, then set this value to `utf-8`.
 
-cola.readsize
+fanta.readsize
 -------------
 
 `git fanta` avoids reading large binary untracked files.
-The maximum size to read is controlled by `cola.readsize`
+The maximum size to read is controlled by `fanta.readsize`
 and defaults to `2048`.
 
-cola.resizebrowsercolumns
+fanta.resizebrowsercolumns
 -------------------------
 
 `git fanta` will automatically resize the file browser columns as folders are
-expanded/collapsed when ``cola.resizebrowsercolumns`` is set to `true`.
+expanded/collapsed when ``fanta.resizebrowsercolumns`` is set to `true`.
 Defaults to `false`.
 
-cola.patchesdirectory
+fanta.patchesdirectory
 ---------------------
 
 The default directory to use when exporting patches. Relative paths are treated
 as being relative to the current repository. Absolute paths are used as-is.
 Defaults to `patches`.
 
-cola.safemode
+fanta.safemode
 -------------
 
 The "Stage" button in the `git fanta` Actions panel stages all files when it is
 activated and no files are selected.  This can be problematic if it is
 accidentally triggered after carefully preparing the index with staged
-changes.  "Safe Mode" is enabled by setting `cola.safemode` to `true`.
+changes.  "Safe Mode" is enabled by setting `fanta.safemode` to `true`.
 When enabled, `git fanta` will do nothing when "Stage" is activated without a
 selection.  Defaults to `false`.
 
-cola.savewindowsettings
+fanta.savewindowsettings
 -----------------------
 
 `git fanta` will remember its window settings when set to `true`.
 Window settings and X11 sessions are saved in `$HOME/.config/git-fanta`.
 
-cola.showpath
+fanta.showpath
 -------------
 
 `git fanta` displays the absolute path of the repository in the window title.
-This can be disabled by setting `cola.showpath` to `false`.
+This can be disabled by setting `fanta.showpath` to `false`.
 Defaults to `true`.
 
-cola.signcommits
+fanta.signcommits
 ----------------
 
 `git fanta` will sign commits by default when set `true`. Defaults to `false`.
 See the section below on setting up GPG for more details.
 
-cola.startupmode
+fanta.startupmode
 ----------------
 
 Control how the list of repositories is displayed in the startup dialog.
@@ -1182,48 +1182,48 @@ Set to `list` to view the list of repositories as a list, or `folder` to view
 the list of repositories as a collection of folder icons.
 Defaults to `list`.
 
-cola.statusindent
+fanta.statusindent
 -----------------
 
 Set to `true` to indent files in the Status widget.  Files in the `Staged`,
 `Modified`, etc. categories will be grouped in a tree-like structure.
 Defaults to `false`.
 
-cola.statusshowtotals
+fanta.statusshowtotals
 ---------------------
 
 Set to `true` to display files counts in the Status widget's category titles.
 Defaults to `false`.
 
-cola.sync
+fanta.sync
 ---------
 
 Set to `false` to disable calling `os.fdatasync()`  / `os.fdata()` when saving
 settings. Defaults to `true`, which means that these functions are called when windows
 are closed and their settings are saved.
 
-cola.tabwidth
+fanta.tabwidth
 -------------
 
 The number of columns occupied by a tab character.  Defaults to 8.
 
-cola.terminal
+fanta.terminal
 -------------
 
 The command to use when launching commands within a graphical terminal.
 
-`cola.terminal` defaults to `xterm -e` when unset.
+`fanta.terminal` defaults to `xterm -e` when unset.
 e.g. when opening a shell, `git fanta` will run `xterm -e $SHELL`.
 
 `git fanta` has built-in support for `xterm`, `gnome-terminal`, `konsole`.
 If either `gnome-terminal`, `xfce4-terminal`, or `konsole` are installed
-then they will be preferred over `xterm` when `cola.terminal` is unset.
+then they will be preferred over `xterm` when `fanta.terminal` is unset.
 
 The table below shows the built-in values that are used for the respective
 terminal.  You can force the use of a specific terminal by configuring cola
 accordingly.
 
-cola.terminalshellquote
+fanta.terminalshellquote
 -----------------------
 
 Some terminal require that the command string get passed as a string.
@@ -1240,7 +1240,7 @@ The table below shows the builtin configuration.
 
 .. code-block:: text
 
-    Terminal            cola.terminal           cola.terminalshellquote
+    Terminal            fanta.terminal           fanta.terminalshellquote
     --------            -------------           -----------------------
     gnome-terminal      "gnome-terminal --"     false
     konsole             "konsole -e"            false
@@ -1248,15 +1248,15 @@ The table below shows the builtin configuration.
     xterm               "xterm -e"              false
 
 
-cola.textwidth
+fanta.textwidth
 --------------
 
 The number of columns used for line wrapping.
-Tabs are counted according to `cola.tabwidth`.
+Tabs are counted according to `fanta.tabwidth`.
 
 .. _cola_theme:
 
-cola.theme
+fanta.theme
 ----------
 
 Specifies the GUI theme to use throughout `git fanta`. The theme specified
@@ -1274,7 +1274,7 @@ must be one of the following values:
 
 .. code-block:: sh
 
-    git config --global cola.theme flat-dark-blue
+    git config --global fanta.theme flat-dark-blue
 
 If unset, or set to an invalid value, then the default style will be
 used. The `default` theme is generated by Qt internal engine and should look
@@ -1285,7 +1285,7 @@ systems.
 The GUI theme can also be specified by passing ``--theme=<name>`` on the
 command line.
 
-cola.turbo
+fanta.turbo
 ----------
 
 Set to `true` to enable "turbo" mode.  "Turbo" mode disables some
@@ -1294,48 +1294,48 @@ features that can slow things down when operating on huge repositories.
 information, and commit date details in the `File Browser` tool.
 Defaults to `false`.
 
-cola.color.text
+fanta.color.text
 ---------------
 
 The default diff text color, in hexadecimal #RRGGBB notation.
 Defaults to "#030303"::
 
-    git config cola.color.text '#030303'
+    git config fanta.color.text '#030303'
 
-cola.color.add
+fanta.color.add
 --------------
 
 The default diff "add" background color, in hexadecimal #RRGGBB notation.
 Defaults to "#d2ffe4"::
 
-    git config cola.color.add '#d2ffe4'
+    git config fanta.color.add '#d2ffe4'
 
-cola.color.remove
+fanta.color.remove
 -----------------
 
 The default diff "remove" background color, in hexadecimal #RRGGBB notation.
 Defaults to "#fee0e4"::
 
-    git config cola.color.remove '#fee0e4'
+    git config fanta.color.remove '#fee0e4'
 
-cola.color.header
+fanta.color.header
 -----------------
 
 The default diff header text color, in hexadecimal #RRGGBB notation.
 Defaults to "#bbbbbb"::
 
-    git config cola.color.header '#bbbbbb'
+    git config fanta.color.header '#bbbbbb'
 
-cola.updateindex
+fanta.updateindex
 ----------------
 
 Git's index is refreshed during application startup. You can disable this behavior by
-configuring ``cola.updateindex`` to ``false``. This is useful in some scenarios such as
+configuring ``fanta.updateindex`` to ``false``. This is useful in some scenarios such as
 when accessing Git repositories over a Samba share. If you have this enabled then you
 can use the ``ctrl-r`` "Refresh" action to force the index to be refreshed instead.
 Defaults to ``true``.
 
-cola.verbosity
+fanta.verbosity
 --------------
 
 Increase the verbosity of the Console tool by logging ``git`` commands with a ``[git]``
@@ -1476,21 +1476,21 @@ have not been set.
 If no `askpass` program can be found then cola's builtin `ssh-askpass`
 program will by used, but using an external program is highly encouraged.
 
-GIT_COLA_ICON_THEME
+GIT_FANTA_ICON_THEME
 -------------------
 
-When set in the environment, `GIT_COLA_ICON_THEME` overrides the
-theme specified in the `cola.icontheme` configuration.
+When set in the environment, `GIT_FANTA_ICON_THEME` overrides the
+theme specified in the `fanta.icontheme` configuration.
 Read :ref:`cola_icontheme` for more details.
 
-GIT_COLA_SCALE
+GIT_FANTA_SCALE
 --------------
 
-.. Important:: `GIT_COLA_SCALE` should not be used with newer versions of Qt.
+.. Important:: `GIT_FANTA_SCALE` should not be used with newer versions of Qt.
 
     Set `QT_AUTO_SCREEN_SCALE_FACTOR` to `1` and Qt will automatically
     scale the interface to the correct size based on the display DPI.
-    This option is also available by setting `cola.hidpi` configuration.
+    This option is also available by setting `fanta.hidpi` configuration.
 
     See the `Qt High DPI documentation <https://doc.qt.io/qt-5/highdpi.html>`_
     for more details.
@@ -1502,7 +1502,7 @@ A good value is `2` for high-resolution displays.
 
 Fonts are not scaled, as their size can already be set in the settings.
 
-GIT_COLA_TRACE
+GIT_FANTA_TRACE
 --------------
 
 When defined, `git fanta` logs `git` commands to stdout.
@@ -1824,4 +1824,4 @@ Git Fanta's Git Repository
 Git Fanta Homepage
 -----------------
 
-https://git-cola.gitlab.io/
+https://git-fanta.gitlab.io/

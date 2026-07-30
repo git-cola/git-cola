@@ -182,7 +182,7 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
     if icon_themes_env:
         result.extend([x for x in icon_themes_env.split(':') if x])
 
-    icon_themes_cfg = list(reversed(context.cfg.get_all('cola.icontheme')))
+    icon_themes_cfg = list(reversed(context.cfg.get_all('fanta.icontheme')))
     if not icon_themes_cfg or icon_themes_cfg[0] == 'default':
         result.append(detect_system_theme())
 
@@ -281,11 +281,11 @@ class ColaApplication:
     def _install_style(self, theme_str: None) -> None:
         """Generate and apply a stylesheet to the app"""
         if theme_str is None:
-            theme_str = self.context.cfg.get('cola.theme', default='default')
+            theme_str = self.context.cfg.get('fanta.theme', default='default')
         theme = themes.find_theme(theme_str)
         self.theme = theme
 
-        bold_fonts = self.context.cfg.get('cola.boldfonts', default=False)
+        bold_fonts = self.context.cfg.get('fanta.boldfonts', default=False)
         theme_stylesheet = theme.build_style_sheet(self._app.palette(), bold_fonts)
         self._app.setStyleSheet(theme_stylesheet)
 
@@ -297,7 +297,7 @@ class ColaApplication:
 
     def refresh_system_appearance(self) -> None:
         """Rebuild styles that follow the system palette."""
-        theme_str = self.context.cfg.get('cola.theme', default='default')
+        theme_str = self.context.cfg.get('fanta.theme', default='default')
         if theme_str != 'default':
             return
 
@@ -305,7 +305,7 @@ class ColaApplication:
 
     def _install_hidpi_config(self) -> None:
         """Sets QT HiDPI scaling (requires Qt 5.6)"""
-        value = self.context.cfg.get('cola.hidpi', default=hidpi.Option.AUTO)
+        value = self.context.cfg.get('fanta.hidpi', default=hidpi.Option.AUTO)
         hidpi.apply_choice(value)
 
     def activeWindow(self) -> QtWidgets | None:
@@ -370,7 +370,7 @@ class ColaQApplication(QtWidgets.QApplication):
             if context:
                 cfg = context.cfg
                 if context.git.is_valid() and cfg.get(
-                    'cola.refreshonfocus', default=False
+                    'fanta.refreshonfocus', default=False
                 ):
                     cmds.do(cmds.Refresh, context)
         return super().event(e)
@@ -666,7 +666,7 @@ def new_worktree(context: ApplicationContext, repo: str, prompt: bool) -> None:
             # We are not currently in a git repository so we need to find one.
             # Before prompting the user for a repository, check if they've
             # configured a default repository and attempt to use it.
-            default_repo = cfg.get('cola.defaultrepo')
+            default_repo = cfg.get('fanta.defaultrepo')
             if default_repo:
                 valid = model.set_worktree(default_repo)
 
@@ -711,7 +711,7 @@ def async_update(context: ApplicationContext) -> None:
 
     git-fanta should startup as quickly as possible.
     """
-    update_index = context.cfg.get('cola.updateindex', True)
+    update_index = context.cfg.get('fanta.updateindex', True)
     update_status = partial(context.model.update_status, update_index=update_index)
     task = qtutils.SimpleTask(update_status)
     context.runtask.start(task)

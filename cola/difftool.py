@@ -51,7 +51,7 @@ class LaunchDifftool(cmds.ContextCommand):
                 mergetool = ['git', 'mergetool', '--no-prompt', '--']
                 mergetool.extend(paths)
                 needs_shellquote = cfg.get(
-                    'cola.terminalshellquote', shellquote_default
+                    'fanta.terminalshellquote', shellquote_default
                 )
 
                 if needs_shellquote:

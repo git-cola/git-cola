@@ -14,7 +14,7 @@ def test_get_with_default_repo(app_context):
     mode = startup.ICON_MODE
     is_bookmark = True
 
-    app_context.cfg.set_repo('cola.defaultrepo', path)
+    app_context.cfg.set_repo('fanta.defaultrepo', path)
     builder = startup.BuildItem(app_context)
 
     actual = builder.get(path, name, mode, is_bookmark)
@@ -36,7 +36,7 @@ def test_get_with_non_default_repo(app_context):
     mode = startup.ICON_MODE
     is_bookmark = True
 
-    app_context.cfg.set_repo('cola.defaultrepo', default_repo_path)
+    app_context.cfg.set_repo('fanta.defaultrepo', default_repo_path)
     builder = startup.BuildItem(app_context)
 
     actual = builder.get(path, name, mode, is_bookmark)
@@ -56,7 +56,7 @@ def test_get_with_item_from_recent(app_context):
     mode = startup.ICON_MODE
     is_bookmark = False
 
-    app_context.cfg.set_repo('cola.defaultrepo', path)
+    app_context.cfg.set_repo('fanta.defaultrepo', path)
     builder = startup.BuildItem(app_context)
 
     actual = builder.get(path, name, mode, is_bookmark)
@@ -76,7 +76,7 @@ def test_get_with_list_mode(app_context):
     mode = startup.LIST_MODE
     is_bookmark = True
 
-    app_context.cfg.set_repo('cola.defaultrepo', path)
+    app_context.cfg.set_repo('fanta.defaultrepo', path)
     builder = startup.BuildItem(app_context)
 
     actual = builder.get(path, name, mode, is_bookmark)
@@ -87,3 +87,11 @@ def test_get_with_list_mode(app_context):
     assert actual.is_bookmark
     assert actual.text() == path
     assert not actual.isEditable()
+
+
+def test_legacy_default_repo_key_is_still_honored(app_context):
+    """Ein vor der Umbenennung gesetztes cola.defaultrepo wirkt weiter."""
+    app_context.cfg.set_repo('cola.defaultrepo', '/tmp/legacy-repo')
+    app_context.cfg.reset()
+
+    assert app_context.cfg.get('fanta.defaultrepo') == '/tmp/legacy-repo'

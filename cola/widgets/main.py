@@ -90,7 +90,7 @@ class MainView(standard.MainWindow):
 
         create_dock = qtutils.create_dock
         cfg = context.cfg
-        self.browser_dockable = cfg.get('cola.browserdockable')
+        self.browser_dockable = cfg.get('fanta.browserdockable')
         if self.browser_dockable:
             browser = browse.worktree_browser(
                 context, parent=self, show=False, update=False

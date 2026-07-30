@@ -91,6 +91,20 @@ def _append_tab(value: str) -> tuple[str, str]:
     return (value, value + '\t')
 
 
+# git-fanta was renamed from git-cola. Config keys use the "fanta." prefix. The
+# legacy "cola." prefix is still honored so that a pre-rename ~/.gitconfig or
+# .git/config keeps working without any migration step.
+CONFIG_PREFIX = 'fanta.'
+LEGACY_CONFIG_PREFIX = 'cola.'
+
+
+def legacy_config_key(key):
+    """Return the pre-rename config key for a "fanta." key, or None"""
+    if key.lower().startswith(CONFIG_PREFIX):
+        return LEGACY_CONFIG_PREFIX + key[len(CONFIG_PREFIX) :]
+    return None
+
+
 class GitConfig(QtCore.QObject):
     """Encapsulate access to git-config values."""
 
@@ -228,18 +242,30 @@ class GitConfig(QtCore.QObject):
 
     def _get_value(self, src: dict[str, ConfigValue], key: str) -> Any:
         """Return a value from the map"""
-        try:
-            return src[key]
-        except KeyError:
-            pass
-        # Try the original key name.
-        key = self._renamed_keys.get(key.lower(), key)
-        try:
-            return src[key]
-        except KeyError:
-            pass
+        for candidate in self._key_candidates(key):
+            try:
+                return src[candidate]
+            except KeyError:
+                continue
         # Allow the final KeyError to bubble up
         return src[key.lower()]
+
+    def _key_candidates(self, key):
+        """Yield the config keys to probe for `key`, current naming first
+
+        The key is tried as-is, then via the case-preserved name recorded while
+        parsing, then lowercased. Only after all three miss do the same three
+        variants of the legacy "cola." key get a turn, so a "fanta." key always
+        wins over a "cola." key of the same name.
+        """
+        yield key
+        yield self._renamed_keys.get(key.lower(), key)
+        yield key.lower()
+        legacy = legacy_config_key(key)
+        if legacy is not None:
+            yield legacy
+            yield self._renamed_keys.get(legacy.lower(), legacy)
+            yield legacy.lower()
 
     def get(
         self,
@@ -281,10 +307,11 @@ class GitConfig(QtCore.QObject):
         if key in self._multi_values:
             return self._multi_values[key]
 
-        # Check for a renamed version of this key (x.kittycat -> x.kittyCat)
-        renamed_key = self._renamed_keys.get(key.lower(), key)
-        if renamed_key in self._multi_values:
-            return self._multi_values[renamed_key]
+        # Check for a renamed version of this key (x.kittycat -> x.kittyCat) and
+        # for the legacy "cola." prefix.
+        for candidate in self._key_candidates(key):
+            if candidate in self._multi_values:
+                return self._multi_values[candidate]
 
         key_lower = key.lower()
         if key_lower in self._multi_values:
@@ -348,7 +375,7 @@ class GitConfig(QtCore.QObject):
 
     def is_per_file_attrs_enabled(self) -> bool:
         return self.get(
-            'cola.fileattributes', func=lambda: os.path.exists('.gitattributes')
+            'fanta.fileattributes', func=lambda: os.path.exists('.gitattributes')
         )
 
     def is_binary(self, path) -> bool:
@@ -433,7 +460,7 @@ class GitConfig(QtCore.QObject):
 
     def terminal(self) -> str:
         """Return a suitable terminal command for running a shell"""
-        term = self.get('cola.terminal', default=None)
+        term = self.get('fanta.terminal', default=None)
         if term:
             return term
 
@@ -469,7 +496,7 @@ class GitConfig(QtCore.QObject):
         return None
 
     def color(self, key: str, default: str) -> tuple[int, int, int]:
-        value = self.get('cola.color.%s' % key, default=default)
+        value = self.get('fanta.color.%s' % key, default=default)
         struct_layout = core.encode('BBB')
         try:
             red, green, blue = struct.unpack(struct_layout, unhex(value))

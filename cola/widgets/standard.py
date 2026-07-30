@@ -103,8 +103,8 @@ class WidgetMixin:
         context = getattr(self, 'context', None)
         if context:
             cfg = context.cfg
-            save = cfg.get('cola.savewindowsettings', default=True)
-            sync = cfg.get('cola.sync', default=True)
+            save = cfg.get('fanta.savewindowsettings', default=True)
+            sync = cfg.get('fanta.sync', default=True)
         if save:
             if settings is None:
                 settings = Settings.read()

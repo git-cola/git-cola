@@ -1460,7 +1460,7 @@ class ToggleDiffType(ContextCommand):
         filename = self.model.filename
         _, ext = os.path.splitext(filename)
         if ext.startswith('.'):
-            cfg = 'cola.imagediff' + ext
+            cfg = 'fanta.imagediff' + ext
             self.cfg.set_repo(cfg, value)
 
 
@@ -1495,7 +1495,7 @@ class DiffImage(EditModel):
         _, ext = os.path.splitext(filename)
         if ext.startswith('.'):
             # Check e.g. "cola.imagediff.svg" to see if we should imagediff.
-            cfg = 'cola.imagediff' + ext
+            cfg = 'fanta.imagediff' + ext
             if self.cfg.get(cfg, True):
                 result = main.Types.IMAGE
             else:
@@ -2752,7 +2752,7 @@ class SetDefaultRepo(ContextCommand):
         self.repo = repo
 
     def do(self) -> None:
-        self.cfg.set_user('cola.defaultrepo', self.repo)
+        self.cfg.set_user('fanta.defaultrepo', self.repo)
 
 
 class SetDiffText(EditModel):
@@ -2832,7 +2832,7 @@ class ShowUntracked(EditModel):
     def read(self, filename) -> str:
         """Read file contents"""
         cfg = self.cfg
-        size = cfg.get('cola.readsize', 2048)
+        size = cfg.get('fanta.readsize', 2048)
         try:
             result: TextType = core.read(filename, size=size, encoding='bytes')
         except OSError:
@@ -2978,7 +2978,7 @@ class Stage(ContextCommand):
         context = self.context
         paths = self.paths
         if not paths:
-            if self.model.cfg.get('cola.safemode', False):
+            if self.model.cfg.get('fanta.safemode', False):
                 return (0, '', '')
             return self.stage_all()
 
@@ -3111,7 +3111,7 @@ class StageOrUnstageAll(ContextCommand):
         if self.model.staged:
             do(Unstage, self.context, self.model.staged)
         else:
-            if self.cfg.get('cola.safemode', False):
+            if self.cfg.get('fanta.safemode', False):
                 unstaged = self.model.modified
             else:
                 unstaged = self.model.modified + self.model.untracked
@@ -3309,7 +3309,7 @@ class StageSelected(ContextCommand):
         paths = self.selection.unstaged
         if paths:
             do(Stage, context, paths)
-        elif self.cfg.get('cola.safemode', False):
+        elif self.cfg.get('fanta.safemode', False):
             do(StageModified, context)
 
 

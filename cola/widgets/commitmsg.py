@@ -174,7 +174,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         # Sign commits
         self.sign_action = self.actions_menu.addAction(N_('Create Signed Commit'))
         self.sign_action.setCheckable(True)
-        signcommits = cfg.get('cola.signcommits', default=False)
+        signcommits = cfg.get('fanta.signcommits', default=False)
         self.sign_action.setChecked(signcommits)
 
         # Spell checker

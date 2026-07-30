@@ -74,7 +74,7 @@ class Merge(standard.Dialog):
         self.checkbox_commit_state = True
 
         text = N_('Create Signed Commit')
-        checked = cfg.get('cola.signcommits', False)
+        checked = cfg.get('fanta.signcommits', False)
         tooltip = N_('GPG-sign the merge commit')
         self.checkbox_sign = qtutils.checkbox(
             text=text, checked=checked, tooltip=tooltip

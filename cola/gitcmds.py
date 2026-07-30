@@ -1019,7 +1019,7 @@ def prepare_commit_message_hook(context: ApplicationContext) -> str:
     """Run the cola.preparecommitmessagehook to prepare the commit message"""
     config = context.cfg
     default_hook = config.hooks_path('cola-prepare-commit-msg')
-    return config.get('cola.preparecommitmessagehook', default=default_hook)
+    return config.get('fanta.preparecommitmessagehook', default=default_hook)
 
 
 def cherry_pick(context: ApplicationContext, revs) -> tuple[int, str, str] | list:

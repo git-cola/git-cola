@@ -70,7 +70,7 @@ class GitRepoModel(QtGui.QStandardItemModel):
         self.model = context.model
         self.entries = {}
         cfg = context.cfg
-        self.turbo = cfg.get('cola.turbo', False)
+        self.turbo = cfg.get('fanta.turbo', False)
         self.default_author = cfg.get('user.name', N_('Author'))
         self._interesting_paths = set()
         self._interesting_files = set()

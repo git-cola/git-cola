@@ -244,7 +244,7 @@ def open_quick_repo_search(
 
     if items:
         cfg = context.cfg
-        default_repo = cfg.get('cola.defaultrepo')
+        default_repo = cfg.get('fanta.defaultrepo')
 
         entries = QtGui.QStandardItemModel()
         added = set()

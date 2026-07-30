@@ -170,3 +170,25 @@ def test_distribution_name_matches_pyproject():
         f"metadata.version('{distribution}')" in version_py
     ), f'cola/version.py fragt nicht nach "{distribution}"'
     assert distribution == 'git-fanta'
+
+
+def test_no_legacy_config_key_literals():
+    """Kein Quelltext-Literal benutzt mehr den alten cola.-Config-Prefix.
+
+    Der Fallback in cola/gitcfg.py laesst vergessene Keys funktionieren, ohne dass
+    ein Test rot wird. Dieser Test ist die einzige Instanz, die sie bemerkt.
+    """
+    import re
+
+    pattern = re.compile(r"'cola\.[a-z]")
+    offenders = []
+    for name, text in tracked_text_files():
+        if not name.startswith(('cola/', 'bin/')):
+            continue
+        for number, line in enumerate(text.splitlines(), start=1):
+            if pattern.search(line):
+                offenders.append(f'{name}:{number}: {line.strip()[:100]}')
+
+    assert (
+        not offenders
+    ), 'Diese Literale benutzen noch den alten Config-Prefix:\n' + '\n'.join(offenders)
