@@ -1591,3 +1591,63 @@ def test_history_content_is_indented_and_stays_aligned(
     )
     _show(qapp, view)
     assert history.revtext.parentWidget().x() == history.files_splitter.x()
+
+
+def test_double_click_in_the_main_window_checks_out_and_reloads(
+    qapp, main_context, managed_qobject, monkeypatch
+):
+    """Der Doppelklick wechselt den Branch und die History zieht nach.
+
+    Interaction.confirm wird ersetzt, weil die Konsolenvariante sonst stdin liest;
+    dieser Fall darf sie ohnehin nicht erreichen.
+    """
+    monkeypatch.setattr(Interaction, 'confirm', staticmethod(lambda *a, **kw: False))
+    _git('commit', '-m', 'base')
+    original_branch = _git('branch', '--show-current')
+    _git('checkout', '-b', 'topic')
+    _git('commit', '--allow-empty', '-m', 'topic')
+    topic_oid = _git('rev-parse', 'HEAD')
+    _git('checkout', original_branch)
+    main_context.model.update_status()
+    window, refresh_calls = _main_with_refresh_spy(
+        main_context, managed_qobject, monkeypatch
+    )
+    _wait_for_history(qapp, window, topic_oid)
+    tree = window.historywidget.treewidget
+    refresh_baseline = len(refresh_calls)
+
+    tree.itemDoubleClicked.emit(tree.oidmap[topic_oid], 0)
+    _wait_for_head(qapp, window, topic_oid, refresh_calls, refresh_baseline)
+
+    assert main_context.model.currentbranch == 'topic'
+    assert _git('branch', '--show-current') == 'topic'
+
+
+def test_double_click_marks_the_new_branch_in_the_graph(
+    qapp, main_context, managed_qobject, monkeypatch
+):
+    """Nach dem Wechsel traegt der neue Branch die Markierung."""
+    monkeypatch.setattr(Interaction, 'confirm', staticmethod(lambda *a, **kw: False))
+    _git('commit', '-m', 'base')
+    original_branch = _git('branch', '--show-current')
+    _git('checkout', '-b', 'topic')
+    _git('commit', '--allow-empty', '-m', 'topic')
+    topic_oid = _git('rev-parse', 'HEAD')
+    _git('checkout', original_branch)
+    main_context.model.update_status()
+    window, refresh_calls = _main_with_refresh_spy(
+        main_context, managed_qobject, monkeypatch
+    )
+    _wait_for_history(qapp, window, topic_oid)
+    tree = window.historywidget.treewidget
+    refresh_baseline = len(refresh_calls)
+
+    tree.itemDoubleClicked.emit(tree.oidmap[topic_oid], 0)
+    _wait_for_head(qapp, window, topic_oid, refresh_calls, refresh_baseline)
+
+    labels = tree.graph_delegate._row_labels(
+        window.historywidget.commits[topic_oid].tags
+    )
+    assert [display for _ref, display, _condensed in labels] == [
+        f'{chr(0x2605)} topic'
+    ]
