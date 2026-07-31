@@ -1,6 +1,5 @@
 """Tests fuer die Migration von ~/.config/git-cola nach ~/.config/git-fanta."""
 
-import os
 
 from cola import resources
 
