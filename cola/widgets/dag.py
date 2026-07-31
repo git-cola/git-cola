@@ -22,6 +22,7 @@ from .. import qtcompat
 from .. import qtutils
 from ..compat import maxsize
 from ..i18n import N_
+from ..interaction import Interaction
 from ..models import dag
 from ..models import graph
 from ..models import main
@@ -82,6 +83,23 @@ class FocusRedirectProxy:
             func = getattr(self.default, name)
 
         return func(*args, **kwargs)
+
+
+def _confirm_detached_checkout(context, commit):
+    """Warn before a checkout that would leave HEAD detached"""
+    oid = commit.oid[: prefs.abbrev(context)]
+    return Interaction.confirm(
+        N_('Checkout Detached HEAD?'),
+        N_('Commit %s is not the tip of a branch.') % oid,
+        N_(
+            'Checking out this commit detaches HEAD. New commits will not belong '
+            'to any branch and can be lost when you switch away.\n'
+            'Use "Create Branch" if you want to keep working here.'
+        ),
+        N_('Checkout Detached HEAD'),
+        default=False,
+        icon=icons.branch(),
+    )
 
 
 class ViewerMixin:
@@ -292,6 +310,33 @@ class ViewerMixin:
         """Checkout a commit using an anonymous detached HEAD"""
         context = self.context
         self.with_oid(lambda oid: cmds.do(cmds.Checkout, context, [oid]))
+
+    def checkout_commit(self, commit):
+        """Go to the branch at `commit`, or to the commit itself after a warning
+
+        A commit that is the tip of exactly one local branch is what the user
+        means by "take me to that branch", so it is checked out by name. Several
+        branches at the same commit are ambiguous and go through the existing
+        Checkout Branch dialog. Anything else would detach HEAD, which is a state
+        the user has to opt into.
+        """
+        if commit is None or commit.oid in (dag.STAGE, dag.WORKTREE):
+            return
+        context = self.context
+        branches = list(commit.branches)
+        if context.model.currentbranch in branches:
+            return
+        if len(branches) == 1:
+            cmds.do(cmds.CheckoutBranch, context, branches[0])
+            return
+        if branches:
+            guicmds.checkout_branch(context, default=branches[0])
+            return
+        if 'HEAD' in commit.tags:
+            return
+        if not _confirm_detached_checkout(context, commit):
+            return
+        cmds.do(cmds.Checkout, context, [commit.oid])
 
     def save_blob_dialog(self):
         """Save a file blob from the selected commit"""
