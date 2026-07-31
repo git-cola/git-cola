@@ -77,9 +77,19 @@ out the rebase tree and a `FileWidget` in exactly this way.
 `_MAIN_HISTORY_UNSUPPORTED_FILE_ACTIONS` (`cola/widgets/main.py:65`), keeping only
 "Launch Editor", which works standalone.
 
-**Deliberately not done:** clicking a file does not show its diff. The hook for that later is
-`historywidget.filewidget.files_selected` → `MainView.diffviewer`, and it carries its own
-mode/`DiffLoading` semantics.
+**Single-clicking a file still does not show its diff** — the selection stays a selection.
+**Double-clicking does**: `FileWidget.file_diff_requested` carries `(commits, path)` to the host,
+which opens a reusable `CommitFileDiffWindow` (`cola/widgets/diff.py`). See
+`docs/plans/2026-07-31-commit-file-diff-window.md`.
+
+Two things about that window are load-bearing:
+
+- It is a `standard.Widget` with `Qt.Window`, **not** a `standard.Dialog`. Only the former's
+  `closeEvent` calls `save_settings()`, so only the former remembers its geometry.
+- `set_commit_file()` seeds `oid`/`oid_start`/`oid_end` directly instead of calling
+  `CommitDiffWidget.commits_selected()`. That method starts a 100 ms debounce which would fire
+  after `files_selected()` and replace the single-file diff with the whole-commit diff.
+  `test_set_commit_file_survives_the_debounce` guards this.
 
 ## Where the fork's tests live
 
@@ -90,5 +100,7 @@ mode/`DiffLoading` semantics.
   legacy windowstate restore, refresh-on-command behavior, the file panel in the main window.
 - `test/widgets_history_filelist_test.py` — `FileWidget` characterization plus the
   `--raw --numstat` parser and the status-icon mapping.
+- `test/widgets_commit_file_diff_test.py` — `CommitFileDiffWindow`, the single-file diff
+  seeding, window reuse, and the debounce regression guard.
 - `test/diff_debounce_test.py` — the debounce/supersede pattern in `CommitDiffWidget` that the
   file panel's scheduling was modeled on.

@@ -1,3 +1,19 @@
+---
+status: completed
+completed_at: 2026-07-31
+plan_commit: 035e8cf1
+implementation_branch: tree-ui/diff-view/minimax-M3
+implementation_head: c73ec4a26b412577560323cf12e58accd53d3f79
+ci_run: nicht ausgefuehrt (lokal gruen)
+manual_verification: |
+  - Doppelklick oeffnet das Fenster mit dem Diff genau dieser Datei
+  - Diff bleibt nach 1 s der Dateidiff (Debounce-Falle geprueft)
+  - Zweiter Doppelklick benutzt dasselbe Fenster
+  - Geometrie ueberlebt Schliessen und erneutes Oeffnen
+  - Bereichs-Diff bei zwei markierten Commits
+  - im DAG-Fenster ebenfalls geprueft
+---
+
 # Doppelklick in der Commit-Dateiliste öffnet den Diff in einem Fenster
 
 **Erstellt:** 2026-07-31
