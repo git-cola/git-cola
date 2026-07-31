@@ -14,10 +14,11 @@ names it — that is deliberate, do not "fix" it. References to the upstream pro
 `garden.yaml`) are also deliberate and must stay. See
 `docs/plans/2026-07-30-rename-to-git-fanta.md`.
 
-The fork's own work so far is UI: making the commit history graph a first-class part of the main
-window rather than a separate DAG window. Read `references/fork-history.md` when you need to know
-what this fork changed and why — it also records the design decisions that later changes must not
-undo.
+Four work packages have shipped: the inline commit history in the main window, the commit file
+panel beside it, the rename itself, and double-clicking a file to open its diff in a window.
+Read `references/fork-history.md` when you need to know what this fork changed and why — it also
+records the design decisions that later changes must not undo, several of which look arbitrary
+until you see the reasoning.
 
 ## Layout
 
@@ -27,13 +28,13 @@ undo.
 | `cola/models/` | Non-Qt data models: `main.py` (MainModel), `dag.py` (Commit/RepoReader), `graph.py` (the single graph engine, `build_graph()`), `prefs.py`, `selection.py` |
 | `cola/` (top level) | `git.py` (Git process wrapper), `gitcmds.py` (git commands + output parsing), `cmds.py` (undoable commands), `qtutils.py` (widget factories, `Task`/`RunTask`, state helpers), `icons.py` (the **only** file naming icon assets), `hotkeys.py`, `app.py` (`ApplicationContext`), `settings.py`, `i18n.py` |
 | `cola/icons/` | The SVG assets. Check here before assuming an icon exists |
-| `test/` | 36 `*_test.py` files, flat, plus `helper.py`. No `conftest.py` — fixtures are defined per file or imported from `helper` |
+| `test/` | 41 `*_test.py` files, flat, plus `helper.py`. No `conftest.py` — fixtures are defined per file or imported from `helper` |
 | `docs/plans/` | Implementation plans (see Workflow below) |
 | `bin/` | Launchers: `git-fanta`, `git-dag`, `git-fanta-sequence-editor` |
 
 ## Architecture in five sentences
 
-`ApplicationContext` (`cola/app.py:805`) is the dependency container passed to nearly everything:
+`ApplicationContext` (`cola/app.py:807`) is the dependency container passed to nearly everything:
 `context.git`, `.cfg`, `.model`, `.settings`, `.selection`, `.runtask`, `.view`, `.notifier`.
 Widgets take `context` as their first constructor argument and read what they need from it.
 Mutating operations go through `cmds.do(cmds.SomeCommand, context, ...)` rather than direct git
@@ -138,3 +139,11 @@ Consult `references/gotchas.md` for the full list with evidence. The short versi
   widgets in one window do not collide.
 - `FileWidget.commits_selected` runs git **synchronously** and a test name says so. Schedule
   policy belongs in the host, not in the shared widget.
+- `CommitDiffWidget.commits_selected()` arms a **100 ms debounce that fires after** whatever you
+  do next. Seeding it and then calling `files_selected()` shows the file diff, then silently
+  replaces it with the whole-commit diff.
+- `app_context.settings` is a **raw `Mock`, and a `Mock` is truthy** — any widget calling
+  `init_state(context.settings, ...)` blows up at construction unless the test sets
+  `get_gui_state.return_value = {}` first.
+- A **forgotten `'cola.<key>'` config literal stays green**: `gitcfg` falls back to the old
+  prefix on purpose, so only `test_no_legacy_config_key_literals` notices.

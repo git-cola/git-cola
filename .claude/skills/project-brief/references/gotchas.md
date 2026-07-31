@@ -48,6 +48,22 @@ before delivering the parent's show event. Both verified offscreen under PyQt5.
 or hint values depending on the binding. Never assert against fixed pixel numbers; compare
 against the live value, or spy on `setSizes`.
 
+**`CommitDiffWidget.commits_selected()` arms a 100 ms debounce that fires later and wins.**
+Calling it and then `files_selected(['path'])` shows the single-file diff — until the timer fires
+and reloads the whole-commit diff over it (measured: `filename=None`, two git calls). To show one
+file's diff, set `oid` / `oid_start` / `oid_end` directly and call `files_selected()` once, the
+way `CommitFileDiffWindow.set_commit_file()` does.
+
+**A `standard.Widget` with a parent is not a window.** `isWindow()` is `False` until you call
+`setWindowFlags(Qt.Window)`; without it the widget silently becomes a child in the parent's
+layout. `standard.Dialog` is a window straight away. Both persist geometry on close — `Widget`
+via `WidgetMixin.closeEvent`, `Dialog` via `closeEvent → reject()` — so state saving is *not*
+what distinguishes them.
+
+**Qt destroys child widgets without sending a close event.** A window that saves its state in
+`closeEvent` therefore loses it when the parent goes away. Hosts close such children explicitly:
+see the `browser_windows` loop and the `commit_file_diff_window` line in `MainView.closeEvent`.
+
 ## Git output
 
 **`git show --raw` prints nothing for merge commits**, while `--numstat` still prints the combined
@@ -92,6 +108,12 @@ context wired to a real `git`, `cfg` and `MainModel`. Building your own repo or 
 **There is no `conftest.py`.** `qapp`, `managed_qobject` and `main_context` are defined
 per test file. Copy them from a neighbouring widget test verbatim instead of writing variants.
 
+**`app_context.settings` is a raw `Mock`, and a `Mock` is truthy.** Any widget that calls
+`init_state(context.settings, ...)` therefore takes the restore branch and hands `Mock` objects
+to `QByteArray.fromBase64()` — a `TypeError` at construction time, with a message that says
+nothing about your test. Set `app_context.settings.get_gui_state.return_value = {}` first; that
+is what `main_context` and every `GitDAG` test already do.
+
 **`--doctest-modules` is on and `garden test` collects `cola/` too.** A `>>>` in any production
 docstring becomes a test case.
 
@@ -117,18 +139,26 @@ error codes disabled). It checks `bin` and `cola`, not `test`.
 
 **Python 3.9 is the floor**, enforced by `pyupgrade --py39-plus` in CI and pre-commit.
 
-## git-fanta is renamed from git-cola — das hat vier stille Kanten
+## The git-fanta rename
 
-1. `cola/widgets/toolbar.py:253` löst Icon-Namen über `getattr(icons, name, None)` auf, und
-   `cola/widgets/toolbarcmds.py:283`/`:285` setzen `'icon': 'cola'`. `icons.cola()` umzubenennen
-   entfernt das Icon lautlos — kein Fehler, kein Log. Deshalb heißt die Funktion weiterhin
-   `cola()`, obwohl die Datei `git-fanta.svg` heißt.
-2. `cola/version.py` fragt `metadata.version('git-fanta')`. Der String muss dem `name` in
-   `pyproject.toml` entsprechen, sonst fällt die Versionsanzeige still auf den Builtin-Wert
-   zurück. `test/rename_guard_test.py::test_distribution_name_matches_pyproject` bewacht das.
-3. `.github/workflows/ci.yml` installiert per `brew install git-cola` die echte Homebrew-Formel
-   als Abhängigkeit des macOS-Jobs. Diese Zeile ist kein Rename-Rückstand.
-4. Die git-config-Keys heißen `fanta.*`, `cola/gitcfg.py` liest den alten `cola.`-Prefix aber
-   weiter als Fallback. Das heißt: ein vergessener `'cola.irgendwas'`-Literal im Code fällt
-   **nicht** durch einen roten Test auf. `test_no_legacy_config_key_literals` in
-   `test/rename_guard_test.py` ist die einzige Instanz, die das bemerkt.
+**`icons.cola()` keeps its name on purpose.** `cola/widgets/toolbar.py:254` resolves icon names
+with `getattr(icons, name, None)` and `cola/widgets/toolbarcmds.py:283`/`:285` pass `'icon':
+'cola'`. Renaming the function removes the toolbar icon silently — no exception, no log entry.
+The asset it returns is `git-fanta.svg`; the function name is not user-visible.
+
+**`cola/version.py` asks `metadata.version('git-fanta')`,** which must match `name` in
+`pyproject.toml`. If the two drift, `importlib.metadata` raises `PackageNotFoundError` and the
+version display falls back to the builtin value without saying so.
+`test_distribution_name_matches_pyproject` guards it.
+
+**`brew install git-cola` in `.github/workflows/ci.yml` is not a leftover.** It installs the real
+upstream Homebrew formula as a dependency of the macOS job. Renaming it breaks that job.
+
+**A forgotten `'cola.<key>'` literal will not turn a test red.** `cola/gitcfg.py` falls back to
+the old prefix by design, so the stale key keeps working and the rename is quietly incomplete.
+`test_no_legacy_config_key_literals` in `test/rename_guard_test.py` is the only thing that
+notices — there are 34 such literals outside `cola/models/prefs.py`, spread over 16 files.
+
+**The upstream references are load-bearing.** `CHANGES.rst`, the `github.com/git-cola/...` links
+in code comments, and the remotes in `garden.yaml` point at a project that still exists.
+`test_upstream_references_are_preserved` fails if a future rename sweep eats them.
