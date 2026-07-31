@@ -2219,6 +2219,17 @@ class DiffRangeTask(qtutils.Task):
         return gitcmds.diff_range(context, self.start, self.end, filename=self.filename)
 
 
+def show_commit_file_diff(context, parent, commits, filename, window=None):
+    """Zeigt den Diff einer Datei in einem wiederverwendbaren Fenster"""
+    if window is None:
+        window = CommitFileDiffWindow(context, parent=parent)
+    window.set_commit_file(commits, filename)
+    window.show()
+    window.raise_()
+    window.activateWindow()
+    return window
+
+
 def apply_patches(context, patches=None):
     """Open the ApplyPatches dialog"""
     parent = qtutils.active_window()
@@ -2263,6 +2274,49 @@ def get_patches_from_dir(path):
         for name in [f for f in files if f.endswith(('.patch', '.mbox'))]:
             patches.append(core.decode(os.path.join(root, name)))
     return patches
+
+
+class CommitFileDiffWindow(standard.Widget):
+    """Zeigt den Diff einer einzelnen Datei fuer die ausgewaehlten Commits"""
+
+    def __init__(self, context, parent=None):
+        standard.Widget.__init__(self, parent)
+        self.context = context
+        self.setWindowFlags(Qt.Window)
+        self.setWindowTitle(N_('Commit File Diff'))
+
+        self.diffwidget = CommitDiffWidget(context, self, is_commit=True)
+        self.main_layout = qtutils.vbox(defs.no_margin, defs.spacing, self.diffwidget)
+        self.setLayout(self.main_layout)
+        qtutils.add_close_action(self)
+
+        self.init_state(context.settings, self.resize, 720, 480)
+
+    def set_commit_file(self, commits, filename):
+        """Zeigt `filename` so, wie `commits` ihn veraendert haben"""
+        if not commits or not filename:
+            return
+        diffwidget = self.diffwidget
+        commit = commits[-1]
+        diffwidget.set_details(
+            commit.oid,
+            commit.author or '',
+            commit.email or '',
+            commit.authdate or '',
+            commit.summary or '',
+        )
+        diffwidget.oid = commit.oid
+        if len(commits) > 1:
+            diffwidget.oid_start = commits[0]
+            diffwidget.oid_end = commits[-1]
+        else:
+            diffwidget.oid_start = None
+            diffwidget.oid_end = None
+        diffwidget.files_selected([filename])
+        self.setWindowTitle(
+            N_('%(filename)s - %(oid)s')
+            % {'filename': filename, 'oid': commit.oid[:12]}
+        )
 
 
 class ApplyPatches(standard.Dialog):
