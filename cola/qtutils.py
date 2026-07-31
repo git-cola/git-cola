@@ -1037,7 +1037,12 @@ class DockTitleBarWidget(QtWidgets.QFrame):
     """Provides a dockwidget titlebar that can be extended with custom widgets"""
 
     def __init__(
-        self, parent, title: str, stretch: bool = True, hide_title: bool = False
+        self,
+        parent,
+        title: str,
+        stretch: bool = True,
+        hide_title: bool = False,
+        title_indent: int = 0,
     ) -> None:
         QtWidgets.QFrame.__init__(self, parent)
         self.setAutoFillBackground(True)
@@ -1060,6 +1065,7 @@ class DockTitleBarWidget(QtWidgets.QFrame):
 
         self.corner_layout = hbox(defs.no_margin, defs.spacing)
         self.title_layout = hbox(defs.no_margin, defs.button_spacing, self.label)
+        self.title_layout.setContentsMargins(title_indent, 0, 0, 0)
 
         if stretch:
             separator = STRETCH
@@ -1124,12 +1130,15 @@ def create_dock(
     widget: QtWidgets.QWidget | None = None,
     func: Callable | None = None,
     hide_title: bool = False,
+    title_indent: int = 0,
 ) -> QtWidgets.QDockWidget:
     """Create a dock widget and set it up accordingly."""
     dock = QtWidgets.QDockWidget(parent)
     dock.setWindowTitle(title)
     dock.setObjectName(name)
-    titlebar = DockTitleBarWidget(dock, title, stretch=stretch, hide_title=hide_title)
+    titlebar = DockTitleBarWidget(
+        dock, title, stretch=stretch, hide_title=hide_title, title_indent=title_indent
+    )
     dock.setTitleBarWidget(titlebar)
     dock.setAutoFillBackground(True)
     dock.topLevelChanged.connect(titlebar.set_floating)

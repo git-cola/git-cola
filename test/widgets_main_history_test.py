@@ -16,6 +16,7 @@ from cola import qtutils
 from cola.interaction import Interaction
 from cola.models import dag as dag_model
 from cola.models import graph as graph_model
+from cola.widgets import defs
 from cola.widgets import standard
 from cola.widgets.dag import GRAPH_ROW_ROLE
 from cola.widgets.dag import CommitHistoryWidget
@@ -1554,3 +1555,39 @@ def test_main_view_starts_without_a_diff_window(qapp, main_context, managed_qobj
     view = managed_qobject(MainView(main_context))
 
     assert view.commit_file_diff_window is None
+
+
+def test_history_dock_title_is_indented(qapp, main_context, managed_qobject):
+    """Die Ueberschrift 'History' klebt nicht mehr an der Kante."""
+    view = managed_qobject(MainView(main_context))
+
+    titlebar = view.historydock.titleBarWidget()
+
+    assert titlebar.title_layout.contentsMargins().left() == defs.margin
+
+
+def test_other_dock_titles_stay_flush(qapp, main_context, managed_qobject):
+    """Der neue Parameter aendert per Default nichts an den uebrigen Docks."""
+    view = managed_qobject(MainView(main_context))
+
+    for dock in (view.statusdock, view.commitdock, view.diffdock):
+        assert dock.titleBarWidget().title_layout.contentsMargins().left() == 0
+
+
+def test_history_content_is_indented_and_stays_aligned(
+    qapp, main_context, managed_qobject
+):
+    """Eingabezeile und Baum ruecken gemeinsam ein, damit sie buendig bleiben."""
+    view = managed_qobject(MainView(main_context))
+    history = view.historywidget
+
+    margins = history.layout().contentsMargins()
+
+    assert (margins.left(), margins.top(), margins.right(), margins.bottom()) == (
+        defs.margin,
+        0,
+        0,
+        0,
+    )
+    _show(qapp, view)
+    assert history.revtext.parentWidget().x() == history.files_splitter.x()

@@ -1827,6 +1827,9 @@ class CommitHistoryWidget(QtWidgets.QWidget):
         layout = qtutils.vbox(
             defs.no_margin, defs.spacing, controls_widget, self.files_splitter
         )
+        # Eingabezeile, Baum und Dateiliste ruecken gemeinsam von der Dockkante ab,
+        # damit sie buendig bleiben.
+        layout.setContentsMargins(defs.margin, 0, 0, 0)
         # Pin the controls row to its natural height; give the splitter the
         # remaining vertical space.
         layout.setStretchFactor(controls_widget, 0)

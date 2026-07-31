@@ -38,6 +38,7 @@ from . import compare
 from . import createbranch
 from . import createtag
 from . import dag
+from . import defs
 from . import diff
 from . import editremotes
 from . import finder
@@ -120,6 +121,7 @@ class MainView(standard.MainWindow):
             'History',
             N_('History'),
             self,
+            title_indent=defs.margin,
             func=lambda dock: dag.CommitHistoryWidget(
                 context,
                 ref='--all',
