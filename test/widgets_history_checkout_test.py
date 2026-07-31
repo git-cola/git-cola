@@ -10,6 +10,7 @@ from cola import guicmds
 from cola.interaction import Interaction
 from cola.models import dag
 from cola.widgets.dag import CommitTreeWidget
+from cola.widgets.dag import CommitTreeWidgetItem
 from qtpy import QtCore
 from qtpy import QtTest
 from qtpy import QtWidgets
@@ -270,5 +271,43 @@ def test_none_is_ignored(qapp, checkout_context, managed_qobject, monkeypatch):
     tree = _tree(checkout_context, managed_qobject)
 
     tree.checkout_commit(None)
+
+    assert confirmed == []
+
+
+def _double_click_first_item(tree):
+    item = tree.topLevelItem(0)
+    tree.itemDoubleClicked.emit(item, 0)
+    return item
+
+
+def test_double_click_in_the_tree_checks_out_the_branch(
+    qapp, checkout_context, managed_qobject, monkeypatch
+):
+    """Der Doppelklick auf die Zeile loest den Checkout aus."""
+    _base, topic_oid = _repo_with_topic(checkout_context)
+    _never_confirm(monkeypatch)
+    tree = _tree(checkout_context, managed_qobject)
+    tree.addTopLevelItem(
+        CommitTreeWidgetItem(_fake_commit(topic_oid, branches=['topic']))
+    )
+
+    _double_click_first_item(tree)
+    qapp.processEvents()
+
+    assert _git('rev-parse', '--abbrev-ref', 'HEAD') == 'topic'
+
+
+def test_double_click_on_a_row_without_a_commit_is_ignored(
+    qapp, checkout_context, managed_qobject, monkeypatch
+):
+    """Fremde Items ohne .commit duerfen nichts ausloesen."""
+    _repo_with_topic(checkout_context)
+    confirmed = _never_confirm(monkeypatch)
+    tree = _tree(checkout_context, managed_qobject)
+    tree.addTopLevelItem(QtWidgets.QTreeWidgetItem(['no commit']))
+
+    _double_click_first_item(tree)
+    qapp.processEvents()
 
     assert confirmed == []

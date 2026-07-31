@@ -1418,6 +1418,7 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         self.itemSelectionChanged.connect(
             self.selection_changed, type=Qt.QueuedConnection
         )
+        self.itemDoubleClicked.connect(self._commit_double_clicked)
 
     def export_state(self):
         """Export the widget's state"""
@@ -1587,6 +1588,10 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         oids = [item.commit.oid for item in reversed(items)]
         all_oids = [commit.oid for commit in self.commits]
         cmds.do(cmds.FormatPatch, context, oids, all_oids)
+
+    def _commit_double_clicked(self, item, _column):
+        'A double-click means "take me to that branch".'
+        self.checkout_commit(getattr(item, 'commit', None))
 
     # Qt overrides
     def contextMenuEvent(self, event):
