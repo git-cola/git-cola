@@ -682,6 +682,20 @@ def _paint_graph_row(tree, row_color, palette, selected=False):
     return image
 
 
+def _record_graph_row(tree, row_color, palette):
+    """Zeichnet eine Zeile in den Recorder und gibt die Ellipsen zurueck."""
+    item = tree.topLevelItem(0)
+    item.data(0, GRAPH_ROW_ROLE).color = row_color
+    option = QtWidgets.QStyleOptionViewItem()
+    option.rect = QtCore.QRect(0, 0, 240, 26)
+    option.palette = QtGui.QPalette(palette)
+    option.font = tree.font()
+    option.fontMetrics = QtGui.QFontMetrics(option.font)
+    painter = _TextRecordingPainter()
+    tree.graph_delegate.paint(painter, option, tree.indexFromItem(item, 0))
+    return painter.ellipses
+
+
 _SEMANTIC_PAINT_SCENARIOS = (
     ('linear', [('root', []), ('tip', ['root'])], None),
     ('fork', [('root', []), ('left', ['root']), ('right', ['root'])], None),
@@ -1071,6 +1085,8 @@ class _TextRecordingPainter:
         self.brush = QtGui.QBrush()
         self.rounded_styles = []
         self.rounded_rects = []
+        self.rounded_widths = []
+        self.ellipses = []
 
     def save(self):
         pass
@@ -1102,8 +1118,11 @@ class _TextRecordingPainter:
     def drawPath(self, *_args):
         pass
 
-    def drawEllipse(self, *_args):
-        pass
+    def drawEllipse(self, *args):
+        radius = args[1] if len(args) > 1 else 0
+        self.ellipses.append(
+            (self.pen.color(), self.pen.width(), self.brush.color(), radius)
+        )
 
     def drawRoundedRect(self, *args):
         self.rounded_rects.append(QtCore.QRectF(args[0]))
@@ -3510,3 +3529,58 @@ def test_dag_inline_file_panel_shares_the_same_diff_window(
 
     assert view.commit_file_diff_window is first_window
     assert 'src/b.py' in first_window.windowTitle()
+
+
+@pytest.mark.parametrize(
+    'palette',
+    [
+        _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff'),
+        _palette('#202328', '#e8eaed', '#17191d', '#292d33', '#6ea8fe', '#101216'),
+        *_adversarial_chip_palettes(),
+    ],
+)
+def test_head_accent_stays_visible_against_row_and_node(palette):
+    """Der Ring um den HEAD-Knoten muss sich abheben - vom Hintergrund und vom Knoten.
+
+    Die alte Ableitung _mix_color(highlight, highlightedText, 0.52) lag ueber acht
+    Paletten zwischen 1.00 und 1.98, bei kollabierten Paletten also exakt auf der
+    Hintergrundfarbe.
+    """
+    style = inline_graph_style(palette)
+    backgrounds = (
+        palette.base().color(),
+        palette.alternateBase().color(),
+        palette.highlight().color(),
+        style.head_fill,
+    )
+
+    worst = min(_contrast(style.head_accent, _opaque_color(bg)) for bg in backgrounds)
+
+    assert worst >= 2.0
+
+
+def test_head_node_is_drawn_in_the_accent_color_with_a_wider_ring(
+    qapp, app_context, managed_qobject
+):
+    """Der HEAD-Knoten unterscheidet sich vom normalen Knoten in Farbe und Breite."""
+    palette = _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff')
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    tree = _tree(app_context, managed_qobject)
+    tree.add_commits([commit], _graph_result([commit]))
+    style = inline_graph_style(palette)
+
+    normal = _record_graph_row(tree, graph_model.GraphRowColor.NORMAL, palette)
+    head = _record_graph_row(tree, graph_model.GraphRowColor.HEAD, palette)
+
+    assert [color for color, _width, _brush, _radius in normal] == [style.outline]
+    assert [color for color, _width, _brush, _radius in head] == [
+        style.head_accent,
+        style.head_accent,
+    ]
+    ring_width = head[0][1]
+    node_width = normal[0][1]
+    assert ring_width > node_width
+    assert ring_width == GraphDelegate.HEAD_RING_WIDTH
+    # Falle F4: der aeussere Rand darf 8 nicht ueberschreiten.
+    assert GraphDelegate.HEAD_RING_RADIUS + GraphDelegate.HEAD_RING_WIDTH / 2 <= 8

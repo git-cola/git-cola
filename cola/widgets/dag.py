@@ -1006,11 +1006,27 @@ def inline_graph_style(palette):
     chip_text = _best_contrast(
         chip_text_candidates, (chip_other, chip_remote, chip_head)
     )
+    head_fill = _mix_color(highlight, base, 0.16)
+    # The ring around the HEAD node used to be a fixed mix of highlight and
+    # highlightedText. Measured over eight palettes its contrast against the row
+    # and against the node it surrounds was between 1.00 and 1.98 - at 1.00 it is
+    # literally the background color. Pick the candidate that stays visible.
+    head_accent = _best_contrast(
+        (
+            _mix_color(highlight, highlighted_text, 0.52),
+            highlight,
+            text,
+            highlighted_text,
+            neutral_low,
+            neutral_high,
+        ),
+        (base, alternate, highlight, head_fill),
+    )
     return InlineGraphStyle(
         normal_fill=_mix_color(base, text, 0.18),
         merge_fill=_mix_color(alternate, highlight, 0.44),
-        head_fill=_mix_color(highlight, base, 0.16),
-        head_accent=_mix_color(highlight, highlighted_text, 0.52),
+        head_fill=head_fill,
+        head_accent=head_accent,
         outline=_mix_color(text, base, 0.18),
         text=text,
         selected_text=selected_text,
@@ -1028,6 +1044,10 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
     DOT_RADIUS = 5
     EDGE_WIDTH = 3
     ROW_HEIGHT = 26
+    # Falle F4: der Paint-Test laesst nur 8 px aeusseren Rand zu
+    # (6.5 + 3/2 = 8). Der HEAD-Knoten wird deshalb dicker, nicht groesser.
+    HEAD_RING_RADIUS = DOT_RADIUS + 1.5
+    HEAD_RING_WIDTH = 3
 
     LABEL_BORDER = 3
     LABEL_SPACING = 4
@@ -1137,15 +1157,18 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
                 }
                 if row.color == GraphRowColor.HEAD:
                     accent_pen = QtGui.QPen(style.head_accent)
-                    accent_pen.setWidth(2)
+                    accent_pen.setWidth(self.HEAD_RING_WIDTH)
                     painter.setPen(accent_pen)
                     painter.setBrush(Qt.NoBrush)
                     painter.drawEllipse(
                         QtCore.QPointF(cx, mid_y),
-                        self.DOT_RADIUS + 2,
-                        self.DOT_RADIUS + 2,
+                        self.HEAD_RING_RADIUS,
+                        self.HEAD_RING_RADIUS,
                     )
-                outline_pen = QtGui.QPen(style.outline)
+                    outline_color = style.head_accent
+                else:
+                    outline_color = style.outline
+                outline_pen = QtGui.QPen(outline_color)
                 outline_pen.setWidth(2)
                 painter.setPen(outline_pen)
                 painter.setBrush(color_map[row.color])
