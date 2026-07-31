@@ -2,6 +2,7 @@
 """Characterization tests for FileWidget as used by the history file panel."""
 
 import sys
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -129,3 +130,40 @@ def test_parser_tolerates_numstat_without_raw():
 def test_diff_status_basename_maps_known_codes(status, expected):
     """Each git status code maps to the documented icon basename."""
     assert icons.diff_status_basename(status, 'src/Makefile') == expected
+
+
+def _fake_commit(oid, summary='summary'):
+    """Ein Commit-Stellvertreter mit den Feldern, die die Diff-Ansicht liest."""
+    commit = MagicMock()
+    commit.oid = oid
+    commit.author = 'A U Thor'
+    commit.email = 'author@example.com'
+    commit.authdate = '2026-01-01'
+    commit.summary = summary
+    return commit
+
+
+def test_commits_selected_remembers_the_commits(qapp, app_context, managed_qobject):
+    """Die angezeigten Dateien gehoeren zu einem Commit - der wird gemerkt."""
+    widget = managed_qobject(FileWidget(app_context, None))
+    commit = _fake_commit('a' * 40)
+
+    widget.commits_selected([commit])
+
+    assert widget.commits == [commit]
+
+
+def test_empty_selection_forgets_the_commits(qapp, app_context, managed_qobject):
+    """Ohne Auswahl bleibt kein Commit uebrig, an dem ein Doppelklick haengt."""
+    widget = managed_qobject(FileWidget(app_context, None))
+    widget.commits_selected([_fake_commit('a' * 40)])
+
+    widget.commits_selected([])
+
+    assert widget.commits == []
+
+
+def test_new_widget_starts_without_commits(qapp, app_context, managed_qobject):
+    widget = managed_qobject(FileWidget(app_context, None))
+
+    assert widget.commits == []

@@ -25,6 +25,9 @@ class FileWidget(TreeWidget):
         TreeWidget.__init__(self, parent)
         self.context = context
         self._columns_initialized = False
+        # Die angezeigten Dateien gehoeren zu diesen Commits. Der Doppelklick
+        # braucht sie, um den Diff der Datei fuer den richtigen Commit zu oeffnen.
+        self.commits = []
         self.setHeaderLabels([N_('Filename'), '+', '-'])
 
         self.show_history_action = qtutils.add_action(
@@ -65,6 +68,7 @@ class FileWidget(TreeWidget):
         self.files_selected.emit([i.path for i in items])
 
     def commits_selected(self, commits):
+        self.commits = list(commits)
         if not commits:
             self.clear()
             return
