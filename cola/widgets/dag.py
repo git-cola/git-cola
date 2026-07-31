@@ -2156,6 +2156,14 @@ class GitDAG(standard.MainWindow):
         self.filewidget.files_selected.connect(
             self.diffwidget.files_selected, type=Qt.QueuedConnection
         )
+        # Ein wiederverwendetes Fenster fuer beide Dateilisten dieses Fensters:
+        # das file_dock und das (standardmaessig verborgene) Panel im History-Widget.
+        self.commit_file_diff_window = None
+        for file_widget in (self.filewidget, self.historywidget.filewidget):
+            file_widget.file_diff_requested.connect(
+                self._show_commit_file_diff, type=Qt.QueuedConnection
+            )
+
         self.filewidget.difftool_selected.connect(
             self.difftool_selected, type=Qt.QueuedConnection
         )
@@ -2305,6 +2313,16 @@ class GitDAG(standard.MainWindow):
             )
         else:
             self.setWindowTitle(project + N_(' - DAG'))
+
+    def _show_commit_file_diff(self, commits, filename):
+        """Zeigt den Diff der doppelgeklickten Datei in einem eigenen Fenster"""
+        self.commit_file_diff_window = diff.show_commit_file_diff(
+            self.context,
+            self,
+            commits,
+            filename,
+            window=self.commit_file_diff_window,
+        )
 
     def export_state(self):
         """Store persistent window state plus canonical nested history state."""
@@ -2523,6 +2541,8 @@ class GitDAG(standard.MainWindow):
         self.search_line_range_in_oid(oid)
 
     def closeEvent(self, event):
+        if self.commit_file_diff_window is not None:
+            self.commit_file_diff_window.close()
         self.historywidget.close_popup()
         self.historywidget.stop_and_wait()
         standard.MainWindow.closeEvent(self, event)

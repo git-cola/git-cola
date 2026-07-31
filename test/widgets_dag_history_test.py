@@ -2,6 +2,7 @@
 """Characterization tests for the existing DAG history widgets."""
 
 import sys
+from unittest.mock import MagicMock
 import threading
 import time
 from typing import ClassVar
@@ -3452,3 +3453,60 @@ def test_commit_tree_apply_state_survives_graph_load(
 
     assert tree.columnWidth(CommitTreeWidgetItem.SUMMARY) == 311
     assert tree.columnWidth(CommitTreeWidgetItem.AUTHOR) == 99
+
+
+def _dag_commit_stub():
+    commit = MagicMock()
+    commit.oid = 'a' * 40
+    commit.author = 'A U Thor'
+    commit.email = 'author@example.com'
+    commit.authdate = '2026-01-01'
+    commit.summary = 'summary'
+    return commit
+
+
+def test_dag_file_dock_double_click_opens_the_diff_window(
+    qapp, app_context, managed_qobject
+):
+    app_context.runtask = MagicMock()
+    app_context.settings.get_gui_state.return_value = {}
+    app_context.app.theme.background_color_rgb.return_value = '#ffffff'
+    app_context.app.theme.selection_color.return_value = QtGui.QColor('#4488cc')
+    view = managed_qobject(GitDAG(app_context, dag.DAG('HEAD', 1000)))
+    filewidget = view.filewidget
+    commit = _dag_commit_stub()
+    filewidget.commits_selected([commit])
+    filewidget.list_files(['3	1	src/a.py'])
+
+    filewidget.itemDoubleClicked.emit(filewidget.topLevelItem(0), 0)
+    qapp.processEvents()
+
+    assert view.commit_file_diff_window is not None
+    assert 'src/a.py' in view.commit_file_diff_window.windowTitle()
+
+
+def test_dag_inline_file_panel_shares_the_same_diff_window(
+    qapp, app_context, managed_qobject
+):
+    app_context.runtask = MagicMock()
+    app_context.settings.get_gui_state.return_value = {}
+    app_context.app.theme.background_color_rgb.return_value = '#ffffff'
+    app_context.app.theme.selection_color.return_value = QtGui.QColor('#4488cc')
+    view = managed_qobject(GitDAG(app_context, dag.DAG('HEAD', 1000)))
+    commit = _dag_commit_stub()
+    for filewidget, path in (
+        (view.filewidget, 'src/a.py'),
+        (view.historywidget.filewidget, 'src/b.py'),
+    ):
+        filewidget.commits_selected([commit])
+        filewidget.list_files([f'3	1	{path}'])
+
+    view.filewidget.itemDoubleClicked.emit(view.filewidget.topLevelItem(0), 0)
+    qapp.processEvents()
+    first_window = view.commit_file_diff_window
+    inline = view.historywidget.filewidget
+    inline.itemDoubleClicked.emit(inline.topLevelItem(0), 0)
+    qapp.processEvents()
+
+    assert view.commit_file_diff_window is first_window
+    assert 'src/b.py' in first_window.windowTitle()
