@@ -3730,3 +3730,81 @@ def test_applied_history_publishes_the_current_branch(
     painter = _draw_row_labels(history.treewidget, commit, palette)
 
     assert [text for text, _color in painter.text_colors] == [f'{chr(0x2605)} main']
+
+
+def test_detached_head_row_gets_its_own_chip(qapp, app_context, managed_qobject):
+    """Ohne angehaengten Branch braucht die HEAD-Zeile einen eigenen Chip.
+
+    Gemessen: _prepare_labels(['HEAD']) liefert [] - bei abgeloestem HEAD hatte
+    die Zeile bisher gar keine Beschriftung.
+    """
+    palette = _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff')
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['HEAD']
+    tree = _tree(app_context, managed_qobject)
+    tree.set_current_branch('HEAD')
+
+    painter = _draw_row_labels(tree, commit, palette)
+
+    assert [text for text, _color in painter.text_colors] == ['HEAD']
+    assert painter.rounded_widths == [GraphDelegate.CURRENT_BRANCH_BORDER]
+
+
+def test_detached_head_on_a_branch_tip_shows_head_before_the_branch(
+    qapp, app_context, managed_qobject
+):
+    """Abgeloest auf einer Branch-Spitze: HEAD zuerst, der Branch unmarkiert.
+
+    commit.tags sieht in diesem Fall genauso aus wie im angehaengten Zustand -
+    nur model.currentbranch unterscheidet die beiden.
+    """
+    palette = _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff')
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['HEAD', 'heads/main']
+    tree = _tree(app_context, managed_qobject)
+    tree.set_current_branch('HEAD')
+
+    painter = _draw_row_labels(tree, commit, palette)
+
+    assert [text for text, _color in painter.text_colors] == ['HEAD', 'main']
+    assert painter.rounded_widths == [GraphDelegate.CURRENT_BRANCH_BORDER, 1]
+
+
+def test_attached_head_has_no_separate_head_chip(qapp, app_context, managed_qobject):
+    """Angehaengt zeigt die Zeile nur den markierten Branch, keinen HEAD-Chip."""
+    palette = _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff')
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['HEAD', 'heads/main']
+    tree = _tree(app_context, managed_qobject)
+    tree.set_current_branch('main')
+
+    painter = _draw_row_labels(tree, commit, palette)
+
+    assert [text for text, _color in painter.text_colors] == [f'{chr(0x2605)} main']
+
+
+def test_head_chip_widens_the_size_hint(qapp, app_context, managed_qobject):
+    """Der zusaetzliche Chip muss auch in der Spaltenbreite ankommen.
+
+    Verglichen werden dieselben tags in beiden HEAD-Zustaenden: angehaengt zeigt
+    die Zeile einen Chip ('* main'), abgeloest zwei ('HEAD' und 'main').
+    """
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['HEAD', 'heads/main']
+    tree = _tree(app_context, managed_qobject)
+    tree.add_commits([commit], _graph_result([commit]))
+    index = tree.indexFromItem(tree.topLevelItem(0), 0)
+    option = QtWidgets.QStyleOptionViewItem()
+    option.font = tree.font()
+    option.fontMetrics = QtGui.QFontMetrics(option.font)
+
+    tree.set_current_branch('main')
+    attached = tree.graph_delegate.sizeHint(option, index).width()
+    tree.set_current_branch('HEAD')
+    detached = tree.graph_delegate.sizeHint(option, index).width()
+
+    assert detached > attached

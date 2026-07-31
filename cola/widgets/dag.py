@@ -754,6 +754,7 @@ COMMIT_ROLE = Qt.UserRole + 3
 _REMOTES_PREFIX = 'remotes/'
 _TAGS_PREFIX = 'tags/'
 _HEADS_PREFIX = 'heads/'
+_HEAD_REF = 'HEAD'
 
 
 class RefType(enum.Enum):
@@ -801,7 +802,7 @@ def _prepare_labels(refs: list[str]) -> list[tuple[str, str, str | None]]:
 
     non_group: list[tuple[str, str]] = []
     for ref in refs:
-        if ref == 'HEAD':
+        if ref == _HEAD_REF:
             continue
 
         display, condensed, branch_name, ref_type = _parse_ref(ref)
@@ -1101,16 +1102,31 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             ref == _HEADS_PREFIX + self._current_branch
         )
 
+    def _is_current_position_ref(self, ref: str) -> bool:
+        """Is this chip the place HEAD currently points at?"""
+        return ref == _HEAD_REF or self._is_current_branch_ref(ref)
+
+
     def _row_labels(self, tags: list[str]) -> list[tuple[str, str, str | None]]:
-        """_prepare_labels() with the current branch marked."""
+        """_prepare_labels() with the current position marked.
+
+        _prepare_labels() drops 'HEAD' because an attached HEAD is already
+        implied by the marked branch chip. A detached HEAD has no branch to
+        mark, so it gets its own chip - the same one the standalone GraphView
+        has always drawn.
+        """
         labels = []
+        marked = False
         for ref, display_text, condensed_text in _prepare_labels(tags):
             if self._is_current_branch_ref(ref):
+                marked = True
                 marker = self.CURRENT_BRANCH_MARKER
                 display_text = marker + display_text
                 if condensed_text is not None:
                     condensed_text = marker + condensed_text
             labels.append((ref, display_text, condensed_text))
+        if _HEAD_REF in tags and not marked:
+            labels.insert(0, (_HEAD_REF, _HEAD_REF, None))
         return labels
 
     def set_hover(self, item: object | None, label_idx: int) -> None:
@@ -1271,7 +1287,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         for i, (tag, display_text, condensed_text) in enumerate(self._row_labels(tags)):
             if painter is not None:
                 brush = style.chip_other
-                if tag == 'HEAD' or tag.startswith(_TAGS_PREFIX):
+                if tag == _HEAD_REF or tag.startswith(_TAGS_PREFIX):
                     brush = style.chip_remote
                 elif tag.startswith(_HEADS_PREFIX):
                     brush = style.chip_head
@@ -1280,7 +1296,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
                     candidates = (_opaque_color(selected_text),) + candidates
                 chip_text = _best_contrast(candidates, (brush,))
                 chip_pen = QtGui.QPen(chip_text)
-                if self._is_current_branch_ref(tag):
+                if self._is_current_position_ref(tag):
                     chip_pen.setWidth(self.CURRENT_BRANCH_BORDER)
                 painter.setPen(chip_pen)
                 painter.setBrush(brush)
