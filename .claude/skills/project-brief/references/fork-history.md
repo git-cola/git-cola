@@ -1,6 +1,6 @@
 # What this fork changed, and the decisions behind it
 
-git-fanta tracks **git-cola** upstream and adds UI work around the commit history, plus the
+git-fanta is a fork of git-cola and adds UI work around the commit history, plus the
 rename that gave the fork its own name. Four work packages have shipped. Each has a plan document
 in `docs/plans/` that records the reasoning; read the plan before changing the feature, because
 several constraints in the code look arbitrary until you see why they were chosen.
@@ -102,7 +102,7 @@ Plan: `docs/plans/2026-07-30-rename-to-git-fanta.md`. Implemented across `11e043
   `gitcfg._key_candidates()` probes `fanta.*` then `cola.*` (`cola/gitcfg.py:253`),
   `compat.getenv_with_legacy()` does the same for the env vars (`cola/compat.py:101`),
   `gitcmds.prepare_commit_message_hook()` still honours a `cola-prepare-commit-msg` hook, and
-  `resources.migrate_config_home()` (`cola/resources.py:236`) copies `~/.config/git-cola` over
+  `resources.migrate_config_home()` (`cola/resources.py:236`) copies (git-fanta was renamed from git-cola) `~/.config/git-cola` over
   once on first run.
 - **`git fanta cola` still works.** The sub-command was renamed with an argparse alias
   (`cola/main.py:102`), so old scripts and shell history do not break.
