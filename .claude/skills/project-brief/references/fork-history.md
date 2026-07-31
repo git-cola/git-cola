@@ -142,6 +142,36 @@ which opens a reusable `CommitFileDiffWindow` (`cola/widgets/diff.py`).
   third `FileWidget` and does populate `FileWidget.commits`, so it emits `file_diff_requested`
   into nothing. A double-click there is a no-op by design.
 
+## 5. Mouse actions and HEAD marking in the history
+
+Plan: `docs/plans/2026-07-31-history-mouse-actions.md`.
+
+**Double-clicking a commit switches branch.** `ViewerMixin.checkout_commit()` picks the action:
+the tip of exactly one local branch is checked out by name, several branches go through the
+existing `guicmds.checkout_branch()` dialog, the current branch's tip does nothing, and anything
+else asks before detaching HEAD. `CommitTreeWidget` connects `itemDoubleClicked`, so it works in
+the main window *and* in the DAG window's commit list.
+
+**Decisions that later work must not undo:**
+
+- **The `GraphView` is deliberately not wired.** It inherits `checkout_commit()` from
+  `ViewerMixin` but has its own pan/drag mouse handling; a double-click there is a no-op by
+  design.
+- **`head_accent` is contrast-selected, not mixed.** The old
+  `_mix_color(highlight, highlightedText, 0.52)` measured between 1.00 and 1.98 contrast over
+  eight palettes — at 1.00 it *was* the background. `test_head_accent_stays_visible_against_row_
+  and_node` holds the floor at 2.0.
+- **The HEAD node got thicker, not bigger.** `HEAD_RING_RADIUS + HEAD_RING_WIDTH / 2 == 8` is a
+  hard ceiling: the semantic paint test's tightest sample sits 9 px from the node center.
+- **The current branch is marked with `chr(0x2605)` plus a 2 px chip border, never a new chip
+  color.** `_distinct_chip_backgrounds()` returns exactly three colors, and
+  `_TextRecordingPainter` records the chip *pen color* — changing it would break the adversarial
+  contrast test.
+- **A detached HEAD gets its own `HEAD` chip**, inserted by `GraphDelegate._row_labels()` only
+  when no chip on that row was marked as the current branch. `commit.tags` alone cannot tell the
+  two states apart — both read `['HEAD', 'heads/main']` on a branch tip.
+- **`create_dock(..., title_indent=...)` defaults to 0**, so only the History dock is indented.
+
 ## Where the fork's tests live
 
 - `test/widgets_dag_history_test.py` — `CommitHistoryWidget`, `GitDAG`, state round-trips,
@@ -162,3 +192,5 @@ which opens a reusable `CommitFileDiffWindow` (`cola/widgets/diff.py`).
 - `test/env_rename_test.py`, `test/config_home_migration_test.py`,
   `test/prepare_commit_msg_hook_test.py` — one file per backwards fallback introduced by the
   rename. If you remove a fallback, these are the tests that are supposed to stop you.
+- `test/widgets_history_checkout_test.py` — die Checkout-Regel des Doppelklicks: Branch-Spitze,
+  Mehrdeutigkeit, aktueller Branch, abgelöster HEAD, Pseudo-Commits.

@@ -14,8 +14,10 @@ names it — that is deliberate, do not "fix" it. References to the upstream pro
 `garden.yaml`) are also deliberate and must stay. See
 `docs/plans/2026-07-30-rename-to-git-fanta.md`.
 
-Four work packages have shipped: the inline commit history in the main window, the commit file
-panel beside it, the rename itself, and double-clicking a file to open its diff in a window.
+Five work packages have shipped: the inline commit history in the main window, the commit
+file panel beside it, the rename itself, double-clicking a file to open its diff in a window, and
+the history's mouse actions (double-click a commit to switch branch) plus the HEAD/current-branch
+marking in the inline graph.
 Read `references/fork-history.md` when you need to know what this fork changed and why — it also
 records the design decisions that later changes must not undo, several of which look arbitrary
 until you see the reasoning.

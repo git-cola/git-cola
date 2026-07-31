@@ -64,6 +64,20 @@ what distinguishes them.
 `closeEvent` therefore loses it when the parent goes away. Hosts close such children explicitly:
 see the `browser_windows` loop and the `commit_file_diff_window` line in `MainView.closeEvent`.
 
+
+**`_prepare_labels()` drops `'HEAD'`,** so a detached HEAD row has no chip at all — measured:
+`_prepare_labels(['HEAD']) == []`. `GraphDelegate._row_labels()` puts it back when no branch chip
+on the row was marked current.
+
+**`commit.tags` cannot distinguish an attached from a detached HEAD.** Both read
+`['HEAD', 'heads/main']` on a branch tip — measured through `dag.RepoReader`. Only
+`model.currentbranch` knows, and it is the literal string `'HEAD'` when detached
+(`cola/gitcmds.py:241`). Git refuses a branch named `HEAD`, so `'heads/' + currentbranch` needs no
+special case.
+
+**The inline HEAD node cannot grow past an outer radius of 8 px.** The semantic paint test's
+tightest sample (`incoming_y`) sits 9 px from the node center and asserts `> node_guard`.
+
 ## Git output
 
 **`git show --raw` prints nothing for merge commits**, while `--numstat` still prints the combined
@@ -124,6 +138,14 @@ CI, and lint is a separate step.
 synchronously` and `test_history_widget_owns_history_state_without_window_children` are
 architectural decisions written down as tests. Violating one is a design change requiring
 justification, not a test to be edited into agreement.
+
+
+**`Interaction.confirm` is the console implementation in tests.** `standard.install()` runs only
+from `cola/app.py`, so a confirmation in a test writes to stdout and reads `sys.stdin` — under
+pytest capture that is an error, not a `False`. Monkeypatch it in every test that can reach one.
+
+**`cmds.do()` swallows exceptions** into `Interaction.critical` (`cola/cmds.py:3591`). A broken
+command does not fail a test by itself; assert on the git state or the model instead.
 
 ## Toolchain
 
