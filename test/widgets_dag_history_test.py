@@ -2,10 +2,10 @@
 """Characterization tests for the existing DAG history widgets."""
 
 import sys
-from unittest.mock import MagicMock
 import threading
 import time
 from typing import ClassVar
+from unittest.mock import MagicMock
 
 import pytest
 
