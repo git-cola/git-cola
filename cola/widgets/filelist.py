@@ -15,6 +15,7 @@ from .standard import TreeWidget
 class FileWidget(TreeWidget):
     files_selected = Signal(object)
     difftool_selected = Signal(object)
+    file_diff_requested = Signal(object, object)
     histories_selected = Signal(object)
     grab_file = Signal(object)
     grab_file_from_parent = Signal(object)
@@ -62,10 +63,22 @@ class FileWidget(TreeWidget):
             self.toggle_remark_actions = tuple()
 
         self.itemSelectionChanged.connect(self.selection_changed)
+        self.itemDoubleClicked.connect(self._file_double_clicked)
 
     def selection_changed(self):
         items = self.selected_items()
         self.files_selected.emit([i.path for i in items])
+
+    def _file_double_clicked(self, item, _column):
+        """Fordert den Diff der doppelgeklickten Datei an.
+
+        Die Liste der Commits wird kopiert, damit der Empfaenger sie behalten
+        kann, waehrend sich die Auswahl im Widget weiterbewegt.
+        """
+        path = getattr(item, 'path', '')
+        if not path or not self.commits:
+            return
+        self.file_diff_requested.emit(list(self.commits), path)
 
     def commits_selected(self, commits):
         self.commits = list(commits)

@@ -167,3 +167,56 @@ def test_new_widget_starts_without_commits(qapp, app_context, managed_qobject):
     widget = managed_qobject(FileWidget(app_context, None))
 
     assert widget.commits == []
+
+
+def _double_click_first_item(widget):
+    """Loest den Doppelklick so aus, wie Qt es beim Anwender tun wuerde."""
+    item = widget.topLevelItem(0)
+    widget.itemDoubleClicked.emit(item, 0)
+    return item
+
+
+def test_double_click_requests_the_file_diff(qapp, app_context, managed_qobject):
+    """Ein Doppelklick meldet Commits und Pfad nach aussen."""
+    widget = managed_qobject(FileWidget(app_context, None))
+    commit = _fake_commit('a' * 40)
+    widget.commits_selected([commit])
+    widget.list_files(['3\t1\tsrc/a.py'])
+    received = []
+    widget.file_diff_requested.connect(
+        lambda commits, path: received.append((commits, path))
+    )
+
+    _double_click_first_item(widget)
+    qapp.processEvents()
+
+    assert received == [([commit], 'src/a.py')]
+
+
+def test_double_click_without_commits_is_ignored(qapp, app_context, managed_qobject):
+    """Ohne bekannten Commit gibt es nichts zu diffen - kein Signal."""
+    widget = managed_qobject(FileWidget(app_context, None))
+    widget.list_files(['3\t1\tsrc/a.py'])
+    received = []
+    widget.file_diff_requested.connect(
+        lambda commits, path: received.append((commits, path))
+    )
+
+    _double_click_first_item(widget)
+    qapp.processEvents()
+
+    assert received == []
+
+
+def test_double_click_emits_a_copy_of_the_commits(qapp, app_context, managed_qobject):
+    """Der Empfaenger bekommt eine Kopie, keine Referenz auf den Widget-Zustand."""
+    widget = managed_qobject(FileWidget(app_context, None))
+    widget.commits_selected([_fake_commit('a' * 40)])
+    widget.list_files(['3\t1\tsrc/a.py'])
+    received = []
+    widget.file_diff_requested.connect(lambda commits, path: received.append(commits))
+
+    _double_click_first_item(widget)
+    qapp.processEvents()
+
+    assert received[0] is not widget.commits
