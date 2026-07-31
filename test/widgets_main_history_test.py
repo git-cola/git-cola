@@ -1500,3 +1500,57 @@ def test_main_history_hides_unsupported_file_actions(
     assert not filewidget.grab_file_from_parent_action.isVisible()
     assert not filewidget.select_line_range_action.isVisible()
     assert filewidget.launch_editor_action.isVisible()
+
+
+def test_double_click_in_file_panel_opens_the_diff_window(
+    qapp, main_context, managed_qobject
+):
+    """Ein Doppelklick im Datei-Panel oeffnet das Diff-Fenster des Hauptfensters."""
+    main_context.runtask = Mock()
+    view = managed_qobject(MainView(main_context))
+    filewidget = view.historywidget.filewidget
+    commit = Mock()
+    commit.oid = 'a' * 40
+    commit.author = 'A U Thor'
+    commit.email = 'author@example.com'
+    commit.authdate = '2026-01-01'
+    commit.summary = 'summary'
+    filewidget.commits_selected([commit])
+    filewidget.list_files(['3\t1\tsrc/a.py'])
+
+    filewidget.itemDoubleClicked.emit(filewidget.topLevelItem(0), 0)
+    qapp.processEvents()
+
+    assert view.commit_file_diff_window is not None
+    assert 'src/a.py' in view.commit_file_diff_window.windowTitle()
+
+
+def test_second_double_click_reuses_the_diff_window(
+    qapp, main_context, managed_qobject
+):
+    main_context.runtask = Mock()
+    view = managed_qobject(MainView(main_context))
+    filewidget = view.historywidget.filewidget
+    commit = Mock()
+    commit.oid = 'a' * 40
+    commit.author = 'A U Thor'
+    commit.email = 'author@example.com'
+    commit.authdate = '2026-01-01'
+    commit.summary = 'summary'
+    filewidget.commits_selected([commit])
+    filewidget.list_files(['3\t1\tsrc/a.py', '0\t2\tsrc/b.py'])
+
+    filewidget.itemDoubleClicked.emit(filewidget.topLevelItem(0), 0)
+    qapp.processEvents()
+    first_window = view.commit_file_diff_window
+    filewidget.itemDoubleClicked.emit(filewidget.topLevelItem(1), 0)
+    qapp.processEvents()
+
+    assert view.commit_file_diff_window is first_window
+    assert 'src/b.py' in first_window.windowTitle()
+
+
+def test_main_view_starts_without_a_diff_window(qapp, main_context, managed_qobject):
+    view = managed_qobject(MainView(main_context))
+
+    assert view.commit_file_diff_window is None

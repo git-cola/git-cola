@@ -141,6 +141,11 @@ class MainView(standard.MainWindow):
             file_action = getattr(self.historywidget.filewidget, action_name)
             file_action.setVisible(False)
             file_action.setShortcut(QtGui.QKeySequence())
+        # Ein wiederverwendetes Fenster fuer den Diff einer doppelgeklickten Datei.
+        self.commit_file_diff_window = None
+        self.historywidget.filewidget.file_diff_requested.connect(
+            self._show_commit_file_diff, type=Qt.QueuedConnection
+        )
         self.model.updated.disconnect(self.historywidget.model_updated)
 
         # "Switch Repository" widgets
@@ -1040,11 +1045,23 @@ class MainView(standard.MainWindow):
         self.model.save_commitmsg(msg=commit_msg)
         for browser in list(self.context.browser_windows):
             browser.close()
+        if self.commit_file_diff_window is not None:
+            self.commit_file_diff_window.close()
         self.historywidget.close_popup()
         self.historywidget.stop_and_wait()
         standard.MainWindow.closeEvent(self, event)
         if self.dag is not None and self.dag.isVisible():
             self.context.reset_view(self.dag)
+
+    def _show_commit_file_diff(self, commits, filename):
+        """Zeigt den Diff der doppelgeklickten Datei in einem eigenen Fenster"""
+        self.commit_file_diff_window = diff.show_commit_file_diff(
+            self.context,
+            self,
+            commits,
+            filename,
+            window=self.commit_file_diff_window,
+        )
 
     def create_view_menu(self):
         menu = qtutils.create_menu(N_('View'), self)
