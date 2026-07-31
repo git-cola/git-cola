@@ -1,7 +1,10 @@
 # Maus-Aktionen und HEAD-Markierung in der History-Ansicht
 
 **Erstellt:** 2026-07-31
-**Branch:** wird vor der Umsetzung manuell gesetzt — dieser Plan legt **keinen** Branch an.
+**Branch:** Die Tasks committen auf den Branch, der beim Start ausgecheckt ist. **Niemals auf
+`main`** — das Repository-Muster für Feature-Arbeit ist `tree-ui/<agent>/<modell>/<thema>`.
+Vor Task 1 prüfen: `git rev-parse --abbrev-ref HEAD`. Steht dort `main`, vorher einen Branch
+anlegen. Dieser Plan legt selbst **keinen** an.
 **Betrifft:** die History-Ansicht im Hauptfenster (`CommitHistoryWidget`, `CommitTreeWidget`,
 `GraphDelegate`) und damit automatisch auch das eigenständige DAG-Fenster, das dieselben
 Komponenten benutzt.
@@ -26,14 +29,26 @@ ausgeführt werden kann.
 - **Nach jedem Task ist die volle Test-Suite grün.**
 - Schlägt ein Befehl fehl und der Plan nennt keinen Ausweg: **stoppen und melden.**
 
+**Arbeitsverzeichnis und Werkzeuge.** Alle Befehle laufen im **Wurzelverzeichnis des
+Repositorys** — dort, wo `pyproject.toml` und `garden.yaml` liegen. Der Plan enthält keine
+absoluten Pfade; alle Pfadangaben sind relativ zu dieser Wurzel.
+
+Zwei Werkzeuge kommen in mehreren Tasks vor. Task 0 stellt fest, in welcher Form sie hier
+verfügbar sind; **danach gilt die dort notierte Form für den gesamten Plan**:
+
+| Im Plan geschrieben | Falls das nicht läuft |
+|---|---|
+| `python3 -B -m pytest …` | `env3/bin/python -B -m pytest …`, wenn das Verzeichnis `env3/` existiert |
+| `garden fmt` | `cercis bin bin/git-* cola test extras/sphinxtogithub` gefolgt von `isort --force-single-line-imports --py=39 --no-lines-before=STDLIB bin bin/git-* cola test extras/sphinxtogithub` (das ist wörtlich, was `garden fmt` ausführt — `garden.yaml:76-81`) |
+
 Standard-Testbefehle:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test
 ```
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py test/widgets_dag_history_test.py test/widgets_main_history_test.py
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py test/widgets_dag_history_test.py test/widgets_main_history_test.py
 ```
 
 ---
@@ -141,42 +156,47 @@ Festgelegte Entscheidungen:
 
 ## Task 0 — Entwicklungsumgebung herstellen
 
-> **Blockierend. Kein Commit.**
+> **Blockierend. Kein Commit.** Ziel ist eine einzige Feststellung: **welcher Testbefehl läuft
+> hier?** Jeder folgende Task hängt an einer beobachteten RED- und GREEN-Ausgabe; ohne Testrunner
+> darf der Plan nicht „blind" ausgeführt werden.
 
-> **Achtung, gemessen am 2026-07-31 auf dieser Maschine:** `env3/` existiert **nicht**, `garden`
-> ist **nicht** installiert, `pytest` ist **nicht** installiert, und `python3 -m pip` sowie
-> `ensurepip` fehlen ebenfalls (`ModuleNotFoundError: No module named 'ensurepip'`). PyQt5 ist
-> vorhanden, PyQt6 nicht. **Ohne funktionierenden Testrunner ist dieser Plan nicht ausführbar.**
-
-1. Prüfen:
+1. Werkzeuge feststellen:
 
 ```bash
-ls -d /home/hermes-agent/Projects/git-fanta/env3 2>/dev/null && echo VORHANDEN || echo FEHLT
+python3 -m pytest --version 2>&1 | head -1
+ls -d env3 2>/dev/null && env3/bin/python -m pytest --version 2>&1 | head -1
+command -v garden cercis isort
+python3 -c "import qtpy; print('qtpy', qtpy.API_NAME)"
 ```
 
-2. Falls `FEHLT` und `garden` vorhanden ist:
+2. **Notiere aus dieser Ausgabe:**
+   - den Interpreter für alle `pytest`-Aufrufe: `python3`, sonst `env3/bin/python`;
+   - ob `garden` existiert — sonst gilt die Ersatzform für `garden fmt` aus §0.
+
+3. Läuft **weder** `python3 -m pytest` **noch** `env3/bin/python -m pytest`, einen der beiden
+   Wege versuchen:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden dev/virtualenv && garden dev
+garden dev/virtualenv && garden dev
 ```
-
-3. Falls `garden` fehlt:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && python3 -m venv --system-site-packages env3 && ./env3/bin/python -m ensurepip --upgrade && ./env3/bin/pip install -e '.[docs,dev,testing,extras]'
+python3 -m venv --system-site-packages env3 && env3/bin/python -m ensurepip --upgrade && env3/bin/pip install -e '.[docs,dev,testing,extras]'
 ```
 
-4. Falls auch das scheitert (kein `ensurepip`, kein Netz): **STOPP und melden.** Der Plan darf
-   nicht „blind" ausgeführt werden — jeder Task hängt an einer beobachteten RED- und
-   GREEN-Ausgabe.
+4. Scheitert auch das: **STOPP und melden.**
 
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -5
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -5
 ```
 
-**Erwartet:** `NNN passed`, kein `failed`, kein `error`. **Notiere `NNN` als Baseline.**
+**Erwartet:** `NNN passed`, kein `failed`, kein `error`. **Notiere `NNN` als Baseline** — alle
+folgenden Tasks geben ihre Erwartung als „Baseline + X" an.
+
+> Die Testdateien laufen bewusst mit `-p no:ruff`: `pytest-ruff` ist über `pytest-enabler`
+> standardmäßig aktiv, und die CI schaltet es genauso ab (`.github/workflows/ci.yml:49`).
 
 ---
 
@@ -504,7 +524,7 @@ def test_none_is_ignored(qapp, checkout_context, managed_qobject, monkeypatch):
 **RED ausführen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py 2>&1 | tail -12
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py 2>&1 | tail -12
 ```
 
 **Erwartete Fehlermeldung — alle 10 Tests scheitern mit:**
@@ -518,7 +538,7 @@ AttributeError: 'CommitTreeWidget' object has no attribute 'checkout_commit'
 **Anker:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "^from \.\.i18n import N_$" cola/widgets/dag.py
+grep -n "^from \.\.i18n import N_$" cola/widgets/dag.py
 ```
 
 Füge **direkt darunter** ein (isort sortiert `..i18n` vor `..interaction` vor `..models`):
@@ -532,7 +552,7 @@ from ..interaction import Interaction
 **Anker 1 — Hilfsfunktion:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "^class ViewerMixin" cola/widgets/dag.py
+grep -n "^class ViewerMixin" cola/widgets/dag.py
 ```
 
 Füge **direkt vor** `class ViewerMixin:` ein:
@@ -560,7 +580,7 @@ def _confirm_detached_checkout(context, commit):
 **Anker 2 — die Regel:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    def checkout_detached" -A 4 cola/widgets/dag.py
+grep -n "    def checkout_detached" -A 4 cola/widgets/dag.py
 ```
 
 Füge **direkt nach** der Methode `checkout_detached` ein (also vor `def save_blob_dialog`):
@@ -598,7 +618,7 @@ Füge **direkt nach** der Methode `checkout_detached` ein (also vor `def save_bl
 **Importe prüfen** — alle bereits vorhanden:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "^from \.\. import cmds$\|^from \.\. import guicmds$\|^from \.\. import icons$\|^from \.\.models import dag$\|^from \.\.models import prefs$\|^from \.\.i18n import N_$" cola/widgets/dag.py
+grep -n "^from \.\. import cmds$\|^from \.\. import guicmds$\|^from \.\. import icons$\|^from \.\.models import dag$\|^from \.\.models import prefs$\|^from \.\.i18n import N_$" cola/widgets/dag.py
 ```
 
 **Erwartet:** sechs Treffer. Fehlt einer, **stoppen und melden**.
@@ -606,13 +626,13 @@ cd /home/hermes-agent/Projects/git-fanta && grep -n "^from \.\. import cmds$\|^f
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py
+garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py
 ```
 
 **Erwartet:** `10 passed`.
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
 ```
 
 **Erwartet:** Baseline + 10 passed, 0 failed.
@@ -620,7 +640,7 @@ cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLA
 ### Commit
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "feat: Checkout-Regel fuer einen Commit der History
+git add -A && git commit -m "feat: Checkout-Regel fuer einen Commit der History
 
 checkout_commit() waehlt zwischen Branch-Checkout, Auswahldialog und einem
 bestaetigten Checkout mit abgeloestem HEAD. Die Regel sitzt im ViewerMixin,
@@ -684,7 +704,7 @@ def test_double_click_on_a_row_without_a_commit_is_ignored(
 **RED ausführen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py -k double_click_in_the_tree 2>&1 | tail -8
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py -k double_click_in_the_tree 2>&1 | tail -8
 ```
 
 **Erwartete Fehlermeldung:**
@@ -701,7 +721,7 @@ AssertionError: assert 'main' == 'topic'
 **Anker 1 — Verbindung:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "self.itemSelectionChanged.connect" -A 3 cola/widgets/dag.py
+grep -n "self.itemSelectionChanged.connect" -A 3 cola/widgets/dag.py
 ```
 
 Füge **direkt nach** dem `itemSelectionChanged.connect(...)`-Aufruf in `CommitTreeWidget.__init__`
@@ -722,7 +742,7 @@ ein (der Aufruf endet mit `)` auf einer eigenen Zeile):
 > nur die erste Stelle, weil `GraphView` `sort_by_generation(self.commits)` benutzt:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "all_oids = \[commit.oid for commit in self.commits\]" -A 1 cola/widgets/dag.py
+grep -n "all_oids = \[commit.oid for commit in self.commits\]" -A 1 cola/widgets/dag.py
 ```
 
 **Erwartet:** genau **zwei** ausgegebene Zeilen (`all_oids = …` und die `cmds.do(...)`-Zeile
@@ -741,13 +761,13 @@ vor dem Kommentar `# Qt overrides`):
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py
+garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_history_checkout_test.py
 ```
 
 **Erwartet:** `12 passed`.
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
 ```
 
 **Erwartet:** Baseline + 12 passed, 0 failed.
@@ -755,7 +775,7 @@ cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLA
 ### Commit
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "feat: Doppelklick auf einen Commit wechselt den Branch
+git add -A && git commit -m "feat: Doppelklick auf einen Commit wechselt den Branch
 
 Die Verbindung sitzt im CommitTreeWidget und wirkt damit in der History des
 Hauptfensters und in der Commit-Liste des DAG-Fensters. Die GraphView bleibt
@@ -851,7 +871,7 @@ Und erweitere `_TextRecordingPainter` — **zwei** Ergänzungen, beide additiv:
 **Anker A:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "        self.rounded_rects = \[\]" test/widgets_dag_history_test.py
+grep -n "        self.rounded_rects = \[\]" test/widgets_dag_history_test.py
 ```
 
 Füge **direkt darunter** ein:
@@ -864,7 +884,7 @@ Füge **direkt darunter** ein:
 **Anker B:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    def drawEllipse(self, \*_args):" -A 1 test/widgets_dag_history_test.py
+grep -n "    def drawEllipse(self, \*_args):" -A 1 test/widgets_dag_history_test.py
 ```
 
 Ersetze
@@ -891,7 +911,7 @@ durch
 **RED ausführen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "head_accent or head_node" 2>&1 | tail -20
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "head_accent or head_node" 2>&1 | tail -20
 ```
 
 **Erwartete Fehlermeldungen — zwei verschiedene:**
@@ -913,7 +933,7 @@ für `test_head_node_is_drawn_in_the_accent_color_with_a_wider_ring`.
 **Anker:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    return InlineGraphStyle(" -B 4 cola/widgets/dag.py
+grep -n "    return InlineGraphStyle(" -B 4 cola/widgets/dag.py
 ```
 
 Füge **direkt vor** `    return InlineGraphStyle(` ein:
@@ -956,7 +976,7 @@ durch
 **Anker 1 — Konstanten:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    ROW_HEIGHT = 26" cola/widgets/dag.py
+grep -n "    ROW_HEIGHT = 26" cola/widgets/dag.py
 ```
 
 Füge **direkt darunter** ein:
@@ -971,7 +991,7 @@ Füge **direkt darunter** ein:
 **Anker 2 — Paint:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "                if row.color == GraphRowColor.HEAD:" -A 16 cola/widgets/dag.py
+grep -n "                if row.color == GraphRowColor.HEAD:" -A 16 cola/widgets/dag.py
 ```
 
 Ersetze den Block
@@ -1015,7 +1035,7 @@ durch
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py
+garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py
 ```
 
 **Erwartet:** alle passed.
@@ -1023,7 +1043,7 @@ cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscr
 **Die beiden Paint-Tests einzeln prüfen** — sie sind die, die brechen würden:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "semantic_paint_smoke or offscreen_nodes or palette_derived"
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "semantic_paint_smoke or offscreen_nodes or palette_derived"
 ```
 
 **Erwartet:** alle passed. Gemessen wurde vorab: `fill_region` zeigt weiterhin `head_fill`,
@@ -1031,7 +1051,7 @@ cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLA
 zu vorher**, in light, dark und grey.
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
 ```
 
 **Erwartet:** Baseline + 20 passed, 0 failed (12 aus Task 1/2, 7 Paletten-Varianten + 1 Knotentest).
@@ -1039,7 +1059,7 @@ cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLA
 ### Commit
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "feat: der HEAD-Knoten im Inline-Graph wird sichtbar
+git add -A && git commit -m "feat: der HEAD-Knoten im Inline-Graph wird sichtbar
 
 head_accent war ueber acht gemessene Paletten zwischen 1.00 und 1.98 Kontrast -
 bei kollabierten Paletten also unsichtbar. Die Farbe wird jetzt wie Chip-Text
@@ -1205,7 +1225,7 @@ def test_applied_history_publishes_the_current_branch(
 **RED ausführen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "current_branch or chips_stay_plain or marked_chip or detached_head_marks" 2>&1 | tail -20
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "current_branch or chips_stay_plain or marked_chip or detached_head_marks" 2>&1 | tail -20
 ```
 
 **Erwartete Fehlermeldungen — alle fünf Tests scheitern, mit zwei verschiedenen Ursachen.**
@@ -1232,7 +1252,7 @@ melden**.
 **Anker 1 — Konstanten:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    ANIMATION_DURATION = 50" cola/widgets/dag.py
+grep -n "    ANIMATION_DURATION = 50" cola/widgets/dag.py
 ```
 
 Füge **direkt darunter** ein:
@@ -1247,7 +1267,7 @@ Füge **direkt darunter** ein:
 **Anker 2 — Feld:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "        self._expand_progress: float = 0.0" cola/widgets/dag.py
+grep -n "        self._expand_progress: float = 0.0" cola/widgets/dag.py
 ```
 
 Füge **direkt darunter** ein:
@@ -1259,7 +1279,7 @@ Füge **direkt darunter** ein:
 **Anker 3 — Methoden:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    def set_hover(self, item: object | None, label_idx: int) -> None:" cola/widgets/dag.py
+grep -n "    def set_hover(self, item: object | None, label_idx: int) -> None:" cola/widgets/dag.py
 ```
 
 Füge **direkt vor** `def set_hover(...)` ein:
@@ -1303,7 +1323,7 @@ Füge **direkt vor** `def set_hover(...)` ein:
 **Anker 4 — `_draw_labels` benutzt die neue Liste:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "for i, (tag, display_text, condensed_text) in enumerate(_prepare_labels(tags)):" cola/widgets/dag.py
+grep -n "for i, (tag, display_text, condensed_text) in enumerate(_prepare_labels(tags)):" cola/widgets/dag.py
 ```
 
 Ersetze die Zeile durch
@@ -1315,7 +1335,7 @@ Ersetze die Zeile durch
 **Anker 5 — Rahmen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "                painter.setPen(QtGui.QPen(chip_text))" cola/widgets/dag.py
+grep -n "                painter.setPen(QtGui.QPen(chip_text))" cola/widgets/dag.py
 ```
 
 Ersetze die Zeile durch
@@ -1333,7 +1353,7 @@ Ersetze die Zeile durch
 **Anker 6 — `_label_hit_test` benutzt dieselbe Liste:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "        for i, (_, display_text, condensed_text) in enumerate(" -A 2 cola/widgets/dag.py
+grep -n "        for i, (_, display_text, condensed_text) in enumerate(" -A 2 cola/widgets/dag.py
 ```
 
 Ersetze
@@ -1355,7 +1375,7 @@ durch
 **Anker 7 — Recorder ergänzen** (Testdatei):
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "        self.rounded_styles.append((self.pen.color(), self.brush.color()))" test/widgets_dag_history_test.py
+grep -n "        self.rounded_styles.append((self.pen.color(), self.brush.color()))" test/widgets_dag_history_test.py
 ```
 
 Füge **direkt darunter** ein:
@@ -1369,7 +1389,7 @@ Füge **direkt darunter** ein:
 **Anker 1 — `CommitTreeWidget`:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    def display_inline_graph(self, enabled):" cola/widgets/dag.py
+grep -n "    def display_inline_graph(self, enabled):" cola/widgets/dag.py
 ```
 
 Füge **direkt vor** `def display_inline_graph(self, enabled):` ein:
@@ -1384,7 +1404,7 @@ Füge **direkt vor** `def display_inline_graph(self, enabled):` ein:
 **Anker 2 — `CommitHistoryWidget.apply_result`:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "            self.treewidget.add_commits(commit_list, graph_result)" cola/widgets/dag.py
+grep -n "            self.treewidget.add_commits(commit_list, graph_result)" cola/widgets/dag.py
 ```
 
 Füge **direkt darüber** ein:
@@ -1398,7 +1418,7 @@ Füge **direkt darüber** ein:
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py
+garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py
 ```
 
 **Erwartet:** alle passed.
@@ -1406,14 +1426,14 @@ cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscr
 **Die Chip-Tests einzeln prüfen** — sie sind die, die brechen würden:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "adversarial_chip or contrasting_text or identical_boundaries or label_hit_area"
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "adversarial_chip or contrasting_text or identical_boundaries or label_hit_area"
 ```
 
 **Erwartet:** alle passed. Diese Tests bauen frische Widgets ohne `set_current_branch(...)`,
 `_current_branch` ist also `''` und kein Chip wird markiert.
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
 ```
 
 **Erwartet:** Baseline + 25 passed, 0 failed.
@@ -1421,7 +1441,7 @@ cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLA
 ### Commit
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "feat: der aktuelle Branch ist im Inline-Graph markiert
+git add -A && git commit -m "feat: der aktuelle Branch ist im Inline-Graph markiert
 
 Stern-Glyphe und dickerer Rahmen am Chip des Branches, auf dem HEAD steht.
 Die Stern-Markierung ist das Muster der Branches-Ansicht. Die Chipfarbe bleibt
@@ -1528,7 +1548,7 @@ def test_head_chip_widens_the_size_hint(qapp, app_context, managed_qobject):
 **RED ausführen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "detached_head_row or head_before_the_branch or separate_head_chip or widens_the_size_hint" 2>&1 | tail -20
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py -k "detached_head_row or head_before_the_branch or separate_head_chip or widens_the_size_hint" 2>&1 | tail -20
 ```
 
 **Erwartete Fehlermeldungen — drei Tests, drei Ursachen:**
@@ -1551,7 +1571,7 @@ gegen einen zu gierigen GREEN-Schritt, kein RED.
 **Anker 1 — `_row_labels`:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    def _row_labels" -A 12 cola/widgets/dag.py
+grep -n "    def _row_labels" -A 12 cola/widgets/dag.py
 ```
 
 Ersetze die Methode
@@ -1599,7 +1619,7 @@ durch
 **Anker 2 — Konstante:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "^_HEADS_PREFIX = 'heads/'" cola/widgets/dag.py
+grep -n "^_HEADS_PREFIX = 'heads/'" cola/widgets/dag.py
 ```
 
 Füge **direkt darunter** ein:
@@ -1611,7 +1631,7 @@ _HEAD_REF = 'HEAD'
 **Anker 3 — auch der HEAD-Chip bekommt den Rahmen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    def _is_current_branch_ref" -A 5 cola/widgets/dag.py
+grep -n "    def _is_current_branch_ref" -A 5 cola/widgets/dag.py
 ```
 
 Füge **direkt nach** der Methode `_is_current_branch_ref` ein:
@@ -1626,7 +1646,7 @@ Füge **direkt nach** der Methode `_is_current_branch_ref` ein:
 **Anker 4 — Rahmen umstellen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "                if self._is_current_branch_ref(tag):" cola/widgets/dag.py
+grep -n "                if self._is_current_branch_ref(tag):" cola/widgets/dag.py
 ```
 
 Ersetze die Zeile durch
@@ -1641,7 +1661,7 @@ Ersetze die Zeile durch
 **Anker 5 — vorhandene `'HEAD'`-Literale aufräumen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "if ref == 'HEAD':\|if tag == 'HEAD' or tag.startswith" cola/widgets/dag.py
+grep -n "if ref == 'HEAD':\|if tag == 'HEAD' or tag.startswith" cola/widgets/dag.py
 ```
 
 Ersetze in `_prepare_labels`
@@ -1671,13 +1691,13 @@ durch
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py
+garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_dag_history_test.py
 ```
 
 **Erwartet:** alle passed.
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
 ```
 
 **Erwartet:** Baseline + 29 passed, 0 failed.
@@ -1685,7 +1705,7 @@ cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLA
 ### Commit
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "feat: abgeloester HEAD bekommt im Inline-Graph einen eigenen Chip
+git add -A && git commit -m "feat: abgeloester HEAD bekommt im Inline-Graph einen eigenen Chip
 
 _prepare_labels() wirft 'HEAD' weg, weil ein angehaengter HEAD schon durch den
 markierten Branch-Chip zu sehen ist. Bei abgeloestem HEAD gab es dadurch gar
@@ -1748,7 +1768,7 @@ from cola.widgets import defs
 Zur Kontrolle vorher:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "^from cola" test/widgets_main_history_test.py
+grep -n "^from cola" test/widgets_main_history_test.py
 ```
 
 **Erwartet:** kein Treffer für `defs`. Weicht das ab, **stoppen und melden**.
@@ -1756,7 +1776,7 @@ cd /home/hermes-agent/Projects/git-fanta && grep -n "^from cola" test/widgets_ma
 **RED ausführen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_main_history_test.py -k "indented or stay_flush" 2>&1 | tail -12
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_main_history_test.py -k "indented or stay_flush" 2>&1 | tail -12
 ```
 
 **Erwartete Fehlermeldungen — zwei Tests, zwei Meldungen:**
@@ -1780,7 +1800,7 @@ für `test_history_content_is_indented_and_stays_aligned`.
 **Anker 1 — `DockTitleBarWidget`:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "        self, parent, title: str, stretch: bool = True, hide_title: bool = False" cola/qtutils.py
+grep -n "        self, parent, title: str, stretch: bool = True, hide_title: bool = False" cola/qtutils.py
 ```
 
 Ersetze die Zeile durch
@@ -1797,7 +1817,7 @@ Ersetze die Zeile durch
 **Anker 2 — Einzug setzen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "        self.title_layout = hbox(defs.no_margin, defs.button_spacing, self.label)" cola/qtutils.py
+grep -n "        self.title_layout = hbox(defs.no_margin, defs.button_spacing, self.label)" cola/qtutils.py
 ```
 
 Füge **direkt darunter** ein:
@@ -1815,7 +1835,7 @@ Füge **direkt darunter** ein:
 > Zeilenende verankert und trifft nur `create_dock`:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "^    hide_title: bool = False,$" -A 1 cola/qtutils.py
+grep -n "^    hide_title: bool = False,$" -A 1 cola/qtutils.py
 ```
 
 **Erwartet:** genau **ein** Treffer. Sind es zwei, **stoppen und melden** — dann wurde Anker 1
@@ -1839,7 +1859,7 @@ durch
 **Anker 4 — Weitergabe:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "    titlebar = DockTitleBarWidget(dock, title, stretch=stretch, hide_title=hide_title)" cola/qtutils.py
+grep -n "    titlebar = DockTitleBarWidget(dock, title, stretch=stretch, hide_title=hide_title)" cola/qtutils.py
 ```
 
 Ersetze die Zeile durch
@@ -1859,7 +1879,7 @@ Ersetze die Zeile durch
 **Anker 1 — Import in `cola/widgets/main.py`** (`defs` wird dort bisher **nicht** benutzt, gemessen):
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "^from \. import dag$" cola/widgets/main.py
+grep -n "^from \. import dag$" cola/widgets/main.py
 ```
 
 Füge **direkt darunter** ein (alphabetisch zwischen `dag` und `diff`):
@@ -1871,7 +1891,7 @@ from . import defs
 **Anker 2 — Dock:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "        self.historydock = create_dock(" -A 4 cola/widgets/main.py
+grep -n "        self.historydock = create_dock(" -A 4 cola/widgets/main.py
 ```
 
 Ersetze
@@ -1896,7 +1916,7 @@ durch
 **Anker 3 — Inhalt des History-Widgets:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && grep -n "        layout = qtutils.vbox(" -A 3 cola/widgets/dag.py
+grep -n "        layout = qtutils.vbox(" -A 3 cola/widgets/dag.py
 ```
 
 Füge **direkt nach** dem `layout = qtutils.vbox(...)`-Aufruf (er endet mit `)` auf einer eigenen
@@ -1911,13 +1931,13 @@ Zeile, direkt vor dem Kommentar `# Pin the controls row…`) ein:
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_main_history_test.py test/widgets_dag_history_test.py
+garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_main_history_test.py test/widgets_dag_history_test.py
 ```
 
 **Erwartet:** alle passed.
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
 ```
 
 **Erwartet:** Baseline + 32 passed, 0 failed.
@@ -1925,7 +1945,7 @@ cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLA
 ### Commit
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "style: linkes Padding fuer History-Ueberschrift und Eingabezeile
+git add -A && git commit -m "style: linkes Padding fuer History-Ueberschrift und Eingabezeile
 
 create_dock bekommt einen optionalen title_indent (Default 0, alle uebrigen
 Docks bleiben unveraendert). Der Inhalt des CommitHistoryWidget rueckt als
@@ -2023,7 +2043,7 @@ def test_double_click_marks_the_new_branch_in_the_graph(
 **RED ausführen:**
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q test/widgets_main_history_test.py -k double_click 2>&1 | tail -12
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q test/widgets_main_history_test.py -k double_click 2>&1 | tail -12
 ```
 
 **Erwartet:** **beide Tests sind bereits grün.** Task 2 hat die Verbindung gelegt, Task 4 die
@@ -2037,7 +2057,7 @@ isolierten Widgets zu funktionieren.
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
+garden fmt && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
 ```
 
 **Erwartet:** Baseline + 34 passed, 0 failed.
@@ -2045,7 +2065,7 @@ cd /home/hermes-agent/Projects/git-fanta && garden fmt && QT_QPA_PLATFORM=offscr
 ### Commit
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "test: Doppelklick im Hauptfenster wechselt Branch und laedt die History nach
+git add -A && git commit -m "test: Doppelklick im Hauptfenster wechselt Branch und laedt die History nach
 
 Die Kette aus Doppelklick, cmds.CheckoutBranch, model.updated, load_if_stale und
 apply_result laesst sich nur im Hauptfenster pruefen. Beide Tests sind
@@ -2152,23 +2172,33 @@ marking in the inline graph.
 ### Verifikation
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen ./env3/bin/python -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
+QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=offscreen python3 -B -m pytest -p no:ruff -q cola test 2>&1 | tail -3
 ```
 
 **Erwartet:** unverändert grün (Doku ändert keinen Code).
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden check/fmt && garden check/pyupgrade && garden check/mypy
+garden check/fmt && garden check/pyupgrade && garden check/mypy
 ```
 
-**Erwartet:** alle drei ohne Befund. Schlägt `check/mypy` an `_row_labels` oder
-`set_current_branch` an: die Annotationen stehen im Plan, `from __future__ import annotations`
-steht in `cola/widgets/dag.py:1` — dann **stoppen und melden**.
+Ohne `garden` dieselben drei Prüfungen einzeln (wörtlich das, was `garden.yaml:66-75` ausführt):
+
+```bash
+cercis --check bin bin/git-* cola test extras/sphinxtogithub
+isort --check --force-single-line-imports --py=39 --no-lines-before=STDLIB bin bin/git-* cola test extras/sphinxtogithub
+pyupgrade --py39-plus bin/git-* bin/*.py cola/*.py cola/*/*.py
+python3 -m mypy --config-file pyproject.toml bin cola
+```
+
+**Erwartet:** alle ohne Befund. Schlägt mypy an `_row_labels` oder `set_current_branch` an: die
+Annotationen stehen im Plan, `from __future__ import annotations` steht in
+`cola/widgets/dag.py:1` — dann **stoppen und melden**. Fehlt eines der Werkzeuge, ist das kein
+Grund zum Abbruch: notieren, welche Prüfung nicht lief.
 
 ### Commit
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "docs: dokumentiere Maus-Aktionen und HEAD-Markierung der History"
+git add -A && git commit -m "docs: dokumentiere Maus-Aktionen und HEAD-Markierung der History"
 ```
 
 ---
@@ -2178,8 +2208,22 @@ cd /home/hermes-agent/Projects/git-fanta && git add -A && git commit -m "docs: d
 Nach Task 8 einmal die Anwendung starten und der Reihe nach prüfen:
 
 ```bash
-cd /home/hermes-agent/Projects/git-fanta && garden run
+garden run
 ```
+
+Ohne `garden` — oder in einer Umgebung ohne Bildschirm — startet dasselbe über den Launcher im
+Repository:
+
+```bash
+env3/bin/python bin/git-fanta
+```
+
+> **In einer isolierten Umgebung ohne Anzeige entfällt dieser Abschnitt.** Dann gilt: die
+> Punkte 1–9 sind durch die Tests aus Task 1–7 abgedeckt **bis auf** die rein optischen — 6
+> (Sichtbarkeit des HEAD-Knotens in beiden Themes) und 7 (Padding). Beide sind zusätzlich
+> numerisch abgesichert (Kontrast ≥ 2.0 über sieben Paletten; `contentsMargins() == (4, 0, 0, 0)`),
+> aber niemand hat sie angesehen. **Das im Abschlussbericht so schreiben, nicht als „geprüft"
+> ausgeben.**
 
 1. **Doppelklick auf die Spitze eines anderen Branches** wechselt dorthin, ohne Rückfrage. Die
    Fenstertitelzeile und der markierte Chip ziehen nach.
