@@ -10,67 +10,67 @@ from .. import utils
 from ..cmd import Command
 
 ABBREV = 'core.abbrev'
-ASPELL_ENABLED = 'cola.aspell.enabled'
-ASPELL_LANG = 'cola.aspell.lang'
-AUTOCOMPLETE_PATHS = 'cola.autocompletepaths'
-AUTODETECT_PROXY = 'cola.autodetectproxy'
-AUTOTEMPLATE = 'cola.autoloadcommittemplate'
-BACKGROUND_EDITOR = 'cola.backgroundeditor'
-BLAME_VIEWER = 'cola.blameviewer'
-BLOCK_CURSOR = 'cola.blockcursor'
-BOLD_FONTS = 'cola.boldfonts'
-BOLD_HEADERS = 'cola.boldheaders'
-CHECK_CONFLICTS = 'cola.checkconflicts'
-CHECK_PUBLISHED_COMMITS = 'cola.checkpublishedcommits'
+ASPELL_ENABLED = 'fanta.aspell.enabled'
+ASPELL_LANG = 'fanta.aspell.lang'
+AUTOCOMPLETE_PATHS = 'fanta.autocompletepaths'
+AUTODETECT_PROXY = 'fanta.autodetectproxy'
+AUTOTEMPLATE = 'fanta.autoloadcommittemplate'
+BACKGROUND_EDITOR = 'fanta.backgroundeditor'
+BLAME_VIEWER = 'fanta.blameviewer'
+BLOCK_CURSOR = 'fanta.blockcursor'
+BOLD_FONTS = 'fanta.boldfonts'
+BOLD_HEADERS = 'fanta.boldheaders'
+CHECK_CONFLICTS = 'fanta.checkconflicts'
+CHECK_PUBLISHED_COMMITS = 'fanta.checkpublishedcommits'
 COMMENT_CHAR = 'core.commentchar'
 COMMIT_CLEANUP = 'commit.cleanup'
-DICTIONARY = 'cola.dictionary'
+DICTIONARY = 'fanta.dictionary'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
 EDITOR = 'gui.editor'
-ENABLE_GRAVATAR = 'cola.gravatar'
-ENABLE_POPUPS = 'cola.enablepopups'
-EXPANDTAB = 'cola.expandtab'
-FIXUP_COMMIT_COUNT = 'cola.fixupcommitcount'
-FONTDIFF = 'cola.fontdiff'
-FONTSIZE = 'cola.fontsize'
-HIDPI = 'cola.hidpi'
+ENABLE_GRAVATAR = 'fanta.gravatar'
+ENABLE_POPUPS = 'fanta.enablepopups'
+EXPANDTAB = 'fanta.expandtab'
+FIXUP_COMMIT_COUNT = 'fanta.fixupcommitcount'
+FONTDIFF = 'fanta.fontdiff'
+FONTSIZE = 'fanta.fontsize'
+HIDPI = 'fanta.hidpi'
 HISTORY_BROWSER = 'gui.historybrowser'
 HTTP_PROXY = 'http.proxy'
-ICON_THEME = 'cola.icontheme'
-INOTIFY = 'cola.inotify'
-INOTIFY_DELAY = 'cola.inotifydelay'
-NOTIFY_ON_PUSH = 'cola.notifyonpush'
-LINEBREAK = 'cola.linebreak'
-LOAD_COMMITMSG_COUNT = 'cola.loadcommitmsgcount'
-LOGDATE = 'cola.logdate'
-MAXRECENT = 'cola.maxrecent'
+ICON_THEME = 'fanta.icontheme'
+INOTIFY = 'fanta.inotify'
+INOTIFY_DELAY = 'fanta.inotifydelay'
+NOTIFY_ON_PUSH = 'fanta.notifyonpush'
+LINEBREAK = 'fanta.linebreak'
+LOAD_COMMITMSG_COUNT = 'fanta.loadcommitmsgcount'
+LOGDATE = 'fanta.logdate'
+MAXRECENT = 'fanta.maxrecent'
 MERGE_DIFFSTAT = 'merge.diffstat'
 MERGE_KEEPBACKUP = 'merge.keepbackup'
 MERGE_SUMMARY = 'merge.summary'
 MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
-MOUSE_ZOOM = 'cola.mousezoom'
-PATCHES_DIRECTORY = 'cola.patchesdirectory'
+MOUSE_ZOOM = 'fanta.mousezoom'
+PATCHES_DIRECTORY = 'fanta.patchesdirectory'
 PULL_REBASE = 'pull.rebase'
 REBASE_UPDATE_REFS = 'rebase.updaterefs'
-REFRESH_ON_FOCUS = 'cola.refreshonfocus'
-RESIZE_BROWSER_COLUMNS = 'cola.resizebrowsercolumns'
-SAFE_MODE = 'cola.safemode'
-SAVEWINDOWSETTINGS = 'cola.savewindowsettings'
-SHOW_PATH = 'cola.showpath'
-SORT_BOOKMARKS = 'cola.sortbookmarks'
-SPELL_CHECK = 'cola.spellcheck'
-STATUS_INDENT = 'cola.statusindent'
-STATUS_SHOW_TOTALS = 'cola.statusshowtotals'
-THEME = 'cola.theme'
-TABWIDTH = 'cola.tabwidth'
-TEXTWIDTH = 'cola.textwidth'
+REFRESH_ON_FOCUS = 'fanta.refreshonfocus'
+RESIZE_BROWSER_COLUMNS = 'fanta.resizebrowsercolumns'
+SAFE_MODE = 'fanta.safemode'
+SAVEWINDOWSETTINGS = 'fanta.savewindowsettings'
+SHOW_PATH = 'fanta.showpath'
+SORT_BOOKMARKS = 'fanta.sortbookmarks'
+SPELL_CHECK = 'fanta.spellcheck'
+STATUS_INDENT = 'fanta.statusindent'
+STATUS_SHOW_TOTALS = 'fanta.statusshowtotals'
+THEME = 'fanta.theme'
+TABWIDTH = 'fanta.tabwidth'
+TEXTWIDTH = 'fanta.textwidth'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
-UPDATE_INDEX = 'cola.updateindex'
-VERBOSITY = 'cola.verbosity'
+UPDATE_INDEX = 'fanta.updateindex'
+VERBOSITY = 'fanta.verbosity'
 
 
 class DateFormat:
@@ -285,7 +285,7 @@ def fallback_editor() -> str:
     """Return a fallback editor for cases where one is not configured
 
     GIT_VISUAL and VISUAL are consulted before GIT_EDITOR and EDITOR to allow
-    configuring a visual editor for Git Cola using $GIT_VISUAL and an alternative
+    configuring a visual editor for Git Fanta using $GIT_VISUAL and an alternative
     editor for the Git CLI.
     """
     editor_variables = (
@@ -329,12 +329,12 @@ def enable_gravatar(context) -> bool:
 def default_history_browser() -> str:
     """Return the default history browser (e.g. git-dag, gitk)"""
     if utils.is_win32():
-        # On Windows, a sensible default is "python git-cola dag"
+        # On Windows, a sensible default is "python git-fanta dag"
         # which is different than `gitk` below, but is preferred
         # because we don't have to guess paths.
-        git_cola = sys.argv[0].replace('\\', '/')
+        git_fanta = sys.argv[0].replace('\\', '/')
         python = sys.executable.replace('\\', '/')
-        argv = core.prep_for_subprocess([python, git_cola, 'dag'])
+        argv = core.prep_for_subprocess([python, git_fanta, 'dag'])
         default = core.list2cmdline(argv)
     else:
         # The `gitk` script can be launched as-is on unix

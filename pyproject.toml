@@ -3,7 +3,7 @@ requires = ["setuptools>=61.2", "setuptools_scm[toml]>=6.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "git-cola"
+name = "git-fanta"
 authors = [
     {name = "David Aguilar", email = "davvid@gmail.com"}
 ]
@@ -16,7 +16,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Version Control :: Git",
 ]
-description = "Git Cola is a powerful Git GUI with a slick and intuitive user interface."
+description = "Git Fanta is a powerful Git GUI with a slick and intuitive user interface."
 dependencies = [
     "polib >= 1.0.0",
     "qtpy >= 1.1.0",
@@ -76,10 +76,10 @@ pyside6 = [
 ]
 
 [project.scripts]
-cola = "cola.main:main"
-git-cola = "cola.main:main"
+fanta = "cola.main:main"
+git-fanta = "cola.main:main"
 git-dag = "cola.dag:main"
-git-cola-sequence-editor = "cola.sequenceeditor:main"
+git-fanta-sequence-editor = "cola.sequenceeditor:main"
 
 [tool.cercis]
 function-definition-extra-indent = false

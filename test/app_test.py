@@ -106,7 +106,7 @@ def test_set_application_name_swallows_cocoa_exceptions(monkeypatch):
     """A failure inside the Cocoa block must not crash app startup.
 
     The function is best-effort -- it intentionally swallows any AppKit
-    exception because a cosmetic naming failure must not prevent git-cola
+    exception because a cosmetic naming failure must not prevent git-fanta
     from launching.
     """
     monkeypatch.setattr(sys, 'platform', 'darwin')

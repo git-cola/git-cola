@@ -571,7 +571,7 @@ if AVAILABLE == 'pywin32':
 def create(context: ApplicationContext) -> _Monitor:
     thread_class = None
     cfg = context.cfg
-    if not cfg.get('cola.inotify', default=True):
+    if not cfg.get('fanta.inotify', default=True):
         msg = N_(
             'File system change monitoring: disabled because'
             ' "cola.inotify" is false.\n'

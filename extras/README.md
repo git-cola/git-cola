@@ -1,11 +1,11 @@
 # extras
 
 The extras directory contains third-party code that is used
-by Git Cola.
+by Git Fanta.
 
 ## sphinxtogithub
 
-Git Cola uses
+Git Fanta uses
 [sphinx-to-github](https://github.com/michaeljones/sphinx-to-github)
 for massaging the output of the
 [Sphinx](https://github.com/sphinx-doc/sphinx)-generated documentation.

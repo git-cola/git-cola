@@ -1,7 +1,7 @@
 # Copyright (c) 2018-2024 David Aguilar <davvid@gmail.com>
 #
-# Git Cola is GPL licensed, but this file has a more permissive license.
-# This file is dual-licensed Git Cola GPL + pyqimageview MIT.
+# Git Fanta is GPL licensed, but this file has a more permissive license.
+# This file is dual-licensed Git Fanta GPL + pyqimageview MIT.
 # imageview.py was originally based on the pyqimageview:
 # https://github.com/nevion/pyqimageview/
 #

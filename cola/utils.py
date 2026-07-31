@@ -303,7 +303,7 @@ def shell_split(value: str) -> list[Any | str]:
 
 
 def tmp_filename(label: str, suffix: str = '') -> str:
-    label = 'git-cola-' + label.replace('/', '-').replace('\\', '-')
+    label = 'git-fanta-' + label.replace('/', '-').replace('\\', '-')
     with tempfile.NamedTemporaryFile(
         prefix=label + '-', suffix=suffix, delete=False
     ) as handle:

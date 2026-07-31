@@ -97,7 +97,7 @@ def setup_environment() -> None:
                 compat.setenv('SHELL', shell)
                 break
 
-    # Setup the path so that git finds us when we run 'git cola'
+    # Setup the path so that git finds us when we run 'git fanta'
     path_entries = core.getenv('PATH', '').split(os.pathsep)
     bindir = core.decode(os.path.dirname(sys_argv0))
     path_entries.append(bindir)
@@ -178,11 +178,11 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
     """Return the default icon theme names"""
     result = []
 
-    icon_themes_env = core.getenv('GIT_COLA_ICON_THEME')
+    icon_themes_env = compat.getenv_with_legacy('GIT_FANTA_ICON_THEME')
     if icon_themes_env:
         result.extend([x for x in icon_themes_env.split(':') if x])
 
-    icon_themes_cfg = list(reversed(context.cfg.get_all('cola.icontheme')))
+    icon_themes_cfg = list(reversed(context.cfg.get_all('fanta.icontheme')))
     if not icon_themes_cfg or icon_themes_cfg[0] == 'default':
         result.append(detect_system_theme())
 
@@ -195,7 +195,7 @@ def get_icon_themes(context: ApplicationContext) -> list[str]:
 def set_application_name(app_name) -> None:
     """Tell Qt and Cocoa the user-visible application name.
 
-    Without this, a non-bundled launch on macOS (running ``git-cola`` via the
+    Without this, a non-bundled launch on macOS (running ``git-fanta`` via the
     system ``python3``) shows ``python3`` in the menu bar, the Apple menu
     "Hide" / "Quit" items, and in the dock, because Cocoa derives all of
     those from the executable name.
@@ -275,17 +275,17 @@ class ColaApplication:
         icons.install(icon_themes or get_icon_themes(context))
         # Icons must be installed before setting icons.
         self._app.setWindowIcon(icons.cola())
-        self._app.setDesktopFileName('git-cola')
+        self._app.setDesktopFileName('git-fanta')
         self._install_style(gui_theme)
 
     def _install_style(self, theme_str: None) -> None:
         """Generate and apply a stylesheet to the app"""
         if theme_str is None:
-            theme_str = self.context.cfg.get('cola.theme', default='default')
+            theme_str = self.context.cfg.get('fanta.theme', default='default')
         theme = themes.find_theme(theme_str)
         self.theme = theme
 
-        bold_fonts = self.context.cfg.get('cola.boldfonts', default=False)
+        bold_fonts = self.context.cfg.get('fanta.boldfonts', default=False)
         theme_stylesheet = theme.build_style_sheet(self._app.palette(), bold_fonts)
         self._app.setStyleSheet(theme_stylesheet)
 
@@ -297,7 +297,7 @@ class ColaApplication:
 
     def refresh_system_appearance(self) -> None:
         """Rebuild styles that follow the system palette."""
-        theme_str = self.context.cfg.get('cola.theme', default='default')
+        theme_str = self.context.cfg.get('fanta.theme', default='default')
         if theme_str != 'default':
             return
 
@@ -305,7 +305,7 @@ class ColaApplication:
 
     def _install_hidpi_config(self) -> None:
         """Sets QT HiDPI scaling (requires Qt 5.6)"""
-        value = self.context.cfg.get('cola.hidpi', default=hidpi.Option.AUTO)
+        value = self.context.cfg.get('fanta.hidpi', default=hidpi.Option.AUTO)
         hidpi.apply_choice(value)
 
     def activeWindow(self) -> QtWidgets | None:
@@ -370,7 +370,7 @@ class ColaQApplication(QtWidgets.QApplication):
             if context:
                 cfg = context.cfg
                 if context.git.is_valid() and cfg.get(
-                    'cola.refreshonfocus', default=False
+                    'fanta.refreshonfocus', default=False
                 ):
                     cmds.do(cmds.Refresh, context)
         return super().event(e)
@@ -393,7 +393,7 @@ class ColaQApplication(QtWidgets.QApplication):
 def process_args(args: argparse.Namespace, setup_repo: bool = False) -> None:
     """Process and verify command-line arguments"""
     if args.version:
-        # Accept 'git cola --version' or 'git cola version'
+        # Accept 'git fanta --version' or 'git fanta version'
         version.print_version()
         sys.exit(core.EXIT_SUCCESS)
 
@@ -441,11 +441,11 @@ def restore_session(args: argparse.Namespace) -> None:
 def application_init(
     args: argparse.Namespace,
     update: bool = False,
-    app_name: str = 'Git Cola',
+    app_name: str = 'Git Fanta',
     setup_worktree: bool = True,
     setup_repo: bool = False,
 ) -> ApplicationContext:
-    """Parses the command-line arguments and starts git-cola"""
+    """Parses the command-line arguments and starts git-fanta"""
     # Ensure that we're working in a valid git repository.
     # If not, try to find one.  When found, chdir there.
     setup_environment()
@@ -469,7 +469,7 @@ def application_init(
 
 
 def new_context(
-    args: argparse.Namespace, app_name: str = 'Git Cola'
+    args: argparse.Namespace, app_name: str = 'Git Fanta'
 ) -> ApplicationContext:
     """Create top-level ApplicationContext objects"""
     context = ApplicationContext(args)
@@ -592,7 +592,7 @@ def default_stop(_context: ApplicationContext, _view: ViewType) -> None:
 
 def add_common_arguments(parser: argparse.ArgumentParser) -> None:
     """Add command arguments to the ArgumentParser"""
-    # We also accept 'git cola version'
+    # We also accept 'git fanta version'
     parser.add_argument(
         '--version', default=False, action='store_true', help='print version number'
     )
@@ -666,7 +666,7 @@ def new_worktree(context: ApplicationContext, repo: str, prompt: bool) -> None:
             # We are not currently in a git repository so we need to find one.
             # Before prompting the user for a repository, check if they've
             # configured a default repository and attempt to use it.
-            default_repo = cfg.get('cola.defaultrepo')
+            default_repo = cfg.get('fanta.defaultrepo')
             if default_repo:
                 valid = model.set_worktree(default_repo)
 
@@ -709,9 +709,9 @@ def offer_to_create_repo(context, gitdir) -> None:
 def async_update(context: ApplicationContext) -> None:
     """Update the model in the background
 
-    git-cola should startup as quickly as possible.
+    git-fanta should startup as quickly as possible.
     """
-    update_index = context.cfg.get('cola.updateindex', True)
+    update_index = context.cfg.get('fanta.updateindex', True)
     update_status = partial(context.model.update_status, update_index=update_index)
     task = qtutils.SimpleTask(update_status)
     context.runtask.start(task)
@@ -719,22 +719,24 @@ def async_update(context: ApplicationContext) -> None:
 
 def startup_message() -> None:
     """Print debug startup messages"""
-    trace = git.GIT_COLA_TRACE
+    trace = git.GIT_FANTA_TRACE
     if trace in ('2', 'trace'):
         msg1 = 'info: debug level 2: trace mode enabled'
-        msg2 = 'info: set GIT_COLA_TRACE=1 for less-verbose output'
+        msg2 = 'info: set GIT_FANTA_TRACE=1 for less-verbose output'
         Interaction.log(msg1)
         Interaction.log(msg2)
     elif trace:
         msg1 = 'info: debug level 1'
-        msg2 = 'info: set GIT_COLA_TRACE=2 for trace mode'
+        msg2 = 'info: set GIT_FANTA_TRACE=2 for trace mode'
         Interaction.log(msg1)
         Interaction.log(msg2)
 
 
 def initialize() -> str:
     """System-level initialization"""
-    # We support ~/.config/git-cola/git-bindir on Windows for configuring
+    # git-fanta was renamed from git-cola: carry ~/.config/git-cola over once.
+    resources.migrate_config_home()
+    # We support ~/.config/git-fanta/git-bindir on Windows for configuring
     # a custom location for finding the "git" executable.
     git_path = find_git()
     if git_path:
@@ -897,7 +899,7 @@ def find_git() -> str | None:
 
     # If the user wants to use a Git/bin/ directory from a non-standard
     # directory then they can write its location into
-    # ~/.config/git-cola/git-bindir
+    # ~/.config/git-fanta/git-bindir
     git_bindir = resources.config_home('git-bindir')
     if core.exists(git_bindir):
         custom_path = core.read(git_bindir).strip()

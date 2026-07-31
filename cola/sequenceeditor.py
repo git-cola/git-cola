@@ -9,6 +9,7 @@ from typing import Any
 from typing import Callable
 
 from cola import app  # prints a message if Qt cannot be found
+from cola import compat
 from cola import core
 from cola import difftool
 from cola import gitcmds
@@ -68,7 +69,7 @@ ABBREV = {
 
 
 def main() -> int:
-    """Start a git-cola-sequence-editor session"""
+    """Start a git-fanta-sequence-editor session"""
     args = parse_args()
     context = app.application_init(args)
     view = new_window(context, args.filename)
@@ -104,7 +105,7 @@ def unabbrev(cmd: str) -> str | None:
 
 
 class MainWindow(standard.MainWindow):
-    """The main git-cola application window"""
+    """The main git-fanta application window"""
 
     def __init__(self, context: ApplicationContext, parent: Any = None) -> None:
         super().__init__(parent)
@@ -113,8 +114,8 @@ class MainWindow(standard.MainWindow):
         # If the user closes the window without confirmation it's considered cancelled.
         self.cancelled = True
         self.editor: Any = None
-        default_title = '%s - git cola sequence editor' % core.getcwd()
-        title = core.getenv('GIT_COLA_SEQ_EDITOR_TITLE', default_title)
+        default_title = '%s - git fanta sequence editor' % core.getcwd()
+        title = compat.getenv_with_legacy('GIT_FANTA_SEQ_EDITOR_TITLE', default_title)
         self.setWindowTitle(title)
         self.show_help_action = qtutils.add_action(
             self, N_('Show Help'), partial(show_help, context), hotkeys.QUESTION
@@ -174,7 +175,7 @@ class Editor(QtWidgets.QWidget):
         self.setFocusProxy(self.tree)
 
         self.rebase_button = qtutils.create_button(
-            text=core.getenv('GIT_COLA_SEQ_EDITOR_ACTION', N_('Rebase')),
+            text=compat.getenv_with_legacy('GIT_FANTA_SEQ_EDITOR_ACTION', N_('Rebase')),
             tooltip=N_('Accept changes and rebase\nShortcut: Ctrl+Enter'),
             icon=icons.ok(),
             default=True,
@@ -986,5 +987,5 @@ ctrl+q     = cancel and abort the rebase
 ctrl+d     = launch difftool
 """
     )
-    title = N_('Help - git-cola-sequence-editor')
+    title = N_('Help - git-fanta-sequence-editor')
     return text.text_dialog(context, help_text, title)

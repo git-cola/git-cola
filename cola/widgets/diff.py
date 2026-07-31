@@ -1495,7 +1495,7 @@ class DiffEditor(DiffTextEdit):
                 action = qtutils.add_action_with_icon(
                     menu,
                     icons.cola(),
-                    N_('Launch git-cola'),
+                    N_('Launch git-fanta'),
                     cmds.run(cmds.OpenRepo, context, path),
                 )
                 add_action(action)
@@ -1557,7 +1557,7 @@ class DiffEditor(DiffTextEdit):
                 qtutils.add_action_with_icon(
                     menu,
                     icons.cola(),
-                    N_('Launch git-cola'),
+                    N_('Launch git-fanta'),
                     cmds.run(cmds.OpenRepo, context, path),
                 )
                 add_action(action)

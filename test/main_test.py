@@ -1,4 +1,4 @@
-"""Tests for the git-cola command-line parser."""
+"""Tests for the git-fanta command-line parser."""
 
 from cola import main
 from cola.models import dag
@@ -38,3 +38,17 @@ def test_dag_namespace_marks_explicit_default_equal_ref_override():
 
     assert params.ref == 'main --'
     assert params.overridden('ref')
+
+
+def test_default_subcommand_is_fanta():
+    """Ohne Subkommando landet der Aufruf im "fanta"-Parser."""
+    args = main.parse_args(['fanta'])
+
+    assert args.func is main.cmd_cola
+
+
+def test_legacy_cola_subcommand_still_works():
+    """Das alte "cola"-Subkommando bleibt als Alias erhalten."""
+    args = main.parse_args(['cola'])
+
+    assert args.func is main.cmd_cola

@@ -117,8 +117,8 @@ class MainModel(QtCore.QObject):
         self.commitmsg = ''  # current commit message
         self._auto_commitmsg = ''  # e.g. .git/MERGE_MSG
         self._prev_commitmsg = ''  # saved here when clobbered by .git/MERGE_MSG
-        self._cola_commitmsg = ''  # last content loaded from .git/GIT_COLA_MSG
-        self._cola_commitmsg_mtime: float | None = None  # .git/GIT_COLA_MSG mtime on last read
+        self._cola_commitmsg = ''  # last content loaded from .git/GIT_FANTA_MSG
+        self._cola_commitmsg_mtime: float | None = None  # .git/GIT_FANTA_MSG mtime on last read
         self.object_format = 'sha1'  # repository object format variables.
         self.oid_len = git.OID_LENGTH_SHA1
         self.empty_tree_oid = git.EMPTY_TREE_SHA1
@@ -235,7 +235,7 @@ class MainModel(QtCore.QObject):
     def save_commitmsg(self, msg: str | None = None) -> str:
         if msg is None:
             msg = self.commitmsg
-        path = self.git.git_path('GIT_COLA_MSG')
+        path = self.git.git_path('GIT_FANTA_MSG')
         try:
             if not msg.endswith('\n'):
                 msg += '\n'
@@ -456,7 +456,7 @@ class MainModel(QtCore.QObject):
             self._update_cola_commitmsg()
 
     def _update_cola_commitmsg(self) -> None:
-        """Reload the commit message when .git/GIT_COLA_MSG changes on disk
+        """Reload the commit message when .git/GIT_FANTA_MSG changes on disk
 
         Updates the commit message only when the user has not modified the
         previously loaded content, so manual edits are never clobbered.

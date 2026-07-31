@@ -120,7 +120,7 @@ class ToolBarState:
             try:
                 toolbar.set_toolbar_style(data['toolbar_style'])
             except KeyError:
-                # Maintain compatibility for toolbars created in git-cola <= 3.11.0
+                # Maintain compatibility for toolbars created in git-fanta <= 3.11.0
                 if data['show_icons']:
                     data['toolbar_style'] = ToolBar.STYLE_FOLLOW_SYSTEM
                     toolbar.set_toolbar_style(ToolBar.STYLE_FOLLOW_SYSTEM)
@@ -149,7 +149,7 @@ class ToolBarState:
             if toolbar_area == Qt.NoToolBarArea:
                 continue  # filter out removed toolbars
             items = [x.data() for x in toolbar.actions()]
-            # show_icons is for backwards compatibility with git-cola <= 3.11.0
+            # show_icons is for backwards compatibility with git-fanta <= 3.11.0
             show_icons = toolbar.toolbar_style() != ToolBar.STYLE_TEXT_ONLY
             result.append({
                 'name': toolbar.windowTitle(),
@@ -301,7 +301,7 @@ def decode_toolbar_area(string):
 
 
 class ToolbarView(standard.Dialog):
-    """Provides the git-cola 'ToolBar' configure dialog"""
+    """Provides the git-fanta 'ToolBar' configure dialog"""
 
     SEPARATOR_TEXT = '----------------------------'
 

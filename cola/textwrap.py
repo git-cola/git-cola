@@ -8,7 +8,7 @@ from .compat import ustr
 # Copyright (C) 2002, 2003 Python Software Foundation.
 # Copyright (C) 2013-2024 David Aguilar
 # Written by Greg Ward <gward@python.net>
-# Simplified for git-cola by David Aguilar <davvid@gmail.com>
+# Simplified for git-fanta by David Aguilar <davvid@gmail.com>
 
 
 class TextWrapper:

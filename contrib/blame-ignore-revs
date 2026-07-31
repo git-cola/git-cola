@@ -58,9 +58,9 @@ a5c68561b10f50a259bf9fe666b9a96600f0dc13
 81320f528baf2172d7a640af68169791f5600890
 # logo: Reformat SVG markup using HTML Tidy
 e927d600341e1037097219f5531d5a7ef7914006
-# i18n: update git-cola.pot to the simpler format
+# i18n: update git-fanta.pot to the simpler format
 097b079fe8e095e73c8cec258245c8a9ba5e8b85
-# extras: simplify git-cola.pot format
+# extras: simplify git-fanta.pot format
 f6f68c12b3ebd1d324e9d5d90e74553edf8efac4
 # widgets.browse: reformat for readability
 fda6774fa1a0952b34668e9f6f94365d4b138039

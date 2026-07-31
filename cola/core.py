@@ -236,9 +236,9 @@ def start_command(
         cwd = encode(cwd)
 
     if WIN32:
-        # If git-cola is invoked on Windows using "start pythonw git-cola",
+        # If git-fanta is invoked on Windows using "start pythonw git-fanta",
         # a console window will briefly flash on the screen each time
-        # git-cola invokes git, which is very annoying.  The code below
+        # git-fanta invokes git, which is very annoying.  The code below
         # prevents this by ensuring that any window will be hidden.
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW

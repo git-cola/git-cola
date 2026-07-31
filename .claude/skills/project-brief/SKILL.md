@@ -5,9 +5,14 @@ description: Orientation for the git-fanta repository — what it is, how the co
 
 # git-fanta
 
-A fork of **git-cola**, the Qt desktop GUI for Git. Upstream naming is untouched — the Python
-package is `cola`, `pyproject.toml` still says `git-cola`, and only the remote
-(`hermes-agent-ak/git-fanta`) and the working directory carry the fork name. Do not "fix" that.
+A fork of git-cola, the Qt desktop GUI for Git, renamed to **git-fanta**. Everything
+user-facing carries the fork name: the `git-fanta` executable, the `git fanta` subcommand,
+`fanta.*` git-config keys, `GIT_FANTA_*` environment variables and `~/.config/git-fanta`.
+The Python package is still `cola` (`import cola`, `cola/`) and `[tool.setuptools] packages`
+names it — that is deliberate, do not "fix" it. References to the upstream project
+(github.com/git-cola/git-cola, `brew install git-cola`, `CHANGES.rst`, the remotes in
+`garden.yaml`) are also deliberate and must stay. See
+`docs/plans/2026-07-30-rename-to-git-fanta.md`.
 
 The fork's own work so far is UI: making the commit history graph a first-class part of the main
 window rather than a separate DAG window. Read `references/fork-history.md` when you need to know
@@ -24,7 +29,7 @@ undo.
 | `cola/icons/` | The SVG assets. Check here before assuming an icon exists |
 | `test/` | 36 `*_test.py` files, flat, plus `helper.py`. No `conftest.py` — fixtures are defined per file or imported from `helper` |
 | `docs/plans/` | Implementation plans (see Workflow below) |
-| `bin/` | Launchers: `git-cola`, `git-dag`, `git-cola-sequence-editor` |
+| `bin/` | Launchers: `git-fanta`, `git-dag`, `git-fanta-sequence-editor` |
 
 ## Architecture in five sentences
 

@@ -8,7 +8,7 @@ dirname() {
 mydir="$(dirname "$0")"
 parentdir="$(dirname "$mydir")"
 
-# Windows uses 'git-cola.pyw' instead of 'git-cola'
+# Windows uses 'git-fanta.pyw' instead of 'git-fanta'
 COLA="$parentdir"/bin/git-dag
 if test -f "$COLA".pyw; then
 	COLA="$COLA".pyw

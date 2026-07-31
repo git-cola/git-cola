@@ -517,7 +517,7 @@ class BuildItem:
         self.star_icon = icons.star()
         self.folder_icon = icons.folder()
         cfg = context.cfg
-        self.default_repo = cfg.get('cola.defaultrepo')
+        self.default_repo = cfg.get('fanta.defaultrepo')
 
     def get(self, path, name):
         is_default = self.default_repo == path

@@ -10,7 +10,7 @@ assert app_context is not None
 
 def assert_color(context, expect, git_value, key='test', default=None):
     """Helper function for testing color values"""
-    helper.run_git('config', 'cola.color.%s' % key, git_value)
+    helper.run_git('config', 'fanta.color.%s' % key, git_value)
     context.cfg.reset()
     actual = context.cfg.color(key, default)
     assert expect == actual
@@ -147,3 +147,44 @@ def test_hooks_path_lowercase(app_context):
     expect = str(pathlib.Path('/test/hooks-lowercase/example'))
     actual = app_context.cfg.hooks_path('example')
     assert expect == actual
+
+
+def test_new_config_prefix_is_read(app_context):
+    """Ein fanta.*-Key wird gelesen."""
+    helper.run_git('config', 'fanta.tabwidth', '4')
+    app_context.cfg.reset()
+
+    assert app_context.cfg.get('fanta.tabwidth') == 4
+
+
+def test_legacy_config_prefix_is_still_read(app_context):
+    """Ein alter cola.*-Key wirkt weiterhin, wenn kein fanta.*-Key gesetzt ist."""
+    helper.run_git('config', 'cola.tabwidth', '8')
+    app_context.cfg.reset()
+
+    assert app_context.cfg.get('fanta.tabwidth') == 8
+
+
+def test_new_config_prefix_wins_over_legacy(app_context):
+    """Ist beides gesetzt, gewinnt der neue Key."""
+    helper.run_git('config', 'cola.tabwidth', '8')
+    helper.run_git('config', 'fanta.tabwidth', '2')
+    app_context.cfg.reset()
+
+    assert app_context.cfg.get('fanta.tabwidth') == 2
+
+
+def test_legacy_config_prefix_is_read_by_get_all(app_context):
+    """get_all() beruecksichtigt den alten Prefix ebenfalls."""
+    helper.run_git('config', '--add', 'cola.icontheme', 'dark')
+    app_context.cfg.reset()
+
+    assert 'dark' in app_context.cfg.get_all('fanta.icontheme')
+
+
+def test_unknown_key_still_returns_default(app_context):
+    """Der Fallback darf nicht dazu fuehren, dass fremde Keys plotzlich treffen."""
+    app_context.cfg.reset()
+
+    assert app_context.cfg.get('fanta.doesnotexist', default='x') == 'x'
+    assert app_context.cfg.get('other.doesnotexist', default='y') == 'y'

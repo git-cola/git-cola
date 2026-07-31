@@ -19,7 +19,7 @@ from . import text
 
 
 def clone(context, spawn=True, show=True):
-    """Clone a repository and spawn a new git-cola instance"""
+    """Clone a repository and spawn a new git-fanta instance"""
     parent = qtutils.active_window()
     progress = standard.progress('', '', parent)
     return clone_repo(context, show, progress, task_finished, spawn)
@@ -200,7 +200,7 @@ class Clone(standard.Dialog):
         olddestdir = destdir
         if core.exists(destdir):
             # An existing path can be specified
-            msg = N_('"%s" already exists, cola will create a new directory') % destdir
+            msg = N_('"%s" already exists, fanta will create a new directory') % destdir
             Interaction.information(N_('Directory Exists'), msg)
 
         # Make sure the directory doesn't exist

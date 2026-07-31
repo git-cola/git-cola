@@ -1,4 +1,4 @@
-Git Cola Dark Icons
+Git Fanta Dark Icons
 --------------
 All icons in this directory, besides color inversion,
 are unmodified original ones. All kudos and copyrights go to their
@@ -8,11 +8,11 @@ respective authors ( see original readme below ).
 
 --------------------
 
-Git Cola Icons
+Git Fanta Icons
 --------------
 
 The following icons are based on the based on the original .png icon designs
-for git-cola's File Browser by Uri Okrent.
+for git-fanta's File Browser by Uri Okrent.
 
 staged.svg
 modified.svg
@@ -31,7 +31,7 @@ Git Logo by Jason Long is licensed under the
 Creative Commons Attribution 3.0 Unported License.
 http://git-scm.com/downloads/logos
 
-git-cola.svg is based on the original Git Logo.
+git-fanta.svg is based on the original Git Logo.
 
 
 Octicons

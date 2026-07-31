@@ -1460,7 +1460,7 @@ class ToggleDiffType(ContextCommand):
         filename = self.model.filename
         _, ext = os.path.splitext(filename)
         if ext.startswith('.'):
-            cfg = 'cola.imagediff' + ext
+            cfg = 'fanta.imagediff' + ext
             self.cfg.set_repo(cfg, value)
 
 
@@ -1495,7 +1495,7 @@ class DiffImage(EditModel):
         _, ext = os.path.splitext(filename)
         if ext.startswith('.'):
             # Check e.g. "cola.imagediff.svg" to see if we should imagediff.
-            cfg = 'cola.imagediff' + ext
+            cfg = 'fanta.imagediff' + ext
             if self.cfg.get(cfg, True):
                 result = main.Types.IMAGE
             else:
@@ -1958,7 +1958,7 @@ class LoadCommitMessageFromOID(ContextCommand):
 
 
 class PrepareCommitMessageHook(ContextCommand):
-    """Use the cola-prepare-commit-msg hook to prepare the commit message"""
+    """Use the fanta-prepare-commit-msg hook to prepare the commit message"""
 
     UNDOABLE = True
 
@@ -1971,7 +1971,7 @@ class PrepareCommitMessageHook(ContextCommand):
         hook = gitcmds.prepare_commit_message_hook(self.context)
 
         if os.path.exists(hook):
-            Interaction.log('hook cola-prepare-commit-msg exists: "%s"' % hook)
+            Interaction.log('hook fanta-prepare-commit-msg exists: "%s"' % hook)
             filename = self.model.save_commitmsg()
 
             if utils.is_win32():
@@ -2146,7 +2146,7 @@ class OpenWorktree(OpenDir):
 
 
 class OpenNewRepo(ContextCommand):
-    """Launches git-cola on a repo."""
+    """Launches git-fanta on a repo."""
 
     def __init__(self, context: ApplicationContext, repo_path) -> None:
         super().__init__(context)
@@ -2300,8 +2300,8 @@ def unix_path(path: str, is_win32: Callable = utils.is_win32) -> str:
 
 
 def sequence_editor() -> str:
-    """Set GIT_SEQUENCE_EDITOR for running git-cola-sequence-editor"""
-    xbase = unix_path(resources.command('git-cola-sequence-editor'))
+    """Set GIT_SEQUENCE_EDITOR for running git-fanta-sequence-editor"""
+    xbase = unix_path(resources.command('git-fanta-sequence-editor'))
     if utils.is_win32():
         editor = core.list2cmdline([unix_path(sys.executable), xbase])
     else:
@@ -2310,7 +2310,7 @@ def sequence_editor() -> str:
 
 
 class SequenceEditorEnvironment:
-    """Set environment variables to enable git-cola-sequence-editor"""
+    """Set environment variables to enable git-fanta-sequence-editor"""
 
     def __init__(self, context: ApplicationContext, **kwargs) -> None:
         self.env = {
@@ -2442,11 +2442,11 @@ class Rebase(ContextCommand):
 
         with SequenceEditorEnvironment(
             self.context,
-            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase onto %s') % upstream_title,
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_TITLE=N_('Rebase onto %s') % upstream_title,
+            GIT_FANTA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             # This blocks the user interface window for the duration
-            # of git-cola-sequence-editor. We would need to run the command
+            # of git-fanta-sequence-editor. We would need to run the command
             # in a QRunnable task to avoid blocking the main thread.
             # Alternatively, we can hide the main window while rebasing,
             # which doesn't require as much effort.
@@ -2468,8 +2468,8 @@ class RebaseEditTodo(ContextCommand):
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
-            GIT_COLA_SEQ_EDITOR_TITLE=N_('Edit Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Save'),
+            GIT_FANTA_SEQ_EDITOR_TITLE=N_('Edit Rebase'),
+            GIT_FANTA_SEQ_EDITOR_ACTION=N_('Save'),
         ):
             status, out, err = self.git.rebase(edit_todo=True)
         Interaction.log_status(status, out, err)
@@ -2485,8 +2485,8 @@ class RebaseContinue(ContextCommand):
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
-            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_TITLE=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             status, out, err = self.git.rebase('--continue')
         Interaction.log_status(status, out, err)
@@ -2502,8 +2502,8 @@ class RebaseSkip(ContextCommand):
         (status, out, err) = (1, '', '')
         with SequenceEditorEnvironment(
             self.context,
-            GIT_COLA_SEQ_EDITOR_TITLE=N_('Rebase'),
-            GIT_COLA_SEQ_EDITOR_ACTION=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_TITLE=N_('Rebase'),
+            GIT_FANTA_SEQ_EDITOR_ACTION=N_('Rebase'),
         ):
             status, out, err = self.git.rebase(skip=True)
         Interaction.log_status(status, out, err)
@@ -2752,7 +2752,7 @@ class SetDefaultRepo(ContextCommand):
         self.repo = repo
 
     def do(self) -> None:
-        self.cfg.set_user('cola.defaultrepo', self.repo)
+        self.cfg.set_user('fanta.defaultrepo', self.repo)
 
 
 class SetDiffText(EditModel):
@@ -2832,7 +2832,7 @@ class ShowUntracked(EditModel):
     def read(self, filename) -> str:
         """Read file contents"""
         cfg = self.cfg
-        size = cfg.get('cola.readsize', 2048)
+        size = cfg.get('fanta.readsize', 2048)
         try:
             result: TextType = core.read(filename, size=size, encoding='bytes')
         except OSError:
@@ -2978,7 +2978,7 @@ class Stage(ContextCommand):
         context = self.context
         paths = self.paths
         if not paths:
-            if self.model.cfg.get('cola.safemode', False):
+            if self.model.cfg.get('fanta.safemode', False):
                 return (0, '', '')
             return self.stage_all()
 
@@ -3111,7 +3111,7 @@ class StageOrUnstageAll(ContextCommand):
         if self.model.staged:
             do(Unstage, self.context, self.model.staged)
         else:
-            if self.cfg.get('cola.safemode', False):
+            if self.cfg.get('fanta.safemode', False):
                 unstaged = self.model.modified
             else:
                 unstaged = self.model.modified + self.model.untracked
@@ -3309,7 +3309,7 @@ class StageSelected(ContextCommand):
         paths = self.selection.unstaged
         if paths:
             do(Stage, context, paths)
-        elif self.cfg.get('cola.safemode', False):
+        elif self.cfg.get('fanta.safemode', False):
             do(StageModified, context)
 
 

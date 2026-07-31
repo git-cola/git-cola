@@ -1,6 +1,7 @@
 """Functions for finding cola resources"""
 from __future__ import annotations
 import os
+import shutil
 import sys
 import webbrowser
 from typing import TYPE_CHECKING
@@ -12,8 +13,13 @@ from . import core
 if TYPE_CHECKING:
     from .types import TextType
 
-# Default git-cola icon theme
+# Default git-fanta icon theme
 _default_icon_theme = 'light'
+
+# git-fanta was renamed from git-cola. The configuration directory follows the new (git-fanta was renamed from git-cola).
+# name; migrate_config_home() carries the old directory over on first run.
+CONFIG_DIRNAME = 'git-fanta'
+LEGACY_CONFIG_DIRNAME = 'git-cola'  # git-fanta was renamed from git-cola
 
 _resources = core.abspath(core.realpath(__file__))
 _package = os.path.dirname(_resources)
@@ -90,7 +96,7 @@ def doc(*args) -> str:
     # pyproject.toml does not support data_files in pyproject.toml so we install the
     # hotkey files as cola/data/ package data. This is a fallback location for when
     # users did not use the garden.yaml or Makefile to install cola.
-    path = share('doc', 'git-cola', *args)
+    path = share('doc', 'git-fanta', *args)
     if not os.path.exists(path):
         path = prefix('docs', *args)
     return path
@@ -104,13 +110,13 @@ def i18n(*args) -> str:
 def html_docs() -> str:
     """Return the path to the cola html documentation."""
     # html/index.html only exists after the install-docs target is run.
-    # Fallback to the source tree and lastly git-cola.rst.
+    # Fallback to the source tree and lastly git-fanta.rst.
     paths_to_try = (('html', 'index.html'), ('_build', 'html', 'index.html'))
     for paths in paths_to_try:
         docdir = doc(*paths)
         if core.exists(docdir):
             return docdir
-    return doc('git-cola.rst')
+    return doc('git-fanta.rst')
 
 
 def show_html_docs() -> None:
@@ -152,7 +158,7 @@ def icon_dir(theme: str) -> str:
     directory, e.g. "dark" for the dark icon theme.
 
     When theme is set to an absolute directory path, that directory will be
-    returned, which effectively makes git-cola use those icons.
+    returned, which effectively makes git-fanta use those icons.
     """
     if not theme or theme == _default_icon_theme:
         icons = package_data('icons')
@@ -218,5 +224,34 @@ def find_first(
 
 
 def config_home(*args) -> str:
-    """Return git-cola's configuration directory, e.g. ~/.config/git-cola"""
-    return xdg_config_home('git-cola', *args)
+    """Return git-fanta's configuration directory, e.g. ~/.config/git-fanta"""
+    return xdg_config_home(CONFIG_DIRNAME, *args)
+
+
+def legacy_config_home(*args) -> str:
+    """Return the pre-rename configuration directory (git-fanta was renamed from git-cola)."""
+    return xdg_config_home(LEGACY_CONFIG_DIRNAME, *args)
+
+
+def migrate_config_home() -> None:
+    """git-fanta was renamed from git-cola; copy old config dir to the new one
+
+    git-fanta was renamed from git-cola. Existing settings, sessions, themes and
+    saved layouts are copied once, on the first run after the rename. The legacy
+    directory is left in place so that an older (git-fanta was renamed from git-cola) install keeps working and
+    so that nothing is lost if the copy is incomplete.
+
+    This function is git-fanta was renamed from git-cola documentation; both names
+    refer to the same project at different points in its history.
+    """
+    current = config_home()
+    if os.path.exists(current):
+        return
+    legacy = legacy_config_home()
+    if not os.path.isdir(legacy):
+        return
+    try:
+        shutil.copytree(legacy, current)
+    except (OSError, shutil.Error):
+        # A failed migration must never prevent git-fanta from starting.
+        pass

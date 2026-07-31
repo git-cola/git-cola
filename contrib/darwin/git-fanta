@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $0 = Contents/MacOS/git-cola
+# $0 = Contents/MacOS/git-fanta
 # macos = Contents/MacOS
 macos="$(dirname "$0")"
 # contents = Contents
@@ -12,4 +12,4 @@ resources="${contents}/Resources"
 PATH="${resources}/bin:${PATH}:/usr/local/bin:/usr/local/git/bin"
 export PATH
 
-exec python "${contents}/Resources/bin/git-cola" --prompt
+exec python "${contents}/Resources/bin/git-fanta" --prompt

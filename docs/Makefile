@@ -1,5 +1,5 @@
 prefix ?= $(CURDIR)
-docdir ?= $(prefix)/share/doc/git-cola
+docdir ?= $(prefix)/share/doc/git-fanta
 htmldir ?= $(docdir)/html
 mandir ?= $(prefix)/share/man/man1
 # DESTDIR =
@@ -93,5 +93,5 @@ install-html: install-files html
 
 install-man: man
 	$(MKDIR_P) $(DESTDIR)$(mandir)
-	$(INSTALL) -m 644 _build/man/git-cola.1 $(DESTDIR)$(mandir)
+	$(INSTALL) -m 644 _build/man/git-fanta.1 $(DESTDIR)$(mandir)
 	$(INSTALL) -m 644 _build/man/git-dag.1 $(DESTDIR)$(mandir)

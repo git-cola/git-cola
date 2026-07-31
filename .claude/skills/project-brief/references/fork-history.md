@@ -1,6 +1,6 @@
 # What this fork changed, and the decisions behind it
 
-git-fanta tracks git-cola and adds UI work around the commit history. Two features have shipped
+git-fanta tracks git-fanta and adds UI work around the commit history. Two features have shipped
 so far. Both have a plan document in `docs/plans/` that records the reasoning; read the plan
 before changing the feature, because several constraints in the code look arbitrary until you
 see why they were chosen.

@@ -116,3 +116,19 @@ those files.
 error codes disabled). It checks `bin` and `cola`, not `test`.
 
 **Python 3.9 is the floor**, enforced by `pyupgrade --py39-plus` in CI and pre-commit.
+
+## git-fanta is renamed from git-cola — das hat vier stille Kanten
+
+1. `cola/widgets/toolbar.py:253` löst Icon-Namen über `getattr(icons, name, None)` auf, und
+   `cola/widgets/toolbarcmds.py:283`/`:285` setzen `'icon': 'cola'`. `icons.cola()` umzubenennen
+   entfernt das Icon lautlos — kein Fehler, kein Log. Deshalb heißt die Funktion weiterhin
+   `cola()`, obwohl die Datei `git-fanta.svg` heißt.
+2. `cola/version.py` fragt `metadata.version('git-fanta')`. Der String muss dem `name` in
+   `pyproject.toml` entsprechen, sonst fällt die Versionsanzeige still auf den Builtin-Wert
+   zurück. `test/rename_guard_test.py::test_distribution_name_matches_pyproject` bewacht das.
+3. `.github/workflows/ci.yml` installiert per `brew install git-cola` die echte Homebrew-Formel
+   als Abhängigkeit des macOS-Jobs. Diese Zeile ist kein Rename-Rückstand.
+4. Die git-config-Keys heißen `fanta.*`, `cola/gitcfg.py` liest den alten `cola.`-Prefix aber
+   weiter als Fallback. Das heißt: ein vergessener `'cola.irgendwas'`-Literal im Code fällt
+   **nicht** durch einen roten Test auf. `test_no_legacy_config_key_literals` in
+   `test/rename_guard_test.py` ist die einzige Instanz, die das bemerkt.

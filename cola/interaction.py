@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from typing import Callable
 
+from . import compat
 from . import core
 from .i18n import N_
 
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
 class Interaction:
     """Prompts the user and answers questions"""
 
-    VERBOSE = bool(os.getenv('GIT_COLA_VERBOSE'))
+    VERBOSE = bool(compat.getenv_with_legacy('GIT_FANTA_VERBOSE'))
 
     @classmethod
     def command(

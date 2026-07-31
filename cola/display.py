@@ -106,9 +106,9 @@ def push_notification(
             context.notifier.information.emit(title, dict(message=message))
     else:
         if error:
-            icon = resources.icon_path('git-cola-error.svg')
+            icon = resources.icon_path('git-fanta-error.svg')
         else:
-            icon = resources.icon_path('git-cola-ok.svg')
+            icon = resources.icon_path('git-fanta-ok.svg')
         notify(context, title, message, icon)
 
 

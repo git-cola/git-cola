@@ -866,7 +866,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if len(self.staged()) == 1:
             menu.addAction(
                 icons.cola(),
-                N_('Launch git-cola'),
+                N_('Launch git-fanta'),
                 cmds.run(cmds.OpenRepo, context, path),
             )
             menu.addSeparator()
@@ -967,7 +967,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         if len(self.unstaged()) == 1:
             menu.addAction(
                 icons.cola(),
-                N_('Launch git-cola'),
+                N_('Launch git-fanta'),
                 cmds.run(cmds.OpenRepo, context, path),
             )
             menu.addAction(

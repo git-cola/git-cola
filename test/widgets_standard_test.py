@@ -2,8 +2,8 @@
 from cola.widgets.standard import _strip_maximized_geometry_flag
 from qtpy import QtCore
 
-# Real saveGeometry() blob captured from a maximised git-cola main window on
-# macOS 15 (recorded from ~/.config/git-cola/settings). The byte at offset 44
+# Real saveGeometry() blob captured from a maximised git-fanta main window on
+# macOS 15 (recorded from ~/.config/git-fanta/settings). The byte at offset 44
 # is 0x02 ("maximized" flag). Qt does not always write 0x01 here.
 _MAXIMIZED_BLOB_B64 = b'AdnQywADAAAAAAAAAAAAJgAABecAAAPVAAAAAAAAAEIAAAXl' b'AAAD0wAAAAACAAAABegAAAAAAAAAQgAABecAAAPV'
 

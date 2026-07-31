@@ -30,7 +30,7 @@ class StartupDialog(standard.Dialog):
     def __init__(self, context, parent=None):
         standard.Dialog.__init__(self, parent)
         self.context = context
-        self.setWindowTitle(N_('git-cola'))
+        self.setWindowTitle(N_('git-fanta'))
 
         # Top-most large icon
         self.logo_label = qtutils.pixmap_label(icons.cola(), defs.huge_icon)
@@ -141,7 +141,7 @@ class StartupDialog(standard.Dialog):
         self.bookmarks.setFocus()
 
         # Update the list mode
-        list_mode = context.cfg.get('cola.startupmode', default='folder')
+        list_mode = context.cfg.get('fanta.startupmode', default='folder')
         self.list_mode = list_mode
         if list_mode == 'list':
             self.tab_bar.setCurrentIndex(1)
@@ -186,7 +186,7 @@ class StartupDialog(standard.Dialog):
 
         if list_mode != self.list_mode:
             self.list_mode = list_mode
-            self.context.cfg.set_user('cola.startupmode', list_mode)
+            self.context.cfg.set_user('fanta.startupmode', list_mode)
 
     def resize_widget(self):
         width, height = qtutils.desktop_size()
@@ -568,7 +568,7 @@ class BuildItem:
         self.star_icon = icons.star()
         self.folder_icon = icons.folder()
         cfg = context.cfg
-        self.default_repo = cfg.get('cola.defaultrepo')
+        self.default_repo = cfg.get('fanta.defaultrepo')
 
     def get(self, path, name, mode, is_bookmark):
         is_default = self.default_repo == path

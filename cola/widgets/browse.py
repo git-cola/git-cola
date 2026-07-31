@@ -258,7 +258,7 @@ class RepoTreeView(standard.TreeView):
     def size_columns(self, force=False):
         """Set the column widths."""
         cfg = self.context.cfg
-        should_resize = cfg.get('cola.resizebrowsercolumns', default=False)
+        should_resize = cfg.get('fanta.resizebrowsercolumns', default=False)
         if not force and not should_resize:
             return
         self.resizeColumnToContents(0)

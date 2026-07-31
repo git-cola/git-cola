@@ -29,15 +29,15 @@ def test_commit_strip_comments_unicode():
 
 
 def test_unix_path_win32():
-    path = r'Z:\Program Files\git-cola\bin\git-dag'
-    expect = '/Z/Program Files/git-cola/bin/git-dag'
+    path = r'Z:\Program Files\git-fanta\bin\git-dag'
+    expect = '/Z/Program Files/git-fanta/bin/git-dag'
     actual = cmds.unix_path(path, is_win32=lambda: True)
     assert expect == actual
 
 
 def test_unix_path_network_win32():
-    path = r'\\Z\Program Files\git-cola\bin\git-dag'
-    expect = '//Z/Program Files/git-cola/bin/git-dag'
+    path = r'\\Z\Program Files\git-fanta\bin\git-dag'
+    expect = '//Z/Program Files/git-fanta/bin/git-dag'
     actual = cmds.unix_path(path, is_win32=lambda: True)
     assert expect == actual
 

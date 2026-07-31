@@ -1,0 +1,218 @@
+"""Wächter-Tests für die Umbenennung git-fanta -> git-fanta.
+
+Zwei Invarianten werden hier festgeschrieben:
+
+1. Verweise auf das Upstream-Projekt (github.com/git-cola/git-cola und Freunde)
+   bleiben unverändert, weil sie auf ein echtes, weiterhin existierendes Projekt
+   zeigen.
+2. Der Produktname "git-fanta" kommt sonst nirgends mehr in den versionierten
+   Quellen vor.
+
+Test 2 wird erst in Task 2 des Umbenennungsplans hinzugefuegt.
+"""
+
+import pathlib
+import subprocess
+
+REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
+
+# Zeilen mit einem dieser Marker sind Upstream-Verweise und werden nie umbenannt.
+UPSTREAM_MARKERS = (
+    'github.com/git-cola',
+    'gitlab.com/git-cola',
+    'git-cola.github.io',
+    'git-cola.gitlab.io',
+    'git-cola.readthedocs.io',
+    'pypi.org/project/git-cola',
+    'src.fedoraproject.org/rpms/git-cola',
+    'results.pre-commit.ci',
+    'flathub/com.github.git_cola',
+    'brew install git-cola',
+    # Bewusste historische Nennung des Vorgaengerprojekts in Fliesstext. Wer den
+    # alten Namen in einer Doku-Zeile erwaehnen muss, benutzt genau eine dieser
+    # Formulierungen - dann ist die Absicht am Satz selbst ablesbar.
+    'fork of git-cola',
+    'renamed from git-cola',
+)
+
+# Diese Dateien und Praefixe werden komplett ausgespart.
+EXEMPT_FILES = frozenset({
+    'CHANGES.rst',
+    'garden.yaml',
+    'test/rename_guard_test.py',
+    'test/config_home_migration_test.py',
+    'test/env_rename_test.py',
+    'test/prepare_commit_msg_hook_test.py',
+})
+EXEMPT_PREFIXES = ('cola/i18n/', 'docs/plans/', 'qtpy/')
+
+# Der alte Produktname in allen Schreibweisen, die im Repo vorkommen.
+LEGACY_PRODUCT_NAMES = ('git-cola', 'git_cola', 'Git Cola', 'git cola')
+
+# Konkrete Upstream-Verweise, die nach der Umbenennung noch da sein muessen.
+# Format: (Pfad relativ zum Repo-Wurzelverzeichnis, erwarteter Teilstring)
+PROTECTED_REFERENCES = (
+    ('README.md', 'https://github.com/git-cola/git-cola.git'),
+    ('cola/gravatar.py', 'https://git-cola.github.io/images/git-64x64.jpg'),
+    ('cola/widgets/about.py', 'https://github.com/git-cola/git-cola/issues'),
+    ('cola/widgets/log.py', 'https://git-cola.readthedocs.io/en/latest/'),
+    ('cola/settings.py', 'https://github.com/git-cola/git-cola/issues/1241'),
+    ('cola/themes.py', 'https://github.com/git-cola/git-cola/issues/905'),
+    ('docs/conf.py', 'https://gitlab.com/git-cola/git-cola'),
+    ('.github/workflows/ci.yml', 'brew install git-cola'),
+    ('test/gravatar_test.py', 'git-cola.github.io'),
+)
+
+
+def tracked_text_files():
+    """Liefert (Pfad, Inhalt) fuer jede versionierte Textdatei ausserhalb der Ausnahmen."""
+    listing = subprocess.run(
+        ['git', 'ls-files', '-z'],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    for name in listing.split('\0'):
+        if not name or name in EXEMPT_FILES or name.startswith(EXEMPT_PREFIXES):
+            continue
+        path = REPO_ROOT / name
+        if path.is_symlink() or not path.is_file():
+            continue
+        try:
+            yield name, path.read_text(encoding='utf-8')
+        except (UnicodeDecodeError, OSError):
+            continue
+
+
+def test_upstream_references_are_preserved():
+    """Charakterisierung: Verweise auf das Upstream-Projekt bleiben erhalten."""
+    missing = []
+    for name, needle in PROTECTED_REFERENCES:
+        path = REPO_ROOT / name
+        if not path.is_file():
+            missing.append(f'{name}: Datei fehlt')
+            continue
+        if needle not in path.read_text(encoding='utf-8'):
+            missing.append(f'{name}: "{needle}" fehlt')
+
+    assert not missing, 'Upstream-Verweise wurden zerstoert:\n' + '\n'.join(missing)
+
+
+def test_changes_rst_history_is_untouched():
+    """Charakterisierung: die Upstream-Release-Historie wird nicht umgeschrieben."""
+    text = (REPO_ROOT / 'CHANGES.rst').read_text(encoding='utf-8')
+    assert 'git-cola' in text
+    assert 'git-fanta' not in text
+
+
+def test_product_name_is_git_fanta():
+    """Der alte Produktname kommt ausserhalb der Upstream-Verweise nicht mehr vor."""
+    offenders = []
+    for name, text in tracked_text_files():
+        for number, line in enumerate(text.splitlines(), start=1):
+            if any(marker in line for marker in UPSTREAM_MARKERS):
+                continue
+            if any(legacy in line for legacy in LEGACY_PRODUCT_NAMES):
+                offenders.append(f'{name}:{number}: {line.strip()[:100]}')
+
+    assert (
+        not offenders
+    ), f'{len(offenders)} Zeilen tragen noch den alten Produktnamen:\n' + '\n'.join(
+        offenders[:40]
+    )
+
+
+def test_no_legacy_product_name_in_tracked_filenames():
+    """Kein versionierter Dateiname enthaelt noch "git-cola" oder "_activate_cola"."""
+    listing = subprocess.run(
+        ['git', 'ls-files', '-z'],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    offenders = [
+        name
+        for name in listing.split('\0')
+        if name
+        and not name.startswith(('cola/i18n/', 'docs/plans/'))
+        and ('git-cola' in name or '_activate_cola' in name)
+    ]
+
+    assert not offenders, 'Diese Dateien muessen umbenannt werden:\n' + '\n'.join(
+        offenders
+    )
+
+
+def test_garden_build_commands_use_git_fanta():
+    """Die Build-Kommandos des Forks sind umbenannt, die Upstream-Remotes nicht."""
+    text = (REPO_ROOT / 'garden.yaml').read_text(encoding='utf-8')
+
+    # Fork-eigene Build-Artefakte tragen den neuen Namen.
+    assert './bin/git-fanta' in text
+    assert 'cola/icons/git-fanta.svg' in text
+    assert './bin/git-cola' not in text
+
+    # Upstream-Remotes bleiben erhalten.
+    assert 'davvid/git-cola.git' in text
+    assert 'git-cola/git-cola.git' in text
+
+
+def test_distribution_name_matches_pyproject():
+    """version.py fragt importlib.metadata mit genau dem Namen aus pyproject.toml.
+
+    Laufen die beiden auseinander, wirft importlib.metadata PackageNotFoundError
+    und die Versionsanzeige faellt still auf den Builtin-Wert zurueck.
+    """
+    import re
+
+    pyproject = (REPO_ROOT / 'pyproject.toml').read_text(encoding='utf-8')
+    match = re.search(r'^name\s*=\s*"([^"]+)"', pyproject, re.MULTILINE)
+    assert match, 'pyproject.toml hat keinen name-Eintrag'
+    distribution = match.group(1)
+
+    version_py = (REPO_ROOT / 'cola' / 'version.py').read_text(encoding='utf-8')
+    assert (
+        f"metadata.version('{distribution}')" in version_py
+    ), f'cola/version.py fragt nicht nach "{distribution}"'
+    assert distribution == 'git-fanta'
+
+
+def test_no_legacy_config_key_literals():
+    """Kein Quelltext-Literal benutzt mehr den alten cola.-Config-Prefix.
+
+    Der Fallback in cola/gitcfg.py laesst vergessene Keys funktionieren, ohne dass
+    ein Test rot wird. Dieser Test ist die einzige Instanz, die sie bemerkt.
+    """
+    import re
+
+    pattern = re.compile(r"'cola\.[a-z]")
+    offenders = []
+    for name, text in tracked_text_files():
+        if not name.startswith(('cola/', 'bin/')):
+            continue
+        for number, line in enumerate(text.splitlines(), start=1):
+            if pattern.search(line):
+                offenders.append(f'{name}:{number}: {line.strip()[:100]}')
+
+    assert (
+        not offenders
+    ), 'Diese Literale benutzen noch den alten Config-Prefix:\n' + '\n'.join(offenders)
+
+
+def test_translation_template_uses_the_new_product_name():
+    """Die nutzersichtbaren msgid-Strings tragen den neuen Produktnamen."""
+    pot = REPO_ROOT / 'cola' / 'i18n' / 'git-fanta.pot'
+    assert pot.is_file(), 'cola/i18n/git-fanta.pot fehlt'
+
+    msgids = [
+        line
+        for line in pot.read_text(encoding='utf-8').splitlines()
+        if line.startswith('msgid')
+    ]
+    offenders = [line for line in msgids if 'cola' in line.lower()]
+
+    assert not offenders, 'msgid-Strings tragen noch den alten Namen:\n' + '\n'.join(
+        offenders
+    )

@@ -1,10 +1,10 @@
 ======================
-Git Cola Documentation
+Git Fanta Documentation
 ======================
 .. toctree::
     :maxdepth: 3
 
-    git-cola
+    git-fanta
     git-dag
     thanks
 

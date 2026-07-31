@@ -688,7 +688,7 @@ def persist_clipboard_macos(text: str) -> None:
 
     Qt's QClipboard on macOS does not always hand a persistent copy of the
     string to the system pasteboard, so the clipboard contents can be lost
-    when git-cola exits. Writing through AppKit's NSPasteboard ensures the
+    when git-fanta exits. Writing through AppKit's NSPasteboard ensures the
     pasteboard server retains its own copy.
 
     C.f. https://developer.apple.com/documentation/appkit/nspasteboard
@@ -708,7 +708,7 @@ def persist_clipboard(text: str | None = None) -> None:
 
     X11 stores only a reference to the clipboard data.
     Send a clipboard event to force a copy of the clipboard to occur.
-    This ensures that the clipboard is present after git-cola exits.
+    This ensures that the clipboard is present after git-fanta exits.
     Otherwise, the reference is destroyed on exit.
 
     On MacOS, Qt does not always hand a persistent copy of the clipboard
@@ -1256,7 +1256,7 @@ def mimedata_from_paths(
     mimedata.setText(paths_text)
     if include_urls:
         urls = [QtCore.QUrl.fromLocalFile(path) for path in abspaths]
-        encoding = context.cfg.get('cola.dragencoding', 'utf-16')
+        encoding = context.cfg.get('fanta.dragencoding', 'utf-16')
         encoded_text = core.encode(paths_text, encoding=encoding)
         mimedata.setUrls(urls)
         mimedata.setData('text/x-moz-url', encoded_text)

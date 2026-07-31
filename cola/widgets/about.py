@@ -57,20 +57,20 @@ class ExpandingTabWidget(QtWidgets.QTabWidget):
 
 
 class AboutView(QtWidgets.QDialog):
-    """Provides the git-cola 'About' dialog"""
+    """Provides the git-fanta 'About' dialog"""
 
     def __init__(self, context, parent=None):
         QtWidgets.QDialog.__init__(self, parent)
 
         self.context = context
-        self.setWindowTitle(N_('About git-cola'))
+        self.setWindowTitle(N_('About git-fanta'))
         self.setWindowModality(Qt.WindowModal)
 
         # Top-most large icon
         self.logo_label = qtutils.pixmap_label(icons.cola(), defs.huge_icon)
         self.logo_label.setAlignment(Qt.AlignCenter)
 
-        self.logo_text_label = qtutils.label(text='Git Cola')
+        self.logo_text_label = qtutils.label(text='Git Fanta')
         self.logo_text_label.setAlignment(Qt.AlignLeft | Qt.AlignCenter)
 
         font = self.logo_text_label.font()
@@ -119,7 +119,7 @@ class AboutView(QtWidgets.QDialog):
 
 def copyright_text():
     return """
-Git Cola: The highly caffeinated Git GUI
+Git Fanta: The highly caffeinated Git GUI
 
 Copyright (C) 2007-2024 David Aguilar and contributors
 
@@ -178,7 +178,7 @@ def version_text(context):
         N_(
             """
         <br>
-            Git Cola version %(cola_version)s
+            Git Fanta version %(cola_version)s
         <ul>
             <li> %(platform_version)s
             <li> Python (%(python_path)s) %(python_version)s
@@ -489,7 +489,7 @@ def translators_text():
         N_(
             """
         <br>
-            Git Cola has been translated into different languages thanks
+            Git Fanta has been translated into different languages thanks
             to the help of the individuals listed below.
 
         <br>
