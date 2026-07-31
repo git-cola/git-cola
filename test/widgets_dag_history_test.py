@@ -1127,6 +1127,7 @@ class _TextRecordingPainter:
     def drawRoundedRect(self, *args):
         self.rounded_rects.append(QtCore.QRectF(args[0]))
         self.rounded_styles.append((self.pen.color(), self.brush.color()))
+        self.rounded_widths.append(self.pen.width())
 
     def drawText(self, *args):
         self.text_colors.append((str(args[-1]), self.pen.color()))
@@ -3584,3 +3585,148 @@ def test_head_node_is_drawn_in_the_accent_color_with_a_wider_ring(
     assert ring_width == GraphDelegate.HEAD_RING_WIDTH
     # Falle F4: der aeussere Rand darf 8 nicht ueberschreiten.
     assert GraphDelegate.HEAD_RING_RADIUS + GraphDelegate.HEAD_RING_WIDTH / 2 <= 8
+
+
+def _draw_row_labels(tree, commit, palette, point_size=None):
+    """Zeichnet die Chips einer Zeile in den Recorder."""
+    font = QtGui.QFont(tree.font())
+    if point_size is not None:
+        font.setPointSize(point_size)
+    metrics = QtGui.QFontMetrics(font)
+    painter = _TextRecordingPainter()
+    tree.graph_delegate._draw_labels(
+        painter,
+        13,
+        commit.tags,
+        GraphDelegate.LANE_WIDTH + 8,
+        metrics,
+        None,
+        inline_graph_style(palette),
+    )
+    return painter
+
+
+def test_current_branch_chip_is_starred_and_bordered(
+    qapp, app_context, managed_qobject
+):
+    """Der Chip des aktuellen Branches traegt Stern und dickeren Rahmen."""
+    palette = _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff')
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['heads/main', 'heads/topic']
+    tree = _tree(app_context, managed_qobject)
+    tree.set_current_branch('main')
+
+    painter = _draw_row_labels(tree, commit, palette)
+
+    texts = [text for text, _color in painter.text_colors]
+    assert texts == [f'{chr(0x2605)} main', 'topic']
+    marked, plain = painter.rounded_widths
+    assert marked == GraphDelegate.CURRENT_BRANCH_BORDER
+    assert marked > plain
+
+
+def test_chips_stay_plain_without_a_current_branch(
+    qapp, app_context, managed_qobject
+):
+    """Ohne bekannten aktuellen Branch bleibt jeder Chip unmarkiert."""
+    palette = _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff')
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['heads/main']
+    tree = _tree(app_context, managed_qobject)
+
+    painter = _draw_row_labels(tree, commit, palette)
+
+    assert [text for text, _color in painter.text_colors] == ['main']
+    assert len(set(painter.rounded_widths)) == 1
+
+
+def test_detached_head_marks_no_branch_as_current(
+    qapp, app_context, managed_qobject
+):
+    """gitcmds.current_branch() liefert bei abgeloestem HEAD den String 'HEAD'.
+
+    Git verbietet einen Branch namens HEAD, also passt 'heads/HEAD' auf keinen Ref
+    und kein Chip wird markiert - genau richtig.
+    """
+    palette = _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff')
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['heads/main']
+    tree = _tree(app_context, managed_qobject)
+    tree.set_current_branch('HEAD')
+
+    painter = _draw_row_labels(tree, commit, palette)
+
+    assert [text for text, _color in painter.text_colors] == ['main']
+
+
+def test_marked_chip_and_hit_area_have_identical_boundaries(
+    qapp, app_context, managed_qobject
+):
+    """Der Stern verbreitert den Chip - die Trefferflaeche muss mitwachsen."""
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['heads/main']
+    tree = _tree(app_context, managed_qobject)
+    tree.add_commits([commit], _graph_result([commit]))
+    tree.set_current_branch('main')
+    item = tree.topLevelItem(0)
+    index = tree.indexFromItem(item, 0)
+    font = QtGui.QFont(tree.font())
+    font.setPointSize(24)
+    metrics = QtGui.QFontMetrics(font)
+    option = QtWidgets.QStyleOptionViewItem()
+    option.font = font
+    option.fontMetrics = metrics
+    hint = tree.graph_delegate.sizeHint(option, index)
+    rect = QtCore.QRectF(0, 0, hint.width(), hint.height())
+    painter = _TextRecordingPainter()
+    tree.graph_delegate._draw_labels(
+        painter,
+        rect.center().y(),
+        commit.tags,
+        GraphDelegate.LANE_WIDTH + 8,
+        metrics,
+        item,
+        inline_graph_style(tree.palette()),
+    )
+    chip = painter.rounded_rects[0]
+
+    for x in (chip.left() + 1, chip.right() - 1):
+        assert (
+            tree.graph_delegate._label_hit_test(
+                QtCore.QPointF(x, rect.center().y()), rect, metrics, index, item
+            )[0]
+            == 0
+        )
+    assert (
+        tree.graph_delegate._label_hit_test(
+            QtCore.QPointF(chip.right() + 2, rect.center().y()),
+            rect,
+            metrics,
+            index,
+            item,
+        )[0]
+        == -1
+    )
+
+
+def test_applied_history_publishes_the_current_branch(
+    qapp, app_context, managed_qobject
+):
+    """apply_result() reicht model.currentbranch an den Delegate weiter."""
+    palette = _palette('#f4f5f7', '#202124', '#ffffff', '#edf0f4', '#3268b2', '#ffffff')
+    app_context.model.currentbranch = 'main'
+    history = managed_qobject(
+        CommitHistoryWidget(app_context, ref='--all', count=10, display_status=False)
+    )
+    factory = dag.CommitFactory()
+    commit = _commit(app_context, factory, 'commit')
+    commit.tags = ['HEAD', 'heads/main']
+
+    history.apply_result([commit], _graph_result([commit]))
+    painter = _draw_row_labels(history.treewidget, commit, palette)
+
+    assert [text for text, _color in painter.text_colors] == [f'{chr(0x2605)} main']

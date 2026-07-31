@@ -1053,12 +1053,17 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
     LABEL_SPACING = 4
     LABEL_TEXT_OFFSET = 2
     ANIMATION_DURATION = 50
+    # The Branches dock marks the current branch with a star icon
+    # (cola/widgets/branch.py). The inline graph draws text, so it uses the glyph.
+    CURRENT_BRANCH_MARKER = chr(0x2605) + ' '
+    CURRENT_BRANCH_BORDER = 2
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._hover_item: object | None = None
         self._hover_label_idx: int = -1
         self._expand_progress: float = 0.0
+        self._current_branch = ''
         self._animation = QtCore.QVariantAnimation(self)
         self._animation.setDuration(self.ANIMATION_DURATION)
         self._animation.valueChanged.connect(self._on_animation_value)
@@ -1074,6 +1079,39 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         if self._expand_progress == 0.0:
             self._hover_item = None
             self._hover_label_idx = -1
+
+    def set_current_branch(self, name: str) -> None:
+        """Remember which local branch HEAD points at.
+
+        gitcmds.current_branch() returns the literal string 'HEAD' when HEAD is
+        detached. Git refuses a branch named HEAD, so 'heads/HEAD' never matches
+        a real ref and nothing gets marked in that case, which is correct.
+        """
+        name = name or ''
+        if name == self._current_branch:
+            return
+        self._current_branch = name
+        parent = self.parent()
+        if parent is not None:
+            parent.viewport().update()
+
+    def _is_current_branch_ref(self, ref: str) -> bool:
+        """Is `ref` the local branch HEAD is on?"""
+        return bool(self._current_branch) and (
+            ref == _HEADS_PREFIX + self._current_branch
+        )
+
+    def _row_labels(self, tags: list[str]) -> list[tuple[str, str, str | None]]:
+        """_prepare_labels() with the current branch marked."""
+        labels = []
+        for ref, display_text, condensed_text in _prepare_labels(tags):
+            if self._is_current_branch_ref(ref):
+                marker = self.CURRENT_BRANCH_MARKER
+                display_text = marker + display_text
+                if condensed_text is not None:
+                    condensed_text = marker + condensed_text
+            labels.append((ref, display_text, condensed_text))
+        return labels
 
     def set_hover(self, item: object | None, label_idx: int) -> None:
         if item == self._hover_item and label_idx == self._hover_label_idx:
@@ -1230,7 +1268,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         x_offset = self.LABEL_TEXT_OFFSET
         y_offset = 0
 
-        for i, (tag, display_text, condensed_text) in enumerate(_prepare_labels(tags)):
+        for i, (tag, display_text, condensed_text) in enumerate(self._row_labels(tags)):
             if painter is not None:
                 brush = style.chip_other
                 if tag == 'HEAD' or tag.startswith(_TAGS_PREFIX):
@@ -1241,7 +1279,10 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
                 if selected_text is not None:
                     candidates = (_opaque_color(selected_text),) + candidates
                 chip_text = _best_contrast(candidates, (brush,))
-                painter.setPen(QtGui.QPen(chip_text))
+                chip_pen = QtGui.QPen(chip_text)
+                if self._is_current_branch_ref(tag):
+                    chip_pen.setWidth(self.CURRENT_BRANCH_BORDER)
+                painter.setPen(chip_pen)
                 painter.setBrush(brush)
 
             shown, text_width = self._label_shown_text(
@@ -1349,7 +1390,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
         mid_y = rect.center().y()
         text_height = font_metrics.height()
         for i, (_, display_text, condensed_text) in enumerate(
-            _prepare_labels(commit.tags)
+            self._row_labels(commit.tags)
         ):
             _, text_width = self._label_shown_text(
                 condensed_text, display_text, font_metrics, item, i
@@ -1486,6 +1527,10 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         if event.type() == QtCore.QEvent.PaletteChange:
             self.viewport().update()
         super().changeEvent(event)
+
+    def set_current_branch(self, name):
+        """Tell the graph delegate which local branch HEAD is on"""
+        self.graph_delegate.set_current_branch(name)
 
     def display_inline_graph(self, enabled):
         """Enable and disable the display of inline graph in the commit list"""
@@ -1940,6 +1985,9 @@ class CommitHistoryWidget(QtWidgets.QWidget):
             self.clear()
             self.commit_list = commit_list
             self.commits.update(commit_map)
+            # Vor add_commits: resizeColumnToContents() fragt sizeHint(), und die
+            # Breite des markierten Chips haengt am aktuellen Branch.
+            self.treewidget.set_current_branch(self.model.currentbranch)
             self.treewidget.add_commits(commit_list, graph_result)
 
         self.selection = list(selection)
