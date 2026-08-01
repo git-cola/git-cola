@@ -6,6 +6,7 @@ from .. import gitcmds
 from ..git import STDOUT
 from ..i18n import N_
 from ..interaction import Interaction
+from ..operations import CmdOutputToFile
 
 
 class StashModel:
@@ -209,13 +210,16 @@ class StashIndex(cmds.ContextCommand):
         # worktree.  We do this by applying a reverse diff of the staged
         # changes.  The diff from stash->HEAD is a reverse diff of the stash.
         patch = self.context.ops.tmp_filename('stash')
-        with core.xopen(patch, mode='wb') as patch_fd:
-            status, out, err = git.diff_tree(
-                'refs/stash', 'HEAD', '--', binary=True, _stdout=patch_fd
-            )
-            if status != 0:
-                stash_error('diff-tree', status, out, err)
-                return
+        status, out, err = git.diff_tree(
+            'refs/stash',
+            'HEAD',
+            '--',
+            binary=True,
+            _stdout=CmdOutputToFile(patch, 'wb'),
+        )
+        if status != 0:
+            stash_error('diff-tree', status, out, err)
+            return
 
         # Apply the patch
         status, out, err = git.apply(patch)

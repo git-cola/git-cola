@@ -1,8 +1,8 @@
 from __future__ import annotations
-import io
 import os
 from abc import ABC
 from abc import abstractmethod
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -14,6 +14,12 @@ if TYPE_CHECKING:
 
 ENCODING = 'utf-8'
 IS_LOCAL = True
+
+
+@dataclass
+class CmdOutputToFile:
+    path: str
+    mode: str
 
 
 class IOperations(ABC):
@@ -31,10 +37,6 @@ class IOperations(ABC):
 
     @abstractmethod
     def list2cmdline(self, cmd: list[str | Any | core.UStr]) -> str:
-        pass
-
-    @abstractmethod
-    def xopen(self, path: str, mode: str = 'r', encoding: str | None = None) -> Any:
         pass
 
     @abstractmethod
@@ -207,9 +209,6 @@ class LocalOperations(IOperations):
     def list2cmdline(self, cmd: list[str | Any | core.UStr]) -> str:
         return core.list2cmdline(cmd)
 
-    def xopen(self, path: str, mode: str = 'r', encoding: str | None = None) -> Any:
-        return core.xopen(path, mode, encoding)
-
     def file_append(self, path, text: str, encoding: str | None = None) -> None:
         with core.open_append(path, encoding) as file:
             file.write(text)
@@ -317,7 +316,25 @@ class LocalOperations(IOperations):
     def run_command(
         self, cmd: list[core.UStr | str], *args, **kwargs
     ) -> tuple[int, core.UStr, core.UStr]:
-        return core.run_command(cmd, *args, **kwargs)
+        _stdout = None
+
+        if (
+            isinstance(kwargs.get('stdout'), dict)
+            and 'output_to_file' in kwargs['stdout']
+        ):
+            _stdout = CmdOutputToFile(
+                kwargs['stdout']['output_to_file'],
+                kwargs['stdout'].get('mode', 'wb'),
+            )
+        else:
+            _stdout = kwargs.get('stdout')
+
+        if _stdout and isinstance(_stdout, CmdOutputToFile):
+            with core.xopen(_stdout.path, _stdout.mode) as f:
+                kwargs['stdout'] = f
+                return core.run_command(cmd, *args, **kwargs)
+        else:
+            return core.run_command(cmd, *args, **kwargs)
 
     def get_environ(
         self,
@@ -381,24 +398,6 @@ class RemoteOperations(IOperations):
             },
         }
         return self._send_op(data)
-
-    def xopen(self, path: str, mode: str = 'r', encoding: str | None = None) -> Any:
-        """Open a file for appending in UTF-8 text mode"""
-        data = {
-            'op': 'file_read',
-            'args': [],
-            'kwargs': {
-                'path': path,
-                'encoding': encoding,
-            },
-        }
-        if mode == 'rb':
-            result = self._send_op(data)
-            if not isinstance(result, bytes):
-                result = result.encode('utf-8')
-            return io.BytesIO(result)
-
-        return io.StringIO(self._send_op(data))
 
     def file_append(self, path, text: str, encoding: str | None = None) -> None:
         """Open a file for appending in UTF-8 text mode"""
@@ -700,6 +699,12 @@ class RemoteOperations(IOperations):
 
         if 'env' in kwargs and isinstance(kwargs['env'], dict):
             supported_kwargs['env'] = dict(kwargs['env'])
+
+        if 'stdout' in kwargs and isinstance(kwargs['stdout'], CmdOutputToFile):
+            supported_kwargs['stdout'] = {
+                'output_to_file': kwargs['stdout'].path,
+                'mode': kwargs['stdout'].mode,
+            }
 
         data = {
             'op': 'run_command',

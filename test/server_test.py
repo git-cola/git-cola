@@ -243,28 +243,6 @@ def test_server_list2cmdline():
         ) == service.ops_remote.list2cmdline('test.file')
 
 
-def test_server_xopen():
-    with open('test.file', 'w') as f:
-        f.write('Hello, 世界! 👋 Привет, мир! 🌍 Café ☕ ∑∞\n')
-        f.write('2\n')
-        f.write('3')
-
-    with create_test_server() as service:
-        results_local = []
-        with service.ops_local.xopen('test.file') as f:
-            for line in f:
-                results_local.append(line)
-
-        results_remote = []
-        with service.ops_remote.xopen('test.file') as f:
-            for line in f:
-                results_remote.append(line)
-
-        assert results_local == results_remote
-
-    os.remove('test.file')
-
-
 def test_server_run_command():
     with create_test_server() as service:
         assert service.ops_local.run_command(

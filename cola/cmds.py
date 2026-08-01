@@ -32,6 +32,7 @@ from .i18n import N_
 from .interaction import Interaction
 from .models import main
 from .models import prefs
+from .operations import CmdOutputToFile
 
 if TYPE_CHECKING:
     from .app import ApplicationContext
@@ -455,17 +456,15 @@ class Archive(ContextCommand):
         self.filename = filename
 
     def do(self) -> None:
-        fp = core.xopen(self.filename, 'wb')
         cmd = ['git', 'archive', '--format=' + self.fmt]
         if self.fmt in ('tgz', 'tar.gz'):
             cmd.append('-9')
         if self.prefix:
             cmd.append('--prefix=' + self.prefix)
         cmd.append(self.ref)
-        proc = self.context.ops.run_command(cmd, stdout=fp)
-        out, err = proc.communicate()
-        fp.close()
-        status = proc.returncode
+        status, out, err = self.context.ops.run_command(
+            cmd, stdout=CmdOutputToFile(self.filename, 'wb')
+        )
         Interaction.log_status(status, out or '', err or '')
 
 
@@ -2903,11 +2902,10 @@ def is_conflict_free(context: ApplicationContext, path) -> bool:
     """Return True if `path` contains no conflict markers"""
     rgx = re.compile(r'^(<<<<<<<|\|\|\|\|\|\|\||>>>>>>>) ')
     try:
-        with context.ops.xopen(path, 'rb') as f:
-            for line in f:
-                line = core.decode(line, errors='ignore')
-                if rgx.match(line):
-                    return should_stage_conflicts(path)
+        f = StringIO(context.ops.file_read(path))
+        for line in f:
+            if rgx.match(line):
+                return should_stage_conflicts(path)
     except OSError:
         # We can't read this file ~ we may be staging a removal
         pass
