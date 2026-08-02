@@ -2,6 +2,7 @@ import sys
 from typing import Any
 
 from qtpy import QtCore
+from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from .. import core
@@ -67,6 +68,7 @@ STATUS_SHOW_TOTALS = 'cola.statusshowtotals'
 THEME = 'cola.theme'
 TABWIDTH = 'cola.tabwidth'
 TEXTWIDTH = 'cola.textwidth'
+TEXT_ELIDE_MODE = 'cola.textelidemode'
 USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
 UPDATE_INDEX = 'cola.updateindex'
@@ -187,6 +189,7 @@ class Defaults:
     patches_directory = 'patches'
     status_indent = False
     status_show_totals = False
+    text_elide_mode = 'middle'
     logdate = DateFormat.DEFAULT
     update_index = True
     verbosity = 0
@@ -415,6 +418,17 @@ def patches_directory(context) -> str:
 def sort_bookmarks(context) -> bool:
     """Should we sort bookmarks by name?"""
     return context.cfg.get(SORT_BOOKMARKS, default=Defaults.sort_bookmarks)
+
+
+def text_elide_mode(context) -> Qt.TextElideMode:
+    """Return the configured text elision mode for UI widgets."""
+    value = context.cfg.get(TEXT_ELIDE_MODE, default=Defaults.text_elide_mode)
+    return {
+        'left': Qt.ElideLeft,
+        'middle': Qt.ElideMiddle,
+        'right': Qt.ElideRight,
+        'none': Qt.ElideNone,
+    }.get(value, Qt.ElideMiddle)
 
 
 def tabwidth(context) -> int:

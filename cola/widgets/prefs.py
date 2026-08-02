@@ -468,10 +468,20 @@ class AppearanceFormWidget(FormWidget):
         self.status_show_totals = qtutils.checkbox()
         self.status_indent = qtutils.checkbox()
         self.block_cursor = qtutils.checkbox(checked=True)
+        self.text_elide_mode = qtutils.combo_mapped([
+            (N_('Left'), 'left'),
+            (N_('Middle'), 'middle'),
+            (N_('Right'), 'right'),
+            (N_('None'), 'none'),
+        ])
+        self.text_elide_mode.setToolTip(
+            N_('Choose how overly long text is truncated in the UI.')
+        )
 
         self.add_row(N_('Fixed-Width Font'), self.fixed_font)
         self.add_row(N_('Font Size'), self.fixed_font_size)
         self.add_row(N_('Font Size (UI)'), self.font_size)
+        self.add_row(N_('Text Elide Mode'), self.text_elide_mode)
         self.add_row(N_('GUI theme'), self.theme)
         self.add_row(N_('Icon theme'), self.icon_theme)
         self.add_row(N_('High DPI'), self.high_dpi)
@@ -480,7 +490,6 @@ class AppearanceFormWidget(FormWidget):
         self.add_row(N_('Show File Counts in Status Titles'), self.status_show_totals)
         self.add_row(N_('Indent Status paths'), self.status_indent)
         self.add_row(N_('Use a Block Cursor in Diff Editors'), self.block_cursor)
-
         self.set_config({
             prefs.BOLD_FONTS: (self.bold_fonts, Defaults.bold_fonts),
             prefs.BOLD_HEADERS: (self.bold_headers, Defaults.bold_headers),
@@ -497,6 +506,10 @@ class AppearanceFormWidget(FormWidget):
             prefs.THEME: (self.theme, Defaults.theme),
             prefs.ICON_THEME: (self.icon_theme, Defaults.icon_theme),
             prefs.BLOCK_CURSOR: (self.block_cursor, Defaults.block_cursor),
+            prefs.TEXT_ELIDE_MODE: (
+                self.text_elide_mode,
+                Defaults.text_elide_mode,
+            ),
         })
 
         self.fixed_font.currentFontChanged.connect(self.current_font_changed)
