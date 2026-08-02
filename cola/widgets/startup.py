@@ -338,6 +338,9 @@ class BookmarksListView(QtWidgets.QListView):
         self.setIconSize(make_size(defs.medium_icon))
         self.setDragEnabled(False)
         self.setWordWrap(True)
+        # Elide long paths in the middle so the trailing repository name stays
+        # visible instead of being cut off by the default right-side elision.
+        self.setTextElideMode(Qt.ElideMiddle)
 
         # Context Menu
         self.open_action = qtutils.add_action(

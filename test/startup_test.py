@@ -1,10 +1,28 @@
 """Test Startup Dialog (git cola --prompt) Context Menu and related classes"""
+from qtpy import QtGui
+from qtpy.QtCore import Qt
+
 from cola.widgets import startup
 
 from .helper import app_context
 
 # Prevent unused imports lint errors.
 assert app_context is not None
+
+
+def test_recent_list_elides_in_middle(app_context):
+    """Long repository paths elide in the middle, keeping the trailing name.
+
+    The default right-side elision cut off the repository name, which is the
+    most useful part of a recent-repository path.
+    """
+    view = startup.BookmarksListView(
+        app_context,
+        QtGui.QStandardItemModel(),
+        lambda *args: None,
+        lambda *args: None,
+    )
+    assert view.textElideMode() == Qt.ElideMiddle
 
 
 def test_get_with_default_repo(app_context):
