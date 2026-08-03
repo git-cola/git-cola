@@ -30,6 +30,7 @@ testing = [
     "pytest-checkdocs >= 2.4",
     "pytest-enabler >= 2.2",
     "pytest-ruff >= 0.2.1",
+    "ruff < 0.16",
 ]
 docs = [
     "furo",
