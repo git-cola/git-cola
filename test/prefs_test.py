@@ -13,7 +13,9 @@ from .helper import app_context
 def _qapp():
     instance = QtWidgets.QApplication.instance()
     if instance is None:
-        instance = QtWidgets.QApplication(sys.argv[:1] if sys.argv else ['git-cola-test'])
+        instance = QtWidgets.QApplication(
+            sys.argv[:1] if sys.argv else ['git-cola-test']
+        )
     return instance
 
 
@@ -67,7 +69,9 @@ def test_mergetool_pref_falls_back_to_merge_tool(app_context):
     assert prefs.mergetool(app_context) == 'git-merge-2'
 
 
-def test_history_browser_pref_uses_cola_historybrowser_over_gui_historybrowser(app_context):
+def test_history_browser_pref_uses_cola_historybrowser_over_gui_historybrowser(
+    app_context,
+):
     helper.run_git('config', 'cola.historybrowser', 'cola-hist')
     helper.run_git('config', 'gui.historybrowser', 'gitk-hist')
     app_context.cfg.reset()

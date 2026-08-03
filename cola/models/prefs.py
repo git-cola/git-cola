@@ -76,6 +76,7 @@ COLA_HISTORY_BROWSER = 'cola.historybrowser'
 COLA_DIFFTOOL = 'cola.difftool'
 COLA_MERGETOOL = 'cola.mergetool'
 
+
 class DateFormat:
     DEFAULT = 'default'
     RELATIVE = 'relative'
