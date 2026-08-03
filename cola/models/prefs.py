@@ -71,7 +71,10 @@ USER_EMAIL = 'user.email'
 USER_NAME = 'user.name'
 UPDATE_INDEX = 'cola.updateindex'
 VERBOSITY = 'cola.verbosity'
-
+COLA_EDITOR = 'cola.editor'
+COLA_HISTORY_BROWSER = 'cola.historybrowser'
+COLA_DIFFTOOL = 'cola.difftool'
+COLA_MERGETOOL = 'cola.mergetool'
 
 class DateFormat:
     DEFAULT = 'default'
@@ -266,7 +269,11 @@ def display_untracked(context) -> bool:
 
 def editor(context) -> str:
     """Return the configured editor"""
-    app = context.cfg.get(EDITOR, default=fallback_editor())
+    app = context.cfg.get(COLA_EDITOR, default=None)
+    if app is None:
+        app = context.cfg.get(EDITOR, default=None)
+    if app is None:
+        app = fallback_editor()
     return _remap_editor(app)
 
 
@@ -274,6 +281,22 @@ def background_editor(context) -> str:
     """Return the configured non-blocking background editor"""
     app = context.cfg.get(BACKGROUND_EDITOR, default=editor(context))
     return _remap_editor(app)
+
+
+def difftool(context) -> str:
+    """Return the configured diff tool"""
+    return context.cfg.get(
+        COLA_DIFFTOOL,
+        default=context.cfg.get(DIFFTOOL, default=Defaults.difftool),
+    )
+
+
+def mergetool(context) -> str:
+    """Return the configured merge tool"""
+    return context.cfg.get(
+        COLA_MERGETOOL,
+        default=context.cfg.get(MERGETOOL, default=Defaults.mergetool),
+    )
 
 
 def enable_popups(context) -> bool:
@@ -345,7 +368,10 @@ def default_history_browser() -> str:
 def history_browser(context) -> str:
     """Return the configured history browser"""
     default = default_history_browser()
-    return context.cfg.get(HISTORY_BROWSER, default=default)
+    return context.cfg.get(
+        COLA_HISTORY_BROWSER,
+        default=context.cfg.get(HISTORY_BROWSER, default=default),
+    )
 
 
 def http_proxy(context) -> str:

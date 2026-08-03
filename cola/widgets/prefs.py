@@ -105,9 +105,18 @@ class FormWidget(QtWidgets.QWidget):
             getter = self.cfg.get
 
         for config, widget in self.widget_to_config.items():
-            value = getter(config)
-            if value is None:
-                value = self.defaults[config]
+            if config == prefs.COLA_EDITOR:
+                value = prefs.editor(self.context)
+            elif config == prefs.COLA_HISTORY_BROWSER:
+                value = prefs.history_browser(self.context)
+            elif config == prefs.COLA_DIFFTOOL:
+                value = prefs.difftool(self.context)
+            elif config == prefs.COLA_MERGETOOL:
+                value = prefs.mergetool(self.context)
+            else:
+                value = getter(config)
+                if value is None:
+                    value = self.defaults[config]
             set_widget_value(widget, value)
 
 
@@ -405,13 +414,13 @@ class SettingsFormWidget(FormWidget):
                 Defaults.fixup_commit_count,
             ),
             prefs.SORT_BOOKMARKS: (self.sort_bookmarks, Defaults.sort_bookmarks),
-            prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
-            prefs.EDITOR: (self.editor, fallback_editor()),
+            prefs.COLA_DIFFTOOL: (self.difftool, Defaults.difftool),
+            prefs.COLA_EDITOR: (self.editor, fallback_editor()),
             prefs.BACKGROUND_EDITOR: (
                 self.background_editor,
                 Defaults.background_editor,
             ),
-            prefs.HISTORY_BROWSER: (
+            prefs.COLA_HISTORY_BROWSER: (
                 self.historybrowser,
                 prefs.default_history_browser(),
             ),
@@ -425,7 +434,7 @@ class SettingsFormWidget(FormWidget):
                 self.keep_merge_backups,
                 Defaults.merge_keep_backup,
             ),
-            prefs.MERGETOOL: (self.mergetool, Defaults.mergetool),
+            prefs.COLA_MERGETOOL: (self.mergetool, Defaults.mergetool),
             prefs.REFRESH_ON_FOCUS: (self.refresh_on_focus, Defaults.refresh_on_focus),
             prefs.RESIZE_BROWSER_COLUMNS: (
                 self.resize_browser_columns,
