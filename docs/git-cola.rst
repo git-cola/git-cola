@@ -1422,21 +1422,34 @@ The default text editor to use is defined in `gui.editor`.
 The config variable overrides the VISUAL environment variable.
 Defaults to `gvim -f -p`.
 
+Git Cola also honors the `cola.editor` key. When set, it takes precedence over
+`gui.editor` for Git Cola-specific editor settings.
+
 gui.historybrowser
 ------------------
 
 The history browser to use when visualizing history.
 Defaults to `gitk`.
 
+Git Cola also honors the `cola.historybrowser` key. When set, it takes
+precedence over `gui.historybrowser` for Git Cola-specific history browser
+settings.
+
 diff.tool
 ---------
 
 The default diff tool to use.
 
+Git Cola also honors the `cola.difftool` key. When set, it takes precedence
+over `diff.tool` for Git Cola-specific difftool settings.
+
 merge.tool
 ----------
 
 The default merge tool to use.
+
+Git Cola also honors the `cola.mergetool` key. When set, it takes precedence
+over `merge.tool` for Git Cola-specific mergetool settings.
 
 user.email
 ----------
