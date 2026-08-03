@@ -518,9 +518,8 @@ class AppearanceFormWidget(FormWidget):
         elif theme.is_dark:
             if icon_theme in ('default', 'light'):
                 self.icon_theme.set_value('dark')
-        elif not theme.is_dark:
-            if icon_theme in ('default', 'dark'):
-                self.icon_theme.set_value('light')
+        elif not theme.is_dark and icon_theme in ('default', 'dark'):
+            self.icon_theme.set_value('light')
 
     def update_from_config(self):
         """Update widgets to the current config values"""

@@ -1520,7 +1520,7 @@ class CustomizeCopyActions(standard.Dialog):
         for item in items:
             rows.add(self.table.row(item))
 
-        for row in reversed(sorted(rows)):
+        for row in sorted(rows, reverse=True):
             self.table.removeRow(row)
 
     def save(self):
@@ -1715,7 +1715,7 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
         text_rgb, highlight_text_rgb = theme.text_colors_rgb()
         disabled_text_rgb = theme.disabled_text_color_rgb()
 
-        stylesheet = """
+        stylesheet = f"""
             * {{
                 show-decoration-selected: 1
             }}
@@ -1732,12 +1732,7 @@ class CopyLeadingPathWidget(QtWidgets.QWidget):
             QLabel:disabled {{
                 color: {disabled_text_rgb};
             }}
-        """.format(
-            disabled_text_rgb=disabled_text_rgb,
-            text_rgb=text_rgb,
-            highlight_text_rgb=highlight_text_rgb,
-            highlight_rgb=highlight_rgb,
-        )
+        """
 
         self.setStyleSheet(stylesheet)
 

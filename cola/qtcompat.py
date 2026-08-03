@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable
+from collections.abc import Callable
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -15,7 +15,7 @@ from . import hotkeys
 
 
 def patch(
-    obj: type[QtWidgets.QGraphicsItem] | type[QtGui.QKeySequence],
+    obj: type[QtWidgets.QGraphicsItem | QtGui.QKeySequence],
     attr: str,
     value: Callable | QtGui.QKeySequence,
 ) -> None:

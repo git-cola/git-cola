@@ -36,7 +36,7 @@ def union(selection: State) -> list[Any]:
     values = set(
         selection.staged + selection.unmerged + selection.modified + selection.untracked
     )
-    return list(sorted(values))
+    return sorted(values)
 
 
 def _filter(values: list[str | Any], remove: list[str | Any]) -> None:

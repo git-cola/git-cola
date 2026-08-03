@@ -11,9 +11,9 @@ import tempfile
 import time
 import traceback
 import urllib.parse
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 from typing import TypeVar
 
 from . import compat
@@ -450,8 +450,7 @@ def get_path_from_url(url_str: str) -> str | None:
         path = url.path
 
     path = path.strip('/')  # Strip leading and trailing slashes.
-    if path.endswith('.git'):
-        path = path[: -len('.git')]
+    path = path.removesuffix('.git')
 
     return path
 

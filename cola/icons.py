@@ -1,7 +1,7 @@
 """The only file where icon filenames are mentioned"""
 from __future__ import annotations
 import os
-from typing import Callable
+from collections.abc import Callable
 
 from qtpy import QtGui
 from qtpy import QtWidgets

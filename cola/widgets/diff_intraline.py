@@ -338,8 +338,7 @@ def adjust_hsl(
     base = rgba_qcolor(base)
 
     h0, s0, l0, a = base.getHslF()
-    if h0 < 0.0:
-        h0 = 0.0
+    h0 = max(h0, 0.0)
 
     h0 = (h0 + utils.clamp(hue_shift, -0.5, +0.5)) % 1.0
     l0 = _lerp_to_targets(l0, light_ratio, lo_target=0.0, hi_target=1.0)
@@ -365,10 +364,8 @@ def mix_hsl(
     h1, s1, l1, a1 = color1.getHslF()
     h2, s2, l2, a2 = color2.getHslF()
 
-    if h1 < 0.0:
-        h1 = 0.0
-    if h2 < 0.0:
-        h2 = 0.0
+    h1 = max(h1, 0.0)
+    h2 = max(h2, 0.0)
 
     hue_r = utils.clamp_one(hue_r)
     sat_r = utils.clamp_one(sat_r)

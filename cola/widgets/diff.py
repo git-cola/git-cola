@@ -1852,10 +1852,10 @@ def _write_patch_to_file(diff_editor, patch, filename, append=False):
     except OSError as exc:
         _, details = utils.format_exception(exc)
         title = N_('Error writing patch')
-        msg = N_('Unable to write patch to "%s". Check permissions?' % filename)
+        msg = N_(f'Unable to write patch to "{filename}". Check permissions?')
         Interaction.critical(title, message=msg, details=details)
         return
-    Interaction.log('Patch written to "%s"' % filename)
+    Interaction.log(f'Patch written to "{filename}"')
 
 
 class ObjectIdLabel(PlainTextLabel):
@@ -2130,7 +2130,7 @@ class CommitDiffWidget(QtWidgets.QWidget):
 
     def set_details(self, oid, author, email, date, summary):
         template_args = {'author': author, 'email': email}
-        author_text = '%(author)s <%(email)s>' % template_args
+        author_text = '{author} <{email}>'.format(**template_args)
         self.date_label.set_text(date)
         self.date_label.setVisible(bool(date))
         self.oid_label.set_oid(oid)
@@ -2446,7 +2446,7 @@ class PatchTreeWidget(standard.DraggableTreeWidget):
     def remove_selected(self):
         idxs = self.selectedIndexes()
         rows = [idx.row() for idx in idxs]
-        for row in reversed(sorted(rows)):
+        for row in sorted(rows, reverse=True):
             self.invisibleRootItem().takeChild(row)
 
 

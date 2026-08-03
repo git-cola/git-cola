@@ -65,8 +65,10 @@ class TextWrapper:
         # recompile the regexes for Unicode mode -- done in this clumsy way for
         # backwards compatibility because it's rather common to monkey-patch
         # the TextWrapper class' wordsep_re attribute.
-        self.wordsep_re_uni = re.compile(self.wordsep_re.pattern, re.U)
-        self.wordsep_simple_re_uni = re.compile(self.wordsep_simple_re.pattern, re.U)
+        self.wordsep_re_uni = re.compile(self.wordsep_re.pattern, re.UNICODE)
+        self.wordsep_simple_re_uni = re.compile(
+            self.wordsep_simple_re.pattern, re.UNICODE
+        )
 
     def _split(self, text: str) -> list[Any]:
         """_split(text : string) -> [string]

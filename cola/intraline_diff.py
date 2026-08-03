@@ -63,7 +63,7 @@ class TextSpan:
         if self.start > self.end:
             raise ValueError(
                 'TextSpan start must be less than or equal to end: '
-                '{!r} > {!r}'.format(self.start, self.end)
+                f'{self.start!r} > {self.end!r}'
             )
 
 
@@ -204,9 +204,7 @@ def _compute_intraline_diff_spans_from_lines(
         cancel_tick += 1
         if (cancel_tick % 512) != 0:
             return False
-        if cfg.should_cancel():
-            return True
-        return False
+        return bool(cfg.should_cancel())
 
     # [STEP] Scan: walk the diff text and find "- then +" blocks
     i = 0  # current line index into `raw_line_texts`
@@ -362,18 +360,14 @@ def _strip_diff_line_prefix(raw_line_text: str) -> str:
 def _is_minus_file_header(raw_line_text: str) -> bool:
     # Unified diff file header lines: '--- a/path', '--- b/path', '--- /dev/null'
     return raw_line_text.startswith('--- ') and (
-        raw_line_text.startswith('--- a/')
-        or raw_line_text.startswith('--- b/')
-        or raw_line_text.startswith('--- /dev/null')
+        raw_line_text.startswith(('--- a/', '--- b/', '--- /dev/null'))
     )
 
 
 def _is_plus_file_header(raw_line_text: str) -> bool:
     # Unified diff file header lines: '+++ a/path', '+++ b/path', '+++ /dev/null'
     return raw_line_text.startswith('+++ ') and (
-        raw_line_text.startswith('+++ a/')
-        or raw_line_text.startswith('+++ b/')
-        or raw_line_text.startswith('+++ /dev/null')
+        raw_line_text.startswith(('+++ a/', '+++ b/', '+++ /dev/null'))
     )
 
 

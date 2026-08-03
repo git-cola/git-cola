@@ -1,8 +1,8 @@
 from __future__ import annotations
 import os
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 
 from qtpy import QtGui
 
@@ -270,9 +270,9 @@ def open_quick_repo_search(
         title = N_('Quick Open Repository')
         placeholder = N_('Search repositories by name...')
         if open_repo:
-            open_cmd: type[cmds.NoOp] | type[cmds.OpenRepo] = cmds.OpenRepo
+            open_cmd: type[cmds.NoOp | cmds.OpenRepo] = cmds.OpenRepo
         else:
-            open_cmd: type[cmds.NoOp] | type[cmds.OpenRepo] = cmds.NoOp
+            open_cmd: type[cmds.NoOp | cmds.OpenRepo] = cmds.NoOp
 
         return switcher.switcher_inner_view(
             context,

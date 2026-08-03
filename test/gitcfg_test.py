@@ -10,7 +10,7 @@ assert app_context is not None
 
 def assert_color(context, expect, git_value, key='test', default=None):
     """Helper function for testing color values"""
-    helper.run_git('config', 'cola.color.%s' % key, git_value)
+    helper.run_git('config', f'cola.color.{key}', git_value)
     context.cfg.reset()
     actual = context.cfg.color(key, default)
     assert expect == actual

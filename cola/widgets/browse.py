@@ -97,7 +97,7 @@ class Browser(standard.Widget):
         }
         title = N_('%(project)s: %(branch)s - Browse') % scope
         if self.mode == self.model.mode_amend:
-            title += ' %s' % N_('(Amending)')
+            title += ' {}'.format(N_('(Amending)'))
         self.setWindowTitle(title)
 
 
@@ -578,11 +578,7 @@ class SaveBlob(cmds.ContextCommand):
             except OSError as error:
                 err = f'\n{error}'
                 status = 1
-            out = '# shutil.copy2({}, {}){}'.format(
-                shlex.quote(model.relpath),
-                shlex.quote(model.filename),
-                err,
-            )
+            out = f'# shutil.copy2({shlex.quote(model.relpath)}, {shlex.quote(model.filename)}){err}'
             Interaction.command(
                 N_('Error Saving File'), 'shutil.copy2', status, out, err
             )
@@ -595,11 +591,7 @@ class SaveBlob(cmds.ContextCommand):
             with core.xopen(model.filename, 'wb') as fp:
                 status, output, err = self.context.git.cat_file('blob', ref, _stdout=fp)
 
-            out = '# git cat-file blob {} >{}\n{}'.format(
-                shlex.quote(ref),
-                shlex.quote(model.filename),
-                output,
-            )
+            out = f'# git cat-file blob {shlex.quote(ref)} >{shlex.quote(model.filename)}\n{output}'
             Interaction.command(
                 N_('Error Saving File'), 'git cat-file', status, out, err
             )

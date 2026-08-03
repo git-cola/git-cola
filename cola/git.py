@@ -391,9 +391,9 @@ class Git:
                 # defensive coding for the worst-case scenario. On UNIX
                 # we have ENAMETOOLONG but that doesn't exist on Windows.
                 if _git_is_installed():
-                    raise exc
+                    raise
                 _print_win32_git_hint()
-            result = (1, '', "error: unable to execute '%s'" % GIT)
+            result = (1, '', f"error: unable to execute '{GIT}'")
         return result
 
 

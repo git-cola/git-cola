@@ -1,14 +1,14 @@
 from __future__ import annotations
 import errno
 import functools
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 
 if TYPE_CHECKING:
     from qtpy.QtGui import QIcon
 
-__all__ = ('decorator', 'memoize', 'interruptable')
+__all__ = ('decorator', 'interruptable', 'memoize')
 
 
 def decorator(caller: Callable, func: Callable | None = None) -> Callable:
@@ -84,6 +84,6 @@ def interruptable(func: Callable, *args, **opts) -> Any:
         except OSError as e:
             if e.errno in (errno.EINTR, errno.EINVAL):
                 continue
-            raise e
+            raise
         break
     return result

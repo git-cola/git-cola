@@ -141,7 +141,7 @@ def cola_version(builtin: bool = False) -> str:
         suffix = builtin_version()
     else:
         suffix = version()
-    return 'cola version %s' % suffix
+    return f'cola version {suffix}'
 
 
 def print_version(builtin: bool = False, brief: bool = False) -> None:

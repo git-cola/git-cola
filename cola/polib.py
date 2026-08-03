@@ -29,16 +29,16 @@ from . import compat
 __author__ = 'David Jean Louis <izimobil@gmail.com>'
 __version__ = '1.1.1'
 __all__ = [
-    'pofile',
-    'POFile',
-    'POEntry',
-    'mofile',
-    'MOFile',
     'MOEntry',
+    'MOFile',
+    'POEntry',
+    'POFile',
     'default_encoding',
-    'escape',
-    'unescape',
     'detect_encoding',
+    'escape',
+    'mofile',
+    'pofile',
+    'unescape',
 ]
 
 
@@ -228,7 +228,7 @@ def detect_encoding(file: str, binary_mode: bool = False) -> str:
             mode = 'r'
             rx = rxt
         f = open(file, mode)
-        for line in f.readlines():
+        for line in f:
             match = rx.search(line)
             if match:
                 f.close()
@@ -412,7 +412,7 @@ class _BaseFile(list):
         # check_for_duplicates may not be defined (yet) when unpickling.
         # But if pickling, we never want to check for duplicates anyway.
         if getattr(self, 'check_for_duplicates', False) and entry in self:
-            raise ValueError('Entry "%s" already exists' % entry.msgid)
+            raise ValueError(f'Entry "{entry.msgid}" already exists')
         super().append(entry)
 
     def insert(self, index, entry: _BaseEntry) -> None:
@@ -430,7 +430,7 @@ class _BaseFile(list):
             an instance of :class:`~polib._BaseEntry`.
         """
         if self.check_for_duplicates and entry in self:
-            raise ValueError('Entry "%s" already exists' % entry.msgid)
+            raise ValueError(f'Entry "{entry.msgid}" already exists')
         super().insert(index, entry)
 
     def metadata_as_entry(self) -> POEntry:
@@ -525,17 +525,16 @@ class _BaseFile(list):
                 matches.append(e)
         if len(matches) == 1:
             return matches[0]
-        elif len(matches) > 1:
-            if not msgctxt:
-                # find the entry with no msgctx
-                e = None
-                for m in matches:
-                    if not m.msgctxt:
-                        e = m
-                if e:
-                    return e
-                # fallback to the first entry found
-                return matches[0]
+        elif len(matches) > 1 and not msgctxt:
+            # find the entry with no msgctx
+            e = None
+            for m in matches:
+                if not m.msgctxt:
+                    e = m
+            if e:
+                return e
+            # fallback to the first entry found
+            return matches[0]
         return None
 
     def ordered_metadata(self) -> list[Any]:
@@ -686,9 +685,9 @@ class POFile(_BaseFile):
             if not header:
                 ret += '#\n'
             elif header[:1] in [',', ':']:
-                ret += '#%s\n' % header
+                ret += f'#{header}\n'
             else:
-                ret += '# %s\n' % header
+                ret += f'# {header}\n'
 
         if not isinstance(ret, text_type):
             ret = ret.decode(self.encoding)
@@ -921,7 +920,7 @@ class _BaseEntry:
             keys.sort()
             for index in keys:
                 msgstr = msgstrs[index]
-                plural_index = '[%s]' % index
+                plural_index = f'[{index}]'
                 ret += self._str_field(
                     'msgstr', delflag, plural_index, msgstr, wrapwidth
                 )
@@ -981,9 +980,7 @@ class _BaseEntry:
                 ]
             else:
                 lines = [field]
-        if fieldname.startswith('previous_'):
-            # quick and dirty trick to get the real field name
-            fieldname = fieldname[9:]
+        fieldname = fieldname.removeprefix('previous_')
 
         ret = [f'{delflag}{fieldname}{plural_index} "{escape(lines.pop(0))}"']
         for line in lines:
@@ -1098,7 +1095,7 @@ class POEntry(_BaseEntry):
 
         # flags (TODO: wrapping ?)
         if self.flags:
-            ret.append('#, %s' % ', '.join(self.flags))
+            ret.append('#, {}'.format(', '.join(self.flags)))
 
         # previous context and previous msgid/msgid_plural
         fields = ['previous_msgctxt', 'previous_msgid', 'previous_msgid_plural']
@@ -1409,13 +1406,12 @@ class _POFileParser:
             'msgctxt': 'pc',
         }
         tokens = []
-        fpath = '%s ' % self.instance.fpath if self.instance.fpath else ''
+        fpath = f'{self.instance.fpath} ' if self.instance.fpath else ''
         for line in self.fhandle:
             self.current_line += 1
             if self.current_line == 1:
                 BOM = codecs.BOM_UTF8.decode('utf-8')
-                if line.startswith(BOM):
-                    line = line[len(BOM) :]
+                line = line.removeprefix(BOM)
             line = line.strip()
             if line == '':
                 continue
@@ -1440,8 +1436,8 @@ class _POFileParser:
                 line = line[len(tokens[0]) :].lstrip()
                 if re.search(r'([^\\]|^)"', line[1:-1]):
                     raise OSError(
-                        'Syntax error in po file %s(line %s): '
-                        'unescaped double quote found' % (fpath, self.current_line)
+                        f'Syntax error in po file {fpath}(line {self.current_line}): '
+                        'unescaped double quote found'
                     )
                 self.current_token = line
                 self.process(keywords[tokens[0]])
@@ -1459,8 +1455,8 @@ class _POFileParser:
                 # we are on a continuation line
                 if re.search(r'([^\\]|^)"', line[1:-1]):
                     raise OSError(
-                        'Syntax error in po file %s(line %s): '
-                        'unescaped double quote found' % (fpath, self.current_line)
+                        f'Syntax error in po file {fpath}(line {self.current_line}): '
+                        'unescaped double quote found'
                     )
                 self.process('mc')
 
@@ -1489,8 +1485,7 @@ class _POFileParser:
             elif tokens[0] == '#|':
                 if nb_tokens <= 1:
                     raise OSError(
-                        'Syntax error in po file %s(line %s)'
-                        % (fpath, self.current_line)
+                        f'Syntax error in po file {fpath}(line {self.current_line})'
                     )
 
                 # Remove the marker and any whitespace right after that.
@@ -1505,16 +1500,16 @@ class _POFileParser:
                 if nb_tokens == 2:
                     # Invalid continuation line.
                     raise OSError(
-                        'Syntax error in po file %s(line %s): '
-                        'invalid continuation line' % (fpath, self.current_line)
+                        f'Syntax error in po file {fpath}(line {self.current_line}): '
+                        'invalid continuation line'
                     )
 
                 # we are on a "previous translation" comment line,
                 if tokens[1] not in prev_keywords:
                     # Unknown keyword in previous translation comment.
                     raise OSError(
-                        'Syntax error in po file %s(line %s): '
-                        'unknown keyword %s' % (fpath, self.current_line, tokens[1])
+                        f'Syntax error in po file {fpath}(line {self.current_line}): '
+                        f'unknown keyword {tokens[1]}'
                     )
 
                 # Remove the keyword and any whitespace
@@ -1570,7 +1565,7 @@ class _POFileParser:
             the next state the fsm will have after the action.
         """
         for state in states:
-            action = getattr(self, 'handle_%s' % next_state)
+            action = getattr(self, f'handle_{next_state}')
             self.transitions[(symbol, state)] = (action, next_state)
 
     def process(self, symbol: str) -> None:
@@ -1591,7 +1586,7 @@ class _POFileParser:
             if action():
                 self.current_state = state
         except Exception:
-            fpath = '%s ' % self.instance.fpath if self.instance.fpath else ''
+            fpath = f'{self.instance.fpath} ' if self.instance.fpath else ''
             if hasattr(self.fhandle, 'close'):
                 self.fhandle.close()
             raise OSError(f'Syntax error in po file {fpath}(line {self.current_line})')
@@ -1613,8 +1608,7 @@ class _POFileParser:
         if self.current_entry.tcomment != '':
             self.current_entry.tcomment += '\n'
         tcomment = self.current_token.lstrip('#')
-        if tcomment.startswith(' '):
-            tcomment = tcomment[1:]
+        tcomment = tcomment.removeprefix(' ')
         self.current_entry.tcomment += tcomment
         return True
 

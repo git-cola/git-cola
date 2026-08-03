@@ -673,14 +673,13 @@ class HintWidget(QtCore.QObject):
             'error_fg_rgb': error_fg_rgb,
             'error_bg_rgb': error_bg_rgb,
         }
-        self._error_style = (
-            """
-            %(name)s {
-                color: %(error_fg_rgb)s;
-                background-color: %(error_bg_rgb)s;
-            }
-        """
-            % env
+        self._error_style = """
+            {name} {{
+                color: {error_fg_rgb};
+                background-color: {error_bg_rgb};
+            }}
+        """.format(
+            **env
         )
         # Set the placeholder text.
         self.set_value(hint)
@@ -1072,7 +1071,7 @@ class LineNumbers(TextDecorator):
 
     def width_hint(self):
         document = self.editor.document()
-        digits = int(math.log(max(1, document.blockCount()), 10)) + 2
+        digits = int(math.log10(max(1, document.blockCount()))) + 2
         text_width = qtutils.text_width(self.font(), '0')
         return defs.large_margin + (text_width * digits)
 

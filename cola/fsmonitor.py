@@ -320,7 +320,7 @@ if AVAILABLE == 'inotify':
                         # removed on the filesystem before we call
                         # inotify.rm_watch() so ignore it.
                         continue
-                    raise e
+                    raise
             for path in paths_to_watch - watched_paths:
                 try:
                     wd = inotify.add_watch(
@@ -338,16 +338,14 @@ if AVAILABLE == 'inotify':
                         # before the call to inotify.add_watch().  Therefore we
                         # simply ignore them.
                         continue
-                    raise e
+                    raise
                 wd_to_path_map[wd] = path
                 path_to_wd_map[path] = wd
 
         def _check_event(self, wd, mask, name) -> None:
             if mask & inotify.IN_Q_OVERFLOW:
                 self._force_notify = True
-            elif not mask & self._TRIGGER_MASK:
-                pass
-            elif mask & inotify.IN_ISDIR:
+            elif not mask & self._TRIGGER_MASK or mask & inotify.IN_ISDIR:
                 pass
             elif wd in self._worktree_wd_to_path_map:
                 if self._use_check_ignore and name:

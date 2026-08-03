@@ -177,9 +177,7 @@ class Clone(standard.Dialog):
         if default == '.git':
             # The end of the URL is /.git, so assume it's a file path
             default = os.path.basename(os.path.dirname(newurl))
-        if default.endswith('.git'):
-            # The URL points to a bare repo
-            default = default[:-4]
+        default = default.removesuffix('.git')
         if url == '.':
             # The URL is the current repo
             default = os.path.basename(core.getcwd())

@@ -1,9 +1,9 @@
 """Miscellaneous Qt utility functions."""
 from __future__ import annotations
 import os
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 from typing import Union
 
 try:
@@ -417,14 +417,13 @@ def link(url: str, text: str, palette: QtGui.QPalette | None = None) -> str:
     rgb_color = f'rgb({color.red()}, {color.green()}, {color.blue()})'
     scope = {'rgb': rgb_color, 'text': text, 'url': url}
 
-    return (
-        """
-        <a style="font-style: italic; text-decoration: none; color: %(rgb)s;"
-            href="%(url)s">
-            %(text)s
+    return """
+        <a style="font-style: italic; text-decoration: none; color: {rgb};"
+            href="{url}">
+            {text}
         </a>
-    """
-        % scope
+    """.format(
+        **scope
     )
 
 
@@ -717,7 +716,7 @@ def persist_clipboard(text: str | None = None) -> None:
 
     C.f. https://stackoverflow.com/questions/2007103/how-can-i-disable-clear-of-clipboard-on-exit-of-pyqt4-application
 
-    """  # noqa
+    """
     if utils.is_darwin():
         if text is not None:
             persist_clipboard_macos(text)
@@ -939,24 +938,20 @@ def tool_button() -> QtWidgets.QToolButton:
     highlight_rgb = rgb_css(highlight)
 
     button.setStyleSheet(
-        """
+        f"""
         /* No borders */
-        QToolButton {
+        QToolButton {{
             border: none;
             background-color: none;
-        }
+        }}
         /* Hide the menu indicator */
-        QToolButton::menu-indicator {
+        QToolButton::menu-indicator {{
             image: none;
-        }
-        QToolButton:hover {
-            border: %(border)spx solid %(highlight_rgb)s;
-        }
+        }}
+        QToolButton:hover {{
+            border: {defs.border}px solid {highlight_rgb};
+        }}
     """
-        % {
-            'border': defs.border,
-            'highlight_rgb': highlight_rgb,
-        }
     )
     return button
 
@@ -1240,7 +1235,7 @@ def mimedata_from_paths(
 
     Older versions of gnome-terminal expected a UTF-16 encoding, but that
     behavior is no longer needed.
-    """  # noqa
+    """
     abspaths = [core.abspath(path) for path in paths]
     paths_text = core.list2cmdline(abspaths)
 
@@ -1358,9 +1353,8 @@ class RunTask(QtCore.QObject):
     ) -> None:
         """Start the task and register a callback"""
         self.result_func = result
-        if progress is not None:
-            if hasattr(progress, 'start'):
-                progress.start()
+        if progress is not None and hasattr(progress, 'start'):
+            progress.start()
 
         # prevents garbage collection bugs in certain PyQt4 versions
         self.tasks.append(task)
@@ -1448,7 +1442,7 @@ def rgba_qcolor(value: ColorLike) -> QtGui.QColor:
 
 def rgb_css(color: QtGui.QColor) -> str:
     """Convert a QColor into an rgb #abcdef CSS string"""
-    return '#%s' % rgb_hex(color)
+    return f'#{rgb_hex(color)}'
 
 
 def rgb_hex(color: QtGui.QColor) -> str:
@@ -1463,8 +1457,7 @@ def clamp_color(value: int) -> int:
 
 def css_color(value: str) -> QtGui.QColor:
     """Convert a #abcdef hex string into a QColor"""
-    if value.startswith('#'):
-        value = value[1:]
+    value = value.removeprefix('#')
     try:
         red = clamp_color(int(value[:2], base=16))  # ab
     except ValueError:
@@ -1649,8 +1642,7 @@ def qt_index_from_codepoint(s: str, codepoint_index: int) -> int:
     """Convert a Python codepoint index into a Qt UTF-16 index."""
     if codepoint_index <= 0:
         return 0
-    if codepoint_index >= len(s):
-        codepoint_index = len(s)
+    codepoint_index = min(len(s), codepoint_index)
     u = 0
     for ch in s[:codepoint_index]:
         u += 2 if ord(ch) > 0xFFFF else 1
@@ -1663,8 +1655,7 @@ def qt_span_from_codepoint(
     """Convert a Python codepoint span into a Qt UTF-16 span."""
     if length_codepoint <= 0:
         return (0, 0)
-    if start_codepoint < 0:
-        start_codepoint = 0
+    start_codepoint = max(start_codepoint, 0)
     end_codepoint = min(len(s), start_codepoint + length_codepoint)
     start_qt = qt_index_from_codepoint(s, start_codepoint)
     end_qt = qt_index_from_codepoint(s, end_codepoint)

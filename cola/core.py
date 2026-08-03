@@ -12,9 +12,11 @@ import os
 import platform
 import subprocess
 import sys
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
+
+from typing_extensions import Self
 
 from .compat import PY2
 from .compat import PY3
@@ -67,7 +69,7 @@ class UStr(ustr):
 
     """
 
-    def __new__(cls: type[UStr], string: str | UStr, encoding: str) -> UStr:
+    def __new__(cls, string: str | UStr, encoding: str) -> Self:
         if isinstance(string, UStr):
             if encoding != string.encoding:
                 raise ValueError(f'Encoding conflict: {string.encoding} vs. {encoding}')

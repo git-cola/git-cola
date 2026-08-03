@@ -1062,8 +1062,7 @@ class GraphDelegate(QtWidgets.QStyledItemDelegate):
             text_width = 0
 
         total_width = graph_width + 8 + labels_width + 8 + text_width
-        if total_width < self.LANE_WIDTH * 4:
-            total_width = self.LANE_WIDTH * 4
+        total_width = max(total_width, self.LANE_WIDTH * 4)
         height = option.fontMetrics.height()
         return QtCore.QSize(total_width, height)
 
@@ -2973,13 +2972,11 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             # directions simultaneously.
             for col in itertools.count(0):
                 if col not in columns:
-                    if col > self.max_column:
-                        self.max_column = col
+                    self.max_column = max(self.max_column, col)
                     break
                 col = -col
                 if col not in columns:
-                    if col < self.min_column:
-                        self.min_column = col
+                    self.min_column = min(self.min_column, col)
                     break
         self.declare_column(col)
         columns[col] = 1
@@ -2997,8 +2994,7 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
                 can_overlap = list(range(column - 1, self.min_column - 1, -1))
             for value in can_overlap:
                 frontier = self.frontier[value]
-                if frontier > cell_row:
-                    cell_row = frontier
+                cell_row = max(cell_row, frontier)
 
         # Avoid overlapping with tags of commits at cell_row.
         if self.x_off > 0:

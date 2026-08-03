@@ -3,8 +3,8 @@ from __future__ import annotations
 import os
 import sys
 import webbrowser
+from collections.abc import Callable
 from typing import TYPE_CHECKING
-from typing import Callable
 
 from . import compat
 from . import core

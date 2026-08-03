@@ -193,7 +193,7 @@ class CompareBranchesDialog(standard.Dialog):
             if tracked_branch:
                 return gitcmds.merge_base(context, branch, tracked_branch)
             remote_branches = gitcmds.branch_list(context, remote=True)
-            remote_branch = 'origin/%s' % branch
+            remote_branch = f'origin/{branch}'
             if remote_branch in remote_branches:
                 return gitcmds.merge_base(context, branch, remote_branch)
 

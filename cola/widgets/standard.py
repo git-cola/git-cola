@@ -1123,14 +1123,13 @@ class MessageBox(Dialog):
             QtCore.QTimer.singleShot(0, self.accept)
         elif key in (Qt.Key_N, Qt.Key_Q):
             QtCore.QTimer.singleShot(0, self.reject)
-        elif key == Qt.Key_Tab:
-            if self.button_ok.isVisible():
-                event.accept()
-                if self.focusWidget() == self.button_close:
-                    self.button_ok.setFocus()
-                else:
-                    self.button_close.setFocus()
-                return
+        elif key == Qt.Key_Tab and self.button_ok.isVisible():
+            event.accept()
+            if self.focusWidget() == self.button_close:
+                self.button_ok.setFocus()
+            else:
+                self.button_close.setFocus()
+            return
         Dialog.keyPressEvent(self, event)
 
     def run(self):

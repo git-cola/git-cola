@@ -3,9 +3,9 @@ from __future__ import annotations
 import json
 import os
 import sys
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 
 from . import core
 from . import display
@@ -61,7 +61,7 @@ def write_json(
             if sync:
                 core.fsync(fp.fileno())
     except (ValueError, TypeError, OSError):
-        sys.stderr.write('git-cola: error writing "%s"\n' % path)
+        sys.stderr.write(f'git-cola: error writing "{path}"\n')
         return False
     return True
 
@@ -81,7 +81,7 @@ def remove_path(path: str) -> None:
     try:
         core.remove(path)
     except OSError:
-        sys.stderr.write('git-cola: error removing "%s"\n' % path)
+        sys.stderr.write(f'git-cola: error removing "{path}"\n')
 
 
 class Settings:

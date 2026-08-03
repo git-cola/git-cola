@@ -3,7 +3,7 @@ import sys
 from typing import Any
 
 try:
-    import urllib2 as parse  # noqa
+    import urllib2 as parse
 except ImportError:
     # Python 3
     from urllib import parse  # noqa

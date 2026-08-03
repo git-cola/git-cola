@@ -55,7 +55,7 @@ class FileWidget(TreeWidget):
                 for r in map(str, range(10))
             )
         else:
-            self.toggle_remark_actions = tuple()
+            self.toggle_remark_actions = ()
 
         self.itemSelectionChanged.connect(self.selection_changed)
 

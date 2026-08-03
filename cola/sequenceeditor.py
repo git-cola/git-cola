@@ -3,10 +3,10 @@ import re
 import sys
 from argparse import ArgumentParser
 from argparse import Namespace
+from collections.abc import Callable
 from functools import partial
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 
 from cola import app  # prints a message if Qt cannot be found
 from cola import core
@@ -113,7 +113,7 @@ class MainWindow(standard.MainWindow):
         # If the user closes the window without confirmation it's considered cancelled.
         self.cancelled = True
         self.editor: Any = None
-        default_title = '%s - git cola sequence editor' % core.getcwd()
+        default_title = f'{core.getcwd()} - git cola sequence editor'
         title = core.getenv('GIT_COLA_SEQ_EDITOR_TITLE', default_title)
         self.setWindowTitle(title)
         self.show_help_action = qtutils.add_action(
@@ -304,10 +304,10 @@ class Editor(QtWidgets.QWidget):
     def parse_sequencer_instructions(self, insns: str) -> None:
         idx = 1
         re_comment_char = re.escape(self.comment_char)
-        break_rgx = re.compile(r'^\s*(%s)?\s*(b|break)$' % re_comment_char)
-        exec_rgx = re.compile(r'^\s*(%s)?\s*(x|exec)\s+(.+)$' % re_comment_char)
+        break_rgx = re.compile(rf'^\s*({re_comment_char})?\s*(b|break)$')
+        exec_rgx = re.compile(rf'^\s*({re_comment_char})?\s*(x|exec)\s+(.+)$')
         update_ref_rgx = re.compile(
-            r'^\s*(%s)?\s*(u|update-ref)\s+(.+)$' % re_comment_char
+            rf'^\s*({re_comment_char})?\s*(u|update-ref)\s+(.+)$'
         )
         # The upper bound of 64 below must be >= all git.OID_LENGTH_XXX values.
         pick_rgx = re.compile(
@@ -320,7 +320,7 @@ class Editor(QtWidgets.QWidget):
             % re_comment_char
         )
         label_rgx = re.compile(
-            r'^\s*(%s)?\s*(l|label|m|merge|t|reset)\s+(.+)$' % re_comment_char
+            rf'^\s*({re_comment_char})?\s*(l|label|m|merge|t|reset)\s+(.+)$'
         )
         for line in insns.splitlines():
             match = pick_rgx.match(line)
@@ -624,8 +624,8 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
 
     def move(self, src_idxs: list[int], dst_idx: int) -> None:
         moved_items = []
-        src_base = sorted(src_idxs)[0]
-        for idx in reversed(sorted(src_idxs)):
+        src_base = min(src_idxs)
+        for idx in sorted(src_idxs, reverse=True):
             item = self.invisibleRootItem().takeChild(idx)
             moved_items.insert(0, [dst_idx + (idx - src_base), item])
 

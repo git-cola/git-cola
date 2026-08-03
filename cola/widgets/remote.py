@@ -878,7 +878,7 @@ class RemoteActionDialog(standard.Dialog):
             return
 
         status, out, err = task.result
-        command = 'git %s' % self.action
+        command = f'git {self.action}'
         message = Interaction.format_command_status(command, status)
         details = Interaction.format_out_err(out, err)
 

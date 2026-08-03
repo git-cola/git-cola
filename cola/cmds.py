@@ -3,16 +3,18 @@ from __future__ import annotations
 import os
 import re
 import sys
+from collections.abc import Callable
 from fnmatch import fnmatch
 from io import StringIO
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 
 try:
     from send2trash import send2trash
 except ImportError:
     send2trash = None
+
+from typing_extensions import Self
 
 from . import compat
 from . import core
@@ -276,18 +278,14 @@ class AmendMode(EditModel):
     def do(self) -> None:
         """Leave/enter amend mode."""
         # Attempt to enter amend mode.  Do not allow this when merging.
-        if self.amending:
-            if self.model.is_merging:
-                self.skip = True
-                self.model.set_mode(self.old_mode)
-                Interaction.information(
-                    N_('Cannot Amend'),
-                    N_(
-                        'You are in the middle of a merge.\n'
-                        'Cannot amend while merging.'
-                    ),
-                )
-                return
+        if self.amending and self.model.is_merging:
+            self.skip = True
+            self.model.set_mode(self.old_mode)
+            Interaction.information(
+                N_('Cannot Amend'),
+                N_('You are in the middle of a merge.\n' 'Cannot amend while merging.'),
+            )
+            return
         self.skip = False
         super().do()
         self.model.set_commit_author(self.new_author)
@@ -637,7 +635,7 @@ class Revert(ContextCommand):
         status, out, err = self.git.revert(self.oid, no_edit=True)
         self.model.update_file_status()
         title = N_('Revert failed')
-        out = '# git revert %s\n\n' % self.oid
+        out = f'# git revert {self.oid}\n\n'
         Interaction.command(title, 'git revert', status, out, err)
 
 
@@ -791,7 +789,7 @@ class RestoreWorktree(ConfirmAction):
         return self.git.read_tree(self.ref, reset=True, u=True)
 
     def command(self) -> str:
-        return 'git read-tree --reset -u %s' % self.ref
+        return f'git read-tree --reset -u {self.ref}'
 
     def error_message(self) -> str:
         return N_('Error')
@@ -1016,7 +1014,7 @@ class RemoteRemove(RemoteCommand):
         return N_('Error deleting remote "%s"') % self.remote
 
     def command(self) -> str:
-        return 'git remote rm "%s"' % self.remote
+        return f'git remote rm "{self.remote}"'
 
 
 class RemoteRename(RemoteCommand):
@@ -1293,7 +1291,7 @@ class DeleteBranch(ConfirmAction):
         return self.model.delete_branch(self.branch)
 
     def error_message(self) -> str:
-        return N_('Error deleting branch "%s"' % self.branch)
+        return N_(f'Error deleting branch "{self.branch}"')
 
     def command(self) -> str:
         command = 'git branch -D %s'
@@ -1779,10 +1777,10 @@ class Edit(ContextCommand):
             # Some editors can only apply the '+<line-number>' argument to one file.
             filename = self.selected_filename
             editor_opts = {
-                '*vim*': ['+%s' % self.line_number, filename],
-                '*emacs*': ['+%s' % self.line_number, filename],
+                '*vim*': [f'+{self.line_number}', filename],
+                '*emacs*': [f'+{self.line_number}', filename],
                 '*textpad*': [f'{filename}({self.line_number},0)'],
-                '*notepad++*': ['-n%s' % self.line_number, filename],
+                '*notepad++*': [f'-n{self.line_number}', filename],
                 '*subl*': [f'{filename}:{self.line_number}'],
                 'code': [f'--goto {filename}:{self.line_number}'],
                 'cursor': [f'--goto {filename}:{self.line_number}'],
@@ -1968,7 +1966,7 @@ class PrepareCommitMessageHook(ContextCommand):
         hook = gitcmds.prepare_commit_message_hook(self.context)
 
         if os.path.exists(hook):
-            Interaction.log('hook cola-prepare-commit-msg exists: "%s"' % hook)
+            Interaction.log(f'hook cola-prepare-commit-msg exists: "{hook}"')
             filename = self.model.save_commitmsg()
 
             if utils.is_win32():
@@ -1980,7 +1978,7 @@ class PrepareCommitMessageHook(ContextCommand):
                 if not bash:
                     return self.old_commitmsg
 
-                Interaction.log('bash found: "%s"' % bash)
+                Interaction.log(f'bash found: "{bash}"')
                 # Normalize path separators
                 hook_rep = hook.replace('\\', '/')
                 filename_rep = filename.replace('\\', '/')
@@ -1988,7 +1986,7 @@ class PrepareCommitMessageHook(ContextCommand):
                 # Run the hook through bash.exe
                 cmd = [bash, hook_rep, filename_rep]
 
-                Interaction.log("running 'prepare-commit-msg': %s" % str(cmd))
+                Interaction.log(f"running 'prepare-commit-msg': {cmd!s}")
                 status, out, err = core.run_command(cmd)
             else:
                 # On *nix:
@@ -2269,7 +2267,7 @@ class NewBareRepo(ContextCommand):
 
         status, out, err = self.git.init(path, bare=True, shared=True)
         Interaction.command(
-            N_('Error'), 'git init --bare --shared "%s"' % path, status, out, err
+            N_('Error'), f'git init --bare --shared "{path}"', status, out, err
         )
         return status == 0
 
@@ -2316,7 +2314,7 @@ class SequenceEditorEnvironment:
         }
         self.env.update(kwargs)
 
-    def __enter__(self) -> SequenceEditorEnvironment:
+    def __enter__(self) -> Self:
         for var, value in self.env.items():
             compat.setenv(var, value)
         return self
@@ -2780,8 +2778,8 @@ class SetUpstreamBranch(ContextCommand):
         remote = self.remote
         branch = self.branch
         remote_branch = self.remote_branch
-        cfg.set_repo('branch.%s.remote' % branch, remote)
-        cfg.set_repo('branch.%s.merge' % branch, 'refs/heads/' + remote_branch)
+        cfg.set_repo(f'branch.{branch}.remote', remote)
+        cfg.set_repo(f'branch.{branch}.merge', 'refs/heads/' + remote_branch)
 
 
 def format_hex(data) -> str:
@@ -2793,7 +2791,7 @@ def format_hex(data) -> str:
     while offset < len(data):
         result += '%04u |' % offset
         textpart = ''
-        for i in range(0, 16):
+        for i in range(16):
             if i > 0 and i % 4 == 0:
                 result += ' '
             if offset < len(data):
@@ -3339,7 +3337,7 @@ class UnmergedSummary(EditModel):
         super().__init__(context)
         unmerged = self.model.unmerged
         io = StringIO()
-        io.write('# %s unmerged  file(s)\n' % len(unmerged))
+        io.write(f'# {len(unmerged)} unmerged  file(s)\n')
         if unmerged:
             io.write('\n'.join(unmerged) + '\n')
         self.new_diff_text = io.getvalue()
@@ -3355,7 +3353,7 @@ class UntrackedSummary(EditModel):
         super().__init__(context)
         untracked = self.model.untracked
         io = StringIO()
-        io.write('# %s untracked file(s)\n' % len(untracked))
+        io.write(f'# {len(untracked)} untracked file(s)\n')
         if untracked:
             io.write('# Add these lines to ".gitignore" to ignore these files:\n')
             io.write('\n'.join('/' + filename for filename in untracked) + '\n')
@@ -3434,7 +3432,7 @@ class SubmoduleAdd(ConfirmAction):
     def confirm(self) -> bool:
         title = N_('Add Submodule...')
         question = N_('Add this submodule?')
-        info = N_('The submodule will be added using\n' '"%s"' % self.command())
+        info = N_('The submodule will be added using\n' f'"{self.command()}"')
         ok_txt = N_('Add Submodule')
         return Interaction.confirm(title, question, info, ok_txt, icon=icons.ok())
 
@@ -3450,7 +3448,7 @@ class SubmoduleAdd(ConfirmAction):
         self.model.update_submodules_list()
 
     def error_message(self) -> str:
-        return N_('Error updating submodule %s' % self.path)
+        return N_(f'Error updating submodule {self.path}')
 
     def command(self) -> str:
         cmd = ['git', 'submodule', 'add']
@@ -3481,7 +3479,7 @@ class SubmoduleUpdate(ConfirmAction):
     def confirm(self) -> bool:
         title = N_('Update Submodule...')
         question = N_('Update this submodule?')
-        info = N_('The submodule will be updated using\n' '"%s"' % self.command())
+        info = N_('The submodule will be updated using\n' f'"{self.command()}"')
         ok_txt = N_('Update Submodule')
         return Interaction.confirm(
             title, question, info, ok_txt, default=False, icon=icons.pull()
@@ -3498,7 +3496,7 @@ class SubmoduleUpdate(ConfirmAction):
         self.model.update_file_status()
 
     def error_message(self) -> str:
-        return N_('Error updating submodule %s' % self.path)
+        return N_(f'Error updating submodule {self.path}')
 
     def command(self) -> str:
         cmd = ['git', 'submodule']
@@ -3519,7 +3517,7 @@ class SubmodulesUpdate(ConfirmAction):
     def confirm(self) -> bool:
         title = N_('Update submodules...')
         question = N_('Update all submodules?')
-        info = N_('All submodules will be updated using\n' '"%s"' % self.command())
+        info = N_('All submodules will be updated using\n' f'"{self.command()}"')
         ok_txt = N_('Update Submodules')
         return Interaction.confirm(
             title, question, info, ok_txt, default=False, icon=icons.pull()

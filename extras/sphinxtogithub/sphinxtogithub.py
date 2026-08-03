@@ -80,8 +80,7 @@ class VerboseRename:
 
     def __call__(self, from_, to):
         self.stream.write(
-            "Renaming directory '%s' -> '%s'\n"
-            % (os.path.basename(from_), os.path.basename(to))
+            f"Renaming directory '{os.path.basename(from_)}' -> '{os.path.basename(to)}'\n"
         )
 
         self.renamer(from_, to)
@@ -212,7 +211,7 @@ class LayoutFactory:
             if self.verbose:
                 self.output_stream.write(
                     'No top level directories starting with an underscore '
-                    "were found in '%s'\n" % path
+                    f"were found in '{path}'\n"
                 )
             return NullLayout()
 

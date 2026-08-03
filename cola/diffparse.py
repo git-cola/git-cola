@@ -28,11 +28,7 @@ def _format_range(start: int, count: int) -> str:
 def _format_hunk_header(
     old_start, old_count, new_start, new_count, heading: str = ''
 ) -> str:
-    return '@@ -{} +{} @@{}\n'.format(
-        _format_range(old_start, old_count),
-        _format_range(new_start, new_count),
-        heading,
-    )
+    return f'@@ -{_format_range(old_start, old_count)} +{_format_range(new_start, new_count)} @@{heading}\n'
 
 
 def digits(number: int) -> int:
@@ -321,8 +317,8 @@ class Patch:
         lines = []
         if self.hunks:
             if file_headers:
-                lines.append('--- a/%s\n' % self.filename)
-                lines.append('+++ b/%s\n' % self.filename)
+                lines.append(f'--- a/{self.filename}\n')
+                lines.append(f'+++ b/{self.filename}\n')
             for hunk in self.hunks:
                 lines.extend(hunk.lines)
         return ''.join(lines)

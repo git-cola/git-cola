@@ -1,9 +1,9 @@
 """The central cola model"""
 from __future__ import annotations
 import os
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 
 from qtpy import QtCore
 from qtpy.QtCore import Signal
@@ -706,7 +706,7 @@ def autodetect_proxy(context, kwargs: dict[Any, Any]) -> None:
     if http_proxy:
         Interaction.log(
             N_('http proxy configured by "git config http.proxy %(url)s"')
-            % dict(url=http_proxy)
+            % {'url': http_proxy}
         )
         return
     # This function has the side-effect of updating the kwargs dict.
@@ -745,7 +745,7 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     elif http_proxy:
         Interaction.log(
             N_('%(scheme)s proxy configured from %(desktop)s settings: %(url)s')
-            % dict(scheme='http', desktop=xdg_current_desktop, url=http_proxy)
+            % {'scheme': 'http', 'desktop': xdg_current_desktop, 'url': http_proxy}
         )
         add_env['http_proxy'] = http_proxy
 
@@ -756,7 +756,7 @@ def autodetect_proxy_environ() -> dict[Any, Any]:
     elif https_proxy:
         Interaction.log(
             N_('%(scheme)s proxy configured from %(desktop)s settings: %(url)s')
-            % dict(scheme='https', desktop=xdg_current_desktop, url=https_proxy)
+            % {'scheme': 'https', 'desktop': xdg_current_desktop, 'url': https_proxy}
         )
         add_env['https_proxy'] = https_proxy
 
@@ -811,7 +811,7 @@ def autodetect_proxy_kde(kreadconfig: str, scheme: str) -> str | None:
             '--key',
             f'{scheme}Proxy',
         ]
-        status, out, err = core.run_command(cmd)
+        status, out, _err = core.run_command(cmd)
         if status == 0:
             proxy = out.strip().replace(' ', ':')
             return proxy

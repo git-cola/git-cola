@@ -94,20 +94,20 @@ class Commit:
     root_generation = 0
 
     __slots__ = (
-        'context',
-        'oid',
-        'summary',
-        'parents',
-        'children',
-        'branches',
-        'tags',
-        'author',
         'authdate',
+        'author',
+        'branches',
+        'children',
+        'column',
+        'context',
         'email',
         'generation',
-        'column',
-        'row',
+        'oid',
+        'parents',
         'parsed',
+        'row',
+        'summary',
+        'tags',
     )
 
     def __init__(
@@ -162,14 +162,11 @@ class Commit:
 
     def add_label(self, tag: str) -> None:
         """Add tag/branch labels from `git log --decorate ....`"""
-        if tag.startswith('tag: '):
-            tag = tag[5:]  # strip off "tag: " leaving refs/tags/
+        tag = tag.removeprefix('tag: ')  # strip off "tag: " leaving refs/tags/
         if tag.startswith('refs/heads/'):
             branch = tag[11:]
             self.branches.append(branch)
-        if tag.startswith('refs/'):
-            # strip off refs/ leaving just tags/XXX remotes/XXX heads/XXX
-            tag = tag[5:]
+        tag = tag.removeprefix('refs/')
         if tag.endswith('/HEAD'):
             return
 
@@ -280,7 +277,7 @@ class RepoReader:
         cmd = (
             self._cmd
             + ['-%d' % self.params.count]
-            + ['--date=%s' % prefs.logdate(self.context)]
+            + [f'--date={prefs.logdate(self.context)}']
             + ['--no-patch']
             + ref_args
         )

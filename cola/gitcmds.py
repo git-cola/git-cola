@@ -340,10 +340,10 @@ def tracked_branch(
     if branch is None:
         return None
     config = context.cfg
-    remote = config.get('branch.%s.remote' % branch)
+    remote = config.get(f'branch.{branch}.remote')
     if not remote:
         return None
-    merge_ref = config.get('branch.%s.merge' % branch)
+    merge_ref = config.get(f'branch.{branch}.merge')
     if not merge_ref:
         return None
     refs_heads = 'refs/heads/'
@@ -1171,7 +1171,7 @@ def cat_file(context: ApplicationContext, filename: str, *args, **kwargs) -> str
 
 def cat_file_from_ref(context: ApplicationContext, ref: str, filename: str) -> str:
     """Read file contents using git cat-file"""
-    status, out, _ = context.git.cat_file(
+    _status, out, _ = context.git.cat_file(
         'blob', f'{ref}:{filename}', _raw=True, _readonly=True
     )
     return out

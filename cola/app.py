@@ -6,29 +6,27 @@ import random
 import signal
 import sys
 import time
+from collections.abc import Callable
 from functools import partial
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 
 try:
     from qtpy import QtCore
 except ImportError as error:
     sys.stderr.write(
-        """
+        f"""
 Your Python environment does not have qtpy and PyQt (or PySide).
 The following error was encountered when importing "qtpy":
 
-    ImportError: {err}
+    ImportError: {error}
 
 Install qtpy and PyQt (or PySide) into your Python environment.
 On a Debian/Ubuntu system you can install these modules using apt:
 
     sudo apt install python3-pyqt5 python3-pyqt5.qtwebengine python3-qtpy
 
-""".format(
-            err=error
-        )
+"""
     )
     sys.exit(1)  # core.EXIT_FAILURE
 
@@ -411,8 +409,7 @@ def process_args(args: argparse.Namespace, setup_repo: bool = False) -> None:
 
     # Bail out if --repo is not a directory
     repo: TextType = core.decode(args.repo)
-    if repo.startswith('file:'):
-        repo = repo[len('file:') :]
+    repo = repo.removeprefix('file:')
     repo = core.realpath(repo)
     if not core.isdir(repo):
         errmsg = (
@@ -689,7 +686,7 @@ def new_worktree(context: ApplicationContext, repo: str, prompt: bool) -> None:
             err = model.error
             standard.critical(
                 N_('Error Opening Repository'),
-                message=N_('Could not open %s.' % gitdir),
+                message=N_(f'Could not open {gitdir}.'),
                 details=err,
             )
 

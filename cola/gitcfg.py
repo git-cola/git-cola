@@ -5,10 +5,10 @@ import fnmatch
 import os
 import struct
 from binascii import unhexlify
+from collections.abc import Callable
 from collections.abc import Iterator
 from typing import TYPE_CHECKING
 from typing import Any
-from typing import Callable
 
 try:
     import pwd
@@ -469,7 +469,7 @@ class GitConfig(QtCore.QObject):
         return None
 
     def color(self, key: str, default: str) -> tuple[int, int, int]:
-        value = self.get('cola.color.%s' % key, default=default)
+        value = self.get(f'cola.color.{key}', default=default)
         struct_layout = core.encode('BBB')
         try:
             red, green, blue = struct.unpack(struct_layout, unhex(value))
@@ -517,13 +517,8 @@ def _read_config_with_scope(
     for line in config_output.splitlines():
         if not line:
             continue
-        if (
-            line.startswith(system_key)
-            or line.startswith(global_key)
-            or line.startswith(local_key)
-            or line.startswith(command_key)
-            or line.startswith(worktree_key)  # worktree and unknown are uncommon.
-            or line.startswith(unknown_key)
+        if line.startswith(
+            (system_key, global_key, local_key, command_key, worktree_key, unknown_key)
         ):
             continuation = False
             current_scope, current_path, rest = line.split('\t', 2)
