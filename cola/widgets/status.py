@@ -602,8 +602,25 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
         return entry
 
     def _save_selection(self):
-        self.old_contents = self.contents()
-        self.old_selection = self.selection()
+        # This runs from the queued about_to_update signal, which is delivered
+        # after the model has already swapped in the new file lists. Reading the
+        # live model here (self.contents()/self.selection()) would map the tree's
+        # still-old selected rows against the new path lists and record the wrong
+        # paths -- e.g. staging a,b,c would report the following d,e as selected.
+        # previous_contents is emitted just before about_to_update and holds the
+        # pre-update lists, so use it to snapshot the old contents and selection.
+        old = self.previous_contents
+        if old is None:
+            self.old_contents = self.contents()
+            self.old_selection = self.selection()
+        else:
+            self.old_contents = old
+            self.old_selection = selection.State(
+                qtutils.get_selected_values(self, STAGED_IDX, old.staged),
+                qtutils.get_selected_values(self, UNMERGED_IDX, old.unmerged),
+                qtutils.get_selected_values(self, MODIFIED_IDX, old.modified),
+                qtutils.get_selected_values(self, UNTRACKED_IDX, old.untracked),
+            )
         self.old_current_item = self.current_item()
 
     def refresh(self):
