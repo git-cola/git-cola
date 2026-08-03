@@ -292,8 +292,6 @@ class DiffTextEdit(VimHintedPlainTextEdit):
     def refresh_appearance(self) -> None:
         """Update palette-derived colors after a system appearance change."""
         self.highlighter.refresh_palette(self.context)
-        if self.numbers:
-            self.numbers.refresh_palette()
 
     def changeEvent(self, event):
         if event.type() == QtCore.QEvent.PaletteChange:
@@ -591,6 +589,11 @@ class DiffLineNumbers(TextDecorator):
         self._window = palette.color(QPalette.Window)
         self._disabled = palette.color(QPalette.Disabled, QPalette.Text)
         self.update()
+
+    def changeEvent(self, event):
+        if event.type() == QtCore.QEvent.PaletteChange:
+            self.refresh_palette()
+        super().changeEvent(event)
 
     def set_diff(self, diff, lines=None):
         """Update to a new diff display"""
