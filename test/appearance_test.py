@@ -5,7 +5,9 @@ from unittest.mock import MagicMock
 import pytest
 
 from cola import app as cola_app
+from cola.widgets.diff import DiffLineNumbers
 from cola.widgets.diff import DiffSyntaxHighlighter
+from qtpy import QtCore
 from qtpy import QtGui
 from qtpy import QtWidgets
 
@@ -105,3 +107,15 @@ def test_diff_syntax_highlighter_refresh_palette_rehighlights(qapp):
     highlighter.refresh_palette(context)
 
     highlighter.rehighlight.assert_called_once()
+
+
+def test_diff_line_numbers_change_event_refreshes_on_palette_change(qapp):
+    """DiffLineNumbers must refresh itself on PaletteChange events."""
+    context = MagicMock()
+    context.cfg.get.return_value = None
+    numbers = DiffLineNumbers(context, QtWidgets.QPlainTextEdit())
+    numbers.refresh_palette = MagicMock()
+
+    numbers.changeEvent(QtCore.QEvent(QtCore.QEvent.PaletteChange))
+
+    numbers.refresh_palette.assert_called_once()
