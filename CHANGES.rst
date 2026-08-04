@@ -29,6 +29,11 @@ Usability, bells and whistles
   (`#1627 <https://github.com/git-cola/git-cola/issues/1627>`_)
   (`#1629 <https://github.com/git-cola/git-cola/pull/1629>`_)
 
+* Appearance settings can now be configured to affect either
+  "All Repositories" or just the current repository.
+  (`#1578 <https://github.com/git-cola/git-cola/issues/1578>`_)
+  (`#1623 <https://github.com/git-cola/git-cola/pull/1623>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.
