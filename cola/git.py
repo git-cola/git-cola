@@ -235,11 +235,18 @@ class Git:
 
         return valid
 
-    def git_path(self, *paths) -> str:
+    def git_path(self, *paths, common: bool = True) -> str:
+        """Return a path inside the git directory
+
+        Existing paths in the common git directory are preferred over
+        non-existent per-worktree paths. Pass "common=False" for per-worktree
+        files, which is what "git rev-parse --git-path" reports.
+
+        """
         result = None
         if self.paths.git_dir:
             result = join(self.paths.git_dir, *paths)
-        if result and self.paths.common_dir and not core.exists(result):
+        if common and result and self.paths.common_dir and not core.exists(result):
             common_result = join(self.paths.common_dir, *paths)
             if core.exists(common_result):
                 result = common_result

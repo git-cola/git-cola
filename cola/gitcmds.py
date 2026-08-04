@@ -982,8 +982,13 @@ def rev_list_range(context: ApplicationContext, start, end) -> list[tuple[str, s
 
 
 def commit_message_path(context: ApplicationContext) -> str:
-    """Return the path to .git/GIT_COLA_MSG"""
-    path = context.git.git_path('GIT_COLA_MSG')
+    """Return the path to .git/GIT_COLA_MSG
+
+    The message belongs to a single worktree, so linked worktrees use
+    .git/worktrees/<name>/GIT_COLA_MSG.
+
+    """
+    path = context.git.git_path('GIT_COLA_MSG', common=False)
     if core.exists(path):
         return path
     return None
