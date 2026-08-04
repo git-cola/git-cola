@@ -26,6 +26,7 @@ Usability, bells and whistles
   truncate text in such a way that made the entries ambiguous.
   A new `Text Elide Mode` preference in the settings allows
   the truncation to be configured.
+  (`#1627 <https://github.com/git-cola/git-cola/issues/1627>`_)
   (`#1629 <https://github.com/git-cola/git-cola/pull/1629>`_)
 
 Fixes
