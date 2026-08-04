@@ -21,6 +21,13 @@ Usability, bells and whistles
   external ``git`` processes.
   (`#1618 <https://github.com/git-cola/git-cola/pull/1618>`_)
 
+* The text truncation that is used on some displays, for example
+  in the startup dialog when selecting repositories, would sometimes
+  truncate text in such a way that made the entries ambiguous.
+  A new `Text Elide Mode` preference in the settings allows
+  the truncation to be configured.
+  (`#1629 <https://github.com/git-cola/git-cola/pull/1629>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.

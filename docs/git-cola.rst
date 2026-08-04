@@ -1247,6 +1247,12 @@ The table below shows the builtin configuration.
     xfce4-terminal      "xfce4-terminal -e"     true
     xterm               "xterm -e"              false
 
+cola.textedlidemode
+-------------------
+
+How to truncate overly-long text, for example in the startup dialog.
+Valid values are `left`, `middle`, `right`, and `none`.
+Defaults to `middle`.
 
 cola.textwidth
 --------------

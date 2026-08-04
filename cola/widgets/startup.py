@@ -332,6 +332,7 @@ class BookmarksListView(QtWidgets.QListView):
 
         self.setModel(model)
         self.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.setTextElideMode(prefs.text_elide_mode(context))
         self.setViewMode(QtWidgets.QListView.IconMode)
         self.setResizeMode(QtWidgets.QListView.Adjust)
         self.setGridSize(make_size(defs.large_icon))
