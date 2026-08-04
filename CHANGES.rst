@@ -26,6 +26,9 @@ Fixes
 * Corrected an incorrect import in the Apply Patches feature.
   (`#1630 <https://github.com/git-cola/git-cola/pull/1630>`_)
 
+* The diff tool's line number style is now refreshed when changing palettes.
+  (`#1633 <https://github.com/git-cola/git-cola/pull/1633>`_)
+
 Translations
 ------------
 * Updated French translation.
