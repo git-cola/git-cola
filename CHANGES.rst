@@ -1,3 +1,15 @@
+.. _v4.20.0:
+
+v4.20.0
+=======
+
+Usability, bells and whistles
+-----------------------------
+* Git Cola now avoids taking optional locks that can interact with
+  external ``git`` processes.
+  (`#1618 <https://github.com/git-cola/git-cola/pull/1618>`_)
+
+
 .. _v4.19.0:
 
 v4.19.0
