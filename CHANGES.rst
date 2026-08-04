@@ -34,6 +34,13 @@ Usability, bells and whistles
   (`#1578 <https://github.com/git-cola/git-cola/issues/1578>`_)
   (`#1623 <https://github.com/git-cola/git-cola/pull/1623>`_)
 
+* Work-in-progress commit messages are now stored per-worktree.
+  Switching worktrees will now preserve the commit message that
+  was associated with the specific worktree. The file used for
+  storing work-in-progress commit messages can be found at
+  ``git rev-parse --git-path GIT_COLA_MSG``.
+  (`#1626 <https://github.com/git-cola/git-cola/pull/1626>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.
