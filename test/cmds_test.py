@@ -1,4 +1,5 @@
 """Test the cmds module"""
+import os
 import time
 from unittest.mock import Mock
 from unittest.mock import patch
@@ -266,3 +267,38 @@ def test_unstage_undo_restores_staged_state(app_context):
     cmd.undo()
     model.update_status()
     assert 'A' in model.staged
+
+
+def test_open_repo_loads_prepared_commit_message(app_context):
+    """Switching to a linked worktree loads that worktree's GIT_COLA_MSG"""
+    app_context.timestamp = time.time()
+    helper.commit_files()
+    worktree = os.path.join(os.getcwd(), 'wt')
+    helper.run_git('worktree', 'add', '--quiet', worktree, '-b', 'feature')
+    helper.write_file(
+        os.path.join(os.getcwd(), '.git', 'worktrees', 'wt', 'GIT_COLA_MSG'),
+        'prepared\n',
+    )
+    model = app_context.model
+    model.set_commitmsg('message for the old repository')
+
+    cmds.OpenRepo(app_context, worktree).do()
+
+    assert model.commitmsg == 'prepared\n'
+
+
+def test_open_repo_preserves_edited_commit_message(app_context):
+    """A message typed by hand survives switching repositories and back"""
+    app_context.timestamp = time.time()
+    helper.commit_files()
+    worktree = os.path.join(os.getcwd(), 'wt')
+    main_repo = os.getcwd()
+    helper.run_git('worktree', 'add', '--quiet', worktree, '-b', 'feature')
+    model = app_context.model
+    model.set_commitmsg('typed by hand')
+
+    cmds.OpenRepo(app_context, worktree).do()
+    assert model.commitmsg != 'typed by hand'
+
+    cmds.OpenRepo(app_context, main_repo).do()
+    assert model.commitmsg == 'typed by hand\n'
