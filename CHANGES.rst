@@ -21,6 +21,11 @@ Usability, bells and whistles
   external ``git`` processes.
   (`#1618 <https://github.com/git-cola/git-cola/pull/1618>`_)
 
+Fixes
+-----
+* Corrected an incorrect import in the Apply Patches feature.
+  (`#1630 <https://github.com/git-cola/git-cola/pull/1630>`_)
+
 Translations
 ------------
 * Updated French translation.
