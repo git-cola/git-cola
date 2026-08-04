@@ -17,6 +17,10 @@ Usability, bells and whistles
   A future change will add Undo and Redo support to the application.
   (`#1619 <https://github.com/git-cola/git-cola/pull/1619>`_)
 
+* Git Cola now avoids taking optional locks that can interact with
+  external ``git`` processes.
+  (`#1618 <https://github.com/git-cola/git-cola/pull/1618>`_)
+
 Translations
 ------------
 * Updated French translation.

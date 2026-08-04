@@ -110,6 +110,10 @@ def setup_environment() -> None:
     compat.setenv('GIT_ASKPASS', askpass)
     compat.setenv('SSH_ASKPASS', askpass)
 
+    # Avoid taking optional locks for read-only operations.
+    # We assume that proper state-modifying operations continue to take locks.
+    compat.setenv('GIT_OPTIONAL_LOCKS', '0')
+
     # --- >8 --- >8 ---
     # Git v1.7.10 Release Notes
     # =========================
