@@ -551,7 +551,7 @@ def cmd_about(args: argparse.Namespace) -> int:
 
 
 def cmd_am(args: argparse.Namespace) -> int:
-    from .widgets.patch import new_apply_patches
+    from .widgets.diff import new_apply_patches
 
     context = app.application_init(args)
     view = new_apply_patches(context, patches=args.patches)
