@@ -417,3 +417,29 @@ def test_it_doesnt_deadlock():
 
     actual = err
     assert expect == actual
+
+
+def test_git_path_in_linked_worktree(tmp_path):
+    """Per-worktree paths do not fall back to the main repository's git dir"""
+    repo = tmp_path / 'repo'
+    worktree = tmp_path / 'wt'
+    git.Git.execute(['git', 'init', '--quiet', str(repo)])
+
+    def run(*args):
+        return git.Git.execute(['git', *args], _cwd=str(repo))
+
+    run('commit', '--quiet', '--allow-empty', '-m', 'init')
+    run('worktree', 'add', '--quiet', str(worktree), '-b', 'feature')
+    # A message in the main repository's git dir must not be picked up.
+    (repo / '.git' / 'GIT_COLA_MSG').write_text('main message\n')
+
+    gitcmd = git.Git()
+    gitcmd.set_worktree(str(worktree))
+    expect = str(worktree_git_dir := repo / '.git' / 'worktrees' / 'wt')
+    assert gitcmd.paths.git_dir == expect
+
+    actual = gitcmd.git_path('GIT_COLA_MSG', common=False)
+    assert actual == str(worktree_git_dir / 'GIT_COLA_MSG')
+    # The default still prefers an existing path in the common git dir.
+    actual = gitcmd.git_path('GIT_COLA_MSG')
+    assert actual == str(repo / '.git' / 'GIT_COLA_MSG')

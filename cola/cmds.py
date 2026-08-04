@@ -2165,6 +2165,9 @@ class OpenRepo(EditModel):
 
     def do(self) -> None:
         old_repo = self.git.getcwd()
+        # Keep the message being written for the repository we are leaving,
+        # the same way that closing the window preserves it.
+        self.model.save_commitmsg()
         if self.model.set_worktree(self.repo_path):
             self.fsmonitor.stop()
             self.fsmonitor.start()
@@ -2174,6 +2177,10 @@ class OpenRepo(EditModel):
                 template_loader = LoadCommitMessageFromTemplate(self.context)
                 template_loader.do()
             else:
+                # Load the message prepared for the newly opened repository.
+                msg_path = gitcmds.commit_message_path(self.context)
+                if msg_path:
+                    self.new_commitmsg = core.read(msg_path)
                 self.model.set_commitmsg(self.new_commitmsg)
             settings = self.context.settings
             settings.load()

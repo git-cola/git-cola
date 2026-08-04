@@ -235,7 +235,7 @@ class MainModel(QtCore.QObject):
     def save_commitmsg(self, msg: str | None = None) -> str:
         if msg is None:
             msg = self.commitmsg
-        path = self.git.git_path('GIT_COLA_MSG')
+        path = self.git.git_path('GIT_COLA_MSG', common=False)
         try:
             if not msg.endswith('\n'):
                 msg += '\n'

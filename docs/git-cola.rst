@@ -452,6 +452,13 @@ message will be updated on the next refresh.
 This feature is useful as it allows scripts or agents to prepare a message for manual
 review.
 
+The commit message belongs to a single worktree. Linked worktrees created by
+`git worktree add` use `.git/worktrees/<name>/GIT_COLA_MSG` inside the main
+repository instead of `.git/GIT_COLA_MSG`. Scripts should ask Git for the path
+rather than assuming it::
+
+    git rev-parse --git-path GIT_COLA_MSG
+
 Sign Off
 --------
 
