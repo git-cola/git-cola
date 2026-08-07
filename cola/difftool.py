@@ -12,6 +12,7 @@ from . import git
 from . import gitcmds
 from . import hotkeys
 from . import icons
+from .models import prefs
 from . import qtutils
 from . import utils
 from .i18n import N_
@@ -48,7 +49,11 @@ class LaunchDifftool(cmds.ContextCommand):
                 shellquote_terms = {'xfce4-terminal'}
                 shellquote_default = terminal in shellquote_terms
 
-                mergetool = ['git', 'mergetool', '--no-prompt', '--']
+                mergetool = ['git', 'mergetool', '--no-prompt']
+                tool = prefs.mergetool(self.context)
+                if tool:
+                    mergetool.append(f'--tool={tool}')
+                mergetool.append('--')
                 mergetool.extend(paths)
                 needs_shellquote = cfg.get(
                     'cola.terminalshellquote', shellquote_default
@@ -334,6 +339,9 @@ def difftool_launch(
         'no_prompt': True,
         '_readonly': True,
     }
+    tool = prefs.difftool(context)
+    if tool:
+        kwargs['tool'] = tool
     if staged:
         kwargs['cached'] = True
     if dir_diff:
