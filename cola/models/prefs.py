@@ -273,7 +273,9 @@ def display_untracked(context) -> bool:
 
 def editor(context) -> str:
     """Return the configured editor"""
-    app = _config_with_override(context, OVERRIDE_EDITOR, EDITOR, default=fallback_editor())
+    app = _config_with_override(
+        context, OVERRIDE_EDITOR, EDITOR, default=fallback_editor()
+    )
     return _remap_editor(app)
 
 
@@ -309,9 +311,11 @@ def fallback_editor() -> str:
     return Defaults.editor
 
 
-def _config_with_override(context, override_key: str, fallback_key: str, default='') -> str:
+def _config_with_override(
+    context, override_key: str, fallback_key: str, default=''
+) -> str:
     """Return a cola.* override when configured, else fall back to the git key."""
-    value = context.cfg.get(override_key, default=default)
+    value = context.cfg.get(override_key, default=None)
     if value:
         return value
     return context.cfg.get(fallback_key, default=default)
