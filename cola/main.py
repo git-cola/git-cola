@@ -85,7 +85,7 @@ def add_help_options(parser: argparse.ArgumentParser) -> None:
 
 
 def add_command(
-    parent: argparse._SubParsersAction, name: str, description: str, func: Callable
+    parent: argparse.Action, name: str, description: str, func: Callable
 ) -> argparse.ArgumentParser:
     """Add a "git cola" command with common arguments"""
     parser = parent.add_parser(str(name), help=description)
@@ -94,7 +94,7 @@ def add_command(
     return parser
 
 
-def add_cola_command(subparser: argparse._SubParsersAction) -> None:
+def add_cola_command(subparser: argparse.Action) -> None:
     """Add the main "git cola" command. "git cola cola" is valid"""
     parser = add_command(subparser, 'cola', 'launch git-cola', cmd_cola)
     _add_cola_options(parser)
@@ -111,12 +111,12 @@ def _add_cola_options(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def add_about_command(parent: argparse._SubParsersAction) -> None:
+def add_about_command(parent: argparse.Action) -> None:
     """Add the "git cola about" documentation command"""
     add_command(parent, 'about', 'about git-cola', cmd_about)
 
 
-def add_am_command(parent: argparse._SubParsersAction) -> None:
+def add_am_command(parent: argparse.Action) -> None:
     """Add the "git cola am" command for applying patches"""
     parser = add_command(parent, 'am', 'apply patches using "git am"', cmd_am)
     parser.add_argument(
@@ -124,7 +124,7 @@ def add_am_command(parent: argparse._SubParsersAction) -> None:
     )
 
 
-def add_archive_command(parent: argparse._SubParsersAction) -> None:
+def add_archive_command(parent: argparse.Action) -> None:
     """Add the "git cola archive" tarball export command"""
     parser = add_command(parent, 'archive', 'save an archive', cmd_archive)
     parser.add_argument(
@@ -132,27 +132,27 @@ def add_archive_command(parent: argparse._SubParsersAction) -> None:
     )
 
 
-def add_branch_command(subparser: argparse._SubParsersAction) -> None:
+def add_branch_command(subparser: argparse.Action) -> None:
     """Add the "git cola branch" branch creation command"""
     add_command(subparser, 'branch', 'create a branch', cmd_branch)
 
 
-def add_browse_command(subparser: argparse._SubParsersAction) -> None:
+def add_browse_command(subparser: argparse.Action) -> None:
     """Add the "git cola browse" repository browser command"""
     add_command(subparser, 'browse', 'browse repository', cmd_browse)
 
 
-def add_clone_command(subparser: argparse._SubParsersAction) -> None:
+def add_clone_command(subparser: argparse.Action) -> None:
     """Add the "git cola clone" command for cloning repositories"""
     add_command(subparser, 'clone', 'clone repository', cmd_clone)
 
 
-def add_config_command(subparser: argparse._SubParsersAction) -> None:
+def add_config_command(subparser: argparse.Action) -> None:
     """Add the "git cola config" command for editing preferences"""
     add_command(subparser, 'config', 'edit configuration', cmd_config)
 
 
-def add_dag_command(subparser: argparse._SubParsersAction) -> None:
+def add_dag_command(subparser: argparse.Action) -> None:
     """Add the "git cola dag" command for visualizing history"""
     parser = add_command(subparser, 'dag', 'start git-dag', cmd_dag)
     parser.add_argument(
@@ -175,7 +175,7 @@ def add_dag_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_diff_command(subparser: argparse._SubParsersAction) -> None:
+def add_diff_command(subparser: argparse.Action) -> None:
     """Add the "git cola diff" command for diffing changes"""
     parser = add_command(subparser, 'diff', 'view diffs', cmd_diff)
     parser.add_argument(
@@ -183,24 +183,24 @@ def add_diff_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_fetch_command(subparser: argparse._SubParsersAction) -> None:
+def add_fetch_command(subparser: argparse.Action) -> None:
     """Add the "git cola fetch" command for fetching repositories"""
     add_command(subparser, 'fetch', 'fetch remotes', cmd_fetch)
 
 
-def add_find_command(subparser: argparse._SubParsersAction) -> None:
+def add_find_command(subparser: argparse.Action) -> None:
     """Add the "git cola find" command for finding files"""
     parser = add_command(subparser, 'find', 'find files', cmd_find)
     parser.add_argument('paths', nargs='*', metavar='<path>', help='filter by path')
 
 
-def add_grep_command(subparser: argparse._SubParsersAction) -> None:
+def add_grep_command(subparser: argparse.Action) -> None:
     """Add the "git cola grep" command for searching files"""
     parser = add_command(subparser, 'grep', 'grep source', cmd_grep)
     parser.add_argument('args', nargs='*', metavar='<args>', help='git grep arguments')
 
 
-def add_merge_command(subparser: argparse._SubParsersAction) -> None:
+def add_merge_command(subparser: argparse.Action) -> None:
     """Add the "git cola merge" command for merging branches"""
     parser = add_command(subparser, 'merge', 'merge branches', cmd_merge)
     parser.add_argument(
@@ -208,13 +208,13 @@ def add_merge_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_open_command(subparser: argparse._SubParsersAction) -> None:
+def add_open_command(subparser: argparse.Action) -> None:
     """Add the "git cola open" quick open command"""
     parser = add_command(subparser, 'open', 'quick open', cmd_open)
     _add_cola_options(parser)
 
 
-def add_pull_command(subparser: argparse._SubParsersAction) -> None:
+def add_pull_command(subparser: argparse.Action) -> None:
     """Add the "git cola pull" command for pulling changes from remotes"""
     parser = add_command(subparser, 'pull', 'pull remote branches', cmd_pull)
     parser.add_argument(
@@ -225,12 +225,12 @@ def add_pull_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_push_command(subparser: argparse._SubParsersAction) -> None:
+def add_push_command(subparser: argparse.Action) -> None:
     """Add the "git cola push" command for pushing branches to remotes"""
     add_command(subparser, 'push', 'push remote branches', cmd_push)
 
 
-def add_rebase_command(subparser: argparse._SubParsersAction) -> None:
+def add_rebase_command(subparser: argparse.Action) -> None:
     """Add the "git cola rebase" command for rebasing the current branch"""
     parser = add_command(subparser, 'rebase', 'interactive rebase', cmd_rebase)
     parser.add_argument(
@@ -456,34 +456,34 @@ def add_rebase_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_recent_command(subparser: argparse._SubParsersAction) -> None:
+def add_recent_command(subparser: argparse.Action) -> None:
     """Add the "git cola recent" command for opening recently edited files"""
     add_command(subparser, 'recent', 'edit recent files', cmd_recent)
 
 
-def add_remote_command(subparser: argparse._SubParsersAction) -> None:
+def add_remote_command(subparser: argparse.Action) -> None:
     """Add the "git cola remote" command for editing remotes"""
     add_command(subparser, 'remote', 'edit remotes', cmd_remote)
 
 
-def add_search_command(subparser: argparse._SubParsersAction) -> None:
+def add_search_command(subparser: argparse.Action) -> None:
     """Add the "git cola search" command for searching over commits"""
     add_command(subparser, 'search', 'search commits', cmd_search)
 
 
-def add_stash_command(subparser: argparse._SubParsersAction) -> None:
+def add_stash_command(subparser: argparse.Action) -> None:
     """Add the "git cola stash" command for creating and applying stashes"""
     add_command(subparser, 'stash', 'stash and unstash changes', cmd_stash)
 
 
-def add_connect_command(subparser: argparse._SubParsersAction):
+def add_connect_command(subparser: argparse.Action):
     parser = add_command(subparser, 'connect', 'connect to the server', cmd_connect)
     parser.add_argument('address', help='IP:PORT')
     parser.add_argument('repo', help='/path/to/repo')
     _add_cola_options(parser)
 
 
-def add_tag_command(subparser: argparse._SubParsersAction) -> None:
+def add_tag_command(subparser: argparse.Action) -> None:
     """Add the "git cola tag" command for creating tags"""
     parser = add_command(subparser, 'tag', 'create tags', cmd_tag)
     parser.add_argument(
@@ -501,7 +501,7 @@ def add_tag_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_version_command(subparser: argparse._SubParsersAction) -> None:
+def add_version_command(subparser: argparse.Action) -> None:
     """Add the "git cola version" command for displaying Git Cola's version"""
     parser = add_command(subparser, 'version', 'print the version', cmd_version)
     parser.add_argument(
