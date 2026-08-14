@@ -9,7 +9,6 @@ from qtpy.QtCore import Signal
 
 from .. import actions
 from .. import cmds
-from .. import core
 from .. import display
 from .. import gitcmds
 from .. import hotkeys
@@ -79,6 +78,9 @@ class CommitMessageEditor(QtWidgets.QFrame):
 
         self.launch_editor = actions.launch_editor_at_line(context, self)
         self.launch_difftool = actions.launch_difftool(context, self)
+        if context.ops.is_remote():
+            self.launch_editor.setEnabled(False)
+            self.launch_difftool.setEnabled(False)
 
         self.move_up = actions.move_up(self)
         self.move_down = actions.move_down(self)
@@ -291,7 +293,7 @@ class CommitMessageEditor(QtWidgets.QFrame):
         commit_msg = ''
         commit_msg_path = commit_message_path(context)
         if commit_msg_path:
-            commit_msg = core.read(commit_msg_path)
+            commit_msg = context.ops.file_read(commit_msg_path)
         model.set_commitmsg(commit_msg)
 
         # Allow tab to jump from the summary to the description

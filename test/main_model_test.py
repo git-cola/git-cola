@@ -5,6 +5,7 @@ import pytest
 
 from cola import core
 from cola import git
+from cola import operations
 from cola.models import main
 from cola.models.main import FETCH
 from cola.models.main import FETCH_HEAD
@@ -26,7 +27,7 @@ REMOTE_BRANCH = 'remote'
 def mock_context():
     """Return a Mock context for testing"""
     context = Mock()
-    context.git = git.create()
+    context.git = git.create(operations.LocalOperations())
     return context
 
 

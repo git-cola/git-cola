@@ -77,9 +77,13 @@ def terminal_action(context, parent, func=None, hotkey=None):
             parent,
             cmds.LaunchTerminal,
             context,
-            lambda: utils.select_directory(func()),
+            lambda: utils.select_directory(context.ops, func()),
         )
         action.setIcon(icons.terminal())
         if hotkey is not None:
             action.setShortcut(hotkey)
+
+        if context.ops.is_remote():
+            action.setEnabled(False)
+
     return action

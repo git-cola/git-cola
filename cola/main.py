@@ -9,6 +9,8 @@ from . import app
 from . import cmds
 from . import compat
 from . import core
+from . import server
+from . import utils
 from . import version
 from .widgets.main import MainView
 
@@ -52,6 +54,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     add_browse_command(subparser)
     add_clone_command(subparser)
     add_config_command(subparser)
+    add_connect_command(subparser)
     add_dag_command(subparser)
     add_diff_command(subparser)
     add_fetch_command(subparser)
@@ -65,6 +68,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     add_recent_command(subparser)
     add_remote_command(subparser)
     add_search_command(subparser)
+    add_server_command(subparser)
     add_stash_command(subparser)
     add_tag_command(subparser)
     add_version_command(subparser)
@@ -83,7 +87,7 @@ def add_help_options(parser: argparse.ArgumentParser) -> None:
 
 
 def add_command(
-    parent: argparse._SubParsersAction, name: str, description: str, func: Callable
+    parent: argparse.Action, name: str, description: str, func: Callable
 ) -> argparse.ArgumentParser:
     """Add a "git cola" command with common arguments"""
     parser = parent.add_parser(str(name), help=description)
@@ -92,7 +96,7 @@ def add_command(
     return parser
 
 
-def add_cola_command(subparser: argparse._SubParsersAction) -> None:
+def add_cola_command(subparser: argparse.Action) -> None:
     """Add the main "git cola" command. "git cola cola" is valid"""
     parser = add_command(subparser, 'cola', 'launch git-cola', cmd_cola)
     _add_cola_options(parser)
@@ -109,12 +113,12 @@ def _add_cola_options(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def add_about_command(parent: argparse._SubParsersAction) -> None:
+def add_about_command(parent: argparse.Action) -> None:
     """Add the "git cola about" documentation command"""
     add_command(parent, 'about', 'about git-cola', cmd_about)
 
 
-def add_am_command(parent: argparse._SubParsersAction) -> None:
+def add_am_command(parent: argparse.Action) -> None:
     """Add the "git cola am" command for applying patches"""
     parser = add_command(parent, 'am', 'apply patches using "git am"', cmd_am)
     parser.add_argument(
@@ -122,7 +126,7 @@ def add_am_command(parent: argparse._SubParsersAction) -> None:
     )
 
 
-def add_archive_command(parent: argparse._SubParsersAction) -> None:
+def add_archive_command(parent: argparse.Action) -> None:
     """Add the "git cola archive" tarball export command"""
     parser = add_command(parent, 'archive', 'save an archive', cmd_archive)
     parser.add_argument(
@@ -130,27 +134,27 @@ def add_archive_command(parent: argparse._SubParsersAction) -> None:
     )
 
 
-def add_branch_command(subparser: argparse._SubParsersAction) -> None:
+def add_branch_command(subparser: argparse.Action) -> None:
     """Add the "git cola branch" branch creation command"""
     add_command(subparser, 'branch', 'create a branch', cmd_branch)
 
 
-def add_browse_command(subparser: argparse._SubParsersAction) -> None:
+def add_browse_command(subparser: argparse.Action) -> None:
     """Add the "git cola browse" repository browser command"""
     add_command(subparser, 'browse', 'browse repository', cmd_browse)
 
 
-def add_clone_command(subparser: argparse._SubParsersAction) -> None:
+def add_clone_command(subparser: argparse.Action) -> None:
     """Add the "git cola clone" command for cloning repositories"""
     add_command(subparser, 'clone', 'clone repository', cmd_clone)
 
 
-def add_config_command(subparser: argparse._SubParsersAction) -> None:
+def add_config_command(subparser: argparse.Action) -> None:
     """Add the "git cola config" command for editing preferences"""
     add_command(subparser, 'config', 'edit configuration', cmd_config)
 
 
-def add_dag_command(subparser: argparse._SubParsersAction) -> None:
+def add_dag_command(subparser: argparse.Action) -> None:
     """Add the "git cola dag" command for visualizing history"""
     parser = add_command(subparser, 'dag', 'start git-dag', cmd_dag)
     parser.add_argument(
@@ -173,7 +177,7 @@ def add_dag_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_diff_command(subparser: argparse._SubParsersAction) -> None:
+def add_diff_command(subparser: argparse.Action) -> None:
     """Add the "git cola diff" command for diffing changes"""
     parser = add_command(subparser, 'diff', 'view diffs', cmd_diff)
     parser.add_argument(
@@ -181,24 +185,24 @@ def add_diff_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_fetch_command(subparser: argparse._SubParsersAction) -> None:
+def add_fetch_command(subparser: argparse.Action) -> None:
     """Add the "git cola fetch" command for fetching repositories"""
     add_command(subparser, 'fetch', 'fetch remotes', cmd_fetch)
 
 
-def add_find_command(subparser: argparse._SubParsersAction) -> None:
+def add_find_command(subparser: argparse.Action) -> None:
     """Add the "git cola find" command for finding files"""
     parser = add_command(subparser, 'find', 'find files', cmd_find)
     parser.add_argument('paths', nargs='*', metavar='<path>', help='filter by path')
 
 
-def add_grep_command(subparser: argparse._SubParsersAction) -> None:
+def add_grep_command(subparser: argparse.Action) -> None:
     """Add the "git cola grep" command for searching files"""
     parser = add_command(subparser, 'grep', 'grep source', cmd_grep)
     parser.add_argument('args', nargs='*', metavar='<args>', help='git grep arguments')
 
 
-def add_merge_command(subparser: argparse._SubParsersAction) -> None:
+def add_merge_command(subparser: argparse.Action) -> None:
     """Add the "git cola merge" command for merging branches"""
     parser = add_command(subparser, 'merge', 'merge branches', cmd_merge)
     parser.add_argument(
@@ -206,13 +210,13 @@ def add_merge_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_open_command(subparser: argparse._SubParsersAction) -> None:
+def add_open_command(subparser: argparse.Action) -> None:
     """Add the "git cola open" quick open command"""
     parser = add_command(subparser, 'open', 'quick open', cmd_open)
     _add_cola_options(parser)
 
 
-def add_pull_command(subparser: argparse._SubParsersAction) -> None:
+def add_pull_command(subparser: argparse.Action) -> None:
     """Add the "git cola pull" command for pulling changes from remotes"""
     parser = add_command(subparser, 'pull', 'pull remote branches', cmd_pull)
     parser.add_argument(
@@ -223,12 +227,12 @@ def add_pull_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_push_command(subparser: argparse._SubParsersAction) -> None:
+def add_push_command(subparser: argparse.Action) -> None:
     """Add the "git cola push" command for pushing branches to remotes"""
     add_command(subparser, 'push', 'push remote branches', cmd_push)
 
 
-def add_rebase_command(subparser: argparse._SubParsersAction) -> None:
+def add_rebase_command(subparser: argparse.Action) -> None:
     """Add the "git cola rebase" command for rebasing the current branch"""
     parser = add_command(subparser, 'rebase', 'interactive rebase', cmd_rebase)
     parser.add_argument(
@@ -454,27 +458,70 @@ def add_rebase_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_recent_command(subparser: argparse._SubParsersAction) -> None:
+def add_recent_command(subparser: argparse.Action) -> None:
     """Add the "git cola recent" command for opening recently edited files"""
     add_command(subparser, 'recent', 'edit recent files', cmd_recent)
 
 
-def add_remote_command(subparser: argparse._SubParsersAction) -> None:
+def add_remote_command(subparser: argparse.Action) -> None:
     """Add the "git cola remote" command for editing remotes"""
     add_command(subparser, 'remote', 'edit remotes', cmd_remote)
 
 
-def add_search_command(subparser: argparse._SubParsersAction) -> None:
+def add_search_command(subparser: argparse.Action) -> None:
     """Add the "git cola search" command for searching over commits"""
     add_command(subparser, 'search', 'search commits', cmd_search)
 
 
-def add_stash_command(subparser: argparse._SubParsersAction) -> None:
+def add_server_command(subparser) -> None:
+    parser = add_command(
+        subparser, 'server', 'listen for clients to remote control cola', cmd_server
+    )
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        default=False,
+        action='store_true',
+        help='increase verbosity',
+    )
+    parser.add_argument(
+        'port',
+        default=42069,
+        type=int,
+        help='port number to listen on (default: 42069)',
+        metavar='<port>',
+        nargs='?',
+    )
+    parser.add_argument(
+        'address',
+        default='0.0.0.0',
+        help='bind to the specified IP address (default: 0.0.0.0)',
+        metavar='<address>',
+        nargs='?',
+    )
+
+
+def add_stash_command(subparser: argparse.Action) -> None:
     """Add the "git cola stash" command for creating and applying stashes"""
     add_command(subparser, 'stash', 'stash and unstash changes', cmd_stash)
 
 
-def add_tag_command(subparser: argparse._SubParsersAction) -> None:
+def add_connect_command(subparser: argparse.Action):
+    parser = add_command(subparser, 'connect', 'connect to the server', cmd_connect)
+    parser.add_argument(
+        'address',
+        default='localhost:42069',
+        metavar='<hostname>[:<port>]',
+        help=(
+            'hostname and optional port number of the cola server '
+            '(default: localhost:42069)'
+        ),
+        nargs='?',
+    )
+    _add_cola_options(parser)
+
+
+def add_tag_command(subparser: argparse.Action) -> None:
     """Add the "git cola tag" command for creating tags"""
     parser = add_command(subparser, 'tag', 'create tags', cmd_tag)
     parser.add_argument(
@@ -492,7 +539,7 @@ def add_tag_command(subparser: argparse._SubParsersAction) -> None:
     )
 
 
-def add_version_command(subparser: argparse._SubParsersAction) -> None:
+def add_version_command(subparser: argparse.Action) -> None:
     """Add the "git cola version" command for displaying Git Cola's version"""
     parser = add_command(subparser, 'version', 'print the version', cmd_version)
     parser.add_argument(
@@ -515,20 +562,20 @@ def cmd_cola(
 ) -> int:
     """The "git cola" entry point"""
 
-    status_filter = args.status_filter
+    status_filter = getattr(args, 'status_filter', '')
     if status_filter:
-        status_filter = core.abspath(status_filter)
+        status_filter = context.ops.abspath(status_filter)
 
     if context is None:
         context = app.application_init(args)
 
     context.timer.start('view')
     view = MainView(context)
-    if args.amend:
+    if getattr(args, 'amend', False):
         cmds.do(cmds.AmendMode, context, amend=True)
 
     if status_filter:
-        view.set_filter(core.relpath(status_filter))
+        view.set_filter(context.ops.relpath(status_filter))
 
     context.timer.stop('view')
     if args.perf:
@@ -663,10 +710,12 @@ def cmd_merge(args: argparse.Namespace) -> int:
     return app.application_start(context, view)
 
 
-def cmd_open(args: argparse.Namespace) -> int:
+def cmd_open(
+    args: argparse.Namespace, socket: server.SocketClient | None = None
+) -> int:
     from . import guicmds
 
-    context = app.application_init(args, setup_worktree=False)
+    context = app.application_init(args, socket=socket, setup_worktree=False)
     quick_open = guicmds.open_quick_repo_search(context, open_repo=False, parent=None)
     worktree = quick_open.worktree()
     if worktree:
@@ -700,6 +749,10 @@ def cmd_push(args: argparse.Namespace) -> int:
     context = app.application_init(args, update=True)
     view = remote.push(context)
     return app.application_start(context, view)
+
+
+def cmd_server(args: argparse.Namespace) -> int:
+    server.run(args.address, args.port, args.verbose)
 
 
 def cmd_rebase(args: argparse.Namespace) -> int:
@@ -786,6 +839,22 @@ def cmd_tag(args: argparse.Namespace) -> int:
     context.model.update_status()
     view = new_create_tag(context, name=args.name, ref=args.ref, sign=args.sign)
     return app.application_start(context, view)
+
+
+def cmd_connect(args: argparse.Namespace):
+    from . import server
+
+    address = utils.strip_prefix(args.address, 'ws://')
+    try:
+        hostname, port_str = address.split(':', 1)
+        port = int(port_str)
+    except ValueError:
+        hostname = address
+        port = 42069
+
+    socket_client = server.SocketClient(ip=hostname, port=port)
+    context = app.application_init(args, socket=socket_client)
+    return cmd_cola(args=args, context=context)
 
 
 # Windows shortcut launch features:

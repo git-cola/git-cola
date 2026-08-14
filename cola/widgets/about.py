@@ -1,4 +1,3 @@
-import os
 import platform
 import sys
 import webbrowser
@@ -9,6 +8,7 @@ from qtpy import QtGui
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
+from .. import core
 from .. import hotkeys
 from .. import icons
 from .. import qtutils
@@ -523,7 +523,7 @@ def show_shortcuts():
         hotkeys_url = 'file:///' + hotkeys_html.replace('\\', '/')
     else:
         hotkeys_url = 'file://' + hotkeys_html
-    if not os.path.isfile(hotkeys_html):
+    if not core.isfile(hotkeys_html):
         hotkeys_url = 'https://git-cola.gitlab.io/share/doc/git-cola/hotkeys.html'
         hotkeys_html = None
     try:

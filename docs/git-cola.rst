@@ -92,6 +92,13 @@ config
 Configure settings. ``git cola config`` is an entry point for the
 ``File > Preferences`` main menu action.
 
+connect
+-------
+
+Connect to a cola server over the network. Once connected, the
+Git Cola user interface acts as a frontend to controls the
+cola server running on the remote machine.
+
 dag
 ---
 
@@ -156,6 +163,13 @@ search
 
 Search for commits. ``git cola search`` is an entry point for the
 ``Actions > Search...`` main menu action.
+
+server
+------
+
+Start a server that will listen for connections from ``git cola connect``
+clients. The cola server allows you to connect your local Git Cola UI
+to a cola server running on a separate machine.
 
 stash
 -----

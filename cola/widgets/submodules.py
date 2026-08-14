@@ -6,7 +6,6 @@ from qtpy.QtCore import Signal
 
 from .. import cmds
 from .. import compat
-from .. import core
 from .. import icons
 from .. import qtutils
 from ..i18n import N_
@@ -196,7 +195,7 @@ class SubmodulesTreeWidget(standard.TreeWidget):
         return super().showEvent(event)
 
     def tree_double_clicked(self, item, _column):
-        path = core.abspath(item.path)
+        path = self.context.ops.abspath(item.path)
         cmds.do(cmds.OpenRepo, self.context, path)
 
 

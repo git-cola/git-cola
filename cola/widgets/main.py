@@ -1,5 +1,4 @@
 """Main UI for authoring commits and other Git Cola interactions"""
-import os
 from functools import partial
 
 from qtpy import QtCore
@@ -626,7 +625,9 @@ class MainView(standard.MainWindow):
         # We can do this because can_rebase == not is_rebasing
         self.rebase_start_action_proxy = utils.Proxy(
             self.rebase_start_action,
-            setEnabled=lambda x: self.rebase_start_action.setEnabled(not x),
+            setEnabled=lambda x: self.rebase_start_action.setEnabled(
+                False if context.ops.is_remote() else not x
+            ),
         )
 
         self.rebase_group = utils.Group(
@@ -682,6 +683,7 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.quick_repository_search)
         # File->Open Recent menu
         self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
+
         self.open_recent_menu.setIcon(icons.folder())
         self.file_menu.addAction(self.open_repo_action)
         self.file_menu.addAction(self.open_repo_new_action)
@@ -705,9 +707,21 @@ class MainView(standard.MainWindow):
         self.patches_menu.addAction(self.apply_patches_skip_action)
         self.patches_menu.addAction(self.apply_patches_abort_action)
 
+        if context.ops.is_remote():
+            self.quick_repository_search.setEnabled(False)
+            self.open_recent_menu.setEnabled(False)
+            self.open_repo_action.setEnabled(False)
+            self.open_repo_new_action.setEnabled(False)
+            self.new_repository_action.setEnabled(False)
+            self.new_bare_repository_action.setEnabled(False)
+            self.clone_repo_action.setEnabled(False)
+            self.rebase_start_action_proxy.setEnabled(True)
+            self.save_tarball_action.setEnabled(False)
+            self.patches_menu.setEnabled(False)
+
         # Git Annex / Git LFS
-        annex = core.find_executable('git-annex')
-        lfs = core.find_executable('git-lfs')
+        annex = self.context.ops.find_executable('git-annex')
+        lfs = self.context.ops.find_executable('git-lfs')
         if annex or lfs:
             self.file_menu.addSeparator()
         if annex:
@@ -1126,7 +1140,7 @@ class MainView(standard.MainWindow):
         is_cherry_picking = self.model.is_rebasing
 
         try:
-            curdir = core.getcwd()
+            curdir = self.context.ops.getcwd()
         except FileNotFoundError:
             return
         msg = N_('Repository: %s') % curdir
@@ -1232,7 +1246,7 @@ class MainView(standard.MainWindow):
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists
         hook = gitcmds.prepare_commit_message_hook(self.context)
-        enabled = os.path.exists(hook)
+        enabled = self.context.ops.exists(hook)
         self.prepare_commitmsg_hook_action.setEnabled(enabled)
 
     def export_state(self):

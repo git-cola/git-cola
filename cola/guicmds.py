@@ -12,6 +12,7 @@ from . import difftool
 from . import display
 from . import gitcmds
 from . import icons
+from . import operations
 from . import qtutils
 from . import resources
 from .i18n import N_
@@ -100,7 +101,7 @@ def new_repo(context: ApplicationContext) -> str | None:
 
     """
     git = context.git
-    path = qtutils.opendir_dialog(N_('New Repository...'), core.getcwd())
+    path = qtutils.opendir_dialog(N_('New Repository...'), context.ops.getcwd())
     if not path:
         return None
     # Avoid needlessly calling `git init`.
@@ -130,7 +131,7 @@ def open_new_repo(context: ApplicationContext) -> None:
 def new_bare_repo(context: ApplicationContext) -> str | None:
     """Create a bare repository and configure a remote pointing to it"""
     result = None
-    repo = prompt_for_new_bare_repo()
+    repo = prompt_for_new_bare_repo(context.ops)
     if not repo:
         return result
     # Create bare repo
@@ -148,14 +149,14 @@ def new_bare_repo(context: ApplicationContext) -> str | None:
     return result
 
 
-def prompt_for_new_bare_repo() -> str | None:
+def prompt_for_new_bare_repo(ops: operations.IOperations) -> str | None:
     """Prompt for a directory and name for a new bare repository"""
-    path = qtutils.opendir_dialog(N_('Select Directory...'), core.getcwd())
+    path = qtutils.opendir_dialog(N_('Select Directory...'), ops.getcwd())
     if not path:
         return None
 
     bare_repo = None
-    default = os.path.basename(core.getcwd())
+    default = os.path.basename(ops.getcwd())
     if not default.endswith('.git'):
         default += '.git'
     while not bare_repo:
@@ -169,7 +170,7 @@ def prompt_for_new_bare_repo() -> str | None:
         if not name.endswith('.git'):
             name += '.git'
         repo = os.path.join(path, name)
-        if core.isdir(repo):
+        if ops.isdir(repo):
             Interaction.critical(N_('Error'), N_('"%s" already exists') % repo)
         else:
             bare_repo = repo
@@ -452,8 +453,8 @@ def restore_worktree(context: ApplicationContext) -> None:
 def build_layout_menu(widget: QtWidgets.QWidget, menu: QtWidgets.QMenu) -> None:
     """Add layouts from ~/.config/git-cola/layouts to the specified menu"""
     directory = resources.xdg_config_home('git-cola', 'layouts')
-    if os.path.isdir(directory):
-        layouts = sorted(os.listdir(directory))
+    if core.isdir(directory):
+        layouts = sorted(core.listdir(directory))
     else:
         layouts = []
     suffix = '.layout'
@@ -479,8 +480,8 @@ def save_layout(widget: QtWidgets.QWidget) -> None:
         'git-cola', 'layouts', 'default.layout'
     )
     parent_dir = os.path.dirname(default_filename)
-    if not os.path.isdir(parent_dir):
-        os.makedirs(parent_dir)
+    if not core.isdir(parent_dir):
+        core.makedirs(parent_dir)
     filename = qtutils.save_as(default_filename)
     if not filename:
         return
@@ -492,15 +493,15 @@ def save_layout(widget: QtWidgets.QWidget) -> None:
 def load_layout(widget: QtWidgets.QWidget) -> None:
     """Choose a Qt layout file and apply it to the current widget"""
     directory = resources.xdg_config_home('git-cola', 'layouts')
-    if not os.path.isdir(directory):
-        os.makedirs(directory)
+    if not core.isdir(directory):
+        core.makedirs(directory)
     filename = qtutils.existing_file(directory, title=N_('Load Layout'))
     load_layout_file(widget, filename)
 
 
 def load_layout_file(widget: QtWidgets.QWidget, filename: Any) -> None:
     """Load a Qt layout file into the specified widget"""
-    if not filename or not os.path.isfile(filename):
+    if not filename or not core.isfile(filename):
         return
     with open(filename, 'rb') as handle:
         state = handle.read()

@@ -7,7 +7,6 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from .. import cmds
-from .. import core
 from .. import icons
 from .. import qtutils
 from ..git import STDOUT
@@ -103,7 +102,7 @@ class Archive(Dialog):
         # outputs
         self.fmt = None
 
-        filename = f'{os.path.basename(core.getcwd())}-{shortref}'
+        filename = f'{os.path.basename(context.ops.getcwd())}-{shortref}'
         self.prefix = filename + '/'
         self.filename = filename
 
@@ -200,7 +199,7 @@ class Archive(Dialog):
         filename = self.filename
         if not filename:
             return
-        if core.exists(filename):
+        if self.context.ops.exists(filename):
             title = N_('Overwrite File?')
             msg = N_('The file "%s" exists and will be overwritten.') % filename
             info_txt = N_('Overwrite "%s"?') % filename
