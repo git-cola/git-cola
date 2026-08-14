@@ -29,16 +29,19 @@ def check_dependencies() -> None:
 
 
 class SocketServer:
-    def __init__(self, port: int = 49178):
+    def __init__(self, address: str, port: int, verbose: bool):
         check_dependencies()
+        self.address = address
         self.port = port
+        self.verbose = verbose
         self.ops = operations.LocalOperations()
 
     async def message_handler(self, websocket):
         async for message_bytes in websocket:
             message = msgpack.unpackb(message_bytes)
             try:
-                print(f'Received: {message}')
+                if self.verbose:
+                    print(f'[server] received: {message}')
 
                 func_dict = self.ops.function_dict()
 
@@ -81,9 +84,9 @@ class SocketServer:
 
     async def run_async(self):
         async with websockets.serve(
-            self.message_handler, '0.0.0.0', self.port, max_size=10 * 1024 * 1024
+            self.message_handler, self.address, self.port, max_size=10 * 1024 * 1024
         ):
-            print(f'Server running on ws://0.0.0.0:{self.port}')
+            print(f'# cola server listening on ws://{self.address}:{self.port}')
             await asyncio.Future()  # run forever
 
     def run(self):
@@ -154,10 +157,7 @@ class SyncSocketClient:
         return self._run(self.client.send_message(message, seq_number))
 
 
-def run() -> None:
-    """Start the websocket server."""
-    SocketServer().run()
-
-
-if __name__ == '__main__':
-    run()
+def run(address, port, verbose) -> None:
+    """Start the websocket cola operations server"""
+    server = SocketServer(address, port, verbose)
+    return server.run()

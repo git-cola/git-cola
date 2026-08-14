@@ -10,6 +10,7 @@ from . import cmds
 from . import compat
 from . import core
 from . import server
+from . import utils
 from . import version
 from .widgets.main import MainView
 
@@ -53,6 +54,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     add_browse_command(subparser)
     add_clone_command(subparser)
     add_config_command(subparser)
+    add_connect_command(subparser)
     add_dag_command(subparser)
     add_diff_command(subparser)
     add_fetch_command(subparser)
@@ -66,8 +68,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     add_recent_command(subparser)
     add_remote_command(subparser)
     add_search_command(subparser)
+    add_server_command(subparser)
     add_stash_command(subparser)
-    add_connect_command(subparser)
     add_tag_command(subparser)
     add_version_command(subparser)
 
@@ -471,6 +473,34 @@ def add_search_command(subparser: argparse.Action) -> None:
     add_command(subparser, 'search', 'search commits', cmd_search)
 
 
+def add_server_command(subparser) -> None:
+    parser = add_command(
+        subparser, 'server', 'listen for clients to remote control cola', cmd_server
+    )
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        default=False,
+        action='store_true',
+        help='increase verbosity',
+    )
+    parser.add_argument(
+        'port',
+        default=42069,
+        type=int,
+        help='port number to listen on (default: 42069)',
+        metavar='<port>',
+        nargs='?',
+    )
+    parser.add_argument(
+        'address',
+        default='0.0.0.0',
+        help='bind to the specified IP address (default: 0.0.0.0)',
+        metavar='<address>',
+        nargs='?',
+    )
+
+
 def add_stash_command(subparser: argparse.Action) -> None:
     """Add the "git cola stash" command for creating and applying stashes"""
     add_command(subparser, 'stash', 'stash and unstash changes', cmd_stash)
@@ -478,8 +508,16 @@ def add_stash_command(subparser: argparse.Action) -> None:
 
 def add_connect_command(subparser: argparse.Action):
     parser = add_command(subparser, 'connect', 'connect to the server', cmd_connect)
-    parser.add_argument('address', help='IP:PORT')
-    parser.add_argument('repo', help='/path/to/repo')
+    parser.add_argument(
+        'address',
+        default='localhost:42069',
+        metavar='<hostname>[:<port>]',
+        help=(
+            'hostname and optional port number of the cola server '
+            '(default: localhost:42069)'
+        ),
+        nargs='?',
+    )
     _add_cola_options(parser)
 
 
@@ -524,7 +562,7 @@ def cmd_cola(
 ) -> int:
     """The "git cola" entry point"""
 
-    status_filter = args.status_filter
+    status_filter = getattr(args, 'status_filter', '')
     if status_filter:
         status_filter = context.ops.abspath(status_filter)
 
@@ -533,7 +571,7 @@ def cmd_cola(
 
     context.timer.start('view')
     view = MainView(context)
-    if args.amend:
+    if getattr(args, 'amend', False):
         cmds.do(cmds.AmendMode, context, amend=True)
 
     if status_filter:
@@ -713,6 +751,10 @@ def cmd_push(args: argparse.Namespace) -> int:
     return app.application_start(context, view)
 
 
+def cmd_server(args: argparse.Namespace) -> int:
+    server.run(args.address, args.port, args.verbose)
+
+
 def cmd_rebase(args: argparse.Namespace) -> int:
     context = app.application_init(args)
     context.model.update_refs()
@@ -800,9 +842,17 @@ def cmd_tag(args: argparse.Namespace) -> int:
 
 
 def cmd_connect(args: argparse.Namespace):
-    splitdata = args.address.split(':')
-    socket_client = server.SocketClient(ip=splitdata[0], port=int(splitdata[1]))
+    from . import server
 
+    address = utils.strip_prefix(args.address, 'ws://')
+    try:
+        hostname, port_str = address.split(':', 1)
+        port = int(port_str)
+    except ValueError:
+        hostname = address
+        port = 42069
+
+    socket_client = server.SocketClient(ip=hostname, port=port)
     context = app.application_init(args, socket=socket_client)
     return cmd_cola(args=args, context=context)
 

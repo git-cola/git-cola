@@ -8,7 +8,7 @@ from cola import server
 
 class create_test_server:
     def __init__(self):
-        app = server.SocketServer()
+        app = server.SocketServer('127.0.0.1', 49178, True)
 
         self.server_thread = multiprocessing.Process(target=app.run, daemon=True)
         self.server_thread.start()

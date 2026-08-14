@@ -257,11 +257,11 @@ def select_directory(ops: operations.IOperations, paths: list[str]) -> str:
     return os.path.dirname(paths[0]) or ops.getcwd()
 
 
-def strip_prefix(prefix, string: str) -> str:
-    """Return string, without the prefix. Blow up if string doesn't
-    start with prefix."""
-    assert string.startswith(prefix)
-    return string[len(prefix) :]
+def strip_prefix(string, prefix: str) -> str:
+    """Return string, without the prefix if present"""
+    if string.startswith(prefix):
+        return string[len(prefix) :]
+    return string
 
 
 def tablength(word, tabwidth: int) -> int:

@@ -201,7 +201,11 @@ class Git:
     The Git class manages communication with the Git binary
     """
 
-    def __init__(self, ops: operations.IOperations, worktree: None = None) -> None:
+    def __init__(
+        self, worktree: None = None, ops: operations.IOperations = None
+    ) -> None:
+        if ops is None:
+            ops = operations.LocalOperations()
         self.ops = ops
         self.paths = Paths(self.ops)
 
@@ -488,4 +492,4 @@ def create(ops: operations.IOperations) -> Git:
     True
 
     """
-    return Git(ops)
+    return Git(ops=ops)
