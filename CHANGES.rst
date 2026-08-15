@@ -53,13 +53,17 @@ Usability, bells and whistles
 * Git DAG's commit list and label rendering is now faster.
   (`#1638 <https://github.com/git-cola/git-cola/pull/1638>`_)
 
-* The diff editor now displays a usage hint when its contents
-  are empty, for example when the tool is first displayed.
+* The diff editor now displays a usage hint when its contents are empty, for
+  example when the tool is first displayed.
   (`#1639 <https://github.com/git-cola/git-cola/pull/1639>`_)
 
-* The Diff Options menu's layout was improved so that its
-  custom widgets fit in better within the menu.
+* The Diff Options menu's layout was improved so that its custom widgets fit in
+  better within the menu.
   (`#1640 <https://github.com/git-cola/git-cola/pull/1640>`_)
+
+* The Status tool's behavior when staging multiple items was improved so that the
+  post-staged selection is more intuitive and predictable.
+  (`#1641 <https://github.com/git-cola/git-cola/pull/1641>`_)
 
 Fixes
 -----
