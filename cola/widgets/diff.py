@@ -1082,6 +1082,15 @@ class Options(QtWidgets.QWidget):
         # Create widgets
         self.widget = parent
         self.filename = filename  # The filename plain text display.
+        # Width of the leading gutter for the embedded menu rows below, sized so
+        # their labels line up with the native checkable items' text. Read from
+        # the active style rather than hardcoded so it tracks the platform --
+        # macOS uses different padding/inset values than Fusion. Falls back to
+        # the icon-size constant if the style reports 0.
+        menu_icon_gutter = (
+            self.style().pixelMetric(QtWidgets.QStyle.PM_SmallIconSize)
+            or defs.default_icon
+        )
         self.ignore_space_at_eol = self.add_option(
             N_('Ignore changes in whitespace at EOL')
         )
@@ -1112,12 +1121,19 @@ class Options(QtWidgets.QWidget):
         )
         self.max_diff_spinbox.setSpecialValueText(N_('Unlimited'))
         self.max_diff_widget = QtWidgets.QWidget(self)
+        # The leading gutter lines the label up with the checkable items below
+        # (which are indented past the check/icon column), and the margins keep
+        # the spin box off the menu's right edge.
         self.max_diff_layout = qtutils.hbox(
             defs.no_margin,
-            defs.button_spacing,
+            defs.titlebar_spacing,
+            menu_icon_gutter,
             self.max_diff_label,
             qtutils.STRETCH,
             self.max_diff_spinbox,
+        )
+        self.max_diff_layout.setContentsMargins(
+            defs.small_margin, defs.small_margin, defs.margin, defs.small_margin
         )
         self.max_diff_widget.setLayout(self.max_diff_layout)
         self.max_diff_action = QtWidgets.QWidgetAction(self)
@@ -1177,11 +1193,19 @@ class Options(QtWidgets.QWidget):
         except Exception:
             pass
 
+        # Match the max-diff row: the same gutter aligns the label with the
+        # checkable items, a stretch right-aligns the combo, and the margins
+        # keep it off the menu's right edge.
         intraline_layout = qtutils.hbox(
             defs.no_margin,
-            defs.button_spacing,
+            defs.titlebar_spacing,
+            menu_icon_gutter,
             self.intraline_diff_preset_label,
+            qtutils.STRETCH,
             self.intraline_diff_preset_combo,
+        )
+        intraline_layout.setContentsMargins(
+            defs.small_margin, defs.small_margin, defs.margin, defs.small_margin
         )
         self.intraline_diff_widget.setLayout(intraline_layout)
 
