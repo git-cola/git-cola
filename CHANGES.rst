@@ -46,6 +46,10 @@ Usability, bells and whistles
   ``git rev-parse --git-path GIT_COLA_MSG``.
   (`#1626 <https://github.com/git-cola/git-cola/pull/1626>`_)
 
+* The `Commit` buttons now shows the correct shortcut on macOS and uses an
+  icon for the Cmd modifier instead of the mnemonic name.
+  (`#1636 <https://github.com/git-cola/git-cola/pull/1636>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.
