@@ -32,6 +32,7 @@ import sys
 
 from qtpy import QtCore
 from qtpy import QtGui
+from qtpy import QtSvg
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -50,6 +51,41 @@ main_loop_type = 'qt'
 
 def clamp(x, lo, hi):
     return max(min(x, hi), lo)
+
+
+def looks_like_svg(path):
+    """Cheaply decide whether ``path`` is an SVG before invoking QSvgRenderer.
+
+    Gating on this avoids Qt logging a parse warning for every raster image.
+    """
+    _, ext = os.path.splitext(path)
+    if ext.lower() in ('.svg', '.svgz'):
+        return True
+    try:
+        with open(path, 'rb') as handle:
+            head = handle.read(1024)
+    except OSError:
+        return False
+    return b'<svg' in head.lower()
+
+
+def render_svg_to_pixmap(renderer, logical_size, scale):
+    """Rasterise a QSvgRenderer at ``scale`` device pixels per logical unit.
+
+    The returned pixmap has its device-pixel-ratio set to ``scale`` so it
+    occupies ``logical_size`` scene units while painting at higher resolution.
+    """
+    width = max(1, int(round(logical_size.width() * scale)))
+    height = max(1, int(round(logical_size.height() * scale)))
+    image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
+    image.fill(Qt.transparent)
+    painter = QtGui.QPainter(image)
+    painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+    renderer.render(painter, QtCore.QRectF(0, 0, width, height))
+    painter.end()
+    pixmap = QtGui.QPixmap.fromImage(image)
+    pixmap.setDevicePixelRatio(scale)
+    return pixmap
 
 
 class ImageView(QtWidgets.QGraphicsView):
@@ -71,6 +107,14 @@ class ImageView(QtWidgets.QGraphicsView):
         self.start_drag = QtCore.QPoint()
         self.checkerboard = None
 
+        # Optional vector source. When set, the displayed pixmap is
+        # re-rasterised on resize/zoom so SVGs stay crisp at any scale.
+        self._render_fn = None
+        self._logical_size = QtCore.QSize(0, 0)
+        self._render_scale = 0.0
+        self._max_render_pixels = 4096
+        self._rendering = False
+
         CHECK_MEDIUM = 8
         CHECK_GRAY = 0x80
         CHECK_LIGHT = 0xCC
@@ -90,6 +134,20 @@ class ImageView(QtWidgets.QGraphicsView):
         self.check_brush = QtGui.QBrush(check_pattern)
 
     def load(self, filename):
+        if looks_like_svg(filename):
+            renderer = QtSvg.QSvgRenderer(filename)
+            if renderer.isValid():
+                logical_size = renderer.defaultSize()
+                if logical_size.isEmpty():
+                    logical_size = renderer.viewBox().size()
+                if not logical_size.isEmpty():
+                    self.set_image_source(
+                        lambda scale: render_svg_to_pixmap(
+                            renderer, logical_size, scale
+                        ),
+                        logical_size,
+                    )
+                    return True
         image = QtGui.QImage()
         image.load(filename)
         ok = not image.isNull()
@@ -103,6 +161,9 @@ class ImageView(QtWidgets.QGraphicsView):
 
     @pixmap.setter
     def pixmap(self, image, image_format=None):
+        # A directly-assigned pixmap is a fixed raster; drop any vector source
+        # so resize/zoom does not try to re-rasterise stale content.
+        self._render_fn = None
         pixmap = None
         if have_numpy and isinstance(image, np.ndarray):
             if image.ndim == 3:
@@ -139,21 +200,76 @@ class ImageView(QtWidgets.QGraphicsView):
         else:
             raise TypeError(image)
 
-        if pixmap.hasAlpha():
-            checkerboard = QtGui.QImage(
-                pixmap.width(), pixmap.height(), QtGui.QImage.Format_ARGB32
-            )
-            self.checkerboard = checkerboard
-            painter = QtGui.QPainter(checkerboard)
-            painter.fillRect(checkerboard.rect(), self.check_brush)
-            painter.drawPixmap(0, 0, pixmap)
-            pixmap = QtGui.QPixmap.fromImage(checkerboard)
+        pixmap = self._composite_checkerboard(pixmap)
 
         self.graphics_pixmap.setPixmap(pixmap)
         self.update_scene_rect()
         self.fitInView(self.image_scene_rect, flags=Qt.KeepAspectRatio)
         self.graphics_pixmap.update()
         self.image_changed.emit()
+
+    def _composite_checkerboard(self, pixmap):
+        """Paint the checkerboard behind a pixmap that has an alpha channel.
+
+        Works in device pixels and preserves the pixmap's device-pixel-ratio so
+        hi-DPI vector rasters keep their logical size.
+        """
+        if not pixmap.hasAlpha():
+            return pixmap
+        dpr = pixmap.devicePixelRatio() or 1.0
+        checkerboard = QtGui.QImage(
+            pixmap.width(), pixmap.height(), QtGui.QImage.Format_ARGB32
+        )
+        self.checkerboard = checkerboard
+        painter = QtGui.QPainter(checkerboard)
+        painter.fillRect(checkerboard.rect(), self.check_brush)
+        # Draw into the full device rect so the pixmap's dpr does not shrink it.
+        painter.drawPixmap(QtCore.QRect(0, 0, pixmap.width(), pixmap.height()), pixmap)
+        painter.end()
+        result = QtGui.QPixmap.fromImage(checkerboard)
+        result.setDevicePixelRatio(dpr)
+        return result
+
+    def set_image_source(self, render_fn, logical_size):
+        """Display a re-rasterisable source (e.g. an SVG).
+
+        ``render_fn(scale)`` returns a QPixmap rendered at ``scale`` device
+        pixels per logical unit with its device-pixel-ratio set to ``scale``.
+        The image is re-rasterised as the on-screen size changes.
+        """
+        self._render_fn = render_fn
+        self._logical_size = logical_size
+        self._render_scale = 1.0
+        pixmap = self._composite_checkerboard(render_fn(1.0))
+        self.graphics_pixmap.setPixmap(pixmap)
+        self.update_scene_rect()
+        # fitInView re-rasterises at the fitted resolution via its tail hook.
+        self.fitInView(self.image_scene_rect, flags=Qt.KeepAspectRatio)
+        self.graphics_pixmap.update()
+        self.image_changed.emit()
+
+    def update_render_resolution(self):
+        """Re-rasterise the vector source to match the current on-screen size."""
+        if self._render_fn is None or self._rendering:
+            return
+        logical_w = max(1.0, float(self._logical_size.width()))
+        logical_h = max(1.0, float(self._logical_size.height()))
+        view_scale = abs(self.transform().m11())
+        needed = view_scale * self.viewport().devicePixelRatioF()
+        cap = self._max_render_pixels / max(logical_w, logical_h)
+        needed = clamp(needed, 1.0, max(1.0, cap))
+        # Hysteresis: skip small changes so panning/zoom does not thrash.
+        if self._render_scale / 2.0 <= needed <= self._render_scale * 1.25:
+            return
+        self._rendering = True
+        try:
+            pixmap = self._composite_checkerboard(self._render_fn(needed))
+            self.graphics_pixmap.setPixmap(pixmap)
+            self._render_scale = needed
+            self.update_scene_rect()
+            self.graphics_pixmap.update()
+        finally:
+            self._rendering = False
 
     # image property alias
     @property
@@ -166,17 +282,20 @@ class ImageView(QtWidgets.QGraphicsView):
 
     def update_scene_rect(self):
         pixmap = self.pixmap
+        dpr = pixmap.devicePixelRatio() or 1.0
         self.setSceneRect(
             QtCore.QRectF(
-                QtCore.QPointF(0, 0), QtCore.QPointF(pixmap.width(), pixmap.height())
+                QtCore.QPointF(0, 0),
+                QtCore.QPointF(pixmap.width() / dpr, pixmap.height() / dpr),
             )
         )
 
     @property
     def image_scene_rect(self):
-        return QtCore.QRectF(
-            self.graphics_pixmap.pos(), QtCore.QSizeF(self.pixmap.size())
-        )
+        pixmap = self.pixmap
+        dpr = pixmap.devicePixelRatio() or 1.0
+        size = QtCore.QSizeF(pixmap.width() / dpr, pixmap.height() / dpr)
+        return QtCore.QRectF(self.graphics_pixmap.pos(), size)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -355,6 +474,7 @@ class ImageView(QtWidgets.QGraphicsView):
             xratio = yratio = max(xratio, yratio)
         self.scale(xratio, yratio)
         self.centerOn(rect.center())
+        self.update_render_resolution()
 
 
 class AppImageView(ImageView):

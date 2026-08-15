@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from qtpy import QtCore
 from qtpy import QtGui
+from qtpy import QtSvg
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
@@ -718,6 +719,7 @@ class Viewer(QtWidgets.QFrame):
         self.model = model = context.model
         self.images = []
         self.pixmaps = []
+        self.sources = []
         italic_font = self.font()
         italic_font.setItalic(True)
 
@@ -958,26 +960,39 @@ class Viewer(QtWidgets.QFrame):
     def set_images(self, images):
         self.images = images
         self.pixmaps = []
+        self.sources = []
         if not images:
             self.reset()
             return False
 
-        # In order to comp, we first have to load all the images
-        all_pixmaps = [QtGui.QPixmap(image[0]) for image in images]
-        pixmaps = [pixmap for pixmap in all_pixmaps if not pixmap.isNull()]
-        if not pixmaps:
+        # In order to comp, we first have to load all the images. SVGs are kept
+        # as renderers so they can be re-rasterised crisply at display size.
+        sources = [load_image_source(image[0]) for image in images]
+        sources = [source for source in sources if source is not None]
+        if not sources:
             self.reset()
             return False
 
-        self.pixmaps = pixmaps
+        self.sources = sources
+        self.pixmaps = [
+            source for source in sources if isinstance(source, QtGui.QPixmap)
+        ]
         self.render()
         self.cleanup()
         return True
 
     def render(self):
         # Update images
-        if self.pixmaps:
-            mode = self.options.image_mode.currentIndex()
+        mode = self.options.image_mode.currentIndex()
+        if self.sources and any(is_svg_source(source) for source in self.sources):
+            # Vector sources: hand the view a re-rasterising callback so the
+            # image stays sharp at any zoom level or device-pixel-ratio.
+            sources = self.sources
+            logical = comp_logical_size(sources, mode)
+            self.image.set_image_source(
+                lambda scale: render_comp_image(sources, mode, scale), logical
+            )
+        elif self.pixmaps:
             if mode == self.options.SIDE_BY_SIDE:
                 image = self.render_side_by_side()
             elif mode == self.options.DIFF:
@@ -988,9 +1003,9 @@ class Viewer(QtWidgets.QFrame):
                 image = self.render_pixel_xor()
             else:
                 image = self.render_side_by_side()
+            self.image.pixmap = image
         else:
-            image = QtGui.QPixmap()
-        self.image.pixmap = image
+            self.image.pixmap = QtGui.QPixmap()
 
         # Apply zoom
         zoom_mode = self.options.zoom_mode.currentIndex()
@@ -1000,6 +1015,8 @@ class Viewer(QtWidgets.QFrame):
             self.image.scale(zoom_factor, zoom_factor)
             poly = self.image.mapToScene(self.image.viewport().rect())
             self.image.last_scene_roi = poly.boundingRect()
+        # Re-rasterise any vector source at the resulting fixed-zoom scale.
+        self.image.update_render_resolution()
 
     def render_side_by_side(self):
         # Side-by-side lineup comp
@@ -1062,6 +1079,112 @@ def create_painter(image):
     painter = QtGui.QPainter(image)
     painter.fillRect(image.rect(), Qt.transparent)
     return painter
+
+
+def _comp_mode(mode):
+    """Map an Options mode index to its QPainter composition mode, or None."""
+    return {
+        Options.DIFF: QtGui.QPainter.CompositionMode_Difference,
+        Options.XOR: QtGui.QPainter.CompositionMode_Xor,
+        Options.PIXEL_XOR: QtGui.QPainter.RasterOp_SourceXorDestination,
+    }.get(mode)
+
+
+def load_image_source(path):
+    """Load an image path as a re-rasterisable SVG renderer or a QPixmap.
+
+    Returns a ``QtSvg.QSvgRenderer`` for valid SVGs, a non-null ``QPixmap`` for
+    raster images, or ``None`` when the file cannot be loaded.
+    """
+    if imageview.looks_like_svg(path):
+        renderer = QtSvg.QSvgRenderer(path)
+        if renderer.isValid():
+            return renderer
+    pixmap = QtGui.QPixmap(path)
+    if pixmap.isNull():
+        return None
+    return pixmap
+
+
+def is_svg_source(source):
+    return isinstance(source, QtSvg.QSvgRenderer)
+
+
+def source_logical_size(source):
+    """Return the logical size of an image source in device-independent pixels."""
+    if is_svg_source(source):
+        size = source.defaultSize()
+        if size.isEmpty():
+            size = source.viewBox().size()
+        return size
+    return source.size()
+
+
+def comp_logical_size(sources, mode):
+    """Logical size of the composited image for the given sources and mode."""
+    sizes = [source_logical_size(source) for source in sources]
+    if mode == Options.SIDE_BY_SIDE:
+        width = sum(size.width() for size in sizes)
+        height = max(size.height() for size in sizes)
+    else:
+        width = max(size.width() for size in sizes)
+        height = max(size.height() for size in sizes)
+    return QtCore.QSize(width, height)
+
+
+def paint_source(painter, source, rect):
+    """Paint a single image source into ``rect`` (a device-pixel QRectF)."""
+    if is_svg_source(source):
+        source.render(painter, rect)
+    else:
+        painter.drawPixmap(rect, source, QtCore.QRectF(source.rect()))
+
+
+def render_comp_image(sources, mode, scale):
+    """Composite ``sources`` at ``scale`` device pixels per logical unit.
+
+    The returned pixmap carries a device-pixel-ratio of ``scale`` so it occupies
+    the logical composited size while painting at higher resolution. SVGs are
+    rasterised directly at the target size, so they stay crisp.
+    """
+    sizes = [source_logical_size(source) for source in sources]
+    logical = comp_logical_size(sources, mode)
+    image = create_image(
+        max(1, int(round(logical.width() * scale))),
+        max(1, int(round(logical.height() * scale))),
+    )
+    painter = create_painter(image)
+    painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+    painter.setRenderHint(QtGui.QPainter.SmoothPixmapTransform, True)
+
+    if mode == Options.SIDE_BY_SIDE:
+        x = 0.0
+        for source, size in zip(sources, sizes):
+            rect = QtCore.QRectF(
+                x * scale, 0.0, size.width() * scale, size.height() * scale
+            )
+            paint_source(painter, source, rect)
+            x += size.width()
+    else:
+        comp_mode = _comp_mode(mode)
+        if len(sources) == 1:
+            pairs = [(sources[0], sizes[0])]
+        else:
+            pairs = [(sources[0], sizes[0]), (sources[-1], sizes[-1])]
+        for source, size in pairs:
+            x = (logical.width() - size.width()) / 2.0
+            y = (logical.height() - size.height()) / 2.0
+            rect = QtCore.QRectF(
+                x * scale, y * scale, size.width() * scale, size.height() * scale
+            )
+            paint_source(painter, source, rect)
+            if comp_mode is not None:
+                painter.setCompositionMode(comp_mode)
+    painter.end()
+
+    pixmap = QtGui.QPixmap.fromImage(image)
+    pixmap.setDevicePixelRatio(scale)
+    return pixmap
 
 
 class Options(QtWidgets.QWidget):
