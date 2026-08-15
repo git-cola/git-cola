@@ -50,6 +50,9 @@ Usability, bells and whistles
   icon for the Cmd modifier instead of the mnemonic name.
   (`#1636 <https://github.com/git-cola/git-cola/pull/1636>`_)
 
+* Git DAG's commit list and label rendering is now faster.
+  (`#1638 <https://github.com/git-cola/git-cola/pull/1638>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.
