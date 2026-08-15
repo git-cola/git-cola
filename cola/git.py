@@ -483,7 +483,7 @@ def _print_win32_git_hint(ops: operations.IOperations) -> None:
     ops.print_stderr("error: unable to execute 'git'" + hint)
 
 
-def create(ops: operations.IOperations) -> Git:
+def create(ops: operations.IOperations = None) -> Git:
     """Create Git instances
 
     >>> git = create(operations.LocalOperations())

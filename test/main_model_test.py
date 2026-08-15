@@ -27,7 +27,7 @@ REMOTE_BRANCH = 'remote'
 def mock_context():
     """Return a Mock context for testing"""
     context = Mock()
-    context.git = git.create(operations.LocalOperations())
+    context.git = git.create(ops=operations.LocalOperations())
     return context
 
 

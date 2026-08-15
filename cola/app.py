@@ -493,7 +493,7 @@ def new_context(
     context.timestamp = time.time()
     context.settings = args.settings or Settings.read()
     context.ops = ops
-    context.git = git.create(context.ops)
+    context.git = git.create(ops=context.ops)
     context.cfg = gitcfg.create(context)
     context.fsmonitor = fsmonitor.create(context)
     context.selection = selection.create()

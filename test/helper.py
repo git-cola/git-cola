@@ -92,7 +92,7 @@ def app_context():
     initialize_repo()
     context = Mock()
     context.ops = operations.LocalOperations()
-    context.git = git.create(context.ops)
+    context.git = git.create(ops=context.ops)
     context.git.set_worktree(core.getcwd())
     context.cfg = gitcfg.create(context)
     context.model = main.create(context)
