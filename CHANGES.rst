@@ -53,6 +53,10 @@ Usability, bells and whistles
 * Git DAG's commit list and label rendering is now faster.
   (`#1638 <https://github.com/git-cola/git-cola/pull/1638>`_)
 
+* The diff editor now displays a usage hint when its contents
+  are empty, for example when the tool is first displayed.
+  (`#1639 <https://github.com/git-cola/git-cola/pull/1639>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.
