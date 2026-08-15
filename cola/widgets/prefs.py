@@ -435,15 +435,15 @@ class SettingsFormWidget(FormWidget):
                 Defaults.fixup_commit_count,
             ),
             prefs.SORT_BOOKMARKS: (self.sort_bookmarks, Defaults.sort_bookmarks),
-            prefs.DIFFTOOL: (self.difftool, ''),
-            prefs.EDITOR: (self.editor, ''),
+            prefs.DIFFTOOL: (self.difftool, Defaults.difftool),
+            prefs.EDITOR: (self.editor, fallback_editor()),
             prefs.BACKGROUND_EDITOR: (
                 self.background_editor,
                 Defaults.background_editor,
             ),
             prefs.HISTORY_BROWSER: (
                 self.historybrowser,
-                '',
+                prefs.default_history_browser(),
             ),
             prefs.BLAME_VIEWER: (self.blameviewer, Defaults.blame_viewer),
             prefs.CHECK_CONFLICTS: (self.check_conflicts, Defaults.check_conflicts),
