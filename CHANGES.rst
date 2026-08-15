@@ -63,6 +63,11 @@ Translations
 * Updated French translation.
   (`#1608+ <https://github.com/git-cola/git-cola/pull/1608#pullrequestreview-4688968144>`_)
 
+Development
+-----------
+* Type hints were improved.
+  (`#1637 <https://github.com/git-cola/git-cola/pull/1637>`_)
+
 
 .. _v4.19.0:
 
