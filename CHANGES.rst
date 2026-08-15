@@ -65,6 +65,10 @@ Usability, bells and whistles
   post-staged selection is more intuitive and predictable.
   (`#1641 <https://github.com/git-cola/git-cola/pull/1641>`_)
 
+* The Diff editor's Image Diff mode improved its image rendering for
+  ``*.svg`` vector images to reduce blurriness.
+  (`#1643 <https://github.com/git-cola/git-cola/pull/1643>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.
