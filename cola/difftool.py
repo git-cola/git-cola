@@ -12,12 +12,12 @@ from . import git
 from . import gitcmds
 from . import hotkeys
 from . import icons
-from .models import prefs
 from . import qtutils
 from . import utils
 from .i18n import N_
 from .interaction import Interaction
 from .models import dag
+from .models import prefs
 from .widgets import completion
 from .widgets import defs
 from .widgets import filetree
