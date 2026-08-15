@@ -1147,6 +1147,11 @@ class CommitTreeWidget(standard.TreeWidget, ViewerMixin):
         ViewerMixin.__init__(self)
 
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        # Every row is a single line of text in the same font, so all rows are
+        # the same height. Telling Qt this lets it size the view from one row
+        # instead of calling the delegate's sizeHint() for every commit, which
+        # is a large saving on big histories.
+        self.setUniformRowHeights(True)
         self.setHeaderLabels([N_('Summary'), N_('Author'), N_('Date, Time')])
         self.header().setSectionResizeMode(
             CommitTreeWidgetItem.DATE, QtWidgets.QHeaderView.Stretch
@@ -2301,11 +2306,22 @@ class Label(QtWidgets.QGraphicsItem):
         QtWidgets.QGraphicsItem.__init__(self)
         self.setZValue(-1)
         self.commit = commit
+        # Cached bounding rect and the font it was computed for. The rect only
+        # depends on the (immutable) tags and the label font, so it is computed
+        # once and reused -- Qt queries boundingRect() often (indexing, hit
+        # testing, paint culling) and the per-tag QPainterPath work below is
+        # expensive to repeat.
+        self._bounding_rect = None
+        self._bounding_rect_font = None
 
     def type(self):
         return self.item_type
 
     def boundingRect(self, cache=Cache):
+        font = cache.label_font()
+        if self._bounding_rect is not None and self._bounding_rect_font is font:
+            return self._bounding_rect
+
         QPainterPath = QtGui.QPainterPath
         QRectF = QtCore.QRectF
 
@@ -2316,7 +2332,6 @@ class Label(QtWidgets.QGraphicsItem):
         border_x = self.border + self.text_x_offset
         border_y = self.border + self.text_y_offset
 
-        font = cache.label_font()
         item_shape = QPainterPath()
 
         base_rect = QRectF(0, 0, width, height)
@@ -2331,7 +2346,9 @@ class Label(QtWidgets.QGraphicsItem):
             item_shape.addRect(box_rect)
             current_width = item_shape.boundingRect().width() + spacing
 
-        return item_shape.boundingRect()
+        self._bounding_rect = item_shape.boundingRect()
+        self._bounding_rect_font = font
+        return self._bounding_rect
 
     def paint(self, painter, _option, _widget, cache=Cache):
         # Draw tags and branches
