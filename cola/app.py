@@ -923,7 +923,7 @@ def find_git(ops: operations.IOperations) -> str | None:
     # If the user wants to use a Git/bin/ directory from a non-standard
     # directory then they can write its location into
     # ~/.config/git-cola/git-bindir
-    git_bindir = resources.config_home(ops, 'git-bindir')
+    git_bindir = resources.config_home('git-bindir')
     if ops.exists(git_bindir):
         custom_path = core.read(git_bindir).strip()
         if custom_path and ops.exists(custom_path):
