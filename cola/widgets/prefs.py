@@ -303,6 +303,11 @@ class SettingsFormWidget(FormWidget):
         self.tabwidth = standard.SpinBox(maxi=42)
         self.textwidth = standard.SpinBox(maxi=150)
 
+        self.override_editor = QtWidgets.QLineEdit()
+        self.override_editor.setToolTip(
+            N_('Override the GUI editor setting when configured')
+        )
+
         self.editor = QtWidgets.QLineEdit()
         self.editor.setToolTip(N_('The main GUI editor that must block until it exits'))
 
@@ -312,8 +317,21 @@ class SettingsFormWidget(FormWidget):
         )
         self.historybrowser = QtWidgets.QLineEdit()
         self.blameviewer = QtWidgets.QLineEdit()
+        self.override_historybrowser = QtWidgets.QLineEdit()
+        self.override_historybrowser.setToolTip(
+            N_('Override the history browser setting when configured')
+        )
+
         self.difftool = QtWidgets.QLineEdit()
+        self.override_difftool = QtWidgets.QLineEdit()
+        self.override_difftool.setToolTip(
+            N_('Override the diff tool setting when configured')
+        )
         self.mergetool = QtWidgets.QLineEdit()
+        self.override_mergetool = QtWidgets.QLineEdit()
+        self.override_mergetool.setToolTip(
+            N_('Override the merge tool setting when configured')
+        )
 
         self.linebreak = qtutils.checkbox()
         self.mouse_zoom = qtutils.checkbox()
@@ -350,6 +368,11 @@ class SettingsFormWidget(FormWidget):
         self.add_row(N_('Insert Spaces Instead of Tabs'), self.expandtab)
         self.add_row(N_('Auto-Wrap Lines'), self.linebreak)
 
+        self.add_row('', QtWidgets.QLabel())
+        self.add_row(N_('Editor Override'), self.override_editor)
+        self.add_row(N_('History Browser Override'), self.override_historybrowser)
+        self.add_row(N_('Diff Tool Override'), self.override_difftool)
+        self.add_row(N_('Merge Tool Override'), self.override_mergetool)
         self.add_row('', QtWidgets.QLabel())
         self.add_row(N_('Editor'), self.editor)
         self.add_row(N_('Background Editor'), self.background_editor)
@@ -389,6 +412,13 @@ class SettingsFormWidget(FormWidget):
 
         self.set_config({
             prefs.ASPELL_ENABLED: (self.aspell_enabled, Defaults.aspell_enabled),
+            prefs.OVERRIDE_EDITOR: (self.override_editor, ''),
+            prefs.OVERRIDE_HISTORY_BROWSER: (
+                self.override_historybrowser,
+                '',
+            ),
+            prefs.OVERRIDE_DIFFTOOL: (self.override_difftool, ''),
+            prefs.OVERRIDE_MERGETOOL: (self.override_mergetool, ''),
             prefs.SAVEWINDOWSETTINGS: (
                 self.save_window_settings,
                 Defaults.save_window_settings,

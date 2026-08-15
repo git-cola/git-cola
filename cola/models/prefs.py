@@ -28,8 +28,10 @@ COMMIT_CLEANUP = 'commit.cleanup'
 DICTIONARY = 'cola.dictionary'
 DIFFCONTEXT = 'gui.diffcontext'
 DIFFTOOL = 'diff.tool'
+OVERRIDE_DIFFTOOL = 'cola.difftool'
 DISPLAY_UNTRACKED = 'gui.displayuntracked'
 EDITOR = 'gui.editor'
+OVERRIDE_EDITOR = 'cola.editor'
 ENABLE_GRAVATAR = 'cola.gravatar'
 ENABLE_POPUPS = 'cola.enablepopups'
 EXPANDTAB = 'cola.expandtab'
@@ -38,6 +40,7 @@ FONTDIFF = 'cola.fontdiff'
 FONTSIZE = 'cola.fontsize'
 HIDPI = 'cola.hidpi'
 HISTORY_BROWSER = 'gui.historybrowser'
+OVERRIDE_HISTORY_BROWSER = 'cola.historybrowser'
 HTTP_PROXY = 'http.proxy'
 ICON_THEME = 'cola.icontheme'
 INOTIFY = 'cola.inotify'
@@ -52,6 +55,7 @@ MERGE_KEEPBACKUP = 'merge.keepbackup'
 MERGE_SUMMARY = 'merge.summary'
 MERGE_VERBOSITY = 'merge.verbosity'
 MERGETOOL = 'merge.tool'
+OVERRIDE_MERGETOOL = 'cola.mergetool'
 MOUSE_ZOOM = 'cola.mousezoom'
 PATCHES_DIRECTORY = 'cola.patchesdirectory'
 PULL_REBASE = 'pull.rebase'
@@ -269,7 +273,9 @@ def display_untracked(context) -> bool:
 
 def editor(context) -> str:
     """Return the configured editor"""
-    app = context.cfg.get(EDITOR, default=fallback_editor())
+    app = _config_with_override(
+        context, OVERRIDE_EDITOR, EDITOR, default=fallback_editor()
+    )
     return _remap_editor(app)
 
 
@@ -303,6 +309,16 @@ def fallback_editor() -> str:
             return env_editor
 
     return Defaults.editor
+
+
+def _config_with_override(
+    context, override_key: str, fallback_key: str, default=''
+) -> str:
+    """Return a cola.* override when configured, else fall back to the git key."""
+    value = context.cfg.get(override_key, default=None)
+    if value:
+        return value
+    return context.cfg.get(fallback_key, default=default)
 
 
 def _remap_editor(app: str) -> str:
@@ -348,7 +364,32 @@ def default_history_browser() -> str:
 def history_browser(context) -> str:
     """Return the configured history browser"""
     default = default_history_browser()
-    return context.cfg.get(HISTORY_BROWSER, default=default)
+    return _config_with_override(
+        context,
+        OVERRIDE_HISTORY_BROWSER,
+        HISTORY_BROWSER,
+        default=default,
+    )
+
+
+def difftool(context) -> str:
+    """Return the configured diff tool"""
+    return _config_with_override(
+        context,
+        OVERRIDE_DIFFTOOL,
+        DIFFTOOL,
+        default=Defaults.difftool,
+    )
+
+
+def mergetool(context) -> str:
+    """Return the configured merge tool"""
+    return _config_with_override(
+        context,
+        OVERRIDE_MERGETOOL,
+        MERGETOOL,
+        default=Defaults.mergetool,
+    )
 
 
 def http_proxy(context) -> str:
