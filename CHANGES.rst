@@ -57,6 +57,10 @@ Usability, bells and whistles
   are empty, for example when the tool is first displayed.
   (`#1639 <https://github.com/git-cola/git-cola/pull/1639>`_)
 
+* The Diff Options menu's layout was improved so that its
+  custom widgets fit in better within the menu.
+  (`#1640 <https://github.com/git-cola/git-cola/pull/1640>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.
