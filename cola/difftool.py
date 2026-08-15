@@ -341,7 +341,7 @@ def difftool_launch(
     }
     tool = prefs.difftool(context)
     if tool:
-        kwargs['tool'] = tool
+        kwargs['tool'] = tool  # type: ignore
     if staged:
         kwargs['cached'] = True
     if dir_diff:
