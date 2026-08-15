@@ -970,6 +970,19 @@ to install the Spanish dictionary, run:
 
    sudo apt install hunspell-es
 
+cola.difftool
+-------------
+
+Override the default diff tool to use. This can be used to override the ``diff.tool``
+configuration without affecting core Git's `difftool` configuration setting.
+
+cola.editor
+-----------
+
+Override the editor used by Git Cola without affecting core Git's
+``core.editor`` or ``gui.editor`` configuration.
+
+
 cola.enablepopups
 -----------------
 
@@ -1121,6 +1134,12 @@ cola.maxrecent
 `git cola` caps the number of recent repositories to avoid cluttering
 the start and recent repositories menu.  The maximum number of repositories to
 remember is controlled by `cola.maxrecent` and defaults to `8`.
+
+cola.mergetool
+--------------
+
+Override the default merge tool to use. This can be used to override the ``merge.tool``
+configuration without affecting core Git's `mergetool` configuration setting.
 
 cola.mousezoom
 --------------
@@ -1352,6 +1371,13 @@ The default diff header text color, in hexadecimal #RRGGBB notation.
 Defaults to "#bbbbbb"::
 
     git config cola.color.header '#bbbbbb'
+
+cola.historybrowser
+-------------------
+
+Override the history browser to use when visualizing history.
+This should be used if you do not want to affect core Git's
+``gui.historybrowser`` configuration.
 
 cola.updateindex
 ----------------
