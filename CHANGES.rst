@@ -65,6 +65,13 @@ Usability, bells and whistles
   post-staged selection is more intuitive and predictable.
   (`#1641 <https://github.com/git-cola/git-cola/pull/1641>`_)
 
+* The Editor, History Browser, Mergetool, and Difftool configuration
+  can now be overridden for just Git Cola using a new set of ``cola.*``
+  override variables. This allows you to use a distinct set of tools
+  just for Git Cola without affecting the core Git configuration.
+  (`#1632 <https://github.com/git-cola/git-cola/issues/1632>`_)
+  (`#1642 <https://github.com/git-cola/git-cola/pull/1642>`_)
+
 * The Diff editor's Image Diff mode improved its image rendering for
   ``*.svg`` vector images to reduce blurriness.
   (`#1643 <https://github.com/git-cola/git-cola/pull/1643>`_)
