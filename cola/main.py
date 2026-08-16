@@ -494,8 +494,8 @@ def add_server_command(subparser) -> None:
     )
     parser.add_argument(
         'address',
-        default='0.0.0.0',
-        help='bind to the specified IP address (default: 0.0.0.0)',
+        default='127.0.0.1',
+        help='bind to the specified IP address (default: 127.0.0.1)',
         metavar='<address>',
         nargs='?',
     )
