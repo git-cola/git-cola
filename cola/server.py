@@ -2,6 +2,8 @@
 from __future__ import annotations
 import asyncio
 import datetime
+import os
+import socket
 import sys
 import textwrap
 import threading
@@ -107,7 +109,6 @@ class SocketServer:
         async with websockets.serve(
             self.message_handler, self.address, self.port, max_size=10 * 1024 * 1024
         ):
-            print(f'# cola server listening on ws://{self.address}:{self.port}')
             await asyncio.Future()  # run forever
 
     def run(self):
@@ -177,8 +178,13 @@ class SyncSocketClient:
 
 def run(address, port, verbose) -> None:
     """Start the websocket cola operations server"""
+    log(f'cola server running at ws://{address}:{port}')
     server = SocketServer(address, port, verbose)
-    return server.run()
+    try:
+        return server.run()
+    except KeyboardInterrupt:
+        print('\r', end='')
+        log('server shutdown')
 
 
 def stderr(msg):
@@ -192,4 +198,55 @@ def log(msg):
 def timestamp(msg):
     now = datetime.datetime.now()
     timestamp = now.strftime('%Y-%m-%d %I:%M:%S %p')
-    return f'{timestamp} {msg}'
+    return f'{timestamp}  {msg}'
+
+
+def warn(msg):
+    for line in textwrap.dedent(msg).splitlines():
+        stderr('warning: ' + line)
+
+
+def print_warnings(address, port):
+    check_dependencies()
+
+    stderr(
+        'cola server is currently experimental and **INSECURE**! USE AT YOUR OWN RISK.'
+    )
+    if address == '0.0.0.0':
+        stderr('')
+        warn('Binding to 0.0.0.0 enables unsafe network connections!')
+        warn('Use ssh to tunnel the server port over ssh instead.')
+        warn(
+            """
+            ANYONE on your network could potentially issue commands that do irreparable
+            damage on the host where the server is running.
+
+            cola server enables REMOTE CODE EXECUTION that can do amazing things.
+            It can also potentially cause perform irreparable damage if misued by anyone
+            with nothing more than network access to your host.
+
+            Only use cola server in trusted environments you fully control.
+            NEVER EXPOSE A COLA SERVER TO THE OPEN INTERNET OR EVEN PUBLIC WIFI.
+            IF YOU DO NOT TRUST PEERS ON YOUR NETWORK, DO NOT USE THIS SOFTWARE.
+        """
+        )
+
+    hostname = socket.gethostname()
+    username = os.environ.get('USER', os.getlogin())
+    if port != 42069:
+        connect_cmd = f'git cola connect localhost:{port}'
+    else:
+        connect_cmd = 'git cola connect'
+
+    stderr(
+        f"""
+        To create a secure tunnel from a remote client into the cola server using ssh,
+        adjust the server hostname as necessary and run the following on the remote client:
+
+                $ ssh -L {port}:localhost:{port} {username}@{hostname}
+
+        Once the tunnel is running, run this on the remote host to connect to the server:
+
+                $ {connect_cmd}
+    """
+    )

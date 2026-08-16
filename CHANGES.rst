@@ -4,8 +4,9 @@ Upcoming
 Usability, bells and whistles
 -----------------------------
 * Git Cola now has a server mode that allows you to connect to sessions running on
-  remote machines. ``git cola server`` can be used used to
-  start a cola server and ``git cola connect [<hostname>]`` connects to it.
+  remote machines. ``git cola server`` can be used used to start a cola server and
+  ``git cola connect`` can connect to it.
+  (`#1540 <https://github.com/git-cola/git-cola/issues/1540>`_)
   (`#1617 <https://github.com/git-cola/git-cola/pull/1617>`_)
 
 * The dialog that appears when reverting worktree edits now includes a diff

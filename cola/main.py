@@ -752,6 +752,7 @@ def cmd_push(args: argparse.Namespace) -> int:
 
 
 def cmd_server(args: argparse.Namespace) -> int:
+    server.print_warnings(args.address, args.port)
     server.run(args.address, args.port, args.verbose)
 
 
