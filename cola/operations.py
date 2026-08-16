@@ -347,6 +347,7 @@ class RemoteOperations(IOperations):
     def __init__(self, socket_client: server.SocketClient):
         from . import server
 
+        server.check_dependencies()
         self.client = server.SyncSocketClient(socket_client)
         self.seq_number = 0
 

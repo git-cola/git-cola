@@ -1,4 +1,4 @@
-""" """
+"""Server and client code for remote execution of cola operations"""
 from __future__ import annotations
 import asyncio
 import sys
@@ -19,18 +19,17 @@ from . import operations
 
 
 def check_dependencies() -> None:
+    errors = []
     if msgpack is None:
-        print('msgpack package was not found')
-        sys.exit(1)
-
+        errors.append('error: missing package: msgpack (python3-msgpack)')
     if websockets is None:
-        print('websockets package was not found')
-        sys.exit(1)
+        errors.append('error: missing package: websockets (python3-websockets)')
+    if errors:
+        sys.exit('\n'.join(errors))
 
 
 class SocketServer:
     def __init__(self, address: str, port: int, verbose: bool):
-        check_dependencies()
         self.address = address
         self.port = port
         self.verbose = verbose
@@ -95,7 +94,6 @@ class SocketServer:
 
 class SocketClient:
     def __init__(self, ip: str, port: int = 49178, protocol: str = 'ws'):
-        check_dependencies()
         self.ip = ip
         self.port = port
         self.protocol = protocol
@@ -134,7 +132,6 @@ class SocketClient:
 
 class SyncSocketClient:
     def __init__(self, async_client: SocketClient):
-        check_dependencies()
         self.client = async_client
         self.loop = asyncio.new_event_loop()
         self.thread = threading.Thread(target=self._run_loop, daemon=True)
