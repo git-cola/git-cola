@@ -79,7 +79,7 @@ if TYPE_CHECKING:
     from .types import ViewType
 
 
-def setup_environment() -> None:
+def setup_environment() -> operations.IOperations:
     """Set environment variables to control git's behavior"""
     # Allow Ctrl-C to exit
     random.seed(hash(time.time()))
@@ -149,6 +149,8 @@ def setup_environment() -> None:
     # Longer-term: Use `git merge --no-commit` so that we always
     # have a chance to explain our merges.
     compat.setenv(ops, 'GIT_MERGE_AUTOEDIT', 'no')
+
+    return ops
 
 
 def _get_askpass(ops: operations.IOperations) -> TextType:
@@ -456,16 +458,15 @@ def application_init(
     setup_repo: bool = False,
 ) -> ApplicationContext:
     """Parses the command-line arguments and starts git-cola"""
-    # Ensure that we're working in a valid git repository.
-    # If not, try to find one.  When found, chdir there.
+    local_ops = setup_environment()
     if socket:
-        ops: operations.IOperations = operations.RemoteOperations(socket)
+        ops = operations.RemoteOperations(socket)
     else:
-        ops: operations.IOperations = operations.LocalOperations()
-
-    setup_environment()
+        ops = local_ops
     process_args(ops, args, setup_repo=setup_repo)
 
+    # Ensure that we're working in a valid git repository.
+    # If not, try to find one.  When found, chdir there.
     context = new_context(ops, args, app_name=app_name)
     enforce_single_instance(context)
 
