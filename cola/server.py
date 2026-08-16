@@ -1,8 +1,11 @@
 """Server and client code for remote execution of cola operations"""
 from __future__ import annotations
 import asyncio
+import datetime
 import sys
+import textwrap
 import threading
+import traceback
 from typing import Any
 
 try:
@@ -36,50 +39,69 @@ class SocketServer:
         self.ops = operations.LocalOperations()
 
     async def message_handler(self, websocket):
-        async for message_bytes in websocket:
-            message = msgpack.unpackb(message_bytes)
-            try:
-                if self.verbose:
-                    print(f'[server] received: {message}')
+        try:
+            async for message_bytes in websocket:
+                await self._process_message(websocket, message_bytes)
+        except websockets.exceptions.ConnectionClosedError:
+            log('client disconnected')
 
-                func_dict = self.ops.function_dict()
+    async def _process_message(self, websocket, message_bytes):
+        message = msgpack.unpackb(message_bytes)
+        if self.verbose:
+            log(f'message: {message}')
 
-                if message.get('op') in func_dict:
-                    method = func_dict.get(message.get('op'))
-                    args = message.get('args', [])
-                    kwargs = message.get('kwargs', {})
+        func_dict = self.ops.function_dict()
+        try:
+            op_name = message['op']
+            seq = message['seq']
+        except KeyError:
+            await websocket.send(
+                msgpack.packb({
+                    'seq': message.get('seq', -1),
+                    'op': 'response',
+                    'result': f'invalid message: "op" and "seq" are required: {message}',
+                    'error': True,
+                })
+            )
+            return
 
-                    result = method(self.ops, *args, **kwargs)
+        try:
+            method = func_dict[op_name]
+        except KeyError:
+            await websocket.send(
+                msgpack.packb({
+                    'seq': seq,
+                    'op': 'response',
+                    'result': f'unknown command: {op_name}',
+                    'error': True,
+                })
+            )
+            return
 
-                    await websocket.send(
-                        msgpack.packb({
-                            'seq_number': message.get('seq_number'),
-                            'op': 'response',
-                            'result': result,
-                        })
-                    )
-                else:
-                    await websocket.send(
-                        msgpack.packb({
-                            'seq_number': message.get('seq_number'),
-                            'op': 'response',
-                            'result': 'Unknown command',
-                            'is_exception': True,
-                        })
-                    )
+        args = message.get('args', [])
+        kwargs = message.get('kwargs', {})
 
-            except Exception as e:
-                import traceback
+        try:
+            result = method(self.ops, *args, **kwargs)
+        except Exception as err:
+            await websocket.send(
+                msgpack.packb({
+                    'seq': seq,
+                    'op': 'response',
+                    'result': str(err),
+                    'error': True,
+                    'traceback': traceback.format_exc(),
+                })
+            )
+            return
 
-                await websocket.send(
-                    msgpack.packb({
-                        'seq_number': message.get('seq_number'),
-                        'op': 'response',
-                        'result': str(e),
-                        'is_exception': True,
-                        'traceback': traceback.format_exc(),
-                    })
-                )
+        await websocket.send(
+            msgpack.packb({
+                'seq': seq,
+                'op': 'response',
+                'result': result,
+            })
+        )
 
     async def run_async(self):
         async with websockets.serve(
@@ -108,14 +130,13 @@ class SocketClient:
                 max_size=10 * 1024 * 1024,
             )
         except Exception as err:
-            print(f'Connection failure! {err}')
-            sys.exit(1)
+            sys.exit(timestamp(f'error: connection failure: {err}'))
 
     async def send_message_msgpack(self, message: dict[str, Any]) -> Any:
         packed_message = msgpack.packb(message)
         return await self.send_message(
             packed_message,
-            message.get('seq_number'),
+            message.get('seq'),
         )
 
     async def send_message(self, message: str, seq_number: int):
@@ -125,7 +146,7 @@ class SocketClient:
         await self.websocket.send(message)
         async with self._recv_lock:
             result = msgpack.unpackb(await self.websocket.recv())
-            while result.get('seq_number') != seq_number:
+            while result.get('seq', -1) != seq_number:
                 result = msgpack.unpackb(await self.websocket.recv())
             return result
 
@@ -158,3 +179,17 @@ def run(address, port, verbose) -> None:
     """Start the websocket cola operations server"""
     server = SocketServer(address, port, verbose)
     return server.run()
+
+
+def stderr(msg):
+    print(textwrap.dedent(msg), file=sys.stderr)
+
+
+def log(msg):
+    stderr(timestamp(msg))
+
+
+def timestamp(msg):
+    now = datetime.datetime.now()
+    timestamp = now.strftime('%Y-%m-%d %I:%M:%S %p')
+    return f'{timestamp} {msg}'

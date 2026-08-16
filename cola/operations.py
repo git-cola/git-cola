@@ -352,19 +352,22 @@ class RemoteOperations(IOperations):
         self.seq_number = 0
 
     def _send_op(self, data: dict[str, Any]):
-        data['seq_number'] = self.seq_number
-        received = self.client.send_message_msgpack(data)
-        if received.get('seq_number') != data.get('seq_number'):
-            raise OSError('seq_number was not correct')
+        current_seq = self.seq_number
         self.seq_number += 1
 
-        if received.get('is_exception', False):
-            raise OSError(f"Error was found: {received.get('result')}")
+        data['seq'] = current_seq
+        received = self.client.send_message_msgpack(data)
+        if received.get('seq', -1) != current_seq:
+            raise ValueError(
+                f'error: seq number mismatch in client response: {received}'
+            )
 
-        if 'error' in received:
-            raise RuntimeError(received['error'])
-
-        return received.get('result')
+        if received.get('error', False):
+            raise ValueError(f"error: {received.get('result')}")
+        try:
+            return received['result']
+        except KeyError:
+            raise ValueError(f'error: missing "result" in response: {received}')
 
     def is_remote(self) -> bool:
         return True

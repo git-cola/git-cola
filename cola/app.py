@@ -460,7 +460,7 @@ def application_init(
     """Parses the command-line arguments and starts git-cola"""
     local_ops = setup_environment()
     if socket:
-        ops = operations.RemoteOperations(socket)
+        ops: operations.IOperations = operations.RemoteOperations(socket)
     else:
         ops = local_ops
     process_args(ops, args, setup_repo=setup_repo)
