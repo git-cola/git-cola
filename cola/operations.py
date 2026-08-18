@@ -1,19 +1,38 @@
 from __future__ import annotations
-import io
 import os
+import threading
 from abc import ABC
 from abc import abstractmethod
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
+
+from qtpy import QtCore
 
 from . import core
 from . import utils
 
 if TYPE_CHECKING:
     from . import server
+    from .fsmonitor import _Monitor
+    from .git import Git
+    from .gitcfg import GitConfig
 
 ENCODING = 'utf-8'
 IS_LOCAL = True
+
+
+@dataclass
+class CmdOutputToFile:
+    path: str
+    mode: str
+
+
+class _MonitorContext:
+    def __init__(self, ops: IOperations) -> None:
+        self.ops = ops
+        self.git: Git = None
+        self.cfg: GitConfig = None
 
 
 class IOperations(ABC):
@@ -31,10 +50,6 @@ class IOperations(ABC):
 
     @abstractmethod
     def list2cmdline(self, cmd: list[str | Any | core.UStr]) -> str:
-        pass
-
-    @abstractmethod
-    def xopen(self, path: str, mode: str = 'r', encoding: str | None = None) -> Any:
         pass
 
     @abstractmethod
@@ -199,16 +214,34 @@ class IOperations(ABC):
     def tmp_filename(self, label: str, suffix: str = '') -> str:
         pass
 
+    @abstractmethod
+    def start_monitor(self, worktree: str | None, git_dir: str) -> None:
+        pass
+
+    @abstractmethod
+    def refresh_monitor(self) -> None:
+        pass
+
+    @abstractmethod
+    def poll_monitor(self) -> dict:
+        pass
+
+    @abstractmethod
+    def stop_monitor(self) -> None:
+        pass
+
 
 class LocalOperations(IOperations):
+    def __init__(self) -> None:
+        self._monitor: _Monitor = None
+        self._monitor_lock = threading.Lock()
+        self._monitor_state = {'files': False, 'config': False}
+
     def is_remote(self) -> bool:
         return False
 
     def list2cmdline(self, cmd: list[str | Any | core.UStr]) -> str:
         return core.list2cmdline(cmd)
-
-    def xopen(self, path: str, mode: str = 'r', encoding: str | None = None) -> Any:
-        return core.xopen(path, mode, encoding)
 
     def file_append(self, path, text: str, encoding: str | None = None) -> None:
         with core.open_append(path, encoding) as file:
@@ -315,9 +348,89 @@ class LocalOperations(IOperations):
         return core.expanduser(path)
 
     def run_command(
-        self, cmd: list[core.UStr | str], *args, **kwargs
+        self,
+        cmd: list[core.UStr | str],
+        communicate_data: list[str] | None = None,
+        *args,
+        **kwargs,
     ) -> tuple[int, core.UStr, core.UStr]:
-        return core.run_command(cmd, *args, **kwargs)
+        _stdout = None
+
+        if (
+            isinstance(kwargs.get('stdout'), dict)
+            and 'output_to_file' in kwargs['stdout']
+        ):
+            _stdout = CmdOutputToFile(
+                kwargs['stdout']['output_to_file'],
+                kwargs['stdout'].get('mode', 'wb'),
+            )
+        else:
+            _stdout = kwargs.get('stdout')
+
+        if _stdout and isinstance(_stdout, CmdOutputToFile):
+            with core.xopen(_stdout.path, _stdout.mode) as f:
+                kwargs['stdout'] = f
+                return self._execute_command(cmd, communicate_data, *args, **kwargs)
+        else:
+            return self._execute_command(cmd, communicate_data, *args, **kwargs)
+
+    def _execute_command(
+        self,
+        cmd: list[core.UStr | str],
+        communicate_data: list[str] | None,
+        *args,
+        **kwargs,
+    ):
+        if communicate_data is not None:
+            proc = core.start_command(cmd, *args, **kwargs)
+            out, err = proc.communicate(communicate_data)
+            status = proc.returncode
+
+            return status, out, err
+        else:
+            return core.run_command(cmd, *args, **kwargs)
+
+    def start_monitor(self, worktree: str | None, git_dir: str) -> None:
+        if self._monitor is not None:
+            return
+
+        from . import fsmonitor
+        from . import git
+        from . import gitcfg
+
+        context = _MonitorContext(self)
+        context.git = git.create(self)
+        context.git.set_worktree(worktree or git_dir)
+        context.cfg = gitcfg.create(context)  # type: ignore[arg-type]
+
+        monitor = fsmonitor.create(context)  # type: ignore[arg-type]
+
+        def mark(kind: str):
+            def handler() -> None:
+                with self._monitor_lock:
+                    self._monitor_state[kind] = True
+
+            return handler
+
+        monitor.files_changed.connect(mark('files'), QtCore.Qt.DirectConnection)
+        monitor.config_changed.connect(mark('config'), QtCore.Qt.DirectConnection)
+        monitor.start()
+        self._monitor = monitor
+
+    def refresh_monitor(self) -> None:
+        if self._monitor is not None:
+            self._monitor.refresh()
+
+    def poll_monitor(self) -> dict:
+        with self._monitor_lock:
+            state = dict(self._monitor_state)
+            self._monitor_state = {'files': False, 'config': False}
+        return state
+
+    def stop_monitor(self) -> None:
+        if self._monitor is not None:
+            self._monitor.stop()
+            self._monitor = None
 
     def get_environ(
         self,
@@ -381,24 +494,6 @@ class RemoteOperations(IOperations):
             },
         }
         return self._send_op(data)
-
-    def xopen(self, path: str, mode: str = 'r', encoding: str | None = None) -> Any:
-        """Open a file for appending in UTF-8 text mode"""
-        data = {
-            'op': 'file_read',
-            'args': [],
-            'kwargs': {
-                'path': path,
-                'encoding': encoding,
-            },
-        }
-        if mode == 'rb':
-            result = self._send_op(data)
-            if not isinstance(result, bytes):
-                result = result.encode('utf-8')
-            return io.BytesIO(result)
-
-        return io.StringIO(self._send_op(data))
 
     def file_append(self, path, text: str, encoding: str | None = None) -> None:
         """Open a file for appending in UTF-8 text mode"""
@@ -701,6 +796,12 @@ class RemoteOperations(IOperations):
         if 'env' in kwargs and isinstance(kwargs['env'], dict):
             supported_kwargs['env'] = dict(kwargs['env'])
 
+        if 'stdout' in kwargs and isinstance(kwargs['stdout'], CmdOutputToFile):
+            supported_kwargs['stdout'] = {
+                'output_to_file': kwargs['stdout'].path,
+                'mode': kwargs['stdout'].mode,
+            }
+
         data = {
             'op': 'run_command',
             'args': [cmd],
@@ -710,6 +811,38 @@ class RemoteOperations(IOperations):
         status, out, err = self._send_op(data)
 
         return status, core.UStr(out, ENCODING), core.UStr(err, ENCODING)
+
+    def start_monitor(self, worktree: str | None, git_dir: str) -> None:
+        data = {
+            'op': 'start_monitor',
+            'args': [],
+            'kwargs': {'worktree': worktree, 'git_dir': git_dir},
+        }
+        return self._send_op(data)
+
+    def refresh_monitor(self) -> None:
+        data = {
+            'op': 'refresh_monitor',
+            'args': [],
+            'kwargs': {},
+        }
+        return self._send_op(data)
+
+    def poll_monitor(self) -> dict:
+        data = {
+            'op': 'poll_monitor',
+            'args': [],
+            'kwargs': {},
+        }
+        return self._send_op(data)
+
+    def stop_monitor(self) -> None:
+        data = {
+            'op': 'stop_monitor',
+            'args': [],
+            'kwargs': {},
+        }
+        return self._send_op(data)
 
     def get_environ(
         self,

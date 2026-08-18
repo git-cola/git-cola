@@ -11,6 +11,7 @@ import errno
 import os
 import os.path
 import select
+from threading import Event
 from threading import Lock
 from typing import TYPE_CHECKING
 from typing import Any
@@ -63,7 +64,7 @@ class _Monitor(QtCore.QObject):
     def __init__(
         self, context: ApplicationContext, thread_class: type[_InotifyThread]
     ) -> None:
-        QtCore.QObject.__init__(self)
+        super().__init__()
         self.context = context
         self._thread_class = thread_class
         self._thread: _InotifyThread | None = None
@@ -88,7 +89,7 @@ class _Monitor(QtCore.QObject):
 
 class _BaseThread(QtCore.QThread):
     def __init__(self, context: ApplicationContext, monitor: _Monitor) -> None:
-        QtCore.QThread.__init__(self)
+        QtCore.QObject.__init__(self)
         self.context = context
         #: The delay, in milliseconds, between detecting file system modification
         #: and triggering the 'files_changed' signal, to coalesce multiple
@@ -100,6 +101,10 @@ class _BaseThread(QtCore.QThread):
         self._force_notify = False
         self._force_config = False
         self._file_paths = set()
+        worktree = self.context.git.worktree()
+        if worktree is not None:
+            worktree = self.context.ops.abspath(worktree)
+        self._worktree = worktree
 
         self.context.cfg.repo_config_changed.connect(
             self._config_changed, QtCore.Qt.QueuedConnection
@@ -125,12 +130,13 @@ class _BaseThread(QtCore.QThread):
         if self._force_notify:
             do_notify = True
         elif self._file_paths:
-            proc = core.start_command(
-                ['git', 'check-ignore', '--verbose', '--non-matching', '-z', '--stdin']
-            )
             path_list = bchr(0).join(core.encode(path) for path in self._file_paths)
-            out, _ = proc.communicate(path_list)
-            if proc.returncode:
+            status, out, _ = self.context.ops.run_command(
+                ['git', 'check-ignore', '--verbose', '--non-matching', '-z', '--stdin'],
+                communicate_data=path_list,
+                cwd=self._worktree,
+            )
+            if status:
                 do_notify = True
             else:
                 # Each output record is four fields separated by NULL
@@ -140,7 +146,7 @@ class _BaseThread(QtCore.QThread):
                 # except for <pathname>.  So to see if we have any non-ignored
                 # files, we simply check every fourth field to see if any of
                 # them are empty.
-                source_fields = out.split(bchr(0))[0:-1:4]
+                source_fields = out.split(bchr(0))[0:-1:4]  # type: ignore[arg-type]
                 do_notify = not all(source_fields)
         self._force_notify = False
         self._force_config = False
@@ -164,6 +170,40 @@ class _BaseThread(QtCore.QThread):
         """Update cached configuation values"""
         if key == prefs.INOTIFY_DELAY:
             self.inotify_delay = prefs.inotify_delay(self.context)
+
+
+class _RemoteThread(_BaseThread):
+    def __init__(self, context: ApplicationContext, monitor: _Monitor) -> None:
+        super().__init__(context, monitor)
+        self._git_dir = self.context.git.git_path()
+        self._wake = Event()
+
+    def run(self) -> None:
+        context = self.context
+        context.ops.start_monitor(self._worktree, self._git_dir)
+        self._log_enabled_message()
+        while self._running:
+            self._wake.wait(self.inotify_delay / 1000.0)
+            self._wake.clear()
+            if not self._running:
+                break
+            try:
+                event = context.ops.poll_monitor()
+            except OSError:
+                continue
+            if event.get('files'):
+                self._monitor.files_changed.emit()
+            elif event.get('config'):
+                self._monitor.config_changed.emit()
+        context.ops.stop_monitor()
+
+    def refresh(self) -> None:
+        self.context.ops.refresh_monitor()
+
+    def stop(self) -> None:
+        self._running = False
+        self._wake.set()
+        self.wait()
 
 
 if AVAILABLE == 'inotify':
@@ -576,6 +616,8 @@ def create(context: ApplicationContext) -> _Monitor:
             ' "cola.inotify" is false.\n'
         )
         Interaction.log(msg)
+    elif context.ops.is_remote():
+        thread_class = _RemoteThread
     elif AVAILABLE == 'inotify':
         thread_class = _InotifyThread
     elif AVAILABLE == 'pywin32':

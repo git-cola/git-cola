@@ -8,7 +8,6 @@ from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
 from .. import cmds
-from .. import core
 from .. import difftool
 from .. import gitcmds
 from .. import hotkeys
@@ -21,6 +20,7 @@ from ..models import dag
 from ..models.browse import GitRepoModel
 from ..models.browse import GitRepoNameItem
 from ..models.selection import State
+from ..operations import CmdOutputToFile
 from . import common
 from . import defs
 from . import standard
@@ -589,8 +589,9 @@ class SaveBlob(cmds.ContextCommand):
             else:
                 model_ref = model.ref
             ref = f'{model_ref}:{model.relpath}'
-            with core.xopen(model.filename, 'wb') as fp:
-                status, output, err = self.context.git.cat_file('blob', ref, _stdout=fp)
+            status, output, err = self.context.git.cat_file(
+                'blob', ref, _stdout=CmdOutputToFile(model.filename, 'wb')
+            )
 
             out = f'# git cat-file blob {shlex.quote(ref)} >{shlex.quote(model.filename)}\n{output}'
             Interaction.command(
