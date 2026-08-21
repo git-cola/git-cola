@@ -16,8 +16,6 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
 
-from typing_extensions import Self
-
 from . import operations
 from .compat import PY2
 from .compat import PY3
@@ -70,7 +68,7 @@ class UStr(ustr):
 
     """
 
-    def __new__(cls, string: str | UStr, encoding: str) -> Self:
+    def __new__(cls, string: str | UStr, encoding: str) -> UStr:
         if isinstance(string, UStr):
             if encoding != string.encoding:
                 raise ValueError(f'Encoding conflict: {string.encoding} vs. {encoding}')

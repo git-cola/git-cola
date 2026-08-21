@@ -14,8 +14,6 @@ try:
 except ImportError:
     send2trash = None
 
-from typing_extensions import Self
-
 from . import compat
 from . import core
 from . import display
@@ -2325,7 +2323,7 @@ class SequenceEditorEnvironment:
         self.env.update(kwargs)
         self.context = context
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> SequenceEditorEnvironment:
         for var, value in self.env.items():
             compat.setenv(self.context.ops, var, value)
         return self
