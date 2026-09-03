@@ -11,6 +11,7 @@ from typing import Any
 
 from . import core
 from . import operations
+from . import operations_local
 from .compat import WIN32
 from .compat import int_types
 from .compat import ustr
@@ -205,7 +206,7 @@ class Git:
         self, worktree: None = None, ops: operations.IOperations = None
     ) -> None:
         if ops is None:
-            ops = operations.LocalOperations()
+            ops = operations_local.LocalOperations()
         self.ops = ops
         self.paths = Paths(self.ops)
 
@@ -275,7 +276,7 @@ class Git:
     @staticmethod
     def execute(
         command: list[TextType],
-        ops: operations.IOperations = operations.LocalOperations(),
+        ops: operations.IOperations,
         _add_env: dict[str, str] | None = None,
         _cwd: TextType | None = None,
         _decode: bool = True,
@@ -486,7 +487,8 @@ def _print_win32_git_hint(ops: operations.IOperations) -> None:
 def create(ops: operations.IOperations = None) -> Git:
     """Create Git instances
 
-    >>> git = create(operations.LocalOperations())
+    >>> from cola import operations_local
+    >>> git = create(operations_local.LocalOperations())
     >>> status, out, err = git.version()
     >>> 'git' == out[:3].lower()
     True

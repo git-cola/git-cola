@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from cola import git
 from cola import operations
+from cola import operations_local
 from cola.git import STDOUT
 
 # 16k+1 bytes to exhaust any output buffers.
@@ -14,7 +15,7 @@ BUFFER_SIZE = (16 * 1024) + 1
 
 @patch('cola.git.is_git_dir')
 def test_find_git_dir_None(is_git_dir):
-    paths = git.find_git_directory(operations.LocalOperations(), None)
+    paths = git.find_git_directory(operations_local.LocalOperations(), None)
 
     assert not is_git_dir.called
     assert paths.git_dir is None
@@ -24,7 +25,7 @@ def test_find_git_dir_None(is_git_dir):
 
 @patch('cola.git.is_git_dir')
 def test_find_git_dir_empty_string(is_git_dir):
-    paths = git.find_git_directory(operations.LocalOperations(), '')
+    paths = git.find_git_directory(operations_local.LocalOperations(), '')
 
     assert not is_git_dir.called
     assert paths.git_dir is None
@@ -35,7 +36,7 @@ def test_find_git_dir_empty_string(is_git_dir):
 @patch('cola.git.is_git_dir')
 def test_find_git_dir_never_found(is_git_dir):
     is_git_dir.return_value = False
-    ops = operations.LocalOperations()
+    ops = operations_local.LocalOperations()
     paths = git.find_git_directory(ops, str(pathlib.Path('/does/not/exist').resolve()))
 
     assert is_git_dir.called
@@ -64,7 +65,7 @@ def test_find_git_dir_found_right_away(is_git_dir):
     worktree = str(pathlib.Path('/seems/to/exist').resolve())
     is_git_dir.return_value = True
 
-    paths = git.find_git_directory(operations.LocalOperations(), git_dir)
+    paths = git.find_git_directory(operations_local.LocalOperations(), git_dir)
 
     assert is_git_dir.called
     assert git_dir == paths.git_dir
@@ -78,7 +79,9 @@ def test_find_git_does_discovery(is_git_dir):
     worktree = str(pathlib.Path('/the/root').resolve())
     is_git_dir.side_effect = lambda ops, path: path == git_dir
 
-    paths = git.find_git_directory(operations.LocalOperations(), '/the/root/sub/dir')
+    paths = git.find_git_directory(
+        operations_local.LocalOperations(), '/the/root/sub/dir'
+    )
 
     assert git_dir == paths.git_dir
     assert paths.git_file is None
@@ -97,7 +100,7 @@ def test_find_git_honors_git_files(is_git_dir, is_git_file, read_git_file):
     is_git_file.side_effect = lambda ops, path: path == git_file
     read_git_file.return_value = git_dir
 
-    ops = operations.LocalOperations()
+    ops = operations_local.LocalOperations()
     paths = git.find_git_directory(
         ops, str(pathlib.Path('/the/root/sub/dir').resolve())
     )
@@ -135,7 +138,7 @@ def test_find_git_honors_ceiling_dirs(is_git_dir, getenv):
             return ceiling
         return v
 
-    ops = operations.LocalOperations()
+    ops = operations_local.LocalOperations()
     getenv.side_effect = mock_getenv
     paths = git.find_git_directory(ops, str(pathlib.Path('/ceiling/sub/dir').resolve()))
 
@@ -179,7 +182,7 @@ def test_is_git_dir_finds_linked_repository(isfile, isdir, islink):
     islink.return_value = False
     isfile.side_effect = lambda x: x in files
     isdir.side_effect = lambda x: x in dirs
-    ops = operations.LocalOperations()
+    ops = operations_local.LocalOperations()
 
     assert git.is_git_dir(
         ops,
@@ -196,7 +199,7 @@ def test_find_git_worktree_from_GIT_DIR(is_git_dir, getenv):
     is_git_dir.return_value = True
     getenv.side_effect = lambda x: x == 'GIT_DIR' and git_dir or None
 
-    paths = git.find_git_directory(operations.LocalOperations(), git_dir)
+    paths = git.find_git_directory(operations_local.LocalOperations(), git_dir)
     assert is_git_dir.called
     assert git_dir == paths.git_dir
     assert paths.git_file is None
@@ -209,7 +212,7 @@ def test_finds_no_worktree_from_bare_repo(is_git_dir):
     worktree = None
     is_git_dir.return_value = True
 
-    paths = git.find_git_directory(operations.LocalOperations(), git_dir)
+    paths = git.find_git_directory(operations_local.LocalOperations(), git_dir)
     assert is_git_dir.called
     assert git_dir == paths.git_dir
     assert paths.git_file is None
@@ -234,7 +237,7 @@ def test_find_git_directory_uses_GIT_WORK_TREE(is_git_dir, getenv):
 
     getenv.side_effect = getenv_func
 
-    paths = git.find_git_directory(operations.LocalOperations(), worktree)
+    paths = git.find_git_directory(operations_local.LocalOperations(), worktree)
     assert is_git_dir.called
     assert git_dir == paths.git_dir
     assert paths.git_file is None
@@ -259,7 +262,7 @@ def test_uses_cwd_for_worktree_with_GIT_DIR(is_git_dir, getenv):
 
     is_git_dir.side_effect = is_git_dir_func
 
-    paths = git.find_git_directory(operations.LocalOperations(), worktree)
+    paths = git.find_git_directory(operations_local.LocalOperations(), worktree)
     assert is_git_dir.called
     assert getenv.called
     assert git_dir == paths.git_dir
@@ -339,7 +342,7 @@ def test_transform_double_single_dash_string():
 
 def test_version():
     """Test running 'git version'"""
-    gitcmd = git.Git(ops=operations.LocalOperations())
+    gitcmd = git.Git(ops=operations_local.LocalOperations())
     version = gitcmd.version()[STDOUT]
     assert version.startswith('git version')
 
@@ -348,7 +351,9 @@ def test_stdout():
     """Test overflowing the stdout buffer"""
     # Write to stdout only
     code = r'import sys; value = "\0" * %d; sys.stdout.write(value);' % BUFFER_SIZE
-    status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
+    status, out, err = git.Git.execute(
+        ['python', '-c', code], ops=operations_local.LocalOperations(), _raw=True
+    )
 
     assert status == 0
     expect = BUFFER_SIZE
@@ -367,7 +372,9 @@ def test_stderr():
         r'import sys;' r'value = "\0" * %d;' r'sys.stderr.write(value);'
     ) % BUFFER_SIZE
 
-    status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
+    status, out, err = git.Git.execute(
+        ['python', '-c', code], ops=operations_local.LocalOperations(), _raw=True
+    )
 
     expect = 0
     actual = status
@@ -392,7 +399,9 @@ def test_stdout_and_stderr():
         r'sys.stderr.write(value);'
     ) % BUFFER_SIZE
 
-    status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
+    status, out, err = git.Git.execute(
+        ['python', '-c', code], ops=operations_local.LocalOperations(), _raw=True
+    )
 
     expect = 0
     actual = status
@@ -415,7 +424,9 @@ def test_it_doesnt_deadlock():
         r'sys.stdout.write(value);'
     ) % BUFFER_SIZE
 
-    status, out, err = git.Git.execute(['python', '-c', code], _raw=True)
+    status, out, err = git.Git.execute(
+        ['python', '-c', code], ops=operations_local.LocalOperations(), _raw=True
+    )
 
     expect = 0
     actual = status
@@ -433,17 +444,22 @@ def test_git_path_in_linked_worktree(tmp_path):
     """Per-worktree paths do not fall back to the main repository's git dir"""
     repo = tmp_path / 'repo'
     worktree = tmp_path / 'wt'
-    git.Git.execute(['git', 'init', '--quiet', str(repo)])
+    git.Git.execute(
+        ['git', 'init', '--quiet', str(repo)],
+        ops=operations_local.LocalOperations(),
+    )
 
     def run(*args):
-        return git.Git.execute(['git', *args], _cwd=str(repo))
+        return git.Git.execute(
+            ['git', *args], ops=operations_local.LocalOperations(), _cwd=str(repo)
+        )
 
     run('commit', '--quiet', '--allow-empty', '-m', 'init')
     run('worktree', 'add', '--quiet', str(worktree), '-b', 'feature')
     # A message in the main repository's git dir must not be picked up.
     (repo / '.git' / 'GIT_COLA_MSG').write_text('main message\n')
 
-    gitcmd = git.Git(ops=operations.LocalOperations())
+    gitcmd = git.Git(ops=operations_local.LocalOperations())
     gitcmd.set_worktree(str(worktree))
     expect = str(worktree_git_dir := repo / '.git' / 'worktrees' / 'wt')
     assert gitcmd.paths.git_dir == expect

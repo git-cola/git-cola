@@ -20,7 +20,7 @@ try:
 except ImportError:
     websockets = None
 
-from . import operations
+from . import operations_local
 
 
 def check_dependencies() -> None:
@@ -38,7 +38,7 @@ class SocketServer:
         self.address = address
         self.port = port
         self.verbose = verbose
-        self.ops = operations.LocalOperations()
+        self.ops = operations_local.LocalOperations()
 
     async def message_handler(self, websocket):
         try:

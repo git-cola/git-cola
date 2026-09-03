@@ -716,7 +716,6 @@ class MainView(standard.MainWindow):
             self.new_bare_repository_action.setEnabled(False)
             self.clone_repo_action.setEnabled(False)
             self.rebase_start_action_proxy.setEnabled(True)
-            self.save_tarball_action.setEnabled(False)
             self.patches_menu.setEnabled(False)
 
         # Git Annex / Git LFS

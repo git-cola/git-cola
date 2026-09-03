@@ -56,6 +56,8 @@ from . import hidpi
 from . import i18n
 from . import icons
 from . import operations
+from . import operations_local
+from . import operations_remote
 from . import qtcompat
 from . import qtutils
 from . import resources
@@ -91,7 +93,7 @@ def setup_environment() -> operations.IOperations:
     # Spoof an X11 display for SSH
     os.environ.setdefault('DISPLAY', ':0')
 
-    ops = operations.LocalOperations()
+    ops = operations_local.LocalOperations()
 
     if not core.getenv('SHELL', ''):
         for shell in ('/bin/zsh', '/bin/bash', '/bin/sh'):
@@ -508,7 +510,7 @@ def new_context(
 
 def create_context() -> ApplicationContext:
     """Create a one-off context from the current directory"""
-    ops = operations.LocalOperations()
+    ops = operations_local.LocalOperations()
     args = null_args(ops)
     return new_context(ops, args)  # type: ignore[arg-type]
 
@@ -757,9 +759,9 @@ def initialize(socket: server.SocketClient | None = None) -> str:
     # We support ~/.config/git-cola/git-bindir on Windows for configuring
     # a custom location for finding the "git" executable.
     if socket:
-        ops: operations.IOperations = operations.RemoteOperations(socket)
+        ops: operations.IOperations = operations_remote.RemoteOperations(socket)
     else:
-        ops: operations.IOperations = operations.LocalOperations()
+        ops: operations.IOperations = operations_local.LocalOperations()
 
     git_path = find_git(ops)
     if git_path:
@@ -844,7 +846,7 @@ class ApplicationContext:
         self.runtask: qtutils.RunTask | None = None
         self.settings: Settings | None = None
         self.selection: selection.SelectionModel | None = None
-        self.fsmonitor: fsmonitor._Monitor | None = None
+        self.fsmonitor: fsmonitor.Monitor | None = None
         self.view: ViewType | None = None  # QWidget
         self.browser_windows = []  # list of browse.Browser
 

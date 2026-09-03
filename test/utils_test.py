@@ -2,7 +2,7 @@
 import os
 
 from cola import core
-from cola import operations
+from cola import operations_local
 from cola import utils
 
 
@@ -95,7 +95,7 @@ def test_select_directory():
     filename = utils.tmp_filename('test')
     try:
         expect = os.path.dirname(filename)
-        actual = utils.select_directory(operations.LocalOperations(), [filename])
+        actual = utils.select_directory(operations_local.LocalOperations(), [filename])
         assert expect == actual
     finally:
         os.remove(filename)
@@ -105,7 +105,9 @@ def test_select_directory_prefers_directories():
     filename = utils.tmp_filename('test')
     try:
         expect = '.'
-        actual = utils.select_directory(operations.LocalOperations(), [filename, '.'])
+        actual = utils.select_directory(
+            operations_local.LocalOperations(), [filename, '.']
+        )
         assert expect == actual
     finally:
         os.remove(filename)

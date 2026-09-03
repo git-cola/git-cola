@@ -283,9 +283,9 @@ def prep_for_subprocess(cmd: list[UStr | str], shell: bool = False) -> list[UStr
 
 @interruptable
 def communicate(
-    proc: subprocess.Popen,
+    proc: subprocess.Popen, input: bytes | None
 ) -> tuple[None, bytes] | tuple[bytes, bytes]:
-    return proc.communicate()
+    return proc.communicate(input)
 
 
 def run_command(cmd: list[UStr | str], *args, **kwargs) -> tuple[int, UStr, UStr]:
@@ -297,11 +297,12 @@ def run_command(cmd: list[UStr | str], *args, **kwargs) -> tuple[int, UStr, UStr
 
     """
     encoding = kwargs.pop('encoding', None)
+    input = kwargs.pop('input', None)
     try:
         process = start_command(cmd, *args, **kwargs)
     except FileNotFoundError as err:
         return (EXIT_UNAVAILABLE, UStr('', ENCODING), UStr(f'{err}', ENCODING))
-    (output, errors) = communicate(process)
+    (output, errors) = communicate(process, input)
     output = decode(output, encoding=encoding)
     errors = decode(errors, encoding=encoding)
     exit_code = process.returncode

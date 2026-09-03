@@ -4,7 +4,7 @@ from qtpy import QtCore
 
 from . import compat
 from . import core
-from . import operations
+from . import operations_local
 from . import version
 from .i18n import N_
 
@@ -24,7 +24,7 @@ def is_supported() -> bool:
 
 def apply_choice(value: str) -> None:
     value = compat.ustr(value)
-    ops = operations.LocalOperations()
+    ops = operations_local.LocalOperations()
     if value == Option.AUTO:
         # Do not override the configuration when either of these
         # two environment variables are defined.

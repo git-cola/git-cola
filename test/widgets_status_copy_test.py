@@ -7,7 +7,7 @@ strings on the clipboard, not just the first file.
 """
 from unittest.mock import patch
 
-from cola import operations
+from cola import operations_local
 from cola.widgets import status
 
 
@@ -36,7 +36,7 @@ class _FakeSelection:
 class _FakeContext:
     def __init__(self, selection):
         self.selection = selection
-        self.ops = operations.LocalOperations()
+        self.ops = operations_local.LocalOperations()
 
 
 def _ctx(**kwargs):
