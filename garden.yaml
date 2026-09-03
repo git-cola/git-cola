@@ -303,11 +303,13 @@ trees:
     commands:
       build/full: flatpak-builder "$@" --ccache --user "${prefix}" "${app-id}.yml"
       build: |
-        flatpak-builder "$@" \
-            --skip-if-unchanged --keep-build-dirs --build-only --ccache --user "${prefix}" "${app-id}.yml"
+        flatpak-builder --skip-if-unchanged --keep-build-dirs --build-only --ccache \
+            --user "${prefix}" "${app-id}.yml"
       check: |
-        flatpak run --command=flatpak-builder-lint \
-            org.flatpak.Builder "$@" --exceptions builddir "${prefix}"
+        flatpak run --command=flatpak-builder-lint org.flatpak.Builder \
+            --exceptions --exceptions-repo stable manifest "${app-id}.yml" "$@"
+        flatpak run --command=flatpak-builder-lint org.flatpak.Builder \
+            --exceptions --exceptions-repo stable builddir "${prefix}" "$@"
       install: flatpak-builder "$@" --install --user "${prefix}" "${app-id}.yml"
       run: flatpak run ${app-id}
       setup: |
