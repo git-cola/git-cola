@@ -8,6 +8,7 @@ Usability, bells and whistles
   ``git cola connect`` can connect to it.
   (`#1540 <https://github.com/git-cola/git-cola/issues/1540>`_)
   (`#1617 <https://github.com/git-cola/git-cola/pull/1617>`_)
+  (`#1645 <https://github.com/git-cola/git-cola/pull/1645>`_)
 
 * The dialog that appears when reverting worktree edits now includes a diff
   preview of the content that will be reverted.
