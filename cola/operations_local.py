@@ -14,9 +14,6 @@ from . import gitcfg
 from . import utils
 from .operations import IOperations
 
-ENCODING = 'utf-8'
-IS_LOCAL = True
-
 if TYPE_CHECKING:
     from .fsmonitor import Monitor
 

@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from . import server
 
 ENCODING = 'utf-8'
-IS_LOCAL = True
 
 
 class RemoteOperations(IOperations):

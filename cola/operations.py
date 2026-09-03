@@ -6,9 +6,6 @@ from typing import Any
 
 from . import core
 
-ENCODING = 'utf-8'
-IS_LOCAL = True
-
 
 @dataclass
 class CmdOutputToFile:
