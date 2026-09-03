@@ -17,6 +17,8 @@ from .operations import IOperations
 if TYPE_CHECKING:
     from .fsmonitor import Monitor
 
+_MONITOR_LOCK = threading.Lock()
+
 
 @dataclass
 class CmdOutputToFile:
@@ -34,7 +36,6 @@ class MonitorContext:
 class LocalOperations(IOperations):
     def __init__(self) -> None:
         self._monitor: Monitor = None
-        self._monitor_lock = threading.Lock()
         self._monitor_state = {'files': False, 'config': False}
 
     def is_remote(self) -> bool:
@@ -186,7 +187,7 @@ class LocalOperations(IOperations):
 
         def mark(kind: str):
             def handler() -> None:
-                with self._monitor_lock:
+                with _MONITOR_LOCK:
                     self._monitor_state[kind] = True
 
             return handler
@@ -201,7 +202,7 @@ class LocalOperations(IOperations):
             self._monitor.refresh()
 
     def poll_monitor(self) -> dict:
-        with self._monitor_lock:
+        with _MONITOR_LOCK:
             state = dict(self._monitor_state)
             self._monitor_state = {'files': False, 'config': False}
         return state
