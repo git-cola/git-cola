@@ -14,8 +14,14 @@
   <launchable type="desktop-id">git-cola.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://git-cola.github.io/images/screenshot-main-linux.png</image>
+      <image>https://git-cola.gitlab.io/images/screenshot-dark-linux.png</image>
       <caption>Git Cola running on Linux</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://git-cola.gitlab.io/images/screenshot-imagediff.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://git-cola.gitlab.io/images/dag.png</image>
     </screenshot>
   </screenshots>
   <url type="homepage">https://git-cola.gitlab.io/</url>
