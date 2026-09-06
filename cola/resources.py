@@ -6,7 +6,6 @@ import webbrowser
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from . import compat
 from . import core
 
 if TYPE_CHECKING:
@@ -53,7 +52,7 @@ def sibling_bindir(*args) -> str:
 
 def command(name: str) -> str:
     """Return a command from the bin/ directory"""
-    if compat.WIN32:
+    if core.IS_WIN32:
         # On Windows we have to support being installed via the pynsist installation
         # layout and the pip-installed layout. We also have check for .exe launchers
         # and prefer them when present.

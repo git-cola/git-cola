@@ -1,8 +1,8 @@
 """Provides High DPI support by wrapping Qt options"""
+from __future__ import annotations
 
 from qtpy import QtCore
 
-from . import compat
 from . import core
 from . import operations_local
 from . import version
@@ -22,8 +22,8 @@ def is_supported() -> bool:
     return version.check('qt-hidpi-scale', QtCore.__version__)
 
 
-def apply_choice(value: str) -> None:
-    value = compat.ustr(value)
+def apply_choice(value: int | str) -> None:
+    value = str(value)
     ops = operations_local.LocalOperations()
     if value == Option.AUTO:
         # Do not override the configuration when either of these
@@ -31,11 +31,11 @@ def apply_choice(value: str) -> None:
         if not core.getenv('QT_AUTO_SCREEN_SCALE_FACTOR') and not core.getenv(
             'QT_SCALE_FACTOR'
         ):
-            compat.setenv(ops, 'QT_AUTO_SCREEN_SCALE_FACTOR', '1')
-            compat.unsetenv(ops, 'QT_SCALE_FACTOR')
+            core.setenv(ops, 'QT_AUTO_SCREEN_SCALE_FACTOR', '1')
+            core.unsetenv(ops, 'QT_SCALE_FACTOR')
     elif value and value != Option.DISABLE:
-        compat.unsetenv(ops, 'QT_AUTO_SCREEN_SCALE_FACTOR')
-        compat.setenv(ops, 'QT_SCALE_FACTOR', value)
+        core.unsetenv(ops, 'QT_AUTO_SCREEN_SCALE_FACTOR')
+        core.setenv(ops, 'QT_SCALE_FACTOR', value)
 
 
 def options() -> tuple[tuple[str, str], ...]:

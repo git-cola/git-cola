@@ -4,6 +4,7 @@ import types
 from unittest.mock import MagicMock
 
 from cola import app
+from cola import core
 from qtpy import QtCore
 
 
@@ -42,7 +43,7 @@ class _ExplodingAppKit(types.ModuleType):
 
 def test_set_application_name_is_a_noop_on_non_darwin(monkeypatch):
     """On non-darwin platforms the Cocoa surfaces are never touched."""
-    monkeypatch.setattr(sys, 'platform', 'linux')
+    monkeypatch.setattr(core, 'IS_DARWIN', False)
     monkeypatch.setitem(sys.modules, 'AppKit', _ExplodingAppKit())
 
     # Must not raise, must not touch AppKit.
@@ -52,7 +53,7 @@ def test_set_application_name_is_a_noop_on_non_darwin(monkeypatch):
 
 def test_set_application_name_survives_missing_appkit(monkeypatch):
     """If PyObjC isn't installed, the function returns without crashing."""
-    monkeypatch.setattr(sys, 'platform', 'darwin')
+    monkeypatch.setattr(core, 'IS_DARWIN', True)
     # Force `from AppKit import ...` inside the function to raise ImportError
     # by stashing a non-module object under that key.
     monkeypatch.setitem(sys.modules, 'AppKit', None)
@@ -89,7 +90,7 @@ def _make_fake_appkit():
 
 def test_set_application_name_patches_cocoa_surfaces_on_darwin(monkeypatch):
     """On darwin we set CFBundleName, CFBundleDisplayName, and processName."""
-    monkeypatch.setattr(sys, 'platform', 'darwin')
+    monkeypatch.setattr(core, 'IS_DARWIN', True)
     fake_appkit, captured_info, process_info_instance = _make_fake_appkit()
     monkeypatch.setitem(sys.modules, 'AppKit', fake_appkit)
 
@@ -109,7 +110,7 @@ def test_set_application_name_swallows_cocoa_exceptions(monkeypatch):
     exception because a cosmetic naming failure must not prevent git-cola
     from launching.
     """
-    monkeypatch.setattr(sys, 'platform', 'darwin')
+    monkeypatch.setattr(core, 'IS_DARWIN', True)
     fake_appkit, _captured_info, _process_info = _make_fake_appkit()
     # Make every NSBundle call blow up.
     fake_appkit.NSBundle.mainBundle.side_effect = RuntimeError('boom')

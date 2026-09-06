@@ -21,9 +21,7 @@ from qtpy.QtCore import Signal
 
 from . import core
 from . import gitcmds
-from . import utils
 from . import version
-from .compat import bchr
 from .i18n import N_
 from .interaction import Interaction
 from .models import prefs
@@ -37,7 +35,7 @@ pywintypes = None
 win32file = None
 win32con = None
 win32event = None
-if utils.is_win32():
+if core.IS_WIN32:
     try:
         import pywintypes  # type: ignore
         import win32con  # type: ignore
@@ -48,7 +46,7 @@ if utils.is_win32():
     except ImportError:
         pass
 
-elif utils.is_linux():
+elif core.IS_LINUX:
     try:
         from . import inotify
     except ImportError:
@@ -130,7 +128,7 @@ class _BaseThread(QtCore.QThread):
         if self._force_notify:
             do_notify = True
         elif self._file_paths:
-            path_list: bytes = bchr(0).join(
+            path_list: bytes = core.bchr(0).join(
                 core.encode(path) for path in self._file_paths
             )
             status, out, _ = self.context.ops.run_command(
@@ -148,7 +146,7 @@ class _BaseThread(QtCore.QThread):
                 # except for <pathname>.  So to see if we have any non-ignored
                 # files, we simply check every fourth field to see if any of
                 # them are empty.
-                source_fields = out.split(bchr(0))[0:-1:4]  # type: ignore[arg-type]
+                source_fields = out.split(core.bchr(0))[0:-1:4]  # type: ignore[arg-type]
                 do_notify = not all(source_fields)
         self._force_notify = False
         self._force_config = False
@@ -417,7 +415,7 @@ if AVAILABLE == 'inotify':
             self._running = False
             with self._lock:
                 if self._pipe_w is not None:
-                    os.write(self._pipe_w, bchr(0))
+                    os.write(self._pipe_w, core.bchr(0))
             self.wait()
 
 
@@ -625,13 +623,13 @@ def create(context: ApplicationContext) -> Monitor:
     elif AVAILABLE == 'pywin32':
         thread_class = _Win32Thread
     else:
-        if utils.is_win32():
+        if core.IS_WIN32:
             msg = N_(
                 'File system change monitoring: disabled because pywin32'
                 ' is not installed.\n'
             )
             Interaction.log(msg)
-        elif utils.is_linux():
+        elif core.IS_LINUX:
             msg = N_(
                 'File system change monitoring: disabled because libc'
                 ' does not support the inotify system calls.\n'

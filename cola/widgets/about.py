@@ -13,7 +13,6 @@ from .. import hotkeys
 from .. import icons
 from .. import qtutils
 from .. import resources
-from .. import utils
 from .. import version
 from ..i18n import N_
 from . import defs
@@ -519,7 +518,7 @@ def translators_text():
 
 def show_shortcuts():
     hotkeys_html = resources.data_path(N_('hotkeys.html'))
-    if utils.is_win32():
+    if core.IS_WIN32:
         hotkeys_url = 'file:///' + hotkeys_html.replace('\\', '/')
     else:
         hotkeys_url = 'file://' + hotkeys_html
@@ -542,7 +541,7 @@ def show_shortcuts():
     if hotkeys_html:
         with open(hotkeys_html, encoding='utf-8') as hotkeys_file:
             html = hotkeys_file.read()
-        if utils.is_darwin():
+        if core.IS_DARWIN:
             html = html.replace('Ctrl', 'Cmd')
         web.setHtml(html)
     else:

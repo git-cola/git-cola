@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 
 from . import app
 from . import cmds
-from . import compat
 from . import core
 from . import server
 from . import utils
@@ -39,11 +38,9 @@ def main(argv: list[str] | None = None) -> int:
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    # Newer versions of argparse (Python 3.6+) emit an error message for
-    # "--help-commands" unless we register the flag on the main parser.
-    if compat.PY_VERSION >= (3, 6):
-        add_help_options(parser)
-        parser.set_defaults(func=lambda _: parser.print_help())
+    # Python 3.6+ argparse needs "--help-commands" to be registered on the main parser.
+    add_help_options(parser)
+    parser.set_defaults(func=lambda _: parser.print_help())
 
     subparser = parser.add_subparsers(title='valid commands')
     add_cola_command(subparser)

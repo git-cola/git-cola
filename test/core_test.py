@@ -1,6 +1,8 @@
 """Tests the cola.core module's unicode handling"""
+import os
 
 from cola import core
+from cola import operations_local
 
 from . import helper
 
@@ -56,3 +58,17 @@ def test_guess_mimetype():
     # This function is robust to bytes vs. unicode
     actual = core.guess_mimetype(core.encode(value))
     assert expect == actual
+
+
+def test_setenv():
+    """Test the core.decode function"""
+    key = 'COLA_UNICODE_TEST'
+    value = '字龍'
+    ops = operations_local.LocalOperations()
+    core.setenv(ops, key, value)
+    assert key in os.environ
+    assert os.getenv(key)
+
+    core.unsetenv(ops, key)
+    assert key not in os.environ
+    assert not os.getenv(key)

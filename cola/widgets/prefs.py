@@ -7,7 +7,6 @@ from .. import icons
 from .. import qtutils
 from .. import spellcheck
 from .. import themes
-from ..compat import ustr
 from ..i18n import N_
 from ..models import prefs
 from ..models.prefs import Defaults
@@ -493,10 +492,10 @@ class AppearanceFormWidget(FormWidget):
         self.theme = qtutils.combo_mapped(themes.options(themes=self.themes))
         self.icon_theme = qtutils.combo_mapped(icons.icon_themes())
 
-        # The transform to ustr is needed because the config reader will convert
+        # The transform to str is needed because the config reader will convert
         # "0", "1", and "2" into integers.  The "1.5" value, though, is
         # parsed as a string, so the transform is effectively a no-op.
-        self.high_dpi = qtutils.combo_mapped(hidpi.options(), transform=ustr)
+        self.high_dpi = qtutils.combo_mapped(hidpi.options(), transform=str)
         self.high_dpi.setEnabled(hidpi.is_supported())
         self.bold_fonts = qtutils.checkbox()
         self.bold_headers = qtutils.checkbox()

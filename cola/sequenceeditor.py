@@ -129,7 +129,7 @@ class MainWindow(standard.MainWindow):
 
     def init_window_size(self) -> None:
         """Set the window size on the first initial view"""
-        if utils.is_darwin():
+        if core.IS_DARWIN:
             width, height = qtutils.desktop_size()
             self.resize(width, height)
         else:

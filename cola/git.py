@@ -11,9 +11,6 @@ from typing import Any
 
 from . import core
 from . import operations
-from .compat import WIN32
-from .compat import int_types
-from .compat import ustr
 from .decorators import memoize
 from .interaction import Interaction
 
@@ -398,7 +395,7 @@ class Git:
                 call, self.ops, **_kwargs  # type: ignore[arg-type]
             )
         except OSError as exc:
-            if WIN32 and exc.errno == errno.ENOENT:
+            if core.IS_WIN32 and exc.errno == errno.ENOENT:
                 # see if git exists at all. On win32 it can fail with ENOENT in
                 # case of argv overflow. We should be safe from that but use
                 # defensive coding for the worst-case scenario. On UNIX
@@ -440,7 +437,7 @@ def transform_kwargs(**kwargs) -> list[str | Any]:
 
     """
     args = []
-    types_to_stringify = (ustr, float, str) + int_types
+    types_to_stringify = (str, float, int)
 
     for k, value in kwargs.items():
         if len(k) == 1:

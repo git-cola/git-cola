@@ -18,7 +18,7 @@ from .. import qtutils
 from .. import resources
 from .. import utils
 from .. import version
-from ..compat import WIN32
+from ..core import IS_WIN32
 from ..i18n import N_
 from ..interaction import Interaction
 from ..models import prefs
@@ -176,7 +176,7 @@ class MainView(standard.MainWindow):
 
         # All Actions
         # Make Cmd-M minimize the window on macOS.
-        if utils.is_darwin():
+        if core.IS_DARWIN:
             self.minimize_action = qtutils.add_action(
                 self, N_('Minimize Window'), self.showMinimized, hotkeys.MACOS_MINIMIZE
             )
@@ -876,7 +876,7 @@ class MainView(standard.MainWindow):
         self.view_menu = add_menu(N_('View'), self.menubar)
         self.view_menu.aboutToShow.connect(lambda: self.build_view_menu(self.view_menu))
         self.setup_dockwidget_view_menu()
-        if utils.is_darwin():
+        if core.IS_DARWIN:
             # The native macOS menu doesn't show empty entries.
             self.build_view_menu(self.view_menu)
 
@@ -971,7 +971,7 @@ class MainView(standard.MainWindow):
             title = N_('error: unable to execute git')
             msg = title
             details = ''
-            if WIN32:
+            if IS_WIN32:
                 details = git.win32_git_error_hint()
             Interaction.critical(title, message=msg, details=details)
             self.context.app.exit(core.EXIT_UNAVAILABLE)
@@ -1004,7 +1004,7 @@ class MainView(standard.MainWindow):
 
     def build_view_menu(self, menu):
         menu.clear()
-        if utils.is_darwin():
+        if core.IS_DARWIN:
             menu.addAction(self.minimize_action)
         menu.addAction(self.browse_action)
         menu.addAction(self.dag_action)
@@ -1281,7 +1281,7 @@ class MainView(standard.MainWindow):
 
     def setup_dockwidget_view_menu(self):
         # Hotkeys for toggling the dock widgets
-        if utils.is_darwin():
+        if core.IS_DARWIN:
             optkey = 'Meta'
         else:
             optkey = 'Ctrl'

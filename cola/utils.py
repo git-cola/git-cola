@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING
 from typing import Any
 from typing import TypeVar
 
-from . import compat
 from . import core
 from . import operations
 
@@ -295,12 +294,7 @@ def _shell_split_py3(value: str) -> list[Any | str]:
 
 
 def shell_split(value: str) -> list[Any | str]:
-    if compat.PY2:
-        # Encode before calling split()
-        values = _shell_split_py2(value)
-    else:
-        # Python3 does not need the encode/decode dance
-        values = _shell_split_py3(value)
+    values = _shell_split_py3(value)
     return values
 
 
@@ -341,35 +335,15 @@ def find_bash_exe(ops: operations.IOperations) -> str | None:
     return None
 
 
-def is_linux() -> bool:
-    """Is this a Linux machine?"""
-    return sys.platform.startswith('linux')
-
-
-def is_debian() -> bool:
-    """Is this a Debian/Linux machine?"""
-    return core.exists('/usr/bin/apt-get')
-
-
-def is_darwin() -> bool:
-    """Is this a macOS machine?"""
-    return sys.platform == 'darwin'
-
-
-def is_win32() -> bool:
-    """Return True on win32"""
-    return sys.platform in {'win32', 'cygwin'}
-
-
 def launch_default_app(context: ApplicationContext, paths) -> None:
     """Execute the default application on the specified paths"""
-    if is_win32():
+    if core.IS_WIN32:
         for path in paths:
             if hasattr(os, 'startfile'):
                 os.startfile(context.ops.abspath(path))
         return
 
-    if is_darwin():
+    if core.IS_DARWIN:
         launcher = 'open'
     else:
         launcher = 'xdg-open'

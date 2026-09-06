@@ -23,7 +23,6 @@ from io import BufferedWriter
 from io import TextIOWrapper
 from typing import Any
 
-from . import compat
 from . import core
 
 __author__ = 'David Jean Louis <izimobil@gmail.com>'
@@ -375,7 +374,7 @@ class _BaseFile(list):
             """
             Returns the string representation of the file.
             """
-            return compat.ustr(self).encode(self.encoding)
+            return str(self).encode(self.encoding)
 
     def __contains__(self, entry) -> bool:
         """
@@ -942,7 +941,7 @@ class _BaseEntry:
             """
             Returns the string representation of the entry.
             """
-            return compat.ustr(self).encode(self.encoding)
+            return str(self).encode(self.encoding)
 
     def __eq__(self, other) -> bool:
         return str(self) == str(other)

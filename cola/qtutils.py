@@ -28,8 +28,6 @@ from . import core
 from . import hotkeys
 from . import icons
 from . import utils
-from .compat import int_types
-from .compat import ustr
 from .i18n import N_
 from .models import prefs
 from .widgets import defs
@@ -167,7 +165,7 @@ def box(cls, margin: int, spacing: int, *items: Any) -> QtWidgets.QBoxLayout:
             layout.addStretch()
         elif i is skipped:
             continue
-        elif isinstance(i, int_types):
+        elif isinstance(i, int):
             layout.addSpacing(i)
 
     return layout
@@ -183,7 +181,7 @@ def form(
     set_margin(layout, margin)
 
     for idx, (name, widget) in enumerate(widgets):
-        if isinstance(name, (str, ustr)):
+        if isinstance(name, str):
             layout.addRow(name, widget)
         else:
             layout.setWidget(idx, QtWidgets.QFormLayout.LabelRole, name)
@@ -690,7 +688,7 @@ def set_clipboard(text: str) -> None:
         return
     clipboard = QtWidgets.QApplication.clipboard()
     clipboard.setText(text, QtGui.QClipboard.Clipboard)
-    if not utils.is_darwin() and not utils.is_win32():
+    if not core.IS_DARWIN and not core.IS_WIN32:
         clipboard.setText(text, QtGui.QClipboard.Selection)
     persist_clipboard(text)
 
@@ -730,7 +728,7 @@ def persist_clipboard(text: str | None = None) -> None:
     C.f. https://stackoverflow.com/questions/2007103/how-can-i-disable-clear-of-clipboard-on-exit-of-pyqt4-application
 
     """
-    if utils.is_darwin():
+    if core.IS_DARWIN:
         if text is not None:
             persist_clipboard_macos(text)
         return
@@ -882,9 +880,9 @@ def default_size(
 
 
 def default_monospace_font() -> QtGui.QFont:
-    if utils.is_darwin():
+    if core.IS_DARWIN:
         family = 'Monaco'
-    elif utils.is_win32():
+    elif core.IS_WIN32:
         family = 'Courier'
     else:
         family = 'Monospace'

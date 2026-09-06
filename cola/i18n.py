@@ -17,7 +17,6 @@ except ImportError:
 
 from . import core
 from . import resources
-from . import utils
 
 
 class NullTranslation:
@@ -152,7 +151,7 @@ def get_default_locale() -> str | None:
 
     # Windows method for getting the user's locale.
     if (
-        utils.is_win32()
+        core.IS_WIN32
         and hasattr(ctypes, 'windll')
         and hasattr(locale, 'windows_locale')
     ):

@@ -3,6 +3,7 @@ import collections
 import enum
 import itertools
 import math
+import sys
 from functools import partial
 
 from qtpy import QtCore
@@ -21,7 +22,6 @@ from .. import icons
 from .. import qtcompat
 from .. import qtutils
 from .. import utils
-from ..compat import maxsize
 from ..i18n import N_
 from ..models import dag
 from ..models import main
@@ -2659,8 +2659,8 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
         if not items:
             rect = self.scene().itemsBoundingRect()
         else:
-            x_min = y_min = maxsize
-            x_max = y_max = -maxsize
+            x_min = y_min = sys.maxsize
+            x_max = y_max = -sys.maxsize
 
             for item in items:
                 pos = item.pos()

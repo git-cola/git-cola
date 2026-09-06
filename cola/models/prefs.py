@@ -7,7 +7,6 @@ from qtpy.QtCore import Signal
 
 from .. import core
 from .. import hidpi
-from .. import utils
 from ..cmd import Command
 
 ABBREV = 'core.abbrev'
@@ -347,7 +346,7 @@ def enable_gravatar(context) -> bool:
 
 def default_history_browser() -> str:
     """Return the default history browser (e.g. git-dag, gitk)"""
-    if utils.is_win32():
+    if core.IS_WIN32:
         # On Windows, a sensible default is "python git-cola dag"
         # which is different than `gitk` below, but is preferred
         # because we don't have to guess paths.

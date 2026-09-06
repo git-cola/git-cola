@@ -46,7 +46,6 @@ except ImportError:
 # Import cola modules
 from . import cmd
 from . import cmds
-from . import compat
 from . import core
 from . import fsmonitor
 from . import git
@@ -98,7 +97,7 @@ def setup_environment() -> operations.IOperations:
     if not core.getenv('SHELL', ''):
         for shell in ('/bin/zsh', '/bin/bash', '/bin/sh'):
             if os.path.exists(shell):
-                compat.setenv(ops, 'SHELL', shell)
+                core.setenv(ops, 'SHELL', shell)
                 break
 
     # Setup the path so that git finds us when we run 'git cola'
@@ -106,19 +105,19 @@ def setup_environment() -> operations.IOperations:
     bindir = core.decode(os.path.dirname(sys_argv0))
     path_entries.append(bindir)
     path = os.pathsep.join(path_entries)
-    compat.setenv(ops, 'PATH', path)
+    core.setenv(ops, 'PATH', path)
 
     # We don't ever want a pager
-    compat.setenv(ops, 'GIT_PAGER', '')
+    core.setenv(ops, 'GIT_PAGER', '')
 
     # Setup the openssh askpass credentials helper.
     askpass = _get_askpass(ops)
-    compat.setenv(ops, 'GIT_ASKPASS', askpass)
-    compat.setenv(ops, 'SSH_ASKPASS', askpass)
+    core.setenv(ops, 'GIT_ASKPASS', askpass)
+    core.setenv(ops, 'SSH_ASKPASS', askpass)
 
     # Avoid taking optional locks for read-only operations.
     # We assume that proper state-modifying operations continue to take locks.
-    compat.setenv(ops, 'GIT_OPTIONAL_LOCKS', '0')
+    core.setenv(ops, 'GIT_OPTIONAL_LOCKS', '0')
 
     # --- >8 --- >8 ---
     # Git v1.7.10 Release Notes
@@ -150,7 +149,7 @@ def setup_environment() -> operations.IOperations:
     # --- >8 --- >8 ---
     # Longer-term: Use `git merge --no-commit` so that we always
     # have a chance to explain our merges.
-    compat.setenv(ops, 'GIT_MERGE_AUTOEDIT', 'no')
+    core.setenv(ops, 'GIT_MERGE_AUTOEDIT', 'no')
 
     return ops
 
@@ -230,7 +229,7 @@ def set_application_name(app_name) -> None:
     - https://developer.apple.com/documentation/foundation/processinfo/processname
     """
     QtCore.QCoreApplication.setApplicationName(app_name)
-    if not utils.is_darwin():
+    if not core.IS_DARWIN:
         return
     try:
         # PyObjC is a declared darwin dep but stays optional at import-time.
@@ -536,7 +535,7 @@ def enforce_single_instance(context: ApplicationContext) -> None:
 
     # Shared memory may is not freed when the application terminates abnormally on
     # Linux/UNIX so we workaround that by detaching here.
-    if not utils.is_win32():
+    if not core.IS_WIN32:
         fix_shared_mem = QtCore.QSharedMemory(shared_mem_id)
         if fix_shared_mem.attach():
             fix_shared_mem.detach()
@@ -920,7 +919,7 @@ class Notifier(QtCore.QObject):
 
 def find_git(ops: operations.IOperations) -> str | None:
     """Return the path of git.exe, or None if we can't find it."""
-    if not utils.is_win32():
+    if not core.IS_WIN32:
         return None  # UNIX systems have git in their $PATH
 
     # If the user wants to use a Git/bin/ directory from a non-standard
@@ -950,7 +949,7 @@ def prepend_path(ops: operations.IOperations, path) -> None:
     path_entries = core.getenv('PATH', '').split(os.pathsep)
     if path not in path_entries:
         path_entries.insert(0, path)
-        compat.setenv(ops, 'PATH', os.pathsep.join(path_entries))
+        core.setenv(ops, 'PATH', os.pathsep.join(path_entries))
 
 
 def detect_system_theme() -> str:

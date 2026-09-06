@@ -230,7 +230,9 @@ class LocalOperations(IOperations):
         return os.putenv(name, value)
 
     def unsetenv(self, name: str) -> None:
-        return os.unsetenv(name)
+        if hasattr(os, 'unsetenv'):
+            return os.unsetenv(name)
+        return None
 
     def tmp_filename(self, label: str, suffix: str = '') -> str:
         return utils.tmp_filename(label, suffix)

@@ -10,7 +10,6 @@ from . import core
 from . import decorators
 from . import qtcompat
 from . import resources
-from .compat import ustr
 from .i18n import N_
 
 KNOWN_FILE_MIME_TYPES = [
@@ -121,7 +120,7 @@ def mkicon(value: QtGui.QIcon | None, default: Callable | None = None) -> QtGui.
     """Create an icon from a string value"""
     if value is None and default is not None:
         value = default()
-    elif value and isinstance(value, (str, ustr)):
+    elif value and isinstance(value, str):
         value = QtGui.QIcon(value)
     return value
 

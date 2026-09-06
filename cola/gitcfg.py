@@ -441,7 +441,7 @@ class GitConfig(QtCore.QObject):
             return term
 
         # find a suitable default terminal
-        if utils.is_win32():
+        if core.IS_WIN32:
             # Try to find Git's sh.exe directory in
             # one of the typical locations
             pf = self.context.ops.get_environ().get('ProgramFiles', r'C:\Program Files')

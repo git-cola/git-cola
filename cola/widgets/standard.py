@@ -84,7 +84,7 @@ class WidgetMixin:
 
     def resize_to_desktop(self):
         width, height = qtutils.desktop_size()
-        if utils.is_darwin():
+        if core.IS_DARWIN:
             self.resize(width, height)
         else:
             shown = self.isVisible()
@@ -152,7 +152,7 @@ class WidgetMixin:
             # maximized state.
             #
             # Cf. https://bugreports.qt.io/browse/QTBUG-123335
-            if utils.is_darwin():
+            if core.IS_DARWIN:
                 geometry_bytes, was_maximized = _strip_maximized_geometry_flag(
                     geometry_bytes
                 )

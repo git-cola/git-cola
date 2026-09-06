@@ -14,7 +14,6 @@ from . import core
 from . import icons
 from . import qtutils
 from . import resources
-from . import utils
 from .i18n import N_
 from .widgets import defs
 
@@ -587,7 +586,7 @@ def style_sheet_default(palette: QPalette, bold_fonts: bool) -> str:
     # (smaller) metrics, which pushes the indicator out of vertical alignment
     # with its label. Keep the native controls there and only restyle the
     # indicators on platforms where the palette-based default looks out of place.
-    if utils.is_darwin():
+    if core.IS_DARWIN:
         checkbox_style = ''
     else:
         checkbox_style = """
@@ -672,7 +671,7 @@ def get_all_themes() -> list[Theme]:
         ),
     ]
 
-    if utils.is_darwin():
+    if core.IS_DARWIN:
         themes.extend(get_macos_themes().values())
 
     themes.extend([
@@ -757,7 +756,7 @@ def apply_platform_theme(theme: Theme) -> None:
     """Apply platform-specific themes (e.g. dark mode on macOS)"""
     # https://developer.apple.com/documentation/appkit/nsappearancecustomization/choosing_a_specific_appearance_for_your_macos_app
     # https://github.com/git-cola/git-cola/issues/905#issuecomment-461118465
-    if utils.is_darwin():
+    if core.IS_DARWIN:
         if AppKit is None:
             return
         app = AppKit.NSApplication.sharedApplication()

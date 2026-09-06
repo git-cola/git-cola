@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from cola import compat
 from cola import qtutils
 from cola import spellcheck
 from cola.widgets.spellcheck import SpellCheckLineEdit
@@ -29,7 +28,7 @@ def test_spellcheck_unicode():
 def assert_spellcheck(check):
     for word in check.read():
         assert word is not None
-        assert isinstance(word, compat.ustr)
+        assert isinstance(word, str)
 
 
 @pytest.fixture(scope='module')

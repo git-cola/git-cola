@@ -14,7 +14,6 @@ try:
 except ImportError:
     send2trash = None
 
-from . import compat
 from . import core
 from . import display
 from . import gitcmds
@@ -1845,7 +1844,7 @@ class LaunchTerminal(ContextCommand):
         cmd = self.context.cfg.terminal()
         if cmd is None:
             return
-        if utils.is_win32():
+        if core.IS_WIN32:
             argv = ['start', '', cmd, '--login']
             shell = True
         else:
@@ -1969,7 +1968,7 @@ class PrepareCommitMessageHook(ContextCommand):
             Interaction.log(f'hook cola-prepare-commit-msg exists: "{hook}"')
             filename = self.model.save_commitmsg()
 
-            if utils.is_win32():
+            if core.IS_WIN32:
                 # On Windows:
                 # Git hooks are not executed as native Windows executables.
                 # Instead, the hook script must be invoked through bash.exe so that
@@ -2295,9 +2294,9 @@ class NoOp(ContextCommand):
         pass
 
 
-def unix_path(path: str, is_win32: Callable = utils.is_win32) -> str:
+def unix_path(path: str, is_win32: bool = core.IS_WIN32) -> str:
     """Git for Windows requires Unix paths, so force them here"""
-    if is_win32():
+    if is_win32:
         path = path.replace('\\', '/')
         first = path[0]
         second = path[1]
@@ -2310,7 +2309,7 @@ def unix_path(path: str, is_win32: Callable = utils.is_win32) -> str:
 def sequence_editor() -> str:
     """Set GIT_SEQUENCE_EDITOR for running git-cola-sequence-editor"""
     xbase = unix_path(resources.command('git-cola-sequence-editor'))
-    if utils.is_win32():
+    if core.IS_WIN32:
         editor = core.list2cmdline([unix_path(sys.executable), xbase])
     else:
         editor = core.list2cmdline([xbase])
@@ -2330,7 +2329,7 @@ class SequenceEditorEnvironment:
 
     def __enter__(self) -> SequenceEditorEnvironment:
         for var, value in self.env.items():
-            compat.setenv(self.context.ops, var, value)
+            core.setenv(self.context.ops, var, value)
         return self
 
     def __exit__(
@@ -2340,7 +2339,7 @@ class SequenceEditorEnvironment:
         exc_tb: None,
     ) -> None:
         for var in self.env:
-            compat.unsetenv(self.context.ops, var)
+            core.unsetenv(self.context.ops, var)
 
 
 class Rebase(ContextCommand):
@@ -2681,7 +2680,7 @@ class RunConfigAction(ContextCommand):
         """Run the user-configured action"""
         for env in ('ARGS', 'DIRNAME', 'FILENAME', 'REVISION'):
             try:
-                compat.unsetenv(self.context.ops, env)
+                core.unsetenv(self.context.ops, env)
             except KeyError:
                 pass
         rev = None
@@ -2706,8 +2705,8 @@ class RunConfigAction(ContextCommand):
                 )
                 return False
             dirname = utils.dirname(filename, current_dir='.')
-            compat.setenv(self.context.ops, 'FILENAME', filename)
-            compat.setenv(self.context.ops, 'DIRNAME', dirname)
+            core.setenv(self.context.ops, 'FILENAME', filename)
+            core.setenv(self.context.ops, 'DIRNAME', dirname)
 
         if opts.get('revprompt') or opts.get('argprompt'):
             while True:
@@ -2729,9 +2728,9 @@ class RunConfigAction(ContextCommand):
             if not Interaction.question(title, prompt):
                 return False
         if rev:
-            compat.setenv(self.context.ops, 'REVISION', rev)
+            core.setenv(self.context.ops, 'REVISION', rev)
         if args:
-            compat.setenv(self.context.ops, 'ARGS', args)
+            core.setenv(self.context.ops, 'ARGS', args)
         title = os.path.expandvars(cmd)
         Interaction.log(N_('Running command: %s') % title)
         cmd = ['sh', '-c', cmd]
@@ -2801,7 +2800,6 @@ def format_hex(data) -> str:
     hexdigits = '0123456789ABCDEF'
     result = ''
     offset = 0
-    byte_offset_to_int = compat.byte_offset_to_int_converter()
     while offset < len(data):
         result += '%04u |' % offset
         textpart = ''
@@ -2809,7 +2807,7 @@ def format_hex(data) -> str:
             if i > 0 and i % 4 == 0:
                 result += ' '
             if offset < len(data):
-                v = byte_offset_to_int(data[offset])
+                v = data[offset]
                 result += ' ' + hexdigits[v >> 4] + hexdigits[v & 0xF]
                 textpart += chr(v) if 32 <= v < 127 else '.'
                 offset += 1

@@ -2,8 +2,6 @@
 import re
 from typing import Any
 
-from .compat import ustr
-
 # Copyright (C) 1999-2001 Gregory P. Ward.
 # Copyright (C) 2002, 2003 Python Software Foundation.
 # Copyright (C) 2013-2024 David Aguilar
@@ -85,7 +83,7 @@ class TextWrapper:
           'use', ' ', 'the', ' ', '-b', ' ', option!'
         otherwise.
         """
-        if isinstance(text, ustr):
+        if isinstance(text, str):
             if self.break_on_hyphens:
                 pat = self.wordsep_re_uni
             else:

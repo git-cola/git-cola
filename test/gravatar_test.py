@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 import pytest
 
 from cola import gravatar
-from cola.compat import ustr
 from cola.gravatar import Gravatar
 from cola.gravatar import GravatarLabel
 from qtpy import QtGui
@@ -21,7 +20,7 @@ def test_url_for_email_():
     )
     actual = gravatar.Gravatar.url_for_email(email, 64)
     assert expect == actual
-    assert isinstance(actual, ustr)
+    assert isinstance(actual, str)
 
 
 def test_url_for_email_normalizes_case_and_whitespace():

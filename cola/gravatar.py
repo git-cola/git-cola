@@ -3,6 +3,7 @@ import hashlib
 import time
 from typing import TYPE_CHECKING
 from typing import Any
+from urllib import parse
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -13,7 +14,6 @@ from qtpy.QtCore import Qt
 from . import core
 from . import icons
 from . import qtutils
-from .compat import parse
 from .models import prefs
 from .widgets import defs
 
