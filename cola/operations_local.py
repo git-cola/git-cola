@@ -179,7 +179,7 @@ class LocalOperations(IOperations):
             return
 
         context = MonitorContext(self)
-        context.git = git.create()
+        context.git = git.create(self)
         context.git.set_worktree(worktree or git_dir)
         context.cfg = gitcfg.create(context)  # type: ignore[arg-type]
 

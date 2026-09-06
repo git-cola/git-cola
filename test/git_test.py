@@ -342,7 +342,7 @@ def test_transform_double_single_dash_string():
 
 def test_version():
     """Test running 'git version'"""
-    gitcmd = git.Git(ops=operations_local.LocalOperations())
+    gitcmd = git.create(operations_local.LocalOperations())
     version = gitcmd.version()[STDOUT]
     assert version.startswith('git version')
 
@@ -459,7 +459,7 @@ def test_git_path_in_linked_worktree(tmp_path):
     # A message in the main repository's git dir must not be picked up.
     (repo / '.git' / 'GIT_COLA_MSG').write_text('main message\n')
 
-    gitcmd = git.Git(ops=operations_local.LocalOperations())
+    gitcmd = git.create(operations_local.LocalOperations())
     gitcmd.set_worktree(str(worktree))
     expect = str(worktree_git_dir := repo / '.git' / 'worktrees' / 'wt')
     assert gitcmd.paths.git_dir == expect

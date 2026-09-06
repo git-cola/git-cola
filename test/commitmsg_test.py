@@ -9,6 +9,7 @@ from cola import git
 from cola import gitcfg
 from cola import gitcmds
 from cola import hotkeys
+from cola import operations_local
 from cola.models import main as main_model
 from cola.widgets.commitmsg import CommitMessageEditor
 from qtpy import QtGui
@@ -34,7 +35,8 @@ def commit_editor(qapp, tmp_path, monkeypatch):
     helper.initialize_repo()
 
     context = MagicMock()
-    context.git = git.create()
+    context.ops = operations_local.LocalOperations()
+    context.git = git.create(context.ops)
     context.git.set_worktree(core.getcwd())
     context.cfg = gitcfg.create(context)
     context.model = main_model.create(context)

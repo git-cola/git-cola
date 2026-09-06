@@ -374,7 +374,7 @@ def launch_default_app(context: ApplicationContext, paths) -> None:
     else:
         launcher = 'xdg-open'
 
-    core.fork([launcher] + paths)
+    core.fork([launcher] + paths, ops=context.ops)
 
 
 def expandpath(path: str) -> str:

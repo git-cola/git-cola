@@ -2,7 +2,6 @@ from __future__ import annotations
 import errno
 import os
 import subprocess
-import sys
 import threading
 import time
 from functools import partial
@@ -197,24 +196,12 @@ def find_git_directory(ops: operations.IOperations, path: core.UStr | str) -> Pa
     ).get(path)
 
 
-def _get_local_ops():
-    try:
-        operations_local = sys.modules['cola.operations_local']
-    except KeyError:
-        operations_local = __import__('cola.operations_local').operations_local
-    return operations_local.LocalOperations()
-
-
 class Git:
     """
     The Git class manages communication with the Git binary
     """
 
-    def __init__(
-        self, worktree: None = None, ops: operations.IOperations = None
-    ) -> None:
-        if ops is None:
-            ops = _get_local_ops()
+    def __init__(self, ops: operations.IOperations, worktree: None = None) -> None:
         self.ops = ops
         self.paths = Paths(self.ops)
 
@@ -492,13 +479,15 @@ def _print_win32_git_hint(ops: operations.IOperations) -> None:
     ops.print_stderr("error: unable to execute 'git'" + hint)
 
 
-def create(ops: operations.IOperations = None) -> Git:
+def create(ops: operations.IOperations) -> Git:
     """Create Git instances
 
-    >>> git = create()
+    >>> from cola import operations_local
+    >>>
+    >>> git = create(operations_local.LocalOperations())
     >>> status, out, err = git.version()
     >>> 'git' == out[:3].lower()
     True
 
     """
-    return Git(ops=ops)
+    return Git(ops)

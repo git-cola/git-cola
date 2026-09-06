@@ -32,8 +32,10 @@ def initialize_version():
 def get_version():
     """Calculate a setuptools-scm compatible version number from the git worktree"""
     from cola import git
+    from cola import operations_local
 
-    worktree = git.Git(worktree=get_prefix())
+    ops = operations_local.LocalOperations()
+    worktree = git.Git(ops, worktree=get_prefix())
     if not worktree.is_valid():
         return None
     status, out, _ = worktree.describe(dirty=True, long=True, match='v[0-9]*.[0-9]*')
