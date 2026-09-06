@@ -83,11 +83,6 @@ class UStr(str):
         return obj
 
 
-def bchr(i: int) -> bytes:
-    """Convert an int into a single-byte byte string"""
-    return bytes([i])
-
-
 def decode_maybe(value, encoding, errors: str = 'strict') -> Any:
     """Decode a value when the "decode" method exists"""
     if hasattr(value, 'decode'):

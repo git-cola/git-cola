@@ -56,7 +56,7 @@ def _strip_maximized_geometry_flag(blob):
         return blob, False
     patched = (
         raw[:_QWIDGET_GEOMETRY_MAXIMIZED_OFFSET]
-        + b'\x00'
+        + b'\0'
         + raw[_QWIDGET_GEOMETRY_MAXIMIZED_OFFSET + 1 :]
     )
     return QtCore.QByteArray(patched), True

@@ -128,7 +128,7 @@ class _BaseThread(QtCore.QThread):
         if self._force_notify:
             do_notify = True
         elif self._file_paths:
-            path_list: bytes = core.bchr(0).join(
+            path_list: bytes = b'\0'.join(
                 core.encode(path) for path in self._file_paths
             )
             status, out, _ = self.context.ops.run_command(
@@ -146,7 +146,7 @@ class _BaseThread(QtCore.QThread):
                 # except for <pathname>.  So to see if we have any non-ignored
                 # files, we simply check every fourth field to see if any of
                 # them are empty.
-                source_fields = out.split(core.bchr(0))[0:-1:4]  # type: ignore[arg-type]
+                source_fields = out.split(b'\0')[0:-1:4]  # type: ignore[arg-type]
                 do_notify = not all(source_fields)
         self._force_notify = False
         self._force_config = False
@@ -415,7 +415,7 @@ if AVAILABLE == 'inotify':
             self._running = False
             with self._lock:
                 if self._pipe_w is not None:
-                    os.write(self._pipe_w, core.bchr(0))
+                    os.write(self._pipe_w, b'\0')
             self.wait()
 
 
