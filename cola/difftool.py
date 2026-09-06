@@ -39,7 +39,10 @@ class LaunchDifftool(cmds.ContextCommand):
         if s.unmerged:
             paths = s.unmerged
             if utils.is_win32():
-                core.fork(['git', 'mergetool', '--no-prompt', '--'] + paths)
+                core.fork(
+                    ['git', 'mergetool', '--no-prompt', '--'] + paths,
+                    ops=self.context.ops,
+                )
             else:
                 cfg = self.cfg
                 cmd = cfg.terminal()
@@ -64,7 +67,7 @@ class LaunchDifftool(cmds.ContextCommand):
                 else:
                     argv.extend(mergetool)
 
-                core.fork(argv)
+                core.fork(argv, ops=self.context.ops)
         else:
             difftool_run(self.context)
 

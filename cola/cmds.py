@@ -591,7 +591,7 @@ class BlamePaths(ContextCommand):
             cmd_args = core.list2cmdline(self.argv)
             self.context.notifier.git_cmd(cmd_args)
         try:
-            core.fork(self.argv)
+            core.fork(self.argv, ops=self.context.ops)
         except OSError as e:
             _, details = utils.format_exception(e)
             title = N_('Error Launching Blame Viewer')
@@ -1802,7 +1802,7 @@ class Edit(ContextCommand):
         argv = utils.shell_split(editor) + args
         context.notifier.emit_log('[editor] ' + core.list2cmdline(argv))
         try:
-            core.fork(argv)
+            core.fork(argv, ops=self.context.ops)
         except (OSError, ValueError) as err:
             message = N_('Cannot exec "%s": please configure your editor') % editor
             _, details = utils.format_exception(err)
@@ -1860,7 +1860,7 @@ class LaunchTerminal(ContextCommand):
             argv.append(self.context.ops.getenv('SHELL', command))
             shell = False
 
-        core.fork(argv, cwd=self.path, shell=shell)
+        core.fork(argv, cwd=self.path, shell=shell, ops=self.context.ops)
 
 
 class LaunchEditor(Edit):
@@ -2149,7 +2149,10 @@ class OpenNewRepo(ContextCommand):
 
     def do(self) -> None:
         self.model.set_directory(self.repo_path)
-        core.fork([sys.executable, sys.argv[0], '--repo', self.repo_path])
+        core.fork(
+            [sys.executable, sys.argv[0], '--repo', self.repo_path],
+            ops=self.context.ops,
+        )
 
 
 class OpenRepo(EditModel):
@@ -2256,7 +2259,10 @@ class Clone(ContextCommand):
         self.err = err
         if status == 0 and self.spawn:
             executable = sys.executable
-            core.fork([executable, sys.argv[0], '--repo', self.new_directory])
+            core.fork(
+                [executable, sys.argv[0], '--repo', self.new_directory],
+                ops=self.context.ops,
+            )
         return self
 
 
@@ -2731,7 +2737,7 @@ class RunConfigAction(ContextCommand):
         cmd = ['sh', '-c', cmd]
 
         if opts.get('background'):
-            core.fork(cmd)
+            core.fork(cmd, ops=self.context.ops)
             status, out, err = (0, '', '')
         elif opts.get('noconsole'):
             status, out, err = self.context.ops.run_command(cmd)
@@ -3558,7 +3564,7 @@ class SubmodulesUpdate(ConfirmAction):
 def launch_history_browser(context: ApplicationContext, argv: list[str]) -> None:
     """Launch the configured history browser"""
     try:
-        core.fork(argv)
+        core.fork(argv, ops=context.ops)
     except OSError as e:
         _, details = utils.format_exception(e)
         title = N_('Error Launching History Browser')
