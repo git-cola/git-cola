@@ -16,7 +16,6 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 from typing import Any
 
-from . import operations
 from .compat import PY2
 from .compat import PY3
 from .compat import WIN32
@@ -27,6 +26,8 @@ if TYPE_CHECKING:
     from io import BufferedReader
     from io import BufferedWriter
     from io import TextIOWrapper
+
+    from . import operations
 
 # /usr/include/stdlib.h
 # #define EXIT_SUCCESS    0   /* Successful exit status.  */
