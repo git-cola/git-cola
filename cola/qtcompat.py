@@ -1,5 +1,14 @@
 from __future__ import annotations
+import os
 from collections.abc import Callable
+
+# Prefer PyQt6 over PyQt5 when QT_API is not explicitly set by the user
+if "QT_API" not in os.environ:
+    try:
+        from qtpy import PYQT6  # noqa: F401
+        os.environ["QT_API"] = "pyqt6"
+    except ImportError:
+        pass
 
 from qtpy import QtCore
 from qtpy import QtGui
@@ -12,7 +21,6 @@ except ImportError:
     PYQT4 = False
 
 from . import hotkeys
-
 
 def patch(
     obj: type[QtWidgets.QGraphicsItem | QtGui.QKeySequence],
