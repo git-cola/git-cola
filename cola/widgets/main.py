@@ -143,8 +143,7 @@ class MainView(standard.MainWindow):
         self.submoduleswidget = self.submodulesdock.widget()
 
         # "Commit Message Editor" widget
-        editor = commitmsg.CommitMessageEditor(context, self)
-        self.commiteditor = editor
+        self.commiteditor = editor = commitmsg.CommitMessageEditor(context, self)
         self.commitdock = create_dock(
             'Commit', N_('Commit'), self, widget=editor, hide_title=True, stretch=False
         )
@@ -710,17 +709,6 @@ class MainView(standard.MainWindow):
         self.patches_menu.addAction(self.apply_patches_skip_action)
         self.patches_menu.addAction(self.apply_patches_abort_action)
 
-        if context.ops.is_remote():
-            self.quick_repository_search.setEnabled(False)
-            self.open_recent_menu.setEnabled(False)
-            self.open_repo_action.setEnabled(False)
-            self.open_repo_new_action.setEnabled(False)
-            self.new_repository_action.setEnabled(False)
-            self.new_bare_repository_action.setEnabled(False)
-            self.clone_repo_action.setEnabled(False)
-            self.rebase_start_action_proxy.setEnabled(True)
-            self.patches_menu.setEnabled(False)
-
         # Git Annex / Git LFS
         annex = self.context.ops.find_executable('git-annex')
         lfs = self.context.ops.find_executable('git-lfs')
@@ -739,26 +727,12 @@ class MainView(standard.MainWindow):
         self.edit_menu = edit_menu = add_menu(N_('&Edit'), self.menubar)
 
         self.edit_proxy = edit_proxy = FocusProxy(
-            editor, editor.summary, editor.description
+            self.commiteditor, self.commiteditor.summary, self.commiteditor.description
         )
-
-        editor.summary.undoAvailable.connect(
-            partial(self._update_can_undo_message, editor.summary)
-        )
-        editor.summary.redoAvailable.connect(
-            partial(self._update_can_redo_message, editor.summary)
-        )
-        editor.description.undoAvailable.connect(
-            partial(self._update_can_undo_message, editor.description)
-        )
-        editor.description.redoAvailable.connect(
-            partial(self._update_can_redo_message, editor.description)
-        )
-
         copy_widgets = (
             self,
-            editor.summary,
-            editor.description,
+            self.commiteditor.summary,
+            self.commiteditor.description,
             self.diffeditor,
             self.bookmarkswidget.tree,
             self.recentwidget.tree,
@@ -768,19 +742,17 @@ class MainView(standard.MainWindow):
         edit_proxy.override('copy', copy_widgets)
         edit_proxy.override('selectAll', select_widgets)
 
-        undo = qtutils.add_action(
+        self.undo_message_action = undo = qtutils.add_action(
             edit_menu, N_('Undo Message'), edit_proxy.undo, hotkeys.UNDO
         )
         undo.setIcon(icons.undo())
         undo.setEnabled(False)
-        self.undo_message_action = undo
 
-        redo = qtutils.add_action(
+        self.redo_message_action = redo = qtutils.add_action(
             edit_menu, N_('Redo Message'), edit_proxy.redo, hotkeys.REDO
         )
         redo.setIcon(icons.redo())
         redo.setEnabled(False)
-        self.redo_message_action = redo
 
         edit_menu.addSeparator()
         cut = qtutils.add_action(edit_menu, N_('Cut'), edit_proxy.cut, hotkeys.CUT)
@@ -816,7 +788,6 @@ class MainView(standard.MainWindow):
 
         edit_menu.addSeparator()
         qtutils.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
-        edit_menu.aboutToShow.connect(self._update_undo_redo_message_actions)
 
         # Actions menu
         self.actions_menu = add_menu(N_('Actions'), self.menubar)
@@ -908,7 +879,6 @@ class MainView(standard.MainWindow):
 
         # View Menu
         self.view_menu = add_menu(N_('View'), self.menubar)
-        self.view_menu.aboutToShow.connect(lambda: self.build_view_menu(self.view_menu))
         self.setup_dockwidget_view_menu()
         if core.IS_DARWIN:
             # The native macOS menu doesn't show empty entries.
@@ -945,32 +915,10 @@ class MainView(standard.MainWindow):
         self.addDockWidget(bottom, self.logdock)
         self.tabifyDockWidget(self.actionsdock, self.logdock)
 
-        # Listen for model notifications
-        self.model.updated.connect(self.refresh, type=Qt.QueuedConnection)
-        self.model.mode_changed.connect(
-            lambda mode: self.refresh(), type=Qt.QueuedConnection
-        )
-
-        prefs_model.config_updated.connect(self._config_updated)
-        self.commit_menu.aboutToShow.connect(self.update_menu_actions)
-        self.open_recent_menu.aboutToShow.connect(self.build_recent_menu)
-
-        self.diffeditor.options_changed.connect(self.statuswidget.refresh)
-        self.diffeditor.up.connect(self.statuswidget.move_up)
-        self.diffeditor.down.connect(self.statuswidget.move_down)
-
-        self.commiteditor.up.connect(self.statuswidget.move_up)
-        self.commiteditor.down.connect(self.statuswidget.move_down)
-
-        self.config_actions_changed.connect(
-            lambda names_and_shortcuts: _install_config_actions(
-                context,
-                self.actions_menu,
-                names_and_shortcuts,
-            ),
-            type=Qt.QueuedConnection,
-        )
+        self._initialize_connections()
         self.init_state(context.settings, self.set_initial_size)
+
+        self._update_actions_for_remote_operations()
 
         # Set the UI font size.
         font = self.font()
@@ -987,6 +935,48 @@ class MainView(standard.MainWindow):
         # The Interaction error handlers are not available until the main view has been
         # fully constructed, so we defer that initializaiton.
         QtCore.QTimer.singleShot(0, self.initialize)
+
+    def _initialize_connections(self):
+        self.commiteditor.summary.undoAvailable.connect(
+            partial(self._update_can_undo_message, self.commiteditor.summary)
+        )
+        self.commiteditor.summary.redoAvailable.connect(
+            partial(self._update_can_redo_message, self.commiteditor.summary)
+        )
+        self.commiteditor.description.undoAvailable.connect(
+            partial(self._update_can_undo_message, self.commiteditor.description)
+        )
+        self.commiteditor.description.redoAvailable.connect(
+            partial(self._update_can_redo_message, self.commiteditor.description)
+        )
+
+        self.edit_menu.aboutToShow.connect(self._update_undo_redo_message_actions)
+        self.view_menu.aboutToShow.connect(lambda: self.build_view_menu(self.view_menu))
+
+        self.model.updated.connect(self.refresh, type=Qt.QueuedConnection)
+        self.model.mode_changed.connect(
+            lambda mode: self.refresh(), type=Qt.QueuedConnection
+        )
+
+        self.prefs_model.config_updated.connect(self._config_updated)
+        self.commit_menu.aboutToShow.connect(self.update_menu_actions)
+        self.open_recent_menu.aboutToShow.connect(self.build_recent_menu)
+
+        self.diffeditor.options_changed.connect(self.statuswidget.refresh)
+        self.diffeditor.up.connect(self.statuswidget.move_up)
+        self.diffeditor.down.connect(self.statuswidget.move_down)
+
+        self.commiteditor.up.connect(self.statuswidget.move_up)
+        self.commiteditor.down.connect(self.statuswidget.move_down)
+
+        self.config_actions_changed.connect(
+            lambda names_and_shortcuts: _install_config_actions(
+                self.context,
+                self.actions_menu,
+                names_and_shortcuts,
+            ),
+            type=Qt.QueuedConnection,
+        )
 
     def initialize(self):
         context = self.context
@@ -1009,6 +999,18 @@ class MainView(standard.MainWindow):
                 details = git.win32_git_error_hint()
             Interaction.critical(title, message=msg, details=details)
             self.context.app.exit(core.EXIT_UNAVAILABLE)
+
+    def _update_actions_for_remote_operations(self):
+        """Disable actions that are not (currently) available in remote mode"""
+        if self.context.ops.is_remote():
+            self.quick_repository_search.setEnabled(False)
+            self.open_recent_menu.setEnabled(False)
+            self.open_repo_action.setEnabled(False)
+            self.open_repo_new_action.setEnabled(False)
+            self.new_repository_action.setEnabled(False)
+            self.new_bare_repository_action.setEnabled(False)
+            self.clone_repo_action.setEnabled(False)
+            self.patches_menu.setEnabled(False)
 
     def set_initial_size(self):
         # Default size; this is thrown out when save/restore is used
