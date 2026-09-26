@@ -138,9 +138,6 @@ class StatusWidget(QtWidgets.QFrame):
 
 
 class StatusTreeWidget(QtWidgets.QTreeWidget):
-    # Read-only access to the mode state
-    mode = property(lambda self: self._model.mode)
-
     def __init__(self, context, parent=None):
         QtWidgets.QTreeWidget.__init__(self, parent)
         self.context = context
