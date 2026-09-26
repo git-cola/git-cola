@@ -57,9 +57,6 @@ def save_path(context, path, model):
 class Browser(standard.Widget):
     """A repository branch file browser. Browses files provided by GitRepoModel"""
 
-    # Read-only mode property
-    mode = property(lambda self: self.model.mode)
-
     def __init__(self, context, parent, update=True):
         standard.Widget.__init__(self, parent)
         self.tree = RepoTreeView(context, self)
@@ -97,7 +94,7 @@ class Browser(standard.Widget):
             'branch': branch,
         }
         title = N_('%(project)s: %(branch)s - Browse') % scope
-        if self.mode == self.model.mode_amend:
+        if self.model.mode == self.model.mode_amend:
             title += ' {}'.format(N_('(Amending)'))
         self.setWindowTitle(title)
 
