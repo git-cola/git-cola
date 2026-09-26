@@ -11,7 +11,7 @@ from qtpy import QtCore
 def test_setup_environment():
     # If the function doesn't throw an exception we are happy.
     assert hasattr(app, 'setup_environment')
-    app.setup_environment()
+    app.setup_environment('Git Cola')
 
 
 def test_add_common_arguments():

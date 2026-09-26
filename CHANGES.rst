@@ -78,6 +78,16 @@ Usability, bells and whistles
   ``*.svg`` vector images to reduce blurriness.
   (`#1643 <https://github.com/git-cola/git-cola/pull/1643>`_)
 
+* Git Cola now provides a ``GIT_COLA`` environment variable so that
+  custom ``.git/hooks``, editors, difftools, and other user-configurable
+  tools and commands can detect that ``git`` is being executed by
+  Git Cola. The ``GIT_COLA`` environment variable contains the absolute path to
+  the ``git-cola`` command.
+
+* Git DAG now provides a ``GIT_DAG`` environment variable in its
+  environment with the absolute path to the ``git-dag`` command.
+  This is Git DAG's equivalent to the ``GIT_COLA`` variable.
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.

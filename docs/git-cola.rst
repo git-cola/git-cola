@@ -1509,6 +1509,25 @@ environment variables.
 ENVIRONMENT VARIABLES
 =====================
 
+GIT_COLA
+--------
+
+Git Cola sets the ``GIT_COLA`` variable in its environment with a path to the
+``git-cola`` command. This environment variable is not read by Git Cola.
+
+Your custom `.git/hooks` can use the presence of this variable in the environment
+to detect when a Git Cola session is executing ``git`` commands.
+
+GIT_DAG
+-------
+
+Similar to the ``GIT_COLA`` environment variable, Git DAG sets the ``GIT_DAG``
+variable in its environment with a path to the ``git-dag`` command.
+
+Note that this variable is **only** set when running Git DAG via the ``git-dag``
+entry point. Launching the DAG viewer from within a Git Cola session will only
+have ``GIT_COLA`` present in the environment.
+
 GIT_ASKPASS
 -----------
 

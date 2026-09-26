@@ -80,7 +80,7 @@ if TYPE_CHECKING:
     from .types import ViewType
 
 
-def setup_environment() -> operations.IOperations:
+def setup_environment(app_name) -> operations.IOperations:
     """Set environment variables to control git's behavior"""
     ops = operations_local.LocalOperations()
 
@@ -90,7 +90,8 @@ def setup_environment() -> operations.IOperations:
 
     # Session management wants an absolute path when restarting
     sys.argv[0] = sys_argv0 = os.path.abspath(sys.argv[0])
-    core.setenv(ops, 'GIT_COLA', sys_argv0)
+    app_env_variable = app_name.upper().replace(' ', '_')
+    core.setenv(ops, app_env_variable, sys_argv0)
 
     # Spoof an X11 display for SSH
     os.environ.setdefault('DISPLAY', ':0')
@@ -460,7 +461,7 @@ def application_init(
     setup_repo: bool = False,
 ) -> ApplicationContext:
     """Parses the command-line arguments and starts git-cola"""
-    local_ops = setup_environment()
+    local_ops = setup_environment(app_name)
     if socket:
         ops: operations.IOperations = operations.RemoteOperations(socket)
     else:
