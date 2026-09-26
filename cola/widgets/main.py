@@ -71,6 +71,9 @@ class MainView(standard.MainWindow):
         # Change this whenever dockwidgets are removed.
         self.widget_version = 2
 
+        self._can_undo_message = {}
+        self._can_redo_message = {}
+
         create_dock = qtutils.create_dock
         cfg = context.cfg
         self.browser_dockable = cfg.get('cola.browserdockable')
@@ -733,29 +736,23 @@ class MainView(standard.MainWindow):
         self.file_menu.addAction(self.quit_action)
 
         # Edit Menu
+        self.edit_menu = edit_menu = add_menu(N_('&Edit'), self.menubar)
+
         self.edit_proxy = edit_proxy = FocusProxy(
             editor, editor.summary, editor.description
         )
-        self._can_undo = {
-            id(editor.summary): False,
-            id(editor.description): False,
-        }
-        self._can_redo = {
-            id(editor.summary): False,
-            id(editor.description): False,
-        }
 
         editor.summary.undoAvailable.connect(
-            lambda available: self._undo_available(editor.summary, available)
+            partial(self._update_can_undo_message, editor.summary)
         )
         editor.summary.redoAvailable.connect(
-            lambda available: self._redo_available(editor.summary, available)
+            partial(self._update_can_redo_message, editor.summary)
         )
         editor.description.undoAvailable.connect(
-            lambda available: self._undo_available(editor.description, available)
+            partial(self._update_can_undo_message, editor.description)
         )
         editor.description.redoAvailable.connect(
-            lambda available: self._redo_available(editor.description, available)
+            partial(self._update_can_redo_message, editor.description)
         )
 
         copy_widgets = (
@@ -770,8 +767,6 @@ class MainView(standard.MainWindow):
         select_widgets = copy_widgets + (self.statuswidget.tree,)
         edit_proxy.override('copy', copy_widgets)
         edit_proxy.override('selectAll', select_widgets)
-
-        edit_menu = self.edit_menu = add_menu(N_('&Edit'), self.menubar)
 
         undo = qtutils.add_action(
             edit_menu, N_('Undo Message'), edit_proxy.undo, hotkeys.UNDO
@@ -790,8 +785,10 @@ class MainView(standard.MainWindow):
         edit_menu.addSeparator()
         cut = qtutils.add_action(edit_menu, N_('Cut'), edit_proxy.cut, hotkeys.CUT)
         cut.setIcon(icons.cut())
+
         copy = qtutils.add_action(edit_menu, N_('Copy'), edit_proxy.copy, hotkeys.COPY)
         copy.setIcon(icons.copy())
+
         copy_commit_id = qtutils.add_action(
             edit_menu,
             N_('Copy Commit'),
@@ -800,22 +797,26 @@ class MainView(standard.MainWindow):
         )
         copy_commit_id.setIcon(icons.copy())
         self.addAction(copy_commit_id)
+
         paste = qtutils.add_action(
             edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE
         )
         paste.setIcon(icons.paste())
+
         delete = qtutils.add_action(
             edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE
         )
         delete.setIcon(icons.delete())
+
         edit_menu.addSeparator()
         select_all = qtutils.add_action(
             edit_menu, N_('Select All'), edit_proxy.selectAll, hotkeys.SELECT_ALL
         )
         select_all.setIcon(icons.select_all())
+
         edit_menu.addSeparator()
         qtutils.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
-        edit_menu.aboutToShow.connect(self._update_undo_redo_actions)
+        edit_menu.aboutToShow.connect(self._update_undo_redo_message_actions)
 
         # Actions menu
         self.actions_menu = add_menu(N_('Actions'), self.menubar)
@@ -1019,18 +1020,18 @@ class MainView(standard.MainWindow):
     def set_filter(self, txt):
         self.statuswidget.set_filter(txt)
 
-    def _undo_available(self, widget, available):
-        self._can_undo[id(widget)] = available
-        self._update_undo_redo_actions()
+    def _update_can_undo_message(self, widget, available):
+        self._can_undo_message[id(widget)] = available
+        self._update_undo_redo_message_actions()
 
-    def _redo_available(self, widget, available):
-        self._can_redo[id(widget)] = available
-        self._update_undo_redo_actions()
+    def _update_can_redo_message(self, widget, available):
+        self._can_redo_message[id(widget)] = available
+        self._update_undo_redo_message_actions()
 
-    def _update_undo_redo_actions(self):
+    def _update_undo_redo_message_actions(self):
         focus = self.edit_proxy.focus()
-        can_undo = self._can_undo.get(id(focus), False)
-        can_redo = self._can_redo.get(id(focus), False)
+        can_undo = self._can_undo_message.get(id(focus), False)
+        can_redo = self._can_redo_message.get(id(focus), False)
         self.undo_message_action.setEnabled(can_undo)
         self.redo_message_action.setEnabled(can_redo)
 
