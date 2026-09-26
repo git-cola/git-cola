@@ -807,7 +807,7 @@ class MainView(standard.MainWindow):
         self.redo_message_action.setEnabled(False)
 
         edit_menu.addSeparator()
-        cut = qtutils.add_action_with_icon(
+        self.cut_message_action = qtutils.add_action_with_icon(
             edit_menu,
             icons.cut(),
             N_('Cut'),
@@ -815,7 +815,7 @@ class MainView(standard.MainWindow):
             hotkeys.CUT,
         )
 
-        copy = qtutils.add_action_with_icon(
+        self.copy_message_action = qtutils.add_action_with_icon(
             edit_menu,
             icons.copy(),
             N_('Copy'),
@@ -832,15 +832,15 @@ class MainView(standard.MainWindow):
         )
         self.addAction(copy_commit_id)
 
-        paste = qtutils.add_action_with_icon(
+        self.paste_action = qtutils.add_action_with_icon(
             edit_menu, icons.paste(), N_('Paste'), edit_proxy.paste, hotkeys.PASTE
         )
-        delete = qtutils.add_action_with_icon(
+        self.delete_action = qtutils.add_action_with_icon(
             edit_menu, icons.delete(), N_('Delete'), edit_proxy.delete, hotkeys.DELETE
         )
 
         edit_menu.addSeparator()
-        select_all = qtutils.add_action_with_icon(
+        self.message_select_all_action = qtutils.add_action_with_icon(
             edit_menu,
             icons.select_all(),
             N_('Select All'),
@@ -1187,9 +1187,6 @@ class MainView(standard.MainWindow):
             text = f'{name} {chr(0x2192)} {directory}'
             menu.addAction(text, cmds.run(cmd, context, directory))
 
-    # Accessors
-    mode = property(lambda self: self.model.mode)
-
     def _config_updated(self, _source, config, value):
         if config == prefs.FONTDIFF:
             # The diff font
@@ -1245,96 +1242,18 @@ class MainView(standard.MainWindow):
 
     def refresh(self):
         """Update the title with the current branch and directory name."""
-        curbranch = self.model.currentbranch
-        is_merging = self.model.is_merging
-        is_rebasing = self.model.is_rebasing
-        is_applying_patch = self.model.is_applying_patch
-        is_cherry_picking = self.model.is_rebasing
-
-        try:
-            curdir = self.context.ops.getcwd()
-        except FileNotFoundError:
-            return
-        msg = N_('Repository: %s') % curdir
-        msg += '\n'
-        msg += N_('Branch: %s') % curbranch
-
-        if is_rebasing:
-            msg += '\n\n'
-            msg += N_(
-                'This repository is currently being rebased.\n'
-                'Resolve conflicts, commit changes, and run:\n'
-                '    Rebase > Continue'
-            )
-        elif is_applying_patch:
-            msg += '\n\n'
-            msg += N_(
-                'This repository has unresolved conflicts after applying a patch.\n'
-                'Resolve conflicts and commit changes.'
-            )
-        elif is_cherry_picking:
-            msg += '\n\n'
-            msg += N_(
-                'This repository is in the middle of a cherry-pick.\n'
-                'Resolve conflicts and commit changes.'
-            )
-        elif is_merging:
-            msg += '\n\n'
-            msg += N_(
-                'This repository is in the middle of a merge.\n'
-                'Resolve conflicts and commit changes.'
-            )
-
         self.refresh_window_title()
-        self.commitdock.setToolTip(msg)
+        self.commitdock.setToolTip(_get_commitdock_tooltip(self.context))
 
-        self.actionswidget.set_mode(self.mode)
-        self.commiteditor.set_mode(self.mode)
-        self.statuswidget.set_mode(self.mode)
+        self.actionswidget.set_mode(self.model.mode)
+        self.commiteditor.set_mode(self.model.mode)
+        self.statuswidget.set_mode(self.model.mode)
 
         self.update_actions()
 
     def refresh_window_title(self):
         """Refresh the window title when state changes"""
-        alerts = []
-
-        project = self.model.project
-        curbranch = self.model.currentbranch
-        is_cherry_picking = self.model.is_cherry_picking
-        is_merging = self.model.is_merging
-        is_rebasing = self.model.is_rebasing
-        is_applying_patch = self.model.is_applying_patch
-        is_diff_mode = self.model.is_diff_mode()
-        is_amend_mode = self.mode == self.model.mode_amend
-
-        prefix = chr(0xAB)
-        suffix = chr(0xBB)
-
-        if is_amend_mode:
-            alerts.append(N_('Amending'))
-        elif is_diff_mode:
-            alerts.append(N_('Diff Mode'))
-        elif is_cherry_picking:
-            alerts.append(N_('Cherry-picking'))
-        elif is_merging:
-            alerts.append(N_('Merging'))
-        elif is_rebasing:
-            alerts.append(N_('Rebasing'))
-        elif is_applying_patch:
-            alerts.append(N_('Applying Patch'))
-
-        if alerts:
-            alert_text = (prefix + ' %s ' + suffix + ' ') % ', '.join(alerts)
-        else:
-            alert_text = ''
-
-        if self.model.cfg.get(prefs.SHOW_PATH, True):
-            path_text = self.git.worktree()
-        else:
-            path_text = ''
-
-        title = f'{project}: {curbranch} {alert_text}{path_text}'
-        self.setWindowTitle(title)
+        self.setWindowTitle(_get_window_title(self.context))
 
     def update_actions(self):
         is_rebasing = self.model.is_rebasing
@@ -1582,3 +1501,86 @@ def build_menus(name, menu, cache):
             menu = cache[menu_id] = menu.addMenu(menu_name)
 
     return (menu, text)
+
+
+def _get_commitdock_tooltip(context):
+    try:
+        curdir = context.ops.getcwd()
+    except FileNotFoundError:
+        return ''
+
+    curbranch = context.model.currentbranch
+    is_merging = context.model.is_merging
+    is_rebasing = context.model.is_rebasing
+    is_applying_patch = context.model.is_applying_patch
+    is_cherry_picking = context.model.is_rebasing
+
+    msg = N_('Repository: %s') % curdir
+    msg += '\n'
+    msg += N_('Branch: %s') % curbranch
+
+    if is_rebasing:
+        msg += '\n\n'
+        msg += N_(
+            'This repository is currently being rebased.\n'
+            'Resolve conflicts, commit changes, and run:\n'
+            '    Rebase > Continue'
+        )
+    elif is_applying_patch:
+        msg += '\n\n'
+        msg += N_(
+            'This repository has unresolved conflicts after applying a patch.\n'
+            'Resolve conflicts and commit changes.'
+        )
+    elif is_cherry_picking:
+        msg += '\n\n'
+        msg += N_(
+            'This repository is in the middle of a cherry-pick.\n'
+            'Resolve conflicts and commit changes.'
+        )
+    elif is_merging:
+        msg += '\n\n'
+        msg += N_(
+            'This repository is in the middle of a merge.\n'
+            'Resolve conflicts and commit changes.'
+        )
+    return msg
+
+
+def _get_window_title(context):
+    prefix = chr(0xAB)
+    suffix = chr(0xBB)
+    project = context.model.project
+    curbranch = context.model.currentbranch
+    is_cherry_picking = context.model.is_cherry_picking
+    is_merging = context.model.is_merging
+    is_rebasing = context.model.is_rebasing
+    is_applying_patch = context.model.is_applying_patch
+    is_diff_mode = context.model.is_diff_mode()
+    is_amend_mode = context.model.mode == context.model.mode_amend
+
+    alerts = []
+    if is_amend_mode:
+        alerts.append(N_('Amending'))
+    elif is_diff_mode:
+        alerts.append(N_('Diff Mode'))
+    elif is_cherry_picking:
+        alerts.append(N_('Cherry-picking'))
+    elif is_merging:
+        alerts.append(N_('Merging'))
+    elif is_rebasing:
+        alerts.append(N_('Rebasing'))
+    elif is_applying_patch:
+        alerts.append(N_('Applying Patch'))
+
+    if alerts:
+        alert_text = (prefix + ' %s ' + suffix + ' ') % ', '.join(alerts)
+    else:
+        alert_text = ''
+
+    if context.model.cfg.get(prefs.SHOW_PATH, True):
+        path_text = context.git.worktree()
+    else:
+        path_text = ''
+
+    return f'{project}: {curbranch} {alert_text}{path_text}'
