@@ -182,142 +182,160 @@ class MainView(standard.MainWindow):
             self.minimize_action = qtutils.add_action(
                 self, N_('Minimize Window'), self.showMinimized, hotkeys.MACOS_MINIMIZE
             )
-        self.unstage_all_action = qtutils.add_action(
-            self, N_('Unstage All'), cmds.run(cmds.UnstageAll, context)
+        self.unstage_all_action = qtutils.add_action_with_icon(
+            self, icons.remove(), N_('Unstage All'), cmds.run(cmds.UnstageAll, context)
         )
-        self.unstage_all_action.setIcon(icons.remove())
 
-        self.undo_commit_action = qtutils.add_action(
-            self, N_('Undo Last Commit'), cmds.run(cmds.UndoLastCommit, context)
-        )
-        self.undo_commit_action.setIcon(icons.style_dialog_discard())
-
-        self.unstage_selected_action = qtutils.add_action(
-            self, N_('Unstage'), cmds.run(cmds.UnstageSelected, context)
-        )
-        self.unstage_selected_action.setIcon(icons.remove())
-
-        self.show_diffstat_action = qtutils.add_action(
-            self, N_('Diffstat'), self.statuswidget.select_header, hotkeys.DIFFSTAT
-        )
-        self.show_diffstat_action.setIcon(icons.diff())
-
-        self.stage_modified_action = qtutils.add_action(
+        self.undo_commit_action = qtutils.add_action_with_icon(
             self,
+            icons.style_dialog_discard(),
+            N_('Undo Last Commit'),
+            cmds.run(cmds.UndoLastCommit, context),
+        )
+
+        self.unstage_selected_action = qtutils.add_action_with_icon(
+            self, icons.remove(), N_('Unstage'), cmds.run(cmds.UnstageSelected, context)
+        )
+
+        self.show_diffstat_action = qtutils.add_action_with_icon(
+            self,
+            icons.diff(),
+            N_('Diffstat'),
+            self.statuswidget.select_header,
+            hotkeys.DIFFSTAT,
+        )
+
+        self.stage_modified_action = qtutils.add_action_with_icon(
+            self,
+            icons.add(),
             cmds.StageModified.name(),
             cmds.run(cmds.StageModified, context),
             hotkeys.STAGE_MODIFIED,
         )
-        self.stage_modified_action.setIcon(icons.add())
 
-        self.stage_untracked_action = qtutils.add_action(
+        self.stage_untracked_action = qtutils.add_action_with_icon(
             self,
+            icons.add(),
             cmds.StageUntracked.name(),
             cmds.run(cmds.StageUntracked, context),
             hotkeys.STAGE_UNTRACKED,
         )
-        self.stage_untracked_action.setIcon(icons.add())
 
-        self.apply_patches_action = qtutils.add_action(
-            self, N_('Apply Patches...'), partial(diff.apply_patches, context)
-        )
-        self.apply_patches_action.setIcon(icons.diff())
-
-        self.apply_patches_abort_action = qtutils.add_action_with_tooltip(
+        self.apply_patches_action = qtutils.add_action_with_icon(
             self,
+            icons.diff(),
+            N_('Apply Patches...'),
+            partial(diff.apply_patches, context),
+        )
+
+        self.apply_patches_abort_action = qtutils.add_action_with_icon_and_tooltip(
+            self,
+            icons.style_dialog_discard(),
             N_('Abort Applying Patches...'),
             N_('Abort the current "git am" patch session'),
             cmds.run(cmds.AbortApplyPatch, context),
         )
-        self.apply_patches_abort_action.setIcon(icons.style_dialog_discard())
 
-        self.apply_patches_continue_action = qtutils.add_action_with_tooltip(
+        self.apply_patches_continue_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.commit(),
             N_('Continue Applying Patches'),
             N_('Commit the current state and continue applying patches'),
             cmds.run(cmds.ApplyPatchesContinue, context),
         )
-        self.apply_patches_continue_action.setIcon(icons.commit())
 
-        self.apply_patches_skip_action = qtutils.add_action_with_tooltip(
+        self.apply_patches_skip_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.discard(),
             N_('Skip Current Patch'),
             N_('Skip applying the current patch and continue applying patches'),
             cmds.run(cmds.ApplyPatchesSkip, context),
         )
-        self.apply_patches_skip_action.setIcon(icons.discard())
 
-        self.export_patches_action = qtutils.add_action(
+        self.export_patches_action = qtutils.add_action_with_icon(
             self,
+            icons.save(),
             N_('Export Patches...'),
             partial(guicmds.export_patches, context),
             hotkeys.EXPORT,
         )
-        self.export_patches_action.setIcon(icons.save())
 
-        self.new_repository_action = qtutils.add_action(
-            self, N_('New Repository...'), partial(guicmds.open_new_repo, context)
+        self.new_repository_action = qtutils.add_action_with_icon(
+            self,
+            icons.new(),
+            N_('New Repository...'),
+            partial(guicmds.open_new_repo, context),
         )
-        self.new_repository_action.setIcon(icons.new())
 
-        self.new_bare_repository_action = qtutils.add_action(
-            self, N_('New Bare Repository...'), partial(guicmds.new_bare_repo, context)
+        self.new_bare_repository_action = qtutils.add_action_with_icon(
+            self,
+            icons.new(),
+            N_('New Bare Repository...'),
+            partial(guicmds.new_bare_repo, context),
         )
-        self.new_bare_repository_action.setIcon(icons.new())
 
         prefs_func = partial(
             prefs_widget.preferences, context, parent=self, model=prefs_model
         )
-        self.preferences_action = qtutils.add_action(
-            self, N_('Preferences'), prefs_func, QtGui.QKeySequence.Preferences
-        )
-        self.preferences_action.setIcon(icons.configure())
-
-        self.edit_remotes_action = qtutils.add_action(
-            self, N_('Edit Remotes...'), partial(editremotes.editor, context)
-        )
-        self.edit_remotes_action.setIcon(icons.edit())
-
-        self.rescan_action = qtutils.add_action(
+        self.preferences_action = qtutils.add_action_with_icon(
             self,
+            icons.configure(),
+            N_('Preferences'),
+            prefs_func,
+            QtGui.QKeySequence.Preferences,
+        )
+
+        self.edit_remotes_action = qtutils.add_action_with_icon(
+            self,
+            icons.edit(),
+            N_('Edit Remotes...'),
+            partial(editremotes.editor, context),
+        )
+
+        self.rescan_action = qtutils.add_action_with_icon(
+            self,
+            icons.sync(),
             cmds.Refresh.name(),
             cmds.run(cmds.Refresh, context),
             *hotkeys.REFRESH_HOTKEYS,
         )
-        self.rescan_action.setIcon(icons.sync())
 
-        self.find_files_action = qtutils.add_action(
+        self.find_files_action = qtutils.add_action_with_icon(
             self,
+            icons.search(),
             N_('Find Files'),
             partial(finder.finder, context),
             hotkeys.FINDER,
         )
-        self.find_files_action.setIcon(icons.search())
 
-        self.browse_recently_modified_action = qtutils.add_action(
+        self.browse_recently_modified_action = qtutils.add_action_with_icon(
             self,
+            icons.directory(),
             N_('Recently Modified Files...'),
             partial(recent.browse_recent_files, context),
             hotkeys.EDIT_SECONDARY,
         )
-        self.browse_recently_modified_action.setIcon(icons.directory())
 
-        self.cherry_pick_action = qtutils.add_action(
+        self.cherry_pick_action = qtutils.add_action_with_icon(
             self,
+            icons.cherry_pick(),
             N_('Cherry-Pick...'),
             partial(guicmds.cherry_pick, context),
             hotkeys.CHERRY_PICK,
         )
-        self.cherry_pick_action.setIcon(icons.cherry_pick())
-        self.cherry_pick_abort_action = qtutils.add_action(
-            self, N_('Abort Cherry-Pick...'), cmds.run(cmds.AbortCherryPick, context)
+        self.cherry_pick_abort_action = qtutils.add_action_with_icon(
+            self,
+            icons.style_dialog_discard(),
+            N_('Abort Cherry-Pick...'),
+            cmds.run(cmds.AbortCherryPick, context),
         )
-        self.cherry_pick_abort_action.setIcon(icons.style_dialog_discard())
 
-        self.load_commitmsg_action = qtutils.add_action(
-            self, N_('Load Commit Message...'), partial(guicmds.load_commitmsg, context)
+        self.load_commitmsg_action = qtutils.add_action_with_icon(
+            self,
+            icons.file_text(),
+            N_('Load Commit Message...'),
+            partial(guicmds.load_commitmsg, context),
         )
-        self.load_commitmsg_action.setIcon(icons.file_text())
 
         self.prepare_commitmsg_hook_action = qtutils.add_action(
             self,
@@ -326,144 +344,152 @@ class MainView(standard.MainWindow):
             hotkeys.PREPARE_COMMIT_MESSAGE,
         )
 
-        self.save_tarball_action = qtutils.add_action(
-            self, N_('Save As Tarball/Zip...'), partial(archive.save_archive, context)
+        self.save_tarball_action = qtutils.add_action_with_icon(
+            self,
+            icons.file_zip(),
+            N_('Save As Tarball/Zip...'),
+            partial(archive.save_archive, context),
         )
-        self.save_tarball_action.setIcon(icons.file_zip())
 
         self.quit_action = qtutils.add_action(
             self, N_('Quit'), self.close, hotkeys.QUIT
         )
 
-        self.grep_action = qtutils.add_action(
-            self, N_('Grep'), partial(grep.grep, context), hotkeys.GREP
+        self.grep_action = qtutils.add_action_with_icon(
+            self, icons.search(), N_('Grep'), partial(grep.grep, context), hotkeys.GREP
         )
-        self.grep_action.setIcon(icons.search())
 
-        self.merge_local_action = qtutils.add_action(
-            self, N_('Merge...'), partial(merge.local_merge, context), hotkeys.MERGE
-        )
-        self.merge_local_action.setIcon(icons.merge())
-
-        self.merge_abort_action = qtutils.add_action(
-            self, N_('Abort Merge...'), cmds.run(cmds.AbortMerge, context)
-        )
-        self.merge_abort_action.setIcon(icons.style_dialog_discard())
-
-        self.update_submodules_action = qtutils.add_action(
+        self.merge_local_action = qtutils.add_action_with_icon(
             self,
+            icons.merge(),
+            N_('Merge...'),
+            partial(merge.local_merge, context),
+            hotkeys.MERGE,
+        )
+
+        self.merge_abort_action = qtutils.add_action_with_icon(
+            self,
+            icons.style_dialog_discard(),
+            N_('Abort Merge...'),
+            cmds.run(cmds.AbortMerge, context),
+        )
+
+        self.update_submodules_action = qtutils.add_action_with_icon(
+            self,
+            icons.sync(),
             N_('Update All Submodules...'),
             cmds.run(cmds.SubmodulesUpdate, context),
         )
-        self.update_submodules_action.setIcon(icons.sync())
 
-        self.add_submodule_action = qtutils.add_action(
+        self.add_submodule_action = qtutils.add_action_with_icon(
             self,
+            icons.add(),
             N_('Add Submodule...'),
             partial(submodules.add_submodule, context, parent=self),
         )
-        self.add_submodule_action.setIcon(icons.add())
 
-        self.fetch_action = qtutils.add_action_with_tooltip(
+        self.fetch_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.download(),
             N_('Fetch...'),
             N_('Fetch from one or more remotes using "git fetch"'),
             partial(remote.fetch, context),
             hotkeys.FETCH,
         )
-        self.fetch_action.setIcon(icons.download())
 
-        self.push_action = qtutils.add_action_with_tooltip(
+        self.push_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.push(),
             N_('Push...'),
             N_('Push to one or more remotes using "git push"'),
             partial(remote.push, context),
             hotkeys.PUSH,
         )
-        self.push_action.setIcon(icons.push())
 
-        self.pull_action = qtutils.add_action_with_tooltip(
+        self.pull_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.pull(),
             N_('Pull...'),
             N_('Integrate changes using "git pull"'),
             partial(remote.pull, context),
             hotkeys.PULL,
         )
-        self.pull_action.setIcon(icons.pull())
 
-        self.open_repo_action = qtutils.add_action(
-            self, N_('Open...'), partial(guicmds.open_repo, context), hotkeys.OPEN
-        )
-        self.open_repo_action.setIcon(icons.folder())
-
-        self.open_repo_new_action = qtutils.add_action(
+        self.open_repo_action = qtutils.add_action_with_icon(
             self,
+            icons.folder(),
+            N_('Open...'),
+            partial(guicmds.open_repo, context),
+            hotkeys.OPEN,
+        )
+
+        self.open_repo_new_action = qtutils.add_action_with_icon(
+            self,
+            icons.folder(),
             N_('Open in New Window...'),
             partial(guicmds.open_repo_in_new_window, context),
         )
-        self.open_repo_new_action.setIcon(icons.folder())
 
-        self.stash_action = qtutils.add_action_with_tooltip(
+        self.stash_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.commit(),
             N_('Stash...'),
             N_('Temporarily stash away uncommitted changes using "git stash"'),
             partial(stash.view, context),
             hotkeys.STASH,
         )
-        self.stash_action.setIcon(icons.commit())
 
-        self.reset_soft_action = qtutils.add_action_with_tooltip(
+        self.reset_soft_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.style_dialog_reset(),
             N_('Reset Branch (Soft)'),
             cmds.ResetSoft.tooltip('<commit>'),
             partial(guicmds.reset_soft, context),
         )
-        self.reset_soft_action.setIcon(icons.style_dialog_reset())
 
-        self.reset_mixed_action = qtutils.add_action_with_tooltip(
+        self.reset_mixed_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.style_dialog_reset(),
             N_('Reset Branch and Stage (Mixed)'),
             cmds.ResetMixed.tooltip('<commit>'),
             partial(guicmds.reset_mixed, context),
         )
-        self.reset_mixed_action.setIcon(icons.style_dialog_reset())
 
-        self.reset_keep_action = qtutils.add_action_with_tooltip(
+        self.reset_keep_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.style_dialog_reset(),
             N_('Restore Worktree and Reset All (Keep Unstaged Changes)'),
             cmds.ResetKeep.tooltip('<commit>'),
             partial(guicmds.reset_keep, context),
         )
-        self.reset_keep_action.setIcon(icons.style_dialog_reset())
 
-        self.reset_merge_action = qtutils.add_action_with_tooltip(
+        self.reset_merge_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.style_dialog_reset(),
             N_('Restore Worktree and Reset All (Merge)'),
             cmds.ResetMerge.tooltip('<commit>'),
             partial(guicmds.reset_merge, context),
         )
-        self.reset_merge_action.setIcon(icons.style_dialog_reset())
 
-        self.reset_hard_action = qtutils.add_action_with_tooltip(
+        self.reset_hard_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.style_dialog_reset(),
             N_('Restore Worktree and Reset All (Hard)'),
             cmds.ResetHard.tooltip('<commit>'),
             partial(guicmds.reset_hard, context),
         )
-        self.reset_hard_action.setIcon(icons.style_dialog_reset())
 
-        self.restore_worktree_action = qtutils.add_action_with_tooltip(
+        self.restore_worktree_action = qtutils.add_action_with_icon_and_tooltip(
             self,
+            icons.edit(),
             N_('Restore Worktree'),
             cmds.RestoreWorktree.tooltip('<commit>'),
             partial(guicmds.restore_worktree, context),
         )
-        self.restore_worktree_action.setIcon(icons.edit())
 
-        self.clone_repo_action = qtutils.add_action(
-            self, N_('Clone...'), partial(clone.clone, context)
+        self.clone_repo_action = qtutils.add_action_with_icon(
+            self, icons.repo(), N_('Clone...'), partial(clone.clone, context)
         )
-        self.clone_repo_action.setIcon(icons.repo())
 
         self.help_docs_action = qtutils.add_action(
             self,
@@ -476,151 +502,172 @@ class MainView(standard.MainWindow):
             self, N_('Keyboard Shortcuts'), about.show_shortcuts, hotkeys.QUESTION
         )
 
-        self.visualize_current_action = qtutils.add_action(
+        self.visualize_current_action = qtutils.add_action_with_icon(
             self,
+            icons.visualize(),
             N_('Visualize Current Branch...'),
             cmds.run(cmds.VisualizeCurrent, context),
         )
-        self.visualize_current_action.setIcon(icons.visualize())
 
-        self.visualize_all_action = qtutils.add_action(
-            self, N_('Visualize All Branches...'), cmds.run(cmds.VisualizeAll, context)
-        )
-        self.visualize_all_action.setIcon(icons.visualize())
-
-        self.search_commits_action = qtutils.add_action(
-            self, N_('Search...'), partial(search.search, context)
-        )
-        self.search_commits_action.setIcon(icons.search())
-
-        self.browse_branch_action = qtutils.add_action(
+        self.visualize_all_action = qtutils.add_action_with_icon(
             self,
+            icons.visualize(),
+            N_('Visualize All Branches...'),
+            cmds.run(cmds.VisualizeAll, context),
+        )
+
+        self.search_commits_action = qtutils.add_action_with_icon(
+            self, icons.search(), N_('Search...'), partial(search.search, context)
+        )
+
+        self.browse_branch_action = qtutils.add_action_with_icon(
+            self,
+            icons.directory(),
             N_('Browse Current Branch...'),
             partial(guicmds.browse_current, context),
         )
-        self.browse_branch_action.setIcon(icons.directory())
 
-        self.browse_other_branch_action = qtutils.add_action(
-            self, N_('Browse Other Branch...'), partial(guicmds.browse_other, context)
-        )
-        self.browse_other_branch_action.setIcon(icons.directory())
-
-        self.load_commitmsg_template_action = qtutils.add_action(
+        self.browse_other_branch_action = qtutils.add_action_with_icon(
             self,
+            icons.directory(),
+            N_('Browse Other Branch...'),
+            partial(guicmds.browse_other, context),
+        )
+
+        self.load_commitmsg_template_action = qtutils.add_action_with_icon(
+            self,
+            icons.style_dialog_apply(),
             N_('Get Commit Message Template'),
             cmds.run(cmds.LoadCommitMessageFromTemplate, context),
         )
-        self.load_commitmsg_template_action.setIcon(icons.style_dialog_apply())
 
         self.help_about_action = qtutils.add_action(
             self, N_('About'), partial(about.about_dialog, context)
         )
 
-        self.diff_against_commit_action = qtutils.add_action(
+        self.diff_against_commit_action = qtutils.add_action_with_icon(
             self,
+            icons.compare(),
             N_('Against Commit... (Diff Mode)'),
             partial(guicmds.diff_against_commit, context),
         )
-        self.diff_against_commit_action.setIcon(icons.compare())
 
-        self.exit_diff_mode_action = qtutils.add_action(
-            self, N_('Exit Diff Mode'), cmds.run(cmds.ResetMode, context)
-        )
-        self.exit_diff_mode_action.setIcon(icons.compare())
-
-        self.diff_expression_action = qtutils.add_action(
-            self, N_('Expression...'), partial(guicmds.diff_expression, context)
-        )
-        self.diff_expression_action.setIcon(icons.compare())
-
-        self.branch_compare_action = qtutils.add_action(
-            self, N_('Branches...'), partial(compare.compare_branches, context)
-        )
-        self.branch_compare_action.setIcon(icons.compare())
-
-        self.create_tag_action = qtutils.add_action(
+        self.exit_diff_mode_action = qtutils.add_action_with_icon(
             self,
+            icons.compare(),
+            N_('Exit Diff Mode'),
+            cmds.run(cmds.ResetMode, context),
+        )
+
+        self.diff_expression_action = qtutils.add_action_with_icon(
+            self,
+            icons.compare(),
+            N_('Expression...'),
+            partial(guicmds.diff_expression, context),
+        )
+
+        self.branch_compare_action = qtutils.add_action_with_icon(
+            self,
+            icons.compare(),
+            N_('Branches...'),
+            partial(compare.compare_branches, context),
+        )
+
+        self.create_tag_action = qtutils.add_action_with_icon(
+            self,
+            icons.tag(),
             N_('Create Tag...'),
             partial(createtag.create_tag, context),
         )
-        self.create_tag_action.setIcon(icons.tag())
 
-        self.create_branch_action = qtutils.add_action(
+        self.create_branch_action = qtutils.add_action_with_icon(
             self,
+            icons.branch(),
             N_('Create...'),
             partial(createbranch.create_new_branch, context),
             hotkeys.BRANCH,
         )
-        self.create_branch_action.setIcon(icons.branch())
 
-        self.delete_branch_action = qtutils.add_action(
-            self, N_('Delete...'), partial(guicmds.delete_branch, context)
-        )
-        self.delete_branch_action.setIcon(icons.discard())
-
-        self.delete_remote_branch_action = qtutils.add_action(
+        self.delete_branch_action = qtutils.add_action_with_icon(
             self,
+            icons.discard(),
+            N_('Delete...'),
+            partial(guicmds.delete_branch, context),
+        )
+
+        self.delete_remote_branch_action = qtutils.add_action_with_icon(
+            self,
+            icons.discard(),
             N_('Delete Remote Branch...'),
             partial(guicmds.delete_remote_branch, context),
         )
-        self.delete_remote_branch_action.setIcon(icons.discard())
 
-        self.rename_branch_action = qtutils.add_action(
-            self, N_('Rename Branch...'), partial(guicmds.rename_branch, context)
-        )
-        self.rename_branch_action.setIcon(icons.edit())
-
-        self.checkout_branch_action = qtutils.add_action(
+        self.rename_branch_action = qtutils.add_action_with_icon(
             self,
+            icons.edit(),
+            N_('Rename Branch...'),
+            partial(guicmds.rename_branch, context),
+        )
+
+        self.checkout_branch_action = qtutils.add_action_with_icon(
+            self,
+            icons.branch(),
             N_('Checkout...'),
             partial(guicmds.checkout_branch, context),
             hotkeys.CHECKOUT,
         )
-        self.checkout_branch_action.setIcon(icons.branch())
 
-        self.branch_review_action = qtutils.add_action(
-            self, N_('Review...'), partial(guicmds.review_branch, context)
-        )
-        self.branch_review_action.setIcon(icons.compare())
-
-        self.browse_action = qtutils.add_action(
-            self, N_('File Browser...'), partial(browse.worktree_browser, context)
-        )
-        self.browse_action.setIcon(icons.cola())
-
-        self.dag_action = qtutils.add_action(self, N_('DAG...'), self.git_dag)
-        self.dag_action.setIcon(icons.cola())
-
-        self.rebase_start_action = qtutils.add_action(
+        self.branch_review_action = qtutils.add_action_with_icon(
             self,
+            icons.compare(),
+            N_('Review...'),
+            partial(guicmds.review_branch, context),
+        )
+
+        self.browse_action = qtutils.add_action_with_icon(
+            self,
+            icons.cola(),
+            N_('File Browser...'),
+            partial(browse.worktree_browser, context),
+        )
+
+        self.dag_action = qtutils.add_action_with_icon(
+            self,
+            icons.cola(),
+            N_('DAG...'),
+            self.git_dag,
+        )
+
+        self.rebase_start_action = qtutils.add_action_with_icon(
+            self,
+            icons.play(),
             N_('Start Interactive Rebase...'),
             cmds.run(cmds.Rebase, context),
             hotkeys.REBASE_START_AND_CONTINUE,
         )
-        self.rebase_start_action.setIcon(icons.play())
 
-        self.rebase_edit_todo_action = qtutils.add_action(
-            self, N_('Edit...'), cmds.run(cmds.RebaseEditTodo, context)
+        self.rebase_edit_todo_action = qtutils.add_action_with_icon(
+            self, icons.edit(), N_('Edit...'), cmds.run(cmds.RebaseEditTodo, context)
         )
-        self.rebase_edit_todo_action.setIcon(icons.edit())
 
-        self.rebase_continue_action = qtutils.add_action(
+        self.rebase_continue_action = qtutils.add_action_with_icon(
             self,
+            icons.play(),
             N_('Continue'),
             cmds.run(cmds.RebaseContinue, context),
             hotkeys.REBASE_START_AND_CONTINUE,
         )
-        self.rebase_continue_action.setIcon(icons.play())
 
-        self.rebase_skip_action = qtutils.add_action(
-            self, N_('Skip Current Patch'), cmds.run(cmds.RebaseSkip, context)
+        self.rebase_skip_action = qtutils.add_action_with_icon(
+            self,
+            icons.delete(),
+            N_('Skip Current Patch'),
+            cmds.run(cmds.RebaseSkip, context),
         )
-        self.rebase_skip_action.setIcon(icons.delete())
 
-        self.rebase_abort_action = qtutils.add_action(
-            self, N_('Abort'), cmds.run(cmds.RebaseAbort, context)
+        self.rebase_abort_action = qtutils.add_action_with_icon(
+            self, icons.close(), N_('Abort'), cmds.run(cmds.RebaseAbort, context)
         )
-        self.rebase_abort_action.setIcon(icons.close())
 
         # For "Start Rebase" only, reverse the first argument to setEnabled()
         # so that we can operate on it as a group.
@@ -663,13 +710,13 @@ class MainView(standard.MainWindow):
             self, N_('Load Layout'), lambda: guicmds.load_layout(self)
         )
 
-        self.quick_repository_search = qtutils.add_action(
+        self.quick_repository_search = qtutils.add_action_with_icon(
             self,
+            icons.search(),
             N_('Quick Open...'),
             lambda: guicmds.open_quick_repo_search(self.context, parent=self),
             hotkeys.OPEN_REPO_SEARCH,
         )
-        self.quick_repository_search.setIcon(icons.search())
 
         self.terminal_action = common.terminal_action(
             context, self, hotkey=hotkeys.TERMINAL
@@ -684,9 +731,9 @@ class MainView(standard.MainWindow):
         self.file_menu = add_menu(N_('&File'), self.menubar)
         self.file_menu.addAction(self.quick_repository_search)
         # File->Open Recent menu
-        self.open_recent_menu = self.file_menu.addMenu(N_('Open Recent'))
-
-        self.open_recent_menu.setIcon(icons.folder())
+        self.open_recent_menu = self.file_menu.addMenu(
+            icons.folder(), N_('Open Recent')
+        )
         self.file_menu.addAction(self.open_repo_action)
         self.file_menu.addAction(self.open_repo_new_action)
         self.file_menu.addSeparator()
@@ -701,8 +748,7 @@ class MainView(standard.MainWindow):
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.save_tarball_action)
 
-        self.patches_menu = self.file_menu.addMenu(N_('Patches'))
-        self.patches_menu.setIcon(icons.diff())
+        self.patches_menu = self.file_menu.addMenu(icons.diff(), N_('Patches'))
         self.patches_menu.addAction(self.export_patches_action)
         self.patches_menu.addAction(self.apply_patches_action)
         self.patches_menu.addAction(self.apply_patches_continue_action)
@@ -742,49 +788,65 @@ class MainView(standard.MainWindow):
         edit_proxy.override('copy', copy_widgets)
         edit_proxy.override('selectAll', select_widgets)
 
-        self.undo_message_action = undo = qtutils.add_action(
-            edit_menu, N_('Undo Message'), edit_proxy.undo, hotkeys.UNDO
+        self.undo_message_action = qtutils.add_action_with_icon(
+            edit_menu,
+            icons.undo(),
+            N_('Undo Message'),
+            edit_proxy.undo,
+            hotkeys.UNDO,
         )
-        undo.setIcon(icons.undo())
-        undo.setEnabled(False)
+        self.undo_message_action.setEnabled(False)
 
-        self.redo_message_action = redo = qtutils.add_action(
-            edit_menu, N_('Redo Message'), edit_proxy.redo, hotkeys.REDO
+        self.redo_message_action = qtutils.add_action_with_icon(
+            edit_menu,
+            icons.redo(),
+            N_('Redo Message'),
+            edit_proxy.redo,
+            hotkeys.REDO,
         )
-        redo.setIcon(icons.redo())
-        redo.setEnabled(False)
+        self.redo_message_action.setEnabled(False)
 
         edit_menu.addSeparator()
-        cut = qtutils.add_action(edit_menu, N_('Cut'), edit_proxy.cut, hotkeys.CUT)
-        cut.setIcon(icons.cut())
-
-        copy = qtutils.add_action(edit_menu, N_('Copy'), edit_proxy.copy, hotkeys.COPY)
-        copy.setIcon(icons.copy())
-
-        copy_commit_id = qtutils.add_action(
+        cut = qtutils.add_action_with_icon(
             edit_menu,
+            icons.cut(),
+            N_('Cut'),
+            edit_proxy.cut,
+            hotkeys.CUT,
+        )
+
+        copy = qtutils.add_action_with_icon(
+            edit_menu,
+            icons.copy(),
+            N_('Copy'),
+            edit_proxy.copy,
+            hotkeys.COPY,
+        )
+
+        copy_commit_id = qtutils.add_action_with_icon(
+            edit_menu,
+            icons.copy(),
             N_('Copy Commit'),
             lambda: guicmds.copy_commit_id_to_clipboard(context),
             hotkeys.COPY_COMMIT_ID,
         )
-        copy_commit_id.setIcon(icons.copy())
         self.addAction(copy_commit_id)
 
-        paste = qtutils.add_action(
-            edit_menu, N_('Paste'), edit_proxy.paste, hotkeys.PASTE
+        paste = qtutils.add_action_with_icon(
+            edit_menu, icons.paste(), N_('Paste'), edit_proxy.paste, hotkeys.PASTE
         )
-        paste.setIcon(icons.paste())
-
-        delete = qtutils.add_action(
-            edit_menu, N_('Delete'), edit_proxy.delete, hotkeys.DELETE
+        delete = qtutils.add_action_with_icon(
+            edit_menu, icons.delete(), N_('Delete'), edit_proxy.delete, hotkeys.DELETE
         )
-        delete.setIcon(icons.delete())
 
         edit_menu.addSeparator()
-        select_all = qtutils.add_action(
-            edit_menu, N_('Select All'), edit_proxy.selectAll, hotkeys.SELECT_ALL
+        select_all = qtutils.add_action_with_icon(
+            edit_menu,
+            icons.select_all(),
+            N_('Select All'),
+            edit_proxy.selectAll,
+            hotkeys.SELECT_ALL,
         )
-        select_all.setIcon(icons.select_all())
 
         edit_menu.addSeparator()
         qtutils.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
