@@ -780,6 +780,20 @@ def add_action_with_tooltip(
     return _add_action(widget, text, tip, func, connect_action, *shortcuts)
 
 
+def add_action_with_icon_and_tooltip(
+    widget: QtWidgets.QWidget,
+    icon: QtGui.QIcon,
+    text: str | None,
+    tip: str | None,
+    func: Callable,
+    *shortcuts: Any,
+) -> QtGui.QAction:
+    """Create an action with an icon and tooltip"""
+    action = _add_action(widget, text, tip, func, connect_action, *shortcuts)
+    action.setIcon(icon)
+    return action
+
+
 def menu_separator(widget: QtWidgets.QWidget, text: str = ''):
     """Return a QAction whose isSeparator() returns true. Used in context menus"""
     action = QtWidgets.QAction(text, widget)
