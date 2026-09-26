@@ -1545,6 +1545,8 @@ class DiffImage(EditModel):
         return result
 
     def do(self) -> bool:
+        if not super().do():
+            return False
         filename = self.new_filename
 
         if self.staged:
@@ -1559,7 +1561,7 @@ class DiffImage(EditModel):
             images = []
 
         self.model.set_images(images)
-        return super().do()
+        return True
 
     def staged_images(self) -> list[Any | tuple[str, bool]]:
         context = self.context
