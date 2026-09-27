@@ -2,7 +2,6 @@
 from __future__ import annotations
 import time
 from typing import TYPE_CHECKING
-from typing import Any
 
 from qtpy import QtCore
 from qtpy.QtCore import Qt
@@ -83,6 +82,15 @@ class ContextCommand(Command):
         self.timestamp = time.time()
 
 
+class CommandNode:
+    def __init__(self, cmd, parent=None):
+        self.cmd = cmd
+        self.parent = parent
+        # Commands along the first child chain are the newer / active commands.
+        # Later we can add UI to allow selecting other branches.
+        self.children = []
+
+
 class CommandGraph:
     """Maintain a graph of undo/redo commands
 
@@ -98,93 +106,64 @@ class CommandGraph:
 
     """
 
-    def __init__(self) -> None:
-        self.history: list[Command | list] = []
-        self.cursor: list[int] = []
+    def __init__(self):
+        self.root = None
+        self.cursor = None
 
-    def add(self, cmd: Command) -> None:
-        """Add an undoable command to the history"""
+    def add(self, cmd):
         if not cmd.is_undoable():
             return
-        # If the cursor is not at the end of the history, we need to fork the history
-        if self.cursor != self._end_cursor():
-            branch = self._get_branch(self.cursor)
-            # Fork the history by appending a new list to the current branch
-            branch.append([])
-            # Move the cursor to the new branch
-            self.cursor.append(len(branch) - 1)
-        # Add the command to the current branch
-        branch = self._get_branch(self.cursor)
-        branch.append(cmd)
-        # Move the cursor to the new command
-        self.cursor[-1] = len(branch) - 1
 
-    def is_at_tail(self):
-        """Is the current command the end of the current branch history?"""
-        branch = self._get_branch(self.cursor)
-        return isinstance(branch, list) and (
-            not self.cursor or self.cursor[-1] == len(branch) - 1
-        )
+        if self.root is None:
+            self.root = CommandNode(cmd)
+            self.cursor = self.root
+            return
 
-    def step_backward(self):
-        """Move the cursor backwards in time
+        new_node = CommandNode(cmd, parent=self.cursor)
 
-        If we are at the beginning or end then the cursor does not move.
-        """
-        cmd = self.get_current_command()
-        if len(self.cursor) > 0:
-            if self.cursor[-1] > 0:
-                self.cursor[-1] -= 1
-            else:
-                self.cursor.pop()
-        return cmd
+        # If the cursor is None then are replacing the root.
+        if self.cursor is None:
+            self.root = new_node
+            self.cursor = new_node
+        else:
+            self.cursor.children.insert(0, new_node)
+            self.cursor = new_node
 
     def step_forward(self):
-        """Move the cursor forwards along the timeline of the current history branch
+        # No cursor so the next step is the root.
+        if not self.cursor:
+            self.cursor = self.root
+            if self.cursor:
+                return self.cursor.cmd
+            return None
 
-        If we are at a branch point then the newest branch
-        (ie. the branch with the highest index) is used.
-        """
-        branch = self._get_branch(self.cursor)
-        if isinstance(branch, list):
-            if len(branch) > 0:
-                self.cursor.append(len(branch) - 1)
-        elif isinstance(self.cursor[-1], int) and self.cursor[-1] < len(branch) - 1:
-            self.cursor[-1] += 1
-        return self.get_current_command()
+        if self.cursor and self.cursor.children:
+            self.cursor = self.cursor.children[0]
+            return self.cursor.cmd
 
-    def get_current_command(self):
-        """Return the command pointed to by the cursor"""
-        branch = self._get_branch(self.cursor)
-        if isinstance(branch, list) and len(branch) > 0:
-            return branch[self.cursor[-1]]
         return None
+
+    def step_backward(self):
+        if self.cursor:
+            cmd = self.cursor.cmd
+            self.cursor = self.cursor.parent
+        else:
+            cmd = None
+        return cmd
 
     def get_next_command(self):
-        """Return the "next" command when we are not at the end of the branch"""
-        branch = self._get_branch(self.cursor)
-        if isinstance(branch, list) and len(branch) > 0:
-            if self.cursor[-1] < len(branch) - 1:
-                return branch[self.cursor[-1] + 1]
+        if self.cursor:
+            if self.cursor.children:
+                return self.cursor.children[0].cmd
+            return None
+        if self.root:
+            return self.root.cmd
         return None
 
-    def _get_branch(self, cursor: list[int]) -> list[Command | list]:
-        """Get the current branch of the history"""
-        branch: Any = self.history
-        for index in cursor[:-1]:
-            branch = branch[index]
-        return branch
-
-    def _end_cursor(self) -> list[int]:
-        """Get the cursor at the end of the history"""
-        cursor = []
-        branch: Any = self.history
-        while isinstance(branch, list):
-            cursor.append(len(branch) - 1)
-            if len(branch) == 0:
-                break
-            branch = branch[-1]
-        return cursor
+    def get_current_command(self):
+        if self.cursor:
+            return self.cursor.cmd
+        return None
 
 
 class CommandBus(QtCore.QObject):
@@ -224,7 +203,7 @@ class CommandBus(QtCore.QObject):
 
     def can_redo(self):
         """Can we perform a redo operation?"""
-        return not self.cmd_graph.is_at_tail()
+        return self.cmd_graph.get_next_command() is not None
 
     def can_undo(self):
         """Can we perform an undo?"""
