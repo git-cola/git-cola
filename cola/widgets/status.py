@@ -1230,6 +1230,7 @@ class StatusTreeWidget(QtWidgets.QTreeWidget):
             runtask.run(
                 cmds.run(cmds.ShowUntracked, context, path, finalizer=finalizer)
             )
+        runtask.threadpool.waitForDone(64)
 
     def select_header(self):
         """Select an active header, which triggers a diffstat"""
