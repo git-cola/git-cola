@@ -80,14 +80,14 @@ class EditModel(ContextCommand):
             return False
         self.model.filename = self.new_filename
         self.model.set_mode(self.new_mode)
-        self.model.set_diff_text(self.new_diff_text)
         self.model.set_diff_type(self.new_diff_type)
+        self.model.set_diff_text(self.new_diff_text)
         self.model.set_file_type(self.new_file_type)
         # Finalizers must be constructed after the command is triggered so that the
         # timestamp field and the model state fields are updated.
         if self.finalizer is not None:
             self.continuation = self.finalizer()
-            self.context.command_bus.do_command.emit(self.continuation)
+            self.continuation.do()
         return True
 
     def undo(self) -> bool:
