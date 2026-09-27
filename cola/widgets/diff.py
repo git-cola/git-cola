@@ -909,6 +909,40 @@ class Viewer(QtWidgets.QFrame):
         else:
             self.stack.setCurrentWidget(self.text)
 
+            # Workaround: when switching between text and images, Qt does not properly
+            # render the text when switching back to the text widget. The line numbers
+            # display must be enabled in order to trigger the bug.
+            #
+            # The symptoms are that the text is shifted to the left -- the same width as
+            # the line numbers display itself, and the left side of the text is cutoff
+            # by the numbers display that renders over it. The left side of the text is
+            # cutoff by the numbers display, basically, instead of the text being
+            # correctly shifted to the right so that they render side-by-side.
+            #
+            # The text fixes itself as soon as the widget is given focus, which causes
+            # the cursor to be made visible, but we do not want to steal focus away from
+            # whichever widget the user is using.
+            #
+            # A workaround tested on Debian/testing with Qt/6.10.2 QtPy/2.4.2
+            # PyQt6/6.11.0 is to update the text cursor.
+            text_length = len(self.text.value())
+            if text_length > 1:
+                cursor = self.text.textCursor()
+                position = cursor.position()
+                # If we are before the end then reset the position by temporarily
+                # incrementing the position. If we are at the end then we'll temporarily
+                # decrement the cursor's position.
+                if position < text_length - 1:
+                    offset = 1
+                else:
+                    offset = -1
+                # Here's the hacky workaround. Ideally, we shouldn't need these two
+                # setTextCursor() calls.
+                tmp_cursor = self.text.textCursor()
+                tmp_cursor.setPosition(position + offset)
+                self.text.setTextCursor(tmp_cursor)
+                self.text.setTextCursor(cursor)
+
     def set_file_type(self, file_type):
         """Manage the diff options when the file type changes"""
         # The "file type" is whether the file itself is an image.
