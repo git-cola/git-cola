@@ -3196,7 +3196,7 @@ class SignOff(ContextCommand):
         self.model.set_commitmsg(msg + '\n' + signoff)
         return True
 
-    def undo(self) -> None:
+    def undo(self) -> bool:
         """Restore the commit message"""
         self.model.set_commitmsg(self.old_commitmsg)
         return True
