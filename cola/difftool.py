@@ -30,6 +30,8 @@ if TYPE_CHECKING:
 class LaunchDifftool(cmds.ContextCommand):
     """Launch "git difftool" with the currently selected files"""
 
+    UNDOABLE = False
+
     @staticmethod
     def name() -> str:
         return N_('Launch Diff Tool')

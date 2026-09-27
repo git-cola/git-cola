@@ -17,10 +17,11 @@ class Command:
 
     UNDOABLE = False
 
-    @staticmethod
-    def name() -> str:
-        """Return the command's name"""
-        return '(undefined)'
+    @classmethod
+    def name(cls) -> str:
+        """Return the command's display name"""
+        # NOTE: subclasses should implement this.
+        return cls.__name__
 
     @classmethod
     def is_undoable(cls) -> bool:
@@ -40,6 +41,10 @@ class Command:
         Returns False to signal that an operation should be aborted.
         """
         return True
+
+    def refresh(self) -> None:
+        """Refresh a command so that it can be rerun"""
+        pass
 
 
 class ContextCommand(Command):
@@ -72,6 +77,10 @@ class ContextCommand(Command):
         result = super().undo()
         self.context.timestamp = self.old_timestamp
         return result
+
+    def refresh(self) -> None:
+        super().refresh()
+        self.timestamp = time.time()
 
 
 class CommandGraph:
@@ -113,7 +122,9 @@ class CommandGraph:
     def is_at_tail(self):
         """Is the current command the end of the current branch history?"""
         branch = self._get_branch(self.cursor)
-        return isinstance(branch, list) and self.cursor[-1] == len(branch) - 1
+        return isinstance(branch, list) and (
+            not self.cursor or self.cursor[-1] == len(branch) - 1
+        )
 
     def step_backward(self):
         """Move the cursor backwards in time
@@ -197,6 +208,7 @@ class CommandBus(QtCore.QObject):
     def redo(self) -> bool:
         cmd = self.cmd_graph.step_forward()
         if cmd is not None:
+            cmd.refresh()
             self.do_command.emit(cmd)
             return True
         return False
@@ -205,6 +217,7 @@ class CommandBus(QtCore.QObject):
         """Undo a command on the main thread"""
         cmd = self.cmd_graph.step_backward()
         if cmd is not None:
+            cmd.refresh()
             self.undo_command.emit(cmd)
             return True
         return False
@@ -231,3 +244,11 @@ class CommandBus(QtCore.QObject):
         if cmd is not None:
             return cmd.name()
         return ''
+
+
+def undo(context):
+    context.command_bus.undo()
+
+
+def redo(context):
+    context.command_bus.redo()

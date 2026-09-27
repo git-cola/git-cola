@@ -48,6 +48,8 @@ class StashModel:
 
 
 class ApplyStash(cmds.ContextCommand):
+    UNDOABLE = False
+
     def __init__(self, context, stash_index: str, index: int, pop: bool) -> None:
         super().__init__(context)
         self.stash_ref = 'refs/' + stash_index
@@ -78,6 +80,8 @@ class ApplyStash(cmds.ContextCommand):
 
 
 class DropStash(cmds.ContextCommand):
+    UNDOABLE = False
+
     def __init__(self, context, stash_index: str) -> None:
         super().__init__(context)
         self.stash_ref = 'refs/' + stash_index
@@ -100,6 +104,8 @@ class DropStash(cmds.ContextCommand):
 
 
 class SaveStash(cmds.ContextCommand):
+    UNDOABLE = False
+
     def __init__(self, context, stash_name: str, keep_index: bool) -> None:
         super().__init__(context)
         self.stash_name = stash_name
@@ -125,6 +131,8 @@ class SaveStash(cmds.ContextCommand):
 
 class RenameStash(cmds.ContextCommand):
     """Rename the stash"""
+
+    UNDOABLE = False
 
     def __init__(self, context, stash_index: str, stash_name: str) -> None:
         super().__init__(context)
@@ -160,6 +168,8 @@ class RenameStash(cmds.ContextCommand):
 
 class StashIndex(cmds.ContextCommand):
     """Stash the index away"""
+
+    UNDOABLE = False
 
     def __init__(self, context, stash_name: str) -> None:
         super().__init__(context)

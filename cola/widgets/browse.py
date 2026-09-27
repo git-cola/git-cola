@@ -562,6 +562,8 @@ class BrowseModel:
 
 
 class SaveBlob(cmds.ContextCommand):
+    UNDOABLE = False
+
     def __init__(self, context, model):
         super().__init__(context)
         self.browse_model = model

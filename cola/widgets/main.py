@@ -7,6 +7,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from .. import cmd
 from .. import cmds
 from .. import core
 from .. import git
@@ -772,6 +773,22 @@ class MainView(standard.MainWindow):
         # Edit Menu
         self.edit_menu = edit_menu = add_menu(N_('&Edit'), self.menubar)
 
+        self.undo_action = qtutils.add_action_with_icon(
+            self,
+            icons.undo(),
+            N_('Undo'),
+            lambda: cmd.undo(self.context),
+        )
+        self.undo_action.setEnabled(False)
+
+        self.redo_action = qtutils.add_action_with_icon(
+            self,
+            icons.redo(),
+            N_('Redo'),
+            lambda: cmd.redo(self.context),
+        )
+        self.redo_action.setEnabled(False)
+
         self.edit_proxy = edit_proxy = FocusProxy(
             self.commiteditor, self.commiteditor.summary, self.commiteditor.description
         )
@@ -848,8 +865,12 @@ class MainView(standard.MainWindow):
             hotkeys.SELECT_ALL,
         )
 
-        edit_menu.addSeparator()
-        qtutils.add_menu_actions(edit_menu, self.commiteditor.menu_actions)
+        edit_menu_top_actions = [
+            self.undo_action,
+            self.redo_action,
+            None,
+        ] + self.commiteditor.menu_actions
+        qtutils.add_menu_actions(edit_menu, edit_menu_top_actions)
 
         # Actions menu
         self.actions_menu = add_menu(N_('Actions'), self.menubar)
@@ -1170,7 +1191,7 @@ class MainView(standard.MainWindow):
         menu.exec_(event.globalPos())
 
     def build_recent_menu(self):
-        cmd = cmds.OpenRepo
+        open_repo_cmd = cmds.OpenRepo
         context = self.context
         settings = context.settings
         settings.load()
@@ -1185,7 +1206,7 @@ class MainView(standard.MainWindow):
                 continue
             name = entry['name']
             text = f'{name} {chr(0x2192)} {directory}'
-            menu.addAction(text, cmds.run(cmd, context, directory))
+            menu.addAction(text, cmds.run(open_repo_cmd, context, directory))
 
     def _config_updated(self, _source, config, value):
         if config == prefs.FONTDIFF:
@@ -1273,6 +1294,22 @@ class MainView(standard.MainWindow):
 
         diff_mode = self.model.mode == self.model.mode_diff
         self.exit_diff_mode_action.setEnabled(diff_mode)
+
+        self.undo_action.setEnabled(self.context.command_bus.can_undo())
+        undo_name = self.context.command_bus.get_undo_command_name()
+        if undo_name:
+            undo_text = N_('Undo "{}"').format(undo_name)
+        else:
+            undo_text = N_('Undo')
+        self.undo_action.setText(undo_text)
+
+        self.redo_action.setEnabled(self.context.command_bus.can_redo())
+        redo_name = self.context.command_bus.get_redo_command_name()
+        if redo_name:
+            redo_text = N_('Redo "{}"').format(redo_name)
+        else:
+            redo_text = N_('Redo')
+        self.redo_action.setText(redo_text)
 
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists

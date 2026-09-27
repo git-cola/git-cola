@@ -644,11 +644,18 @@ class CommitMessageEditor(QtWidgets.QFrame):
     def _commit_finished(self, task):
         """Reset widget state on completion of the commit task"""
         title = N_('Commit failed')
-        status, out, err = task.result
-        Interaction.command(title, 'git commit', status, out, err)
+        result = task.result
+        if isinstance(result, tuple) and len(result) == 3:
+            status, out, err = result
+            ok = status == 0
+            Interaction.command(title, 'git commit', status, out, err)
+        elif isinstance(result, bool):
+            ok = result
+        else:
+            ok = False
         # Author and date settings are not cleared unless the commit operation succeeds.
         # These settings are consumed when a commit is produced with their values.
-        if status == 0:
+        if ok:
             self.bypass_commit_hooks_action.setChecked(False)
             self.set_commit_author(False, update=False)
             self.set_commit_date(False, update=True)
