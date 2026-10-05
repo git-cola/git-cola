@@ -1,4 +1,5 @@
 import sys
+from typing import TYPE_CHECKING
 from typing import Any
 
 from qtpy import QtCore
@@ -8,6 +9,10 @@ from qtpy.QtCore import Signal
 from .. import core
 from .. import hidpi
 from ..cmd import Command
+from ..i18n import N_
+
+if TYPE_CHECKING:
+    from ..app import ApplicationContext
 
 ABBREV = 'core.abbrev'
 ASPELL_ENABLED = 'cola.aspell.enabled'
@@ -534,24 +539,34 @@ class SetConfig(Command):
     UNDOABLE = True
 
     def __init__(
-        self, model: PreferencesModel, source: str, config: str, value: str
+        self,
+        context: ApplicationContext,
+        prefs_model: PreferencesModel,
+        source: str,
+        config: str,
+        value: str,
     ) -> None:
+        super().__init__(context)
         self.source = source
         self.config = config
         self.value = value
         self.old_value = None
-        self.model = model
+        self.prefs_model = prefs_model
+
+    @staticmethod
+    def name():
+        return N_('Set Git Config Value')
 
     def do(self) -> None:
         """Modify the model and store the updated configuration"""
         self.old_value = self.model.get_config(self.source, self.config)
-        self.model.set_config(self.source, self.config, self.value)
+        self.prefs_model.set_config(self.source, self.config, self.value)
 
     def undo(self) -> None:
         """Restore the configuration change to its original value"""
         if self.old_value is None:
             return
-        self.model.set_config(self.source, self.config, self.old_value)
+        self.prefs_model.set_config(self.source, self.config, self.old_value)
 
 
 class RemoveDictionary(Command):
@@ -560,8 +575,12 @@ class RemoveDictionary(Command):
     UNDOABLE = True
 
     def __init__(self, context, values: list[str]) -> None:
-        self.context = context
+        super().__init__(context)
         self.values = values
+
+    @staticmethod
+    def name():
+        return N_('Remove Spelling Dictionary')
 
     def do(self) -> None:
         """Remove spelling dictionary entries"""
@@ -589,8 +608,12 @@ class AddDictionary(Command):
     UNDOABLE = True
 
     def __init__(self, context, values: list[str]) -> None:
-        self.context = context
+        super().__init__(context)
         self.values = values
+
+    @staticmethod
+    def name():
+        return N_('Add Spelling Dictionary')
 
     def do(self) -> None:
         """Add spelling dictionary entries"""

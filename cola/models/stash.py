@@ -1,6 +1,6 @@
 import re
 
-from .. import cmds
+from .. import cmd
 from .. import core
 from .. import gitcmds
 from ..git import STDOUT
@@ -47,7 +47,7 @@ class StashModel:
         return diffstat + '\n\n' + diff
 
 
-class ApplyStash(cmds.ContextCommand):
+class ApplyStash(cmd.Command):
     UNDOABLE = False
 
     def __init__(self, context, stash_index: str, index: int, pop: bool) -> None:
@@ -79,7 +79,7 @@ class ApplyStash(cmds.ContextCommand):
         return ok
 
 
-class DropStash(cmds.ContextCommand):
+class DropStash(cmd.Command):
     UNDOABLE = False
 
     def __init__(self, context, stash_index: str) -> None:
@@ -103,7 +103,7 @@ class DropStash(cmds.ContextCommand):
         return False
 
 
-class SaveStash(cmds.ContextCommand):
+class SaveStash(cmd.Command):
     UNDOABLE = False
 
     def __init__(self, context, stash_name: str, keep_index: bool) -> None:
@@ -129,7 +129,7 @@ class SaveStash(cmds.ContextCommand):
         return ok
 
 
-class RenameStash(cmds.ContextCommand):
+class RenameStash(cmd.Command):
     """Rename the stash"""
 
     UNDOABLE = False
@@ -166,7 +166,7 @@ class RenameStash(cmds.ContextCommand):
         return True
 
 
-class StashIndex(cmds.ContextCommand):
+class StashIndex(cmd.Command):
     """Stash the index away"""
 
     UNDOABLE = False

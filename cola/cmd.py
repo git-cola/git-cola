@@ -12,9 +12,19 @@ if TYPE_CHECKING:
 
 
 class Command:
-    """Mixin interface for commands"""
+    """Base class for all commands"""
 
     UNDOABLE = False
+
+    def __init__(self, context: ApplicationContext) -> None:
+        self.timestamp = time.time()
+        self.context = context
+        self.model = context.model
+        self.cfg = context.cfg
+        self.git = context.git
+        self.selection = context.selection
+        self.fsmonitor = context.fsmonitor
+        self.old_timestamp = context.timestamp
 
     @classmethod
     def name(cls) -> str:
@@ -28,39 +38,6 @@ class Command:
         return cls.UNDOABLE
 
     def do(self) -> bool:
-        """Execute the command
-
-        Returns False to signal that an operation should be aborted.
-        """
-        return True
-
-    def undo(self) -> bool:
-        """Undo the command
-
-        Returns False to signal that an operation should be aborted.
-        """
-        return True
-
-    def refresh(self) -> None:
-        """Refresh a command so that it can be rerun"""
-        pass
-
-
-class ContextCommand(Command):
-    """Base class for commands that operate on a context"""
-
-    def __init__(self, context: ApplicationContext) -> None:
-        super().__init__()
-        self.timestamp = time.time()
-        self.context = context
-        self.model = context.model
-        self.cfg = context.cfg
-        self.git = context.git
-        self.selection = context.selection
-        self.fsmonitor = context.fsmonitor
-        self.old_timestamp = context.timestamp
-
-    def do(self) -> bool:
         """Update the context"""
         # Commands can get executed in the background, and completion of one command may
         # happen *after* another Diff and similar commands have been fired. We prevent
@@ -68,17 +45,14 @@ class ContextCommand(Command):
         # context's timestamp.
         if self.context.timestamp > self.timestamp:
             return False
-        super().do()
         self.context.timestamp = self.timestamp
         return True
 
     def undo(self) -> bool:
-        result = super().undo()
         self.context.timestamp = self.old_timestamp
-        return result
+        return True
 
     def refresh(self) -> None:
-        super().refresh()
         self.timestamp = time.time()
 
 

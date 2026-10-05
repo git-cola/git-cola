@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 
+from . import cmd
 from . import cmds
 from . import core
 from . import git
@@ -27,7 +28,7 @@ if TYPE_CHECKING:
     from .app import ApplicationContext
 
 
-class LaunchDifftool(cmds.ContextCommand):
+class LaunchDifftool(cmd.Command):
     """Launch "git difftool" with the currently selected files"""
 
     UNDOABLE = False
@@ -47,8 +48,8 @@ class LaunchDifftool(cmds.ContextCommand):
                 )
             else:
                 cfg = self.cfg
-                cmd = cfg.terminal()
-                argv = utils.shell_split(cmd)
+                terminal_cmd = cfg.terminal()
+                argv = utils.shell_split(terminal_cmd)
 
                 terminal = os.path.basename(argv[0])
                 shellquote_terms = {'xfce4-terminal'}
@@ -368,14 +369,17 @@ def difftool_launch(
     argv = ['git', 'difftool']
     argv.extend(git.transform_kwargs(**kwargs))
     argv.extend(args)
-    # "cmd" is for display purposes only and only displayed when an error occurs.
-    cmd = core.list2cmdline(argv)
-    context.notifier.git_cmd(cmd)
+    # "git_cmd" is for display purposes only and only displayed when an error occurs.
+    git_cmd = core.list2cmdline(argv)
+    context.notifier.git_cmd(git_cmd)
 
     runtask = context.runtask
     if runtask:
         Interaction.async_task(
-            N_('Difftool'), cmd, runtask, partial(context.git.difftool, *args, **kwargs)
+            N_('Difftool'),
+            git_cmd,
+            runtask,
+            partial(context.git.difftool, *args, **kwargs),
         )
     else:
         context.git.difftool(*args, **kwargs)

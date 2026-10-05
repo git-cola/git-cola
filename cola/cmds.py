@@ -22,7 +22,7 @@ from . import resources
 from . import textwrap
 from . import utils
 from . import version
-from .cmd import ContextCommand
+from .cmd import Command
 from .git import STDOUT
 from .git import transform_kwargs
 from .i18n import N_
@@ -51,7 +51,7 @@ class Messages:
     DIFF_LOADING = object()
 
 
-class EditModel(ContextCommand):
+class EditModel(Command):
     """Commands that mutate the main model diff data"""
 
     # This is a common base class so we mark it as not-undoable, but the undo()
@@ -106,7 +106,7 @@ class EditModel(ContextCommand):
         return True
 
 
-class ConfirmAction(ContextCommand):
+class ConfirmAction(Command):
     """Confirm an action before running it"""
 
     def __init__(self, context):
@@ -318,7 +318,7 @@ class AmendMode(EditModel):
         return True
 
 
-class AnnexAdd(ContextCommand):
+class AnnexAdd(Command):
     """Add to Git Annex"""
 
     UNDOABLE = False
@@ -334,7 +334,7 @@ class AnnexAdd(ContextCommand):
         return True
 
 
-class AnnexInit(ContextCommand):
+class AnnexInit(Command):
     """Initialize Git Annex"""
 
     UNDOABLE = False
@@ -347,7 +347,7 @@ class AnnexInit(ContextCommand):
         return True
 
 
-class LFSTrack(ContextCommand):
+class LFSTrack(Command):
     """Add a file to git lfs"""
 
     UNDOABLE = False
@@ -365,7 +365,7 @@ class LFSTrack(ContextCommand):
         return True
 
 
-class LFSInstall(ContextCommand):
+class LFSInstall(Command):
     """Initialize git lfs"""
 
     UNDOABLE = False
@@ -377,7 +377,7 @@ class LFSInstall(ContextCommand):
         return True
 
 
-class ApplyPatch(ContextCommand):
+class ApplyPatch(Command):
     """Apply the specified patch to the worktree or index"""
 
     UNDOABLE = False
@@ -414,7 +414,7 @@ class ApplyPatch(ContextCommand):
         return True
 
 
-class ApplyPatches(ContextCommand):
+class ApplyPatches(Command):
     """Apply patches using the "git am" command"""
 
     UNDOABLE = False
@@ -445,7 +445,7 @@ class ApplyPatches(ContextCommand):
         return True
 
 
-class ApplyPatchesContinue(ContextCommand):
+class ApplyPatchesContinue(Command):
     """Run "git am --continue" to continue on the next patch in a "git am" session"""
 
     UNDOABLE = False
@@ -463,7 +463,7 @@ class ApplyPatchesContinue(ContextCommand):
         return True
 
 
-class ApplyPatchesSkip(ContextCommand):
+class ApplyPatchesSkip(Command):
     """Run "git am --skip" to continue on the next patch in a "git am" session"""
 
     UNDOABLE = False
@@ -481,7 +481,7 @@ class ApplyPatchesSkip(ContextCommand):
         return True
 
 
-class Archive(ContextCommand):
+class Archive(Command):
     """ "Export archives using the "git archive" command"""
 
     UNDOABLE = False
@@ -624,7 +624,7 @@ class CheckoutOurs(ConfirmAction):
         return 'git checkout --ours'
 
 
-class BlamePaths(ContextCommand):
+class BlamePaths(Command):
     """Blame view for paths."""
 
     UNDOABLE = False
@@ -666,7 +666,7 @@ class CheckoutBranch(Checkout):
         super().__init__(context, args, checkout_branch=True)
 
 
-class CherryPick(ContextCommand):
+class CherryPick(Command):
     """Cherry pick commits into the current branch."""
 
     UNDOABLE = False
@@ -682,7 +682,7 @@ class CherryPick(ContextCommand):
         Interaction.command(title, 'git cherry-pick', status, out, err)
 
 
-class Revert(ContextCommand):
+class Revert(Command):
     """Revert a commit"""
 
     UNDOABLE = False
@@ -1043,7 +1043,7 @@ class Commit(ResetMode):
         return msg
 
 
-class CycleReferenceSort(ContextCommand):
+class CycleReferenceSort(Command):
     """Choose the next reference sort type"""
 
     UNDOABLE = False
@@ -1053,7 +1053,7 @@ class CycleReferenceSort(ContextCommand):
         return True
 
 
-class Ignore(ContextCommand):
+class Ignore(Command):
     """Add files to an exclusion file"""
 
     UNDOABLE = False
@@ -1190,7 +1190,7 @@ class RemoteSetURL(RemoteCommand):
         return f'git remote set-url "{self.remote}" "{self.url}"'
 
 
-class Sync(ContextCommand):
+class Sync(Command):
     """Sync upstream changes into the current branch"""
 
     UNDOABLE = False
@@ -1237,7 +1237,7 @@ class Sync(ContextCommand):
         return True
 
 
-class SyncOut(ContextCommand):
+class SyncOut(Command):
     """Push local changes to the tracking branch"""
 
     UNDOABLE = False
@@ -1282,7 +1282,7 @@ class SyncOut(ContextCommand):
         return status == 0
 
 
-class RemoteEdit(ContextCommand):
+class RemoteEdit(Command):
     """Combine RemoteRename and RemoteSetURL"""
 
     UNDOABLE = False
@@ -1350,7 +1350,7 @@ class RemoveRecent(RemoveFromSettings):
         return (0, '', '')
 
 
-class RemoveFiles(ContextCommand):
+class RemoveFiles(Command):
     """Removes files"""
 
     UNDOABLE = False
@@ -1457,7 +1457,7 @@ class DeleteBranch(ConfirmAction):
         return command % self.branch
 
 
-class Rename(ContextCommand):
+class Rename(Command):
     """Rename a set of paths."""
 
     UNDOABLE = False
@@ -1494,7 +1494,7 @@ class Rename(ContextCommand):
         return status == 0
 
 
-class RenameBranch(ContextCommand):
+class RenameBranch(Command):
     """Rename a git branch."""
 
     UNDOABLE = False
@@ -1564,7 +1564,7 @@ def get_mode(
     return mode
 
 
-class DiffAgainstCommitMode(ContextCommand):
+class DiffAgainstCommitMode(Command):
     """Diff against arbitrary commits"""
 
     UNDOABLE = False
@@ -1579,7 +1579,7 @@ class DiffAgainstCommitMode(ContextCommand):
         return True
 
 
-class DiffText(ContextCommand):
+class DiffText(Command):
     """Set the diff type to text"""
 
     UNDOABLE = False
@@ -1608,7 +1608,7 @@ class DiffText(ContextCommand):
         return True
 
 
-class ToggleDiffType(ContextCommand):
+class ToggleDiffType(Command):
     """Toggle the diff type between image and text"""
 
     UNDOABLE = False
@@ -1835,7 +1835,7 @@ class DiffImage(EditModel):
         return images
 
 
-class DiffLoading(ContextCommand):
+class DiffLoading(Command):
     """Notify the diff viewer the a diff is loading"""
 
     UNDOABLE = False
@@ -1928,7 +1928,7 @@ class DiffStagedSummary(EditModel):
         self.new_mode = self.model.mode_index
 
 
-class Edit(ContextCommand):
+class Edit(Command):
     """Edit a file using the configured gui.editor."""
 
     UNDOABLE = False
@@ -2004,7 +2004,7 @@ class Edit(ContextCommand):
         return True
 
 
-class FormatPatch(ContextCommand):
+class FormatPatch(Command):
     """Output a patch series given all revisions and a selected subset."""
 
     UNDOABLE = False
@@ -2026,7 +2026,7 @@ class FormatPatch(ContextCommand):
         return True
 
 
-class LaunchTerminal(ContextCommand):
+class LaunchTerminal(Command):
     UNDOABLE = False
 
     @staticmethod
@@ -2092,7 +2092,7 @@ class LaunchEditorAtLine(LaunchEditor):
             self.selected_filename = context.model.filename
 
 
-class LoadCommitMessageFromFile(ContextCommand):
+class LoadCommitMessageFromFile(Command):
     """Loads a commit message from a path."""
 
     UNDOABLE = True
@@ -2150,7 +2150,7 @@ class LoadCommitMessageFromTemplate(LoadCommitMessageFromFile):
         return LoadCommitMessageFromFile.do(self)
 
 
-class LoadCommitMessageFromOID(ContextCommand):
+class LoadCommitMessageFromOID(Command):
     """Load a previous commit message"""
 
     UNDOABLE = True
@@ -2174,7 +2174,7 @@ class LoadCommitMessageFromOID(ContextCommand):
         return True
 
 
-class PrepareCommitMessageHook(ContextCommand):
+class PrepareCommitMessageHook(Command):
     """Use the cola-prepare-commit-msg hook to prepare the commit message"""
 
     UNDOABLE = True
@@ -2256,7 +2256,7 @@ class LoadFixupMessage(LoadCommitMessageFromOID):
             self.new_commitmsg = self.new_commitmsg.splitlines()[0]
 
 
-class Merge(ContextCommand):
+class Merge(Command):
     """Merge commits"""
 
     UNDOABLE = False
@@ -2324,7 +2324,7 @@ class MergeBranch(Merge):
         super().__init__(context, branch, no_commit, squash, no_ff, sign)
 
 
-class OpenDefaultApp(ContextCommand):
+class OpenDefaultApp(Command):
     """Open a file using the OS default."""
 
     UNDOABLE = False
@@ -2397,7 +2397,7 @@ class OpenWorktree(OpenDir):
         super().__init__(context, dirnames)
 
 
-class OpenNewRepo(ContextCommand):
+class OpenNewRepo(Command):
     """Launches git-cola on a repo."""
 
     UNDOABLE = False
@@ -2471,7 +2471,7 @@ class OpenParentRepo(OpenRepo):
         super().__init__(context, path)
 
 
-class Clone(ContextCommand):
+class Clone(Command):
     """Clones a repository and optionally spawns a new cola session."""
 
     UNDOABLE = False
@@ -2534,7 +2534,7 @@ class Clone(ContextCommand):
         return status == 0
 
 
-class NewBareRepo(ContextCommand):
+class NewBareRepo(Command):
     """Create a new shared bare repository"""
 
     UNDOABLE = False
@@ -2555,7 +2555,7 @@ class NewBareRepo(ContextCommand):
         return status == 0
 
 
-class NoOp(ContextCommand):
+class NoOp(Command):
     """A command that does nothing"""
 
     UNDOABLE = False
@@ -2615,7 +2615,7 @@ class SequenceEditorEnvironment:
             core.unsetenv(self.context.ops, var)
 
 
-class Rebase(ContextCommand):
+class Rebase(Command):
     UNDOABLE = False
 
     def __init__(
@@ -2747,7 +2747,7 @@ class Rebase(ContextCommand):
         return True
 
 
-class RebaseEditTodo(ContextCommand):
+class RebaseEditTodo(Command):
     UNDOABLE = False
 
     def do(self) -> bool:
@@ -2766,7 +2766,7 @@ class RebaseEditTodo(ContextCommand):
         return True
 
 
-class RebaseContinue(ContextCommand):
+class RebaseContinue(Command):
     UNDOABLE = False
 
     def do(self) -> bool:
@@ -2785,7 +2785,7 @@ class RebaseContinue(ContextCommand):
         return True
 
 
-class RebaseSkip(ContextCommand):
+class RebaseSkip(Command):
     UNDOABLE = False
 
     def do(self) -> bool:
@@ -2804,7 +2804,7 @@ class RebaseSkip(ContextCommand):
         return True
 
 
-class RebaseAbort(ContextCommand):
+class RebaseAbort(Command):
     UNDOABLE = False
 
     def do(self) -> bool:
@@ -2816,7 +2816,7 @@ class RebaseAbort(ContextCommand):
         return True
 
 
-class Rescan(ContextCommand):
+class Rescan(Command):
     """Rescan for changes"""
 
     UNDOABLE = False
@@ -2826,7 +2826,7 @@ class Rescan(ContextCommand):
         return True
 
 
-class Refresh(ContextCommand):
+class Refresh(Command):
     """Update refs, refresh the index, and update config"""
 
     UNDOABLE = False
@@ -2843,7 +2843,7 @@ class Refresh(ContextCommand):
         return True
 
 
-class RefreshConfig(ContextCommand):
+class RefreshConfig(Command):
     """Refresh the git config cache"""
 
     UNDOABLE = False
@@ -2972,7 +2972,7 @@ class RevertUncommittedEdits(RevertEditsCommand):
         )
 
 
-class RunConfigAction(ContextCommand):
+class RunConfigAction(Command):
     """Run a user-configured action, typically from the "Tools" menu"""
 
     UNDOABLE = False
@@ -3057,7 +3057,7 @@ class RunConfigAction(ContextCommand):
         return status == 0
 
 
-class SetDefaultRepo(ContextCommand):
+class SetDefaultRepo(Command):
     """Set the default repository"""
 
     UNDOABLE = False
@@ -3083,7 +3083,7 @@ class SetDiffText(EditModel):
         self.new_file_type = main.Types.TEXT
 
 
-class SetUpstreamBranch(ContextCommand):
+class SetUpstreamBranch(Command):
     """Set the upstream branch"""
 
     UNDOABLE = False
@@ -3171,7 +3171,7 @@ class ShowUntracked(EditModel):
         return text_result
 
 
-class SignOff(ContextCommand):
+class SignOff(Command):
     """Append a sign-off to the commit message"""
 
     UNDOABLE = True
@@ -3254,7 +3254,7 @@ def should_stage_conflicts(path) -> bool:
     )
 
 
-class Stage(ContextCommand):
+class Stage(Command):
     """Stage a set of paths."""
 
     UNDOABLE = True
@@ -3440,7 +3440,7 @@ class StageModifiedAndUntracked(StageCarefully):
         self.paths = self.model.modified + self.model.untracked
 
 
-class StageOrUnstageAll(ContextCommand):
+class StageOrUnstageAll(Command):
     """If the selection is staged, unstage it, otherwise stage"""
 
     UNDOABLE = False
@@ -3461,7 +3461,7 @@ class StageOrUnstageAll(ContextCommand):
         return True
 
 
-class StageOrUnstage(ContextCommand):
+class StageOrUnstage(Command):
     """If the selection is staged, unstage it, otherwise stage"""
 
     UNDOABLE = False
@@ -3488,7 +3488,7 @@ class StageOrUnstage(ContextCommand):
         return True
 
 
-class Tag(ContextCommand):
+class Tag(Command):
     """Create a tag object."""
 
     UNDOABLE = False
@@ -3579,7 +3579,7 @@ class Tag(ContextCommand):
         return result
 
 
-class Unstage(ContextCommand):
+class Unstage(Command):
     """Unstage a set of paths."""
 
     UNDOABLE = False
@@ -3633,7 +3633,7 @@ class Unstage(ContextCommand):
         self.model.update_file_status()
 
 
-class UnstageAll(ContextCommand):
+class UnstageAll(Command):
     """Unstage all files; resets the index."""
 
     UNDOABLE = False
@@ -3655,7 +3655,7 @@ def unstage_all(context: ApplicationContext) -> tuple[int, core.UStr, core.UStr]
     return (status, out, err)
 
 
-class StageSelected(ContextCommand):
+class StageSelected(Command):
     """Stage selected files, or all files if no selection exists."""
 
     UNDOABLE = False
@@ -3680,7 +3680,7 @@ class UnstageSelected(Unstage):
         super().__init__(context, staged)
 
 
-class Untrack(ContextCommand):
+class Untrack(Command):
     """Unstage a set of paths."""
 
     UNDOABLE = False
@@ -3734,7 +3734,7 @@ class UntrackedSummary(EditModel):
         self.new_mode = self.model.mode_display
 
 
-class VisualizeAll(ContextCommand):
+class VisualizeAll(Command):
     """Visualize all branches."""
 
     UNDOABLE = False
@@ -3746,7 +3746,7 @@ class VisualizeAll(ContextCommand):
         return True
 
 
-class VisualizeCurrent(ContextCommand):
+class VisualizeCurrent(Command):
     """Visualize all branches."""
 
     UNDOABLE = False
@@ -3758,7 +3758,7 @@ class VisualizeCurrent(ContextCommand):
         return True
 
 
-class VisualizePaths(ContextCommand):
+class VisualizePaths(Command):
     """Path-limited visualization."""
 
     UNDOABLE = False
@@ -3777,7 +3777,7 @@ class VisualizePaths(ContextCommand):
         return True
 
 
-class VisualizeRevision(ContextCommand):
+class VisualizeRevision(Command):
     """Visualize a specific revision."""
 
     UNDOABLE = False
@@ -3970,20 +3970,18 @@ def run(cls: Any, *args, **opts) -> Callable:
 
 def do(cls: Any, *args, **opts) -> Any:
     """Run a command in-place"""
+    result = True
     try:
-        result = True
         cmd = cls(*args, **opts)
-        if hasattr(cmd, 'context'):
-            cmd.context.command_bus.do(cmd, queued=False)
-        else:
-            result = cmd.do()
-        if hasattr(cmd, 'result'):
-            result = cmd.result
-        return result
-    except Exception as e:
-        msg, details = utils.format_exception(e)
+        cmd.context.command_bus.do(cmd, queued=False)
+    except Exception as exc:
+        msg, details = utils.format_exception(exc)
         if hasattr(cls, '__name__'):
             msg = f'{cls.__name__} exception:\n{msg}'
         Interaction.critical(N_('Error'), message=msg, details=details)
+        return False
 
-    return False
+    if hasattr(cmd, 'result'):
+        result = cmd.result
+
+    return result

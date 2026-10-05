@@ -25,7 +25,7 @@ def cmd_action(
     icon: QIcon,
     *shortcuts,
 ) -> QAction:
-    """Wrap a generic ContextCommand in a QAction"""
+    """Wrap a generic Command in a QAction"""
     action = qtutils.add_action(widget, cmd.name(), cmds.run(cmd, context), *shortcuts)
     action.setIcon(icon)
     return action

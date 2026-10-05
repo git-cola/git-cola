@@ -7,6 +7,7 @@ from qtpy import QtWidgets
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
 
+from .. import cmd
 from .. import cmds
 from .. import difftool
 from .. import gitcmds
@@ -561,7 +562,7 @@ class BrowseModel:
         self.filename = filename
 
 
-class SaveBlob(cmds.ContextCommand):
+class SaveBlob(cmd.Command):
     UNDOABLE = False
 
     def __init__(self, context, model):

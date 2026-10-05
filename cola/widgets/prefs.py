@@ -73,27 +73,35 @@ class FormWidget(QtWidgets.QWidget):
 
     def _int_config_changed(self, config):
         def runner(value):
-            cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+            cmds.do(
+                prefs.SetConfig, self.context, self.model, self.source, config, value
+            )
 
         return runner
 
     def _bool_config_changed(self, config):
         def runner(value):
-            cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+            cmds.do(
+                prefs.SetConfig, self.context, self.model, self.source, config, value
+            )
 
         return runner
 
     def _text_config_changed(self, config, widget):
         def runner():
             value = widget.text()
-            cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+            cmds.do(
+                prefs.SetConfig, self.context, self.model, self.source, config, value
+            )
 
         return runner
 
     def _item_config_changed(self, config, widget):
         def runner():
             value = widget.value()
-            cmds.do(prefs.SetConfig, self.model, self.source, config, value)
+            cmds.do(
+                prefs.SetConfig, self.context, self.model, self.source, config, value
+            )
 
         return runner
 
@@ -602,14 +610,30 @@ class AppearanceFormWidget(FormWidget):
         # the merged config, so it is intentionally kept global-only here.
         font = self.fixed_font.currentFont()
         font.setPointSize(size)
-        cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())
+        cmds.do(
+            prefs.SetConfig,
+            self.context,
+            self.model,
+            'global',
+            prefs.FONTDIFF,
+            font.toString(),
+        )
 
     def font_size_changed(self, size):
         """The UI font size was changed"""
-        cmds.do(prefs.SetConfig, self.model, self.source, prefs.FONTSIZE, size)
+        cmds.do(
+            prefs.SetConfig, self.context, self.model, self.source, prefs.FONTSIZE, size
+        )
 
     def current_font_changed(self, font):
-        cmds.do(prefs.SetConfig, self.model, 'global', prefs.FONTDIFF, font.toString())
+        cmds.do(
+            prefs.SetConfig,
+            self.context,
+            self.model,
+            'global',
+            prefs.FONTDIFF,
+            font.toString(),
+        )
 
 
 class AppearanceWidget(QtWidgets.QWidget):
