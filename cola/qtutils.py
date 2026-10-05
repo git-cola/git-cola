@@ -1458,11 +1458,14 @@ def rgba_qcolor(value: ColorLike) -> QtGui.QColor:
         return QtGui.QColor(value)
     if isinstance(value, str):
         return QtGui.QColor(value)
-    if len(value) == 3:
-        red, green, blue = value
-        return QtGui.QColor(int(red), int(green), int(blue))
-    red, green, blue, alpha = value
-    return QtGui.QColor(int(red), int(green), int(blue), int(alpha))
+    if isinstance(value, (list, tuple)):
+        if len(value) == 3:
+            red, green, blue = value[0], value[1], value[2]
+            return QtGui.QColor(int(red), int(green), int(blue))
+        if len(value) == 4:
+            red, green, blue, alpha = value[0], value[1], value[2], value[3]
+            return QtGui.QColor(int(red), int(green), int(blue), int(alpha))
+    return rgb(255, 0, 0)
 
 
 def rgb_css(color: QtGui.QColor) -> str:
