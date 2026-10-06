@@ -1,5 +1,4 @@
 import sys
-from typing import TYPE_CHECKING
 from typing import Any
 
 from qtpy import QtCore
@@ -10,9 +9,6 @@ from .. import core
 from .. import hidpi
 from ..cmd import Command
 from ..i18n import N_
-
-if TYPE_CHECKING:
-    from ..app import ApplicationContext
 
 ABBREV = 'core.abbrev'
 ASPELL_ENABLED = 'cola.aspell.enabled'
@@ -540,7 +536,7 @@ class SetConfig(Command):
 
     def __init__(
         self,
-        context: ApplicationContext,
+        context,
         prefs_model: PreferencesModel,
         source: str,
         config: str,
