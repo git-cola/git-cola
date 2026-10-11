@@ -149,6 +149,7 @@ Thanks
 * jfessard
 * JiCiT
 * Jimmy M. Coleman
+* JimmyO-GH
 * Joachim Jablon
 * Joachim Lusiardi
 * Joel Barrios
