@@ -302,3 +302,43 @@ def test_open_repo_preserves_edited_commit_message(app_context):
 
     cmds.OpenRepo(app_context, main_repo).do()
     assert model.commitmsg == 'typed by hand\n'
+
+
+def test_open_repo_reports_safe_directory_errors(app_context, monkeypatch):
+    """Repositories rejected by safe.directory are reported, not ignored"""
+    app_context.timestamp = time.time()
+    helper.commit_files()
+    main_repo = os.getcwd()
+    worktree = os.path.join(main_repo, 'wt')
+    helper.run_git('worktree', 'add', '--quiet', worktree, '-b', 'feature')
+    # Git's test suite uses this variable to simulate a repository that is owned
+    # by another user.
+    monkeypatch.setenv('GIT_TEST_ASSUME_DIFFERENT_OWNER', '1')
+
+    with patch('cola.cmds.Interaction') as interaction:
+        cmds.OpenRepo(app_context, worktree).do()
+
+    interaction.critical.assert_called_once()
+    details = interaction.critical.call_args.kwargs['details']
+    assert 'dubious ownership' in details
+    # We stay in the original repository.
+    assert os.path.samefile(app_context.git.worktree(), main_repo)
+
+
+def test_open_repo_reports_missing_repositories(app_context, tmp_path):
+    """Paths that are not Git repositories are reported, not ignored"""
+    app_context.timestamp = time.time()
+    helper.commit_files()
+    main_repo = os.getcwd()
+    model = app_context.model
+    # Stale errors from previous attempts must not be reported.
+    model.error = 'stale error'
+
+    with patch('cola.cmds.Interaction') as interaction:
+        cmds.OpenRepo(app_context, str(tmp_path)).do()
+
+    interaction.critical.assert_called_once()
+    details = interaction.critical.call_args.kwargs['details']
+    assert details != 'stale error'
+    assert str(tmp_path) in details
+    assert os.path.samefile(app_context.git.worktree(), main_repo)

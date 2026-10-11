@@ -2453,7 +2453,14 @@ class OpenRepo(EditModel):
             settings.save()
             super().do()
         else:
+            # Restoring the previous worktree clears the model's error.
+            error = self.model.error
             self.model.set_worktree(old_repo)
+            Interaction.critical(
+                N_('Error Opening Repository'),
+                message=N_('Could not open %s.') % self.repo_path,
+                details=error,
+            )
         return True
 
 
