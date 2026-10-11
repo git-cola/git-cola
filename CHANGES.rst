@@ -105,6 +105,10 @@ Fixes
   other distros. Only ``site-packages`` was being considered.
   (`#1652 <https://github.com/git-cola/git-cola/pull/1652>`_)
 
+* The inotify filesystem monitor could sometimes cause a crash when ignored
+  paths are removed in the background.
+  (`#1655 <https://github.com/git-cola/git-cola/issues/1655>`_)
+
 Translations
 ------------
 * Updated French translation.

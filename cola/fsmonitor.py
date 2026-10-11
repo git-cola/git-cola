@@ -146,7 +146,7 @@ class _BaseThread(QtCore.QThread):
                 # except for <pathname>.  So to see if we have any non-ignored
                 # files, we simply check every fourth field to see if any of
                 # them are empty.
-                source_fields = out.split(b'\0')[0:-1:4]  # type: ignore[arg-type]
+                source_fields = out.split('\0')[0:-1:4]  # type: ignore[arg-type]
                 do_notify = not all(source_fields)
         self._force_notify = False
         self._force_config = False
