@@ -88,6 +88,10 @@ Usability, bells and whistles
   environment with the absolute path to the ``git-dag`` command.
   This is Git DAG's equivalent to the ``GIT_COLA`` variable.
 
+* Errors are now reported when a repository cannot be opened due to ``safe.directory``.
+  (`#1654 <https://github.com/git-cola/git-cola/pull/1654>`_)
+  (`#1646 <https://github.com/git-cola/git-cola/issues/1646>`_)
+
 Fixes
 -----
 * Corrected an incorrect import in the Apply Patches feature.
