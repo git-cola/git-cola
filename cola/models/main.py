@@ -136,7 +136,7 @@ class MainModel(QtCore.QObject):
         self.submodules: set[str] = set()
         self.submodules_list: list[Any] | None = None  # lazy loaded
 
-        self.error = None  # The last error message.
+        self.error: str | None = None  # The last error message.
         self.ref_sort = 0  # (0: version, 1:reverse-chrono)
         self.local_branches = []
         self.remote_branches = []
@@ -205,6 +205,8 @@ class MainModel(QtCore.QObject):
                 self.worktree_changed.emit()
             else:
                 self.error = err
+        else:
+            self.error = N_('invalid worktree: %s') % worktree
 
         return is_valid
 
