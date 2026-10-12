@@ -139,6 +139,48 @@ class CommandGraph:
             return self.cursor.cmd
         return None
 
+    def discard(self, cmd):
+        """Remove cmd's node from the graph
+
+        Commands that complete without changing anything, e.g. a canceled
+        or failed command, must not linger in the undo history, so their
+        nodes are removed from the graph.
+
+        """
+        node = self._find_node(self.root, cmd)
+        if node is None:
+            return
+
+        parent = node.parent
+        children = node.children
+
+        if parent is not None:
+            # Splice the node's children into the parent in place of the node.
+            index = parent.children.index(node)
+            parent.children[index : index + 1] = children
+            for child in children:
+                child.parent = parent
+        else:
+            # The node is the root, so promote its newest child.
+            self.root = children[0] if children else None
+            if self.root is not None:
+                self.root.parent = None
+                self.root.children.extend(children[1:])
+
+        if self.cursor is node:
+            self.cursor = parent
+
+    def _find_node(self, node, cmd):
+        while node is not None:
+            if node.cmd is cmd:
+                return node
+            for child in node.children:
+                found = self._find_node(child, cmd)
+                if found is not None:
+                    return found
+            return None
+        return None
+
 
 class CommandBus(QtCore.QObject):
     do_command = Signal(object)
