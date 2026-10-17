@@ -171,14 +171,15 @@ class CommandGraph:
             self.cursor = parent
 
     def _find_node(self, node, cmd):
-        while node is not None:
+        stack = [node]
+        while stack:
+            node = stack.pop()
+            if node is None:
+                continue
             if node.cmd is cmd:
                 return node
-            for child in node.children:
-                found = self._find_node(child, cmd)
-                if found is not None:
-                    return found
-            return None
+            # Push in reverse so that the children are visited in order.
+            stack.extend(reversed(node.children))
         return None
 
 

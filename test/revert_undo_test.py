@@ -6,14 +6,13 @@ from unittest.mock import patch
 
 import pytest
 
-from qtpy import QtWidgets
-
 from cola import cmd
 from cola import cmds
 from cola import core
 from cola import diffparse
 from cola import gitcmds
 from cola.models import selection
+from qtpy import QtWidgets
 
 from . import helper
 from .helper import app_context
@@ -313,12 +312,105 @@ def test_undo_without_completed_revert_is_a_noop(context):
 
 def test_capture_worktree_blobs_missing_file(context):
     """Missing files are recorded with a None blob id"""
-    blobs = cmds.capture_worktree_blobs(context, ['does-not-exist'])
+    blobs = gitcmds.capture_worktree_blobs(context, ['does-not-exist'])
     assert blobs == [('does-not-exist', None)]
 
-    blobs = cmds.capture_worktree_blobs(context, ['A'])
+    blobs = gitcmds.capture_worktree_blobs(context, ['A'])
     assert len(blobs) == 1
     path, oid = blobs[0]
     assert path == 'A'
     assert oid
     assert core.decode(oid) == helper.run_git('hash-object', 'A').strip()
+
+
+def test_command_graph_discard_deep_history():
+    """Discarding from a very deep history does not hit the recursion limit"""
+    graph = cmd.CommandGraph()
+    commands = []
+    for _ in range(3000):
+        cmd_instance = Mock()
+        cmd_instance.is_undoable.return_value = True
+        commands.append(cmd_instance)
+        graph.add(cmd_instance)
+
+    middle = commands[1500]
+    graph.discard(middle)
+
+    # The commands before and after the discarded command remain undoable.
+    assert graph.get_current_command() is commands[-1]
+    count = 0
+    while graph.step_backward():
+        count += 1
+    # One command was discarded, so all of the others are visited.
+    assert count == len(commands) - 1
+
+
+def test_read_index_entries(context):
+    """Index entries are reported as (mode, oid, path) tuples"""
+    entries = gitcmds.read_index_entries(context, ['A'])
+    assert len(entries) == 1
+    mode, oid, path = entries[0]
+    assert mode == '100644'
+    assert oid == helper.run_git('hash-object', 'A').strip()
+    assert path == 'A'
+
+
+def test_read_index_entries_skips_conflict_stages(context):
+    """Merge conflict stages cannot be restored, so they are not reported"""
+    oid = helper.run_git('hash-object', '-w', 'A').strip()
+    # Simulate a conflicted merge: the stage-0 entry is replaced by the
+    # merge stages 1, 2, and 3.
+    helper.run_git('rm', '--cached', 'A')
+    index_info = f'100644 {oid} 1\tA\n' f'100644 {oid} 2\tA\n' f'100644 {oid} 3\tA\n'
+    status, _, _ = core.run_command(
+        ['git', 'update-index', '--index-info'], input=index_info.encode()
+    )
+    assert status == 0
+
+    entries = gitcmds.read_index_entries(context, ['A'])
+    assert entries == []
+
+
+def test_revert_unstaged_binary_file_undo_and_redo(context):
+    """Binary files are reverted and restored byte-for-byte"""
+    model = enable_revert_mode(context)
+    binary_content = b'\x00\x01\x02\xff\xfe\x80binary\ncontent'
+    with open('B', 'wb') as f:
+        f.write(binary_content)
+    model.update_file_status()
+    context.selection.modified = ['B']
+
+    with patch('cola.interaction.Interaction.confirm', return_value=True):
+        assert cmds.do(cmds.RevertUnstagedEdits, context)
+    assert read_file('B') == b'bee\n'
+
+    bus = context.command_bus
+    assert bus_undo(bus)
+    assert read_file('B') == binary_content
+
+    assert bus_redo(bus)
+    assert read_file('B') == b'bee\n'
+
+
+def test_revert_unstaged_edits_in_unborn_repo(app_context):
+    """Reverting unstaged edits works before the initial commit"""
+    context = app_context
+    context.command_bus = cmd.CommandBus()
+    context.selection = selection.create()
+    # The test repository has no commits yet, so the index holds the
+    # original empty 'A' file and the worktree holds an edit.
+    helper.write_file('A', 'one\nCHANGED\n')
+    model = enable_revert_mode(context)
+    model.update_file_status()
+    context.selection.modified = ['A']
+
+    with patch('cola.interaction.Interaction.confirm', return_value=True):
+        assert cmds.do(cmds.RevertUnstagedEdits, context)
+    assert read_file('A') == b''
+
+    bus = context.command_bus
+    assert bus_undo(bus)
+    assert read_file('A') == b'one\nCHANGED\n'
+
+    assert bus_redo(bus)
+    assert read_file('A') == b''

@@ -400,296 +400,181 @@ class RevertSnapshot:
         self.index_entries: list[tuple[str, str, str]] = index_entries or []
 
 
-def capture_worktree_blobs(
-    context: ApplicationContext, paths: list[str]
-) -> list[tuple[str, str | None]]:
-    """Store the worktree contents of paths as git blobs
-
-    Returns a list of (path, oid) pairs.  The oid is None for paths that do
-    not exist in the worktree.
-
-    """
-    blobs: list[tuple[str, str | None]] = []
-    for path in paths:
-        oid: str | None = None
-        if context.ops.isfile(path):
-            status, out, err = context.git.hash_object('-w', path, _readonly=True)
-            if status == 0:
-                oid = out.strip()
-            else:
-                Interaction.command(N_('Error'), 'git hash-object', status, out, err)
-        blobs.append((path, oid))
-    return blobs
+def patch_file_encoding(patch_text: str) -> str | None:
+    """Return the encoding for a patch captured by cola"""
+    return getattr(patch_text, 'encoding', None)
 
 
-def read_index_entries(
-    context: ApplicationContext, paths: list[str]
-) -> list[tuple[str, str, str]]:
-    """Return the (mode, oid, path) index entries for paths"""
-    status, out, err = context.git.ls_files('-s', '--', *paths, _readonly=True)
-    if status != 0:
-        Interaction.command(N_('Error'), 'git ls-files', status, out, err)
-        return []
-    entries: list[tuple[str, str, str]] = []
-    for line in out.splitlines():
-        meta, _, path = line.partition('\t')
-        fields = meta.split()
-        if len(fields) != 3:
-            continue
-        mode, oid, stage = fields
-        if stage != '0':
-            # Merge conflict stages cannot be restored this way.
-            continue
-        if set(oid) == {'0'}:
-            # Intent-to-add entries have no object stored yet.
-            continue
-        entries.append((mode, oid, path))
-    return entries
-
-
-def diff_worktree_patch(
-    context: ApplicationContext, head: str | None, paths: list[str]
+def write_patch_file(
+    context: ApplicationContext, patch_text: str, encoding: str | None
 ) -> str:
-    """Return a patch for the worktree changes of paths
+    """Write a patch to a temporary file and return its path"""
+    tmp_file = context.ops.tmp_filename('undo-revert', suffix='.patch')
+    context.ops.write_file(tmp_file, patch_text, encoding=encoding)
+    return tmp_file
 
-    The patch is relative to `head` when given, and relative to the index
-    otherwise.
+
+def check_patch(
+    context: ApplicationContext,
+    patch_text: str,
+    cached: bool = False,
+    reverse: bool = False,
+) -> bool:
+    """Return True when the patch applies cleanly"""
+    encoding = patch_file_encoding(patch_text)
+    tmp_file = write_patch_file(context, patch_text, encoding)
+    try:
+        kwargs: dict[str, Any] = {'check': True}
+        if cached:
+            kwargs['cached'] = True
+        if reverse:
+            kwargs['reverse'] = True
+        status, out, err = context.git.apply(tmp_file, **kwargs)
+    finally:
+        context.ops.unlink(tmp_file)
+    return status == 0
+
+
+def apply_patch_file(
+    context: ApplicationContext,
+    patch_text: str,
+    cached: bool = False,
+    index: bool = False,
+    reverse: bool = False,
+    encoding: str | None = None,
+) -> tuple[int, Any, Any]:
+    """Apply a patch to the worktree and/or index"""
+    if encoding is None:
+        encoding = patch_file_encoding(patch_text)
+    tmp_file = write_patch_file(context, patch_text, encoding)
+    try:
+        kwargs: dict[str, Any] = {'recount': True}
+        if cached:
+            kwargs['cached'] = True
+        if index:
+            kwargs['index'] = True
+        if reverse:
+            kwargs['reverse'] = True
+        status, out, err = context.git.apply(tmp_file, **kwargs)
+    finally:
+        context.ops.unlink(tmp_file)
+    return status, out, err
+
+
+def discard_from_graph(context: ApplicationContext, cmd: Command) -> None:
+    """Remove cmd from the undo history
+
+    Commands that complete without changing anything, e.g. a canceled
+    revert, must not appear in the undo history.
 
     """
-    args: list[str] = []
-    if head:
-        args.append(head)
-    args.append('--')
-    args.extend(paths)
-    status, out, err = context.git.diff(*args, binary=True, _raw=True, _readonly=True)
-    if status != 0:
-        Interaction.command(N_('Error'), 'git diff', status, out, err)
-        return ''
-    return out
+    bus = context.command_bus
+    if bus is not None:
+        bus.cmd_graph.discard(cmd)
 
 
-def diff_index_patch(context: ApplicationContext, paths: list[str]) -> str:
-    """Return a patch for the index changes of paths, relative to HEAD"""
-    status, out, err = context.git.diff(
-        '--', *paths, cached=True, binary=True, _raw=True, _readonly=True
+def revert_fallback_choice() -> str:
+    """Ask how to proceed when a snapshot patch fails to apply
+
+    Returns one of 'restore', 'retry', or 'skip'.
+
+    """
+    restore = Interaction.confirm(
+        N_('Undo Revert'),
+        N_('The saved patch does not apply cleanly.'),
+        N_(
+            'The files were probably edited by another process after the revert.\n'
+            'The snapshot saved before the revert can be restored instead, '
+            'which overwrites the current contents of the files.'
+        ),
+        N_('Restore Snapshot'),
+        default=False,
+        icon=icons.undo(),
     )
-    if status != 0:
-        Interaction.command(N_('Error'), 'git diff', status, out, err)
-        return ''
-    return out
+    if restore:
+        return 'restore'
+    retry = Interaction.confirm(
+        N_('Undo Revert'),
+        N_('Try applying the saved patch again?'),
+        N_('The snapshot is kept so that the revert can be undone later.'),
+        N_('Try Again'),
+        default=True,
+        icon=icons.undo(),
+    )
+    if retry:
+        return 'retry'
+    return 'skip'
 
 
-class RevertUndoMixin:
-    """Shared helpers for undoing revert-style commands
+def undo_worktree_patch(
+    context: ApplicationContext,
+    patch_text: str,
+    worktree_blobs: list[tuple[str, str | None]],
+    reverse: bool = False,
+    encoding: str | None = None,
+) -> bool:
+    """Undo a worktree edit using the saved patch, with a blob fallback
 
-    These commands save a RevertSnapshot before performing their destructive
-    edit.  Undo applies the snapshot's patches, which preserves concurrent
-    edits made outside of cola, and falls back to restoring whole files from
-    the git blobs saved in the snapshot when a patch no longer applies.
+    The patch is applied in reverse when it is the patch that was
+    originally applied, and as-is when it is a patch of the state that
+    was saved before the edit.
 
     """
-
-    def discard_from_graph(self) -> None:
-        """Remove this command from the undo history
-
-        Commands that complete without changing anything, e.g. a canceled
-        revert, must not appear in the undo history.
-
-        """
-        bus = self.context.command_bus
-        if bus is not None:
-            bus.cmd_graph.discard(self)
-
-    def patch_file_encoding(self, patch_text: str) -> str | None:
-        """Return the encoding for a patch captured by cola"""
-        return getattr(patch_text, 'encoding', None)
-
-    def write_patch_file(self, patch_text: str, encoding: str | None) -> str:
-        """Write a patch to a temporary file and return its path"""
-        tmp_file = self.context.ops.tmp_filename('undo-revert', suffix='.patch')
-        self.context.ops.write_file(tmp_file, patch_text, encoding=encoding)
-        return tmp_file
-
-    def check_patch(
-        self, patch_text: str, cached: bool = False, reverse: bool = False
-    ) -> bool:
-        """Return True when the patch applies cleanly"""
-        encoding = self.patch_file_encoding(patch_text)
-        tmp_file = self.write_patch_file(patch_text, encoding)
-        try:
-            kwargs: dict[str, Any] = {'check': True}
-            if cached:
-                kwargs['cached'] = True
-            if reverse:
-                kwargs['reverse'] = True
-            status, out, err = self.git.apply(tmp_file, **kwargs)
-        finally:
-            self.context.ops.unlink(tmp_file)
-        return status == 0
-
-    def apply_patch_file(
-        self,
-        patch_text: str,
-        cached: bool = False,
-        index: bool = False,
-        reverse: bool = False,
-        encoding: str | None = None,
-    ) -> tuple[int, Any, Any]:
-        """Apply a patch to the worktree and/or index"""
-        if encoding is None:
-            encoding = self.patch_file_encoding(patch_text)
-        tmp_file = self.write_patch_file(patch_text, encoding)
-        try:
-            kwargs: dict[str, Any] = {'recount': True}
-            if cached:
-                kwargs['cached'] = True
-            if index:
-                kwargs['index'] = True
-            if reverse:
-                kwargs['reverse'] = True
-            status, out, err = self.git.apply(tmp_file, **kwargs)
-        finally:
-            self.context.ops.unlink(tmp_file)
-        return status, out, err
-
-    def revert_fallback_choice(self) -> str:
-        """Ask how to proceed when a snapshot patch fails to apply
-
-        Returns one of 'restore', 'retry', or 'skip'.
-
-        """
-        restore = Interaction.confirm(
-            N_('Undo Revert'),
-            N_('The saved patch does not apply cleanly.'),
-            N_(
-                'The files were probably edited by another process after the revert.\n'
-                'The snapshot saved before the revert can be restored instead, '
-                'which overwrites the current contents of the files.'
-            ),
-            N_('Restore Snapshot'),
-            default=False,
-            icon=icons.undo(),
-        )
-        if restore:
-            return 'restore'
-        retry = Interaction.confirm(
-            N_('Undo Revert'),
-            N_('Try applying the saved patch again?'),
-            N_('The snapshot is kept so that the revert can be undone later.'),
-            N_('Try Again'),
-            default=True,
-            icon=icons.undo(),
-        )
-        if retry:
-            return 'retry'
-        return 'skip'
-
-    def undo_worktree_patch(
-        self,
-        patch_text: str,
-        worktree_blobs: list[tuple[str, str | None]],
-        reverse: bool = False,
-        encoding: str | None = None,
-    ) -> bool:
-        """Undo a worktree edit using the saved patch, with a blob fallback
-
-        The patch is applied in reverse when it is the patch that was
-        originally applied, and as-is when it is a patch of the state that
-        was saved before the edit.
-
-        """
-        while True:
-            if self.check_patch(patch_text, cached=False, reverse=reverse):
-                status, out, err = self.apply_patch_file(
-                    patch_text, cached=False, reverse=reverse, encoding=encoding
-                )
-                Interaction.log_status(status, out, err)
-                if status == 0:
-                    return True
-            choice = self.revert_fallback_choice()
-            if choice == 'restore':
-                ok = True
-                for path, oid in worktree_blobs:
-                    if not self.restore_worktree_blob(path, oid):
-                        ok = False
-                return ok
-            if choice == 'skip':
-                return False
-
-    def undo_index_patch(
-        self,
-        patch_text: str,
-        index_entries: list[tuple[str, str, str]],
-        index: bool = False,
-        reverse: bool = False,
-        encoding: str | None = None,
-    ) -> bool:
-        """Undo an index edit using the saved patch, with a blob fallback"""
-        while True:
-            if self.check_patch(patch_text, cached=True, reverse=reverse):
-                status, out, err = self.apply_patch_file(
-                    patch_text,
-                    cached=True,
-                    index=index,
-                    reverse=reverse,
-                    encoding=encoding,
-                )
-                Interaction.log_status(status, out, err)
-                if status == 0:
-                    return True
-            choice = self.revert_fallback_choice()
-            if choice == 'restore':
-                if not index_entries:
-                    Interaction.information(
-                        N_('Undo Revert'),
-                        N_('The state of the index was not saved for this patch.'),
-                    )
-                    return False
-                return self.restore_index_entries(index_entries)
-            if choice == 'skip':
-                return False
-
-    def restore_worktree_blob(self, path: str, oid: str | None) -> bool:
-        """Restore a worktree file from the blob saved before the revert"""
-        context = self.context
-        if oid is None:
-            # The file did not exist before the revert, so remove it again.
-            if context.ops.isfile(path):
-                context.ops.unlink(path)
-            return True
-        filename = os.path.join(self.git.worktree(), core.decode(path))
-        dirname = os.path.dirname(filename)
-        if dirname and not context.ops.isdir(dirname):
-            context.ops.makedirs(dirname)
-        try:
-            tmp_file = open(filename, 'wb')
-        except OSError as exc:
-            msg, details = utils.format_exception(exc)
-            Interaction.critical(N_('Undo Revert'), message=msg, details=details)
+    while True:
+        if check_patch(context, patch_text, cached=False, reverse=reverse):
+            status, out, err = apply_patch_file(
+                context, patch_text, cached=False, reverse=reverse, encoding=encoding
+            )
+            Interaction.log_status(status, out, err)
+            if status == 0:
+                return True
+        choice = revert_fallback_choice()
+        if choice == 'restore':
+            ok = True
+            for path, oid in worktree_blobs:
+                if not gitcmds.restore_worktree_blob(context, path, oid):
+                    ok = False
+            return ok
+        if choice == 'skip':
             return False
-        with tmp_file:
-            status, out, err = context.git.cat_file(
-                'blob', oid, _raw=True, _readonly=True, _stdout=tmp_file
-            )
-        Interaction.command(N_('Undo Revert'), 'git cat-file', status, out, err)
-        return status == 0
 
-    def restore_index_entries(self, entries: list[tuple[str, str, str]]) -> bool:
-        """Restore (mode, oid, path) index entries saved before a revert"""
-        ok = True
-        for mode, oid, path in entries:
-            status, out, err = self.git.update_index(
-                '--add', '--cacheinfo', mode, oid, path
+
+def undo_index_patch(
+    context: ApplicationContext,
+    patch_text: str,
+    index_entries: list[tuple[str, str, str]],
+    index: bool = False,
+    reverse: bool = False,
+    encoding: str | None = None,
+) -> bool:
+    """Undo an index edit using the saved patch, with a blob fallback"""
+    while True:
+        if check_patch(context, patch_text, cached=True, reverse=reverse):
+            status, out, err = apply_patch_file(
+                context,
+                patch_text,
+                cached=True,
+                index=index,
+                reverse=reverse,
+                encoding=encoding,
             )
-            if status != 0:
-                ok = False
-                Interaction.command(
-                    N_('Undo Revert'), 'git update-index', status, out, err
+            Interaction.log_status(status, out, err)
+            if status == 0:
+                return True
+        choice = revert_fallback_choice()
+        if choice == 'restore':
+            if not index_entries:
+                Interaction.information(
+                    N_('Undo Revert'),
+                    N_('The state of the index was not saved for this patch.'),
                 )
-        return ok
+                return False
+            return gitcmds.restore_index_entries(context, index_entries)
+        if choice == 'skip':
+            return False
 
 
-class ApplyPatch(Command, RevertUndoMixin):
+class ApplyPatch(Command):
     """Apply the specified patch to the worktree or index"""
 
     UNDOABLE = True
@@ -721,7 +606,7 @@ class ApplyPatch(Command, RevertUndoMixin):
         else:
             # Nothing was applied, so this command has no place in the
             # undo history.
-            self.discard_from_graph()
+            discard_from_graph(self.context, self)
 
         Interaction.log_status(status, out, err)
         self.model.update_file_status(update_index=True)
@@ -745,17 +630,18 @@ class ApplyPatch(Command, RevertUndoMixin):
         """Capture the state needed to undo this patch application"""
         path = self.patch.filename
         if self.apply_to_worktree:
-            blobs = capture_worktree_blobs(self.context, [path])
+            blobs = gitcmds.capture_worktree_blobs(self.context, [path])
             self.worktree_blob = blobs[0]
         else:
-            entries = read_index_entries(self.context, [path])
+            entries = gitcmds.read_index_entries(self.context, [path])
             self.index_entry = entries[0] if entries else None
 
     def undo(self) -> bool:
         if not self.completed or not self.patch_text:
             return False
         if self.apply_to_worktree:
-            ok = self.undo_worktree_patch(
+            ok = undo_worktree_patch(
+                self.context,
                 self.patch_text,
                 [self.worktree_blob] if self.worktree_blob else [],
                 reverse=True,
@@ -763,7 +649,8 @@ class ApplyPatch(Command, RevertUndoMixin):
             )
         else:
             entries = [self.index_entry] if self.index_entry else []
-            ok = self.undo_index_patch(
+            ok = undo_index_patch(
+                self.context,
                 self.patch_text,
                 entries,
                 index=True,
@@ -3221,7 +3108,7 @@ class RefreshConfig(Command):
         return True
 
 
-class RevertEditsCommand(ConfirmAction, RevertUndoMixin):
+class RevertEditsCommand(ConfirmAction):
     """Revert worktree and/or index changes using "git checkout"
 
     The state of the selected files is saved before the checkout so that
@@ -3294,7 +3181,7 @@ class RevertEditsCommand(ConfirmAction, RevertUndoMixin):
         if not ok and not self.completed:
             # Nothing was reverted, so this command has no place in the
             # undo history.
-            self.discard_from_graph()
+            discard_from_graph(self.context, self)
         return True
 
     def run_revert(self) -> bool:
@@ -3312,20 +3199,23 @@ class RevertEditsCommand(ConfirmAction, RevertUndoMixin):
         paths = self.path_list()
         if not paths:
             return RevertSnapshot()
-        worktree_blobs = capture_worktree_blobs(self.context, paths)
+        context = self.context
+        worktree_blobs = gitcmds.capture_worktree_blobs(context, paths)
         if self.checkout_from_head():
             # "git checkout <head> -- <paths>" resets both the worktree and
             # the index, so save patches for both.  The worktree patch is
             # relative to <head>, which is what the worktree holds after the
             # checkout, so that it can be applied for the undo.
-            worktree_patch = diff_worktree_patch(self.context, self.model.head, paths)
-            index_patch = diff_index_patch(self.context, paths)
-            index_entries = read_index_entries(self.context, paths)
+            worktree_patch = gitcmds.diff_worktree_patch(
+                context, self.model.head, paths
+            )
+            index_patch = gitcmds.diff_index_patch(context, paths)
+            index_entries = gitcmds.read_index_entries(context, paths)
         else:
             # "git checkout -- <paths>" only updates the worktree from the
             # index.  The index is left untouched, so the worktree patch is
             # relative to the index.
-            worktree_patch = diff_worktree_patch(self.context, None, paths)
+            worktree_patch = gitcmds.diff_worktree_patch(context, None, paths)
             index_patch = ''
             index_entries = []
         return RevertSnapshot(
@@ -3336,21 +3226,22 @@ class RevertEditsCommand(ConfirmAction, RevertUndoMixin):
         snapshot = self.snapshot
         if not self.completed or snapshot is None:
             return False
+        context = self.context
         ok = True
         if snapshot.worktree_patch:
-            ok = self.undo_worktree_patch(
-                snapshot.worktree_patch, snapshot.worktree_blobs
+            ok = undo_worktree_patch(
+                context, snapshot.worktree_patch, snapshot.worktree_blobs
             )
         elif snapshot.worktree_blobs:
             # The patch could not be captured, so restore from the blobs.
             for path, oid in snapshot.worktree_blobs:
-                if not self.restore_worktree_blob(path, oid):
+                if not gitcmds.restore_worktree_blob(context, path, oid):
                     ok = False
         if ok and snapshot.index_patch:
-            ok = self.undo_index_patch(snapshot.index_patch, snapshot.index_entries)
+            ok = undo_index_patch(context, snapshot.index_patch, snapshot.index_entries)
         elif ok and snapshot.index_entries:
             # The patch could not be captured, so restore from the blobs.
-            ok = self.restore_index_entries(snapshot.index_entries)
+            ok = gitcmds.restore_index_entries(context, snapshot.index_entries)
         if ok:
             self.model.update_file_status()
         return ok
@@ -3370,7 +3261,7 @@ class RevertUnstagedEdits(RevertEditsCommand):
         title = N_('Revert Unstaged Changes?')
         text = N_(
             'This operation removes unstaged edits from selected files.\n'
-            'The revert can be undone afterwards using "Edit -> Undo".'
+            'These changes are undoable.'
         )
         info = N_('Revert the unstaged changes?')
         ok_text = N_('Revert Unstaged Changes')
@@ -3400,7 +3291,7 @@ class RevertUncommittedEdits(RevertEditsCommand):
         title = N_('Revert Uncommitted Changes?')
         text = N_(
             'This operation removes uncommitted edits from selected files.\n'
-            'The revert can be undone afterwards using "Edit -> Undo".'
+            'These changes are undoable.'
         )
         info = N_('Revert the uncommitted changes?')
         ok_text = N_('Revert Uncommitted Changes')
