@@ -1874,7 +1874,7 @@ class DiffEditor(DiffTextEdit):
                 title,
                 N_(
                     'This operation drops uncommitted changes.\n'
-                    'These changes cannot be recovered.'
+                    'These changes are undoable.'
                 ),
                 N_('Revert the uncommitted changes?'),
                 ok_text,
