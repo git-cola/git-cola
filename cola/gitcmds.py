@@ -12,6 +12,10 @@ from . import core
 from . import textwrap
 from . import utils
 from . import version
+from .git import EMPTY_TREE_SHA1
+from .git import EMPTY_TREE_SHA256
+from .git import MISSING_BLOB_SHA1
+from .git import MISSING_BLOB_SHA256
 from .git import STDOUT
 from .i18n import N_
 from .interaction import Interaction
@@ -45,6 +49,183 @@ def apply_diff(context: ApplicationContext, filename: str) -> Any:
 def apply_diff_to_worktree(context: ApplicationContext, filename: str) -> Any:
     """Use "git apply" to apply the patch in `filename` to the worktree"""
     return context.git.apply(filename, recount=True)
+
+
+def empty_tree_oid(context: ApplicationContext) -> str:
+    """Return the object id of git's built-in empty tree object"""
+    if context.cfg.get_object_format() == 'sha256':
+        return EMPTY_TREE_SHA256
+    return EMPTY_TREE_SHA1
+
+
+def capture_worktree_blobs(
+    context: ApplicationContext, paths: list[str]
+) -> list[tuple[str, str | None]]:
+    """Store the worktree contents of paths as git blobs
+
+    Returns a list of (path, oid) pairs.  The oid is None for paths that do
+    not exist in the worktree.
+
+    """
+    blobs: list[tuple[str, str | None]] = []
+    for path in paths:
+        oid: str | None = None
+        if context.ops.isfile(path):
+            status, out, err = context.git.hash_object(path, w=True, _readonly=True)
+            if status == 0:
+                oid = out
+            else:
+                Interaction.command(N_('Error'), 'git hash-object', status, out, err)
+        blobs.append((path, oid))
+    return blobs
+
+
+def read_index_entries(
+    context: ApplicationContext, paths: list[str]
+) -> list[tuple[str, str, str]]:
+    """Return the (mode, oid, path) index entries for paths
+
+    Merge conflict stages are not reported because they cannot be restored
+    using "git update-index --cacheinfo".
+
+    """
+    status, out, err = context.git.ls_files(
+        '--', *paths, stage=True, z=True, _readonly=True
+    )
+    if status != 0:
+        Interaction.command(N_('Error'), 'git ls-files', status, out, err)
+        return []
+    if not out:
+        return []
+    entries: list[tuple[str, str, str]] = []
+    for line in out[:-1].split('\0'):
+        meta, _, path = line.partition('\t')
+        fields = meta.split()
+        if len(fields) != 3:
+            continue
+        mode, oid, stage = fields
+        if stage != '0':
+            continue
+        if oid in (MISSING_BLOB_SHA1, MISSING_BLOB_SHA256):
+            # Intent-to-add entries have no object stored yet.
+            continue
+        entries.append((mode, oid, path))
+    return entries
+
+
+def diff_worktree_patch(
+    context: ApplicationContext, head: str | None, paths: list[str]
+) -> str:
+    """Return a patch for the worktree changes of paths
+
+    The patch is relative to `head` when given, and relative to the index
+    otherwise.
+
+    """
+    if head:
+        if not is_valid_ref(context, head):
+            # An unborn HEAD has no commits, so diff against the empty tree.
+            head = empty_tree_oid(context)
+        status, out, err = context.git.diff_index(
+            head,
+            '--',
+            *paths,
+            patch=True,
+            binary=True,
+            _raw=True,
+            _readonly=True,
+        )
+        command = 'git diff-index'
+    else:
+        status, out, err = context.git.diff_files(
+            '--',
+            *paths,
+            patch=True,
+            binary=True,
+            _raw=True,
+            _readonly=True,
+        )
+        command = 'git diff-files'
+    if status != 0:
+        Interaction.command(N_('Error'), command, status, out, err)
+        return ''
+    return out
+
+
+def diff_index_patch(context: ApplicationContext, paths: list[str]) -> str:
+    """Return a patch for the index changes of paths, relative to HEAD"""
+    if is_valid_ref(context, 'HEAD'):
+        head: str = 'HEAD'
+    else:
+        # An unborn HEAD has no commits, so diff against the empty tree.
+        head = empty_tree_oid(context)
+    status, out, err = context.git.diff_index(
+        head,
+        '--',
+        *paths,
+        cached=True,
+        patch=True,
+        binary=True,
+        _raw=True,
+        _readonly=True,
+    )
+    if status != 0:
+        Interaction.command(N_('Error'), 'git diff-index', status, out, err)
+        return ''
+    return out
+
+
+def restore_worktree_blob(
+    context: ApplicationContext, path: str, oid: str | None
+) -> bool:
+    """Restore a worktree file from the blob saved before a revert"""
+    if oid is None:
+        # The file did not exist, so remove it again.
+        if context.ops.isfile(path):
+            context.ops.unlink(path)
+        return True
+    dirname = os.path.dirname(path)
+    if dirname and not context.ops.isdir(dirname):
+        context.ops.makedirs(dirname)
+    try:
+        tmp_file = open(path, 'wb')
+    except OSError as exc:
+        msg, details = utils.format_exception(exc)
+        Interaction.critical(N_('Undo Revert'), message=msg, details=details)
+        return False
+    with tmp_file:
+        if version.check_git(context, 'cat-file-filters-path'):
+            # Content filters, e.g. git lfs smudge filters, are applied so
+            # that the file is restored as it would be after a checkout.
+            status, out, err = context.git.cat_file(
+                oid,
+                filters=True,
+                path=path,
+                _raw=True,
+                _readonly=True,
+                _stdout=tmp_file,
+            )
+        else:
+            status, out, err = context.git.cat_file(
+                'blob', oid, _raw=True, _readonly=True, _stdout=tmp_file
+            )
+    Interaction.command(N_('Undo Revert'), 'git cat-file', status, out, err)
+    return status == 0
+
+
+def restore_index_entries(
+    context: ApplicationContext, entries: list[tuple[str, str, str]]
+) -> bool:
+    """Restore (mode, oid, path) index entries saved before a revert"""
+    ok = True
+    for mode, oid, path in entries:
+        status, out, err = context.git.update_index(
+            '--add', '--cacheinfo', mode, oid, path
+        )
+        if status != 0:
+            ok = False
+            Interaction.command(N_('Undo Revert'), 'git update-index', status, out, err)
+    return ok
 
 
 def get_branch(context: ApplicationContext, branch: str | None) -> str:
@@ -913,9 +1094,9 @@ def ls_tree(
         for line in out[:-1].split('\0'):
             #       1    1                                        1
             # .....6 ...4 ......................................40
-            # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6	relative
-            # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2	relative/path
-            # 0..... 7... 12......................................	53
+            # 040000 tree c127cde9a0c644a3a8fef449a244f47d5272dfa6      relative
+            # 100644 blob 139e42bf4acaa4927ec9be1ec55a252b97d3f1e2      relative/path
+            # 0..... 7... 12......................................      53
             # path_offset = 6 + 1 + 4 + 1 + 40 (OID_LENGTH) + 1
             objtype = line[7:11]
             relpath = line[path_offset:]
