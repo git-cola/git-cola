@@ -702,6 +702,21 @@ Options
   Modified content will not be stashed.
 
 
+UNDO AND REDO
+=============
+
+Many operations performed by Git Cola are fully undoable. This includes reverting
+unstaged modifications to files in a worktree, which is typically a destructive
+operation when using raw ``git`` commands such as ``git restore`` or
+``git checkout -- <path>``.
+
+Git Cola keeps track of the edits it performs and is able to restore your worktree files
+and the staging area to their previous state when commands are undone and redone.
+
+You can use the ``Edit > Undo`` and ``Edit > Redo`` menu actions to undo/rewind and
+redo/replay the commands performed by Git Cola.
+
+
 WORKFLOW FAQ
 ============
 

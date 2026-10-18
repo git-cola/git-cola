@@ -3,6 +3,17 @@ Upcoming
 
 Usability, bells and whistles
 -----------------------------
+* Git Cola now supports undo and redo! Destructive Git operations such as reverting
+  unstaged edits from a worktree, or making edits to the index / staging area are now
+  fully undoable when performed by Git Cola. This feature includes the line-based stage,
+  unstage, and revert commands. The new ``Edit > Undo`` and ``Edit > Redo`` menu actions
+  allow you to step backwards and forwards through your edits. The index / staging area
+  and the worktree's files are restored to their previous state as commands are rewound
+  and replayed.
+  (`#1549 <https://github.com/git-cola/git-cola/issues/1549>`_)
+  (`#1619 <https://github.com/git-cola/git-cola/pull/1619>`_)
+  (`#1656 <https://github.com/git-cola/git-cola/pull/1656>`_)
+
 * Git Cola now has a server mode that allows you to connect to sessions running on
   remote machines. ``git cola server`` can be used used to start a cola server and
   ``git cola connect`` can connect to it.
@@ -18,11 +29,6 @@ Usability, bells and whistles
 * Checkboxes and Radio Buttons on macOS are now rendered using native widgetry
   to better match macOS's native light and dark mode themes.
   (`#1622 <https://github.com/git-cola/git-cola/pull/1622>`_)
-
-* The Stage and Unstage commands now support Undo and Redo under the hood,
-  but the application does not yet expose the Undo and Redo queues.
-  A future change will add Undo and Redo support to the application.
-  (`#1619 <https://github.com/git-cola/git-cola/pull/1619>`_)
 
 * Git Cola now avoids taking optional locks that can interact with
   external ``git`` processes.
