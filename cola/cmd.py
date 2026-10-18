@@ -243,8 +243,22 @@ class CommandBus(QtCore.QObject):
 
 
 def undo(context):
+    """Rewind the undo queue and Undo the most recent command"""
     context.command_bus.undo()
 
 
 def redo(context):
+    """Step the undo queue forward and Redo the most recently undone command"""
     context.command_bus.redo()
+
+
+def discard(context: ApplicationContext, cmd: Command) -> None:
+    """Remove cmd from the undo history
+
+    Commands that complete without changing anything, e.g. a canceled
+    revert, must not appear in the undo history.
+
+    """
+    bus = context.command_bus
+    if bus is not None:
+        bus.cmd_graph.discard(cmd)

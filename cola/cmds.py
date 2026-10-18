@@ -23,6 +23,7 @@ from . import textwrap
 from . import utils
 from . import version
 from .cmd import Command
+from .cmd import discard as discard_command
 from .git import STDOUT
 from .git import transform_kwargs
 from .i18n import N_
@@ -461,18 +462,6 @@ def apply_patch_file(
     return status, out, err
 
 
-def discard_from_graph(context: ApplicationContext, cmd: Command) -> None:
-    """Remove cmd from the undo history
-
-    Commands that complete without changing anything, e.g. a canceled
-    revert, must not appear in the undo history.
-
-    """
-    bus = context.command_bus
-    if bus is not None:
-        bus.cmd_graph.discard(cmd)
-
-
 def revert_fallback_choice() -> str:
     """Ask how to proceed when a snapshot patch fails to apply
 
@@ -606,7 +595,7 @@ class ApplyPatch(Command):
         else:
             # Nothing was applied, so this command has no place in the
             # undo history.
-            discard_from_graph(self.context, self)
+            discard_command(self.context, self)
 
         Interaction.log_status(status, out, err)
         self.model.update_file_status(update_index=True)
@@ -3181,7 +3170,7 @@ class RevertEditsCommand(ConfirmAction):
         if not ok and not self.completed:
             # Nothing was reverted, so this command has no place in the
             # undo history.
-            discard_from_graph(self.context, self)
+            discard_command(self.context, self)
         return True
 
     def run_revert(self) -> bool:
