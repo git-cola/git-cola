@@ -181,6 +181,7 @@ trees:
       brccabral: "${gh-https}/brccabral/git-cola.git"
       brlin-tw: "${gh-https}/brlin-tw/git-cola.git"
       dasanit: "${gh-https}/DasaniT/git-cola.git"
+      dani-devlop: "${gh-https}/Dani-Devlop/git-cola.git"
       davvid: "${gh-ssh}:davvid/git-cola.git"
       dschwoerer: "${gh-https}/dschwoerer/git-cola.git"
       florisla: "${gh-https}/florisla/git-cola.git"
