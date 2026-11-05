@@ -5,6 +5,7 @@ from unittest.mock import Mock
 from unittest.mock import patch
 
 from cola import cmds
+from cola import version
 
 from . import helper
 from .helper import app_context
@@ -313,6 +314,8 @@ def test_open_repo_reports_safe_directory_errors(app_context, monkeypatch):
     helper.run_git('worktree', 'add', '--quiet', worktree, '-b', 'feature')
     # Git's test suite uses this variable to simulate a repository that is owned
     # by another user.
+    if not version.check_git(app_context, 'git-test-assume-different-owner'):
+        return
     monkeypatch.setenv('GIT_TEST_ASSUME_DIFFERENT_OWNER', '1')
 
     with patch('cola.cmds.Interaction') as interaction:

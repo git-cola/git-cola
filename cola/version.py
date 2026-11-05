@@ -51,6 +51,8 @@ _versions = {
     'rebase-update-refs': '2.38.0',
     # git rev-parse --show-superproject-working-tree was added in 2.13.0
     'show-superproject-working-tree': '2.13.0',
+    # GIT_TEST_ASSUME_DIFFERENT_OWNER is used by the test suite.
+    'git-test-assume-different-owner': '2.54.0',
 }
 
 
