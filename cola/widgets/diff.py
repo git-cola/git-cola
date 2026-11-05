@@ -456,6 +456,7 @@ class DiffTextEdit(VimHintedPlainTextEdit):
                 config=intraline_cfg,
             )
             intraline_spans = result.spans
+        # ruff: disable[BLE001]
         except Exception:
             intraline_spans = {}
         compute_ms = (time.perf_counter() - start) * 1000
@@ -1184,8 +1185,8 @@ def render_comp_image(sources, mode, scale):
     sizes = [source_logical_size(source) for source in sources]
     logical = comp_logical_size(sources, mode)
     image = create_image(
-        max(1, int(round(logical.width() * scale))),
-        max(1, int(round(logical.height() * scale))),
+        max(1, round(logical.width() * scale)),
+        max(1, round(logical.height() * scale)),
     )
     painter = create_painter(image)
     painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
@@ -1816,13 +1817,12 @@ class DiffEditor(DiffTextEdit):
         return True
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.RightButton:
-            # Intercept right-click to move the cursor to the current position.
-            # setTextCursor() clears the selection so this is only done when
-            # nothing is selected.
-            if not self.has_selection():
-                cursor = self.cursorForPosition(event.pos())
-                self.setTextCursor(cursor)
+        # Intercept right-click to move the cursor to the current position.
+        # setTextCursor() clears the selection so this is only done when
+        # nothing is selected.
+        if event.button() == Qt.RightButton and not self.has_selection():
+            cursor = self.cursorForPosition(event.pos())
+            self.setTextCursor(cursor)
 
         return super().mousePressEvent(event)
 

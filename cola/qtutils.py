@@ -1444,12 +1444,9 @@ def rgb_triple(args: list[int]) -> QtGui.QColor:
     return rgb(*args)
 
 
-ColorLike: TypeAlias = Union[
-    QtGui.QColor,
-    str,
-    tuple[int, int, int],
-    tuple[int, int, int, int],
-]
+ColorLike: TypeAlias = (
+    QtGui.QColor | str | tuple[int, int, int] | tuple[int, int, int, int]
+)
 
 
 def rgba_qcolor(value: ColorLike) -> QtGui.QColor:

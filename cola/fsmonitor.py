@@ -444,6 +444,7 @@ if AVAILABLE == 'pywin32':
                 self.overlapped = pywintypes.OVERLAPPED()
                 self.overlapped.hEvent = self.event
                 self._start()
+            # ruff: disable[BLE001]
             except Exception:
                 self.close()
 

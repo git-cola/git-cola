@@ -79,27 +79,23 @@ class CompletionLineEdit(HintedLineEdit):
     up = Signal()
     down = Signal()
 
-    # Activation keys will cause a selected completion item to be chosen
-    ACTIVATION_KEYS = (Qt.Key_Return, Qt.Key_Enter)
-
-    # Navigation keys trigger signals that widgets can use for customization
-    NAVIGATION_KEYS = {
-        Qt.Key_Return: 'enter',
-        Qt.Key_Enter: 'enter',
-        Qt.Key_Up: 'up',
-        Qt.Key_Down: 'down',
-    }
-
     def __init__(
         self, context, model_factory, hint='', show_all_completions=False, parent=None
     ):
         HintedLineEdit.__init__(self, context, hint, parent=parent)
-        # Tracks when the completion popup was active during key events
-
         self.context = context
         # The most recently selected completion item
         self._selection = None
         self._show_all_completions = show_all_completions
+        # Activation keys will cause a selected completion item to be chosen
+        self._activation_keys = (Qt.Key_Return, Qt.Key_Enter)
+        # Navigation keys trigger signals that widgets can use for customization
+        self._navigation_keys = {
+            Qt.Key_Return: 'enter',
+            Qt.Key_Enter: 'enter',
+            Qt.Key_Up: 'up',
+            Qt.Key_Down: 'down',
+        }
 
         # Create a completion model
         completion_model = model_factory(context, self)
@@ -211,9 +207,10 @@ class CompletionLineEdit(HintedLineEdit):
         if self._completion_model.rowCount() == 0:
             popup.hide()
             return
-        if not popup.isVisible():
-            if not self.hasFocus() or not self._show_all_completions:
-                return
+        if not popup.isVisible() and (
+            not self.hasFocus() or not self._show_all_completions
+        ):
+            return
         self.select_first_completion()
 
     def select_first_completion(self):
@@ -299,12 +296,12 @@ class CompletionLineEdit(HintedLineEdit):
         # activated signal.  Navigation keys have lower priority, and only
         # emit when it wasn't already handled as an activation event.
         key = event.key()
-        if key in self.ACTIVATION_KEYS and visible:
+        if key in self._activation_keys and visible:
             if self.select_completion():
                 self.activated.emit()
             return
 
-        navigation = self.NAVIGATION_KEYS.get(key, None)
+        navigation = self._navigation_keys.get(key, None)
         if navigation:
             signal = getattr(self, navigation)
             signal.emit()

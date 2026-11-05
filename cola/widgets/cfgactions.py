@@ -16,6 +16,9 @@ from . import defs
 from . import standard
 from .text import LineEdit
 
+# Global state
+ACTION_VALUES = {}
+
 
 def install():
     Interaction.run_command = staticmethod(run_command)
@@ -176,8 +179,6 @@ class GitCommandWidget(standard.Dialog):
 
 
 class ActionDialog(standard.Dialog):
-    VALUES = {}
-
     def __init__(self, context, parent, name, opts):
         standard.Dialog.__init__(self, parent)
         self.context = context
@@ -185,9 +186,9 @@ class ActionDialog(standard.Dialog):
         self.opts = opts
 
         try:
-            values = self.VALUES[name]
+            values = ACTION_VALUES[name]
         except KeyError:
-            values = self.VALUES[name] = {}
+            values = ACTION_VALUES[name] = {}
 
         self.setWindowModality(Qt.ApplicationModal)
 
@@ -276,7 +277,7 @@ class ActionDialog(standard.Dialog):
 
     def _argstxt_changed(self, value):
         """Store the argstxt value so that we can remember it between calls"""
-        self.VALUES[self.action_name]['argstxt'] = value
+        ACTION_VALUES[self.action_name]['argstxt'] = value
 
 
 class RevisionSelector(QtWidgets.QWidget):

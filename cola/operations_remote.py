@@ -260,12 +260,12 @@ class RemoteOperations(IOperations):
             if '\t' in path or '\n' in path:
                 path = path.replace('b\t', '')
                 if '\t' in path or '\n' in path:
-                    raise ValueError(f'Invalid control chars in path: {repr(path)}')
+                    raise ValueError(f'Invalid control chars in path: {path!r}')
 
                 return path
 
-            if path.startswith('b"') or path.startswith("b'"):
-                raise ValueError(f'Looks like raw bytes: {repr(path)}')
+            if path.startswith(('b"', "b'")):
+                raise ValueError(f'Looks like raw bytes: {path!r}')
 
             return path
 

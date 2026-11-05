@@ -70,18 +70,13 @@ class MainModel(QtCore.QObject):
     mode_diff = 'diff'  # Diffing against an arbitrary commit
 
     # Modes where we can checkout files from the $head
-    modes_undoable = {mode_amend, mode_diff, mode_index, mode_worktree}
-
+    modes_undoable = frozenset((mode_amend, mode_diff, mode_index, mode_worktree))
     # Modes where we can partially stage files
-    modes_partially_stageable = {
-        mode_amend,
-        mode_diff,
-        mode_worktree,
-        mode_untracked_diff,
-    }
-
+    modes_partially_stageable = frozenset(
+        (mode_amend, mode_diff, mode_worktree, mode_untracked_diff)
+    )
     # Modes where we can partially unstage files
-    modes_unstageable = {mode_amend, mode_diff, mode_index}
+    modes_unstageable = frozenset((mode_amend, mode_diff, mode_index))
 
     unstaged = property(lambda self: self.modified + self.unmerged + self.untracked)
     """An aggregate of the modified, unmerged, and untracked file lists."""
@@ -814,7 +809,7 @@ def autodetect_proxy_kde(
         '--key',
         'ProxyType',
     ]
-    status, out, err = context.ops.run_command(cmd)
+    status, out, _ = context.ops.run_command(cmd)
     if status == 0 and out.strip() == '1':
         cmd = [
             kreadconfig,

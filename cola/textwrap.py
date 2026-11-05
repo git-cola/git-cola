@@ -144,9 +144,8 @@ class TextWrapper:
 
             # The current line is full, and the next chunk is too big to
             # fit on *any* line (not just this one).
-            if chunks and self.chunklen(chunks[-1]) > width:
-                if not cur_line:
-                    cur_line.append(chunks.pop())
+            if chunks and self.chunklen(chunks[-1]) > width and not cur_line:
+                cur_line.append(chunks.pop())
 
             # Avoid whitespace at the beginning of split lines
             if (

@@ -85,6 +85,7 @@ class SocketServer:
 
         try:
             result = method(self.ops, *args, **kwargs)
+        # ruff: disable[BLE001]
         except Exception as err:
             await websocket.send(
                 msgpack.packb({

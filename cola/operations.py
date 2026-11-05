@@ -33,7 +33,6 @@ class IOperations(ABC):
     @abstractmethod
     def file_append(self, path, text: str, encoding: str | None = None) -> None:
         """Open a file for appending in UTF-8 text mode"""
-        pass
 
     @abstractmethod
     def file_read(self, path, encoding: str | None = None) -> str:
@@ -86,7 +85,6 @@ class IOperations(ABC):
         append: bool = False,
     ) -> int:
         """Writes a Unicode string to a file"""
-        pass
 
     @abstractmethod
     def find_executable(

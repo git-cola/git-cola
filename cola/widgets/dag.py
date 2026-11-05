@@ -2113,28 +2113,28 @@ class EdgeColor:
     """An edge color factory"""
 
     current_color_index = 0
-    colors = [
+    colors = (
         QtGui.QColor(Qt.red),
         QtGui.QColor(Qt.cyan),
         QtGui.QColor(Qt.magenta),
         QtGui.QColor(Qt.green),
         # Orange; Qt.yellow is too low-contrast
         qtutils.rgba(0xFF, 0x66, 0x00),
-    ]
+    )
 
     @classmethod
     def update_colors(cls, theme):
         """Update the colors based on the color theme"""
         if theme.is_dark or theme.is_palette_dark:
-            cls.colors.extend([
+            cls.colors += (
                 QtGui.QColor(Qt.red).lighter(),
                 QtGui.QColor(Qt.cyan).lighter(),
                 QtGui.QColor(Qt.magenta).lighter(),
                 QtGui.QColor(Qt.green).lighter(),
                 QtGui.QColor(Qt.yellow).lighter(),
-            ])
+            )
         else:
-            cls.colors.extend([
+            cls.colors += (
                 QtGui.QColor(Qt.blue),
                 QtGui.QColor(Qt.darkRed),
                 QtGui.QColor(Qt.darkCyan),
@@ -2142,7 +2142,7 @@ class EdgeColor:
                 QtGui.QColor(Qt.darkGreen),
                 QtGui.QColor(Qt.darkYellow),
                 QtGui.QColor(Qt.darkBlue),
-            ])
+            )
 
     @classmethod
     def cycle(cls):
@@ -3018,9 +3018,9 @@ class GraphView(QtWidgets.QGraphicsView, ViewerMixin):
             can_overlap = range(self.min_column, column)
         else:
             can_overlap = range(self.max_column, column, -1)
-        for cell_row in itertools.count(cell_row):
+        for cell_row_entry in itertools.count(cell_row):
             for value in can_overlap:
-                if (value, cell_row) in self.tagged_cells:
+                if (value, cell_row_entry) in self.tagged_cells:
                     # Overlapping. Try next row.
                     break
             else:

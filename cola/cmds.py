@@ -3,11 +3,13 @@ from __future__ import annotations
 import os
 import re
 import sys
+import types
 from collections.abc import Callable
 from fnmatch import fnmatch
 from io import StringIO
 from typing import TYPE_CHECKING
 from typing import Any
+from typing import Self
 
 try:
     from send2trash import send2trash
@@ -430,7 +432,7 @@ def check_patch(
             kwargs['cached'] = True
         if reverse:
             kwargs['reverse'] = True
-        status, out, err = context.git.apply(tmp_file, **kwargs)
+        status, _, _ = context.git.apply(tmp_file, **kwargs)
     finally:
         context.ops.unlink(tmp_file)
     return status == 0
@@ -2844,16 +2846,16 @@ class SequenceEditorEnvironment:
         self.env.update(kwargs)
         self.context = context
 
-    def __enter__(self) -> SequenceEditorEnvironment:
+    def __enter__(self) -> Self:
         for var, value in self.env.items():
             core.setenv(self.context.ops, var, value)
         return self
 
     def __exit__(
-        self,
-        exc_type: None,
-        exc_val: None,
-        exc_tb: None,
+        self: object,
+        exc_type: type[BaseException] | None = None,
+        exc_val: BaseException | None = None,
+        exc_tb: types.TracebackType | None = None,
     ) -> None:
         for var in self.env:
             core.unsetenv(self.context.ops, var)
@@ -2941,13 +2943,14 @@ class Rebase(Command):
         cfg = self.cfg
         model = self.model
 
-        if not cfg.get('rebase.autostash', False):
-            if model.staged or model.unmerged or model.modified:
-                Interaction.information(
-                    N_('Unable to rebase'),
-                    N_('You cannot rebase with uncommitted changes.'),
-                )
-                return False
+        if not cfg.get('rebase.autostash', False) and (
+            model.staged or model.unmerged or model.modified
+        ):
+            Interaction.information(
+                N_('Unable to rebase'),
+                N_('You cannot rebase with uncommitted changes.'),
+            )
+            return False
 
         upstream = self.upstream or Interaction.choose_ref(
             context,
@@ -4299,6 +4302,7 @@ def do(cls: Any, *args, **opts) -> Any:
     try:
         cmd = cls(*args, **opts)
         cmd.context.command_bus.do(cmd, queued=False)
+    # ruff: disable[BLE001]
     except Exception as exc:
         msg, details = utils.format_exception(exc)
         if hasattr(cls, '__name__'):

@@ -17,8 +17,8 @@ _default_icon_theme = 'light'
 _resources = core.abspath(core.realpath(__file__))
 _package = os.path.dirname(_resources)
 
-if _package.endswith(os.path.join('site-packages', 'cola')) or _package.endswith(
-    os.path.join('dist-packages', 'cola')
+if _package.endswith(
+    (os.path.join('site-packages', 'cola'), os.path.join('dist-packages', 'cola'))
 ):
     # Unix release tree
     # __file__ = '$prefix/lib/pythonX.Y/site-packages/cola/__file__.py'

@@ -554,9 +554,7 @@ class RebaseTreeWidget(standard.DraggableTreeWidget):
         oid = item.oid
         params = dag.DAG(oid, 2)
         repo = dag.RepoReader(context, params, allow_git_init=False)
-        commits = []
-        for commit in repo.get():
-            commits.append(commit)
+        commits = list(repo.get())
         if commits:
             commits = commits[-1:]
         self.commits_selected.emit(commits)
@@ -704,18 +702,23 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     SUMMARY_COLUMN = 5
     COLUMN_COUNT = 6
     OID_LENGTH = 7
-    COLORS = {
-        '0': ('white', 'darkred'),
-        '1': ('black', 'salmon'),
-        '2': ('black', 'sandybrown'),
-        '3': ('black', 'yellow'),
-        '4': ('black', 'yellowgreen'),
-        '5': ('white', 'forestgreen'),
-        '6': ('white', 'dodgerblue'),
-        '7': ('white', 'royalblue'),
-        '8': ('white', 'slateblue'),
-        '9': ('black', 'rosybrown'),
-    }
+    COLORS = None
+
+    @classmethod
+    def initialize_class_attrs(cls):
+        if cls.COLORS is None:
+            cls.COLORS = {
+                '0': ('white', 'darkred'),
+                '1': ('black', 'salmon'),
+                '2': ('black', 'sandybrown'),
+                '3': ('black', 'yellow'),
+                '4': ('black', 'yellowgreen'),
+                '5': ('white', 'forestgreen'),
+                '6': ('white', 'dodgerblue'),
+                '7': ('white', 'royalblue'),
+                '8': ('white', 'slateblue'),
+                '9': ('black', 'rosybrown'),
+            }
 
     def __init__(
         self,
@@ -732,6 +735,7 @@ class RebaseTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         parent=None,
     ) -> None:
         QtWidgets.QTreeWidgetItem.__init__(self, parent)
+        self.initialize_class_attrs()
         self.combo: ComboBox | None = None
         self.command = command
         self.idx = idx

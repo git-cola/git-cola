@@ -176,27 +176,33 @@ class ToolBar(QtWidgets.QToolBar):
     STYLE_TEXT_ONLY = 'text'
     STYLE_TEXT_BESIDE_ICON = 'text-beside-icon'
     STYLE_TEXT_UNDER_ICON = 'text-under-icon'
-    STYLE_NAMES = [
-        N_('Follow System Style'),
-        N_('Icon Only'),
-        N_('Text Only'),
-        N_('Text Beside Icon'),
-        N_('Text Under Icon'),
-    ]
-    STYLE_SYMBOLS = [
+    STYLE_NAMES = ()
+    STYLE_SYMBOLS = (
         STYLE_FOLLOW_SYSTEM,
         STYLE_ICON_ONLY,
         STYLE_TEXT_ONLY,
         STYLE_TEXT_BESIDE_ICON,
         STYLE_TEXT_UNDER_ICON,
-    ]
+    )
 
     @staticmethod
     def create(context, name):
         return ToolBar(context, name, TREE_LAYOUT, COMMANDS)
 
+    @classmethod
+    def initialize_class_attrs(cls):
+        if not cls.STYLE_NAMES:
+            cls.STYLE_NAMES += (
+                N_('Follow System Style'),
+                N_('Icon Only'),
+                N_('Text Only'),
+                N_('Text Beside Icon'),
+                N_('Text Under Icon'),
+            )
+
     def __init__(self, context, title, tree_layout, toolbar_commands):
         QtWidgets.QToolBar.__init__(self)
+        self.initialize_class_attrs()
         self.setWindowTitle(title)
         self.setObjectName(title)
         self.setToolButtonStyle(Qt.ToolButtonFollowStyle)
@@ -439,8 +445,6 @@ def get_index_from_style(style):
 
 
 class DraggableListMixin:
-    items = []
-
     def __init__(self, widget, Base):
         self.widget = widget
         self.Base = Base

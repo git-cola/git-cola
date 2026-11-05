@@ -18,17 +18,20 @@ WORKTREE = 'WORKTREE'
 
 class CommitFactory:
     root_generation = 0
-    commits = {}
+    commits = None
 
     @classmethod
     def reset(cls) -> None:
-        cls.commits.clear()
+        if isinstance(cls.commits, dict):
+            cls.commits.clear()
         cls.root_generation = 0
 
     @classmethod
     def new(
         cls, context, oid: str | None = None, log_entry: str | None = None
     ) -> Commit:
+        if cls.commits is None:
+            cls.commits = {}
         if not oid and log_entry:
             oid = log_entry[: context.model.oid_len]
         try:

@@ -93,6 +93,15 @@ line-length = 88
 [tool.pytest-enabler.ruff]
 addopts = "--ruff"
 
+[tool.ruff.lint]
+ignore = [
+    "B026",
+    "I001",
+    "S110",
+    "UP007",
+    "UP031",
+]
+
 [tool.setuptools]
 packages = [
     "cola",

@@ -16,7 +16,11 @@ __copyright__ = """
 
 class GlobalState:
     ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
-    LETTERS = set(ALPHABET)
+    LETTERS = ()
+
+    @classmethod
+    def initialize(cls):
+        cls.LETTERS = set(cls.ALPHABET)
 
     @classmethod
     def train(
@@ -94,6 +98,7 @@ class NorvigSpellCheck:
     def init(self) -> None:
         if self.initialized:
             return
+        GlobalState.initialize()
         self.initialized = True
 
         all_train_words = set()
@@ -137,8 +142,7 @@ class NorvigSpellCheck:
         if use_common_files and propernames and core.exists(propernames):
             paths.append(propernames)
 
-        for path in self.extra_dictionaries:
-            paths.append(path)
+        paths.extend(self.extra_dictionaries)
 
         all_words = self.all_words
         for path in paths:

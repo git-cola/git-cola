@@ -204,10 +204,9 @@ class BaseTextEditExtension(QtCore.QObject):
         # Move the text cursor so that the right-click events operate
         # on the current position, not the last left-clicked position.
         widget = self.widget
-        if event.button() == Qt.RightButton:
-            if not widget.textCursor().hasSelection():
-                cursor = widget.cursorForPosition(event.pos())
-                widget.setTextCursor(cursor)
+        if event.button() == Qt.RightButton and not widget.textCursor().hasSelection():
+            cursor = widget.cursorForPosition(event.pos())
+            widget.setTextCursor(cursor)
 
     def add_links_to_menu(self, menu):
         """Add actions for opening URLs to a custom menu"""

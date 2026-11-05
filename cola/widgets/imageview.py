@@ -75,8 +75,8 @@ def render_svg_to_pixmap(renderer, logical_size, scale):
     The returned pixmap has its device-pixel-ratio set to ``scale`` so it
     occupies ``logical_size`` scene units while painting at higher resolution.
     """
-    width = max(1, int(round(logical_size.width() * scale)))
-    height = max(1, int(round(logical_size.height() * scale)))
+    width = max(1, round(logical_size.width() * scale))
+    height = max(1, round(logical_size.height() * scale))
     image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
     image.fill(Qt.transparent)
     painter = QtGui.QPainter(image)
@@ -551,7 +551,6 @@ class ImageViewerWindow(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, event):
         key = event.key()
-        global main_loop_type
         if key == Qt.Key_Escape:
             if main_loop_type == 'qt':
                 QtWidgets.QApplication.quit()

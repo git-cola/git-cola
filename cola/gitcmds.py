@@ -188,6 +188,7 @@ def restore_worktree_blob(
     if dirname and not context.ops.isdir(dirname):
         context.ops.makedirs(dirname)
     try:
+        # ruff: disable[SIM115]
         tmp_file = open(path, 'wb')
     except OSError as exc:
         msg, details = utils.format_exception(exc)

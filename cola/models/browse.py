@@ -26,16 +26,14 @@ class Columns:
 
     ALL = (NAME, STATUS, MESSAGE, AUTHOR, AGE)
     ATTRS = ('name', 'status', 'message', 'author', 'age')
-    TEXT: list[str] = []
+    TEXT: tuple = ()
 
     @classmethod
     def init(cls) -> None:
-        cls.TEXT.extend(
-            [N_('Name'), N_('Status'), N_('Message'), N_('Author'), N_('Age')]
-        )
+        cls.TEXT = (N_('Name'), N_('Status'), N_('Message'), N_('Author'), N_('Age'))
 
     @classmethod
-    def text_values(cls) -> list[str]:
+    def text_values(cls) -> tuple[str]:
         if not cls.TEXT:
             cls.init()
         return cls.TEXT
