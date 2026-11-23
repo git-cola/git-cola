@@ -772,22 +772,8 @@ class MainView(standard.MainWindow):
 
         # Edit Menu
         self.edit_menu = edit_menu = add_menu(N_('&Edit'), self.menubar)
-
-        self.undo_action = qtutils.add_action_with_icon(
-            self,
-            icons.undo(),
-            N_('Undo'),
-            lambda: cmd.undo(self.context),
-        )
-        self.undo_action.setEnabled(False)
-
-        self.redo_action = qtutils.add_action_with_icon(
-            self,
-            icons.redo(),
-            N_('Redo'),
-            lambda: cmd.redo(self.context),
-        )
-        self.redo_action.setEnabled(False)
+        self.undo_action = qtutils.add_undo_action(self.context, self)
+        self.redo_action = qtutils.add_redo_action(self.context, self)
 
         self.edit_proxy = edit_proxy = FocusProxy(
             self.commiteditor, self.commiteditor.summary, self.commiteditor.description

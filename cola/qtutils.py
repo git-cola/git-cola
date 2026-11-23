@@ -24,6 +24,7 @@ try:
 except ImportError:
     AppKit = None
 
+from . import cmd
 from . import core
 from . import hotkeys
 from . import icons
@@ -862,6 +863,34 @@ def create_treeitem(
 def add_close_action(widget: QtWidgets.QWidget) -> QtGui.QAction:
     """Adds close action and shortcuts to a widget."""
     return add_action(widget, N_('Close...'), widget.close, hotkeys.CLOSE, hotkeys.QUIT)
+
+
+def add_undo_action(
+    context: ApplicationContext, widget: QtWidgets.QWidget
+) -> QtGui.QAction:
+    """Create an Undo action"""
+    undo_action = add_action_with_icon(
+        widget,
+        icons.undo(),
+        N_('Undo'),
+        lambda: cmd.undo(context),
+    )
+    undo_action.setEnabled(False)
+    return undo_action
+
+
+def add_redo_action(
+    context: ApplicationContext, widget: QtWidgets.QWidget
+) -> QtGui.QAction:
+    """Create a Redo action"""
+    redo_action = add_action_with_icon(
+        widget,
+        icons.redo(),
+        N_('Redo'),
+        lambda: cmd.redo(context),
+    )
+    redo_action.setEnabled(False)
+    return redo_action
 
 
 def app() -> QCoreApplication | None:
