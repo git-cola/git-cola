@@ -7,6 +7,7 @@ Usability, bells and whistles
   unstaged edits from a worktree, or making edits to the index / staging area are now
   fully undoable when performed by Git Cola. This feature includes the line-based stage,
   unstage, and revert commands. The new ``Edit > Undo`` and ``Edit > Redo`` menu actions
+  and the ``Ctrl + Z`` and ``Shift + Ctrl + Z`` hotkeys in the interactive Diff Editor
   allow you to step backwards and forwards through your edits. The index / staging area
   and the worktree's files are restored to their previous state as commands are rewound
   and replayed.

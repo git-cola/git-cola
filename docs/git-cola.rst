@@ -716,6 +716,8 @@ and the staging area to their previous state when commands are undone and redone
 You can use the ``Edit > Undo`` and ``Edit > Redo`` menu actions to undo/rewind and
 redo/replay the commands performed by Git Cola.
 
+The Diff Editor also provides ``Ctrl-z`` and ``Shift-Ctrl-z`` hotkeys for Undo and Redo.
+
 
 WORKFLOW FAQ
 ============
