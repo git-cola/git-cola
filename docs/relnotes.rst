@@ -5,7 +5,7 @@ Releases
 Latest Release
 ==============
 
-:ref:`v4.19.0 <v4.19.0>` is the latest stable release.
+:ref:`v4.20.0 <v4.20.0>` is the latest stable release.
 
 Development version
 ===================
