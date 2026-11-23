@@ -4,8 +4,11 @@ import time
 from typing import TYPE_CHECKING
 
 from qtpy import QtCore
+from qtpy import QtGui
 from qtpy.QtCore import Qt
 from qtpy.QtCore import Signal
+
+from .i18n import N_
 
 if TYPE_CHECKING:
     from .app import ApplicationContext
@@ -262,3 +265,25 @@ def discard(context: ApplicationContext, cmd: Command) -> None:
     bus = context.command_bus
     if bus is not None:
         bus.cmd_graph.discard(cmd)
+
+
+def update_undo_action(context: ApplicationContext, undo_action: QtGui.QAction) -> None:
+    """Update the current state of the Undo action"""
+    undo_action.setEnabled(context.command_bus.can_undo())
+    undo_name = context.command_bus.get_undo_command_name()
+    if undo_name:
+        undo_text = N_('Undo "{}"').format(undo_name)
+    else:
+        undo_text = N_('Undo')
+    undo_action.setText(undo_text)
+
+
+def update_redo_action(context: ApplicationContext, redo_action: QtGui.QAction) -> None:
+    """Update the current state of the Redo action"""
+    redo_action.setEnabled(context.command_bus.can_redo())
+    redo_name = context.command_bus.get_redo_command_name()
+    if redo_name:
+        redo_text = N_('Redo "{}"').format(redo_name)
+    else:
+        redo_text = N_('Redo')
+    redo_action.setText(redo_text)

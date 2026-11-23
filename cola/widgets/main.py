@@ -1281,21 +1281,8 @@ class MainView(standard.MainWindow):
         diff_mode = self.model.mode == self.model.mode_diff
         self.exit_diff_mode_action.setEnabled(diff_mode)
 
-        self.undo_action.setEnabled(self.context.command_bus.can_undo())
-        undo_name = self.context.command_bus.get_undo_command_name()
-        if undo_name:
-            undo_text = N_('Undo "{}"').format(undo_name)
-        else:
-            undo_text = N_('Undo')
-        self.undo_action.setText(undo_text)
-
-        self.redo_action.setEnabled(self.context.command_bus.can_redo())
-        redo_name = self.context.command_bus.get_redo_command_name()
-        if redo_name:
-            redo_text = N_('Redo "{}"').format(redo_name)
-        else:
-            redo_text = N_('Redo')
-        self.redo_action.setText(redo_text)
+        cmd.update_undo_action(self.context, self.undo_action)
+        cmd.update_redo_action(self.context, self.redo_action)
 
     def update_menu_actions(self):
         # Enable the Prepare Commit Message action if the hook exists
