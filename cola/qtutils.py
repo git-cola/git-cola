@@ -866,31 +866,41 @@ def add_close_action(widget: QtWidgets.QWidget) -> QtGui.QAction:
 
 
 def add_undo_action(
-    context: ApplicationContext, widget: QtWidgets.QWidget
+    context: ApplicationContext, widget: QtWidgets.QWidget, add_hotkey: bool = False
 ) -> QtGui.QAction:
     """Create an Undo action"""
-    undo_action = add_action_with_icon(
+    action = add_action_with_icon(
         widget,
         icons.undo(),
         N_('Undo'),
         lambda: cmd.undo(context),
     )
-    undo_action.setEnabled(False)
-    return undo_action
+    action.setEnabled(False)
+    if add_hotkey:
+        action.setShortcut(hotkeys.UNDO)
+        if hasattr(Qt, 'WidgetWithChildrenShortcut'):
+            action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+        widget.addAction(action)
+    return action
 
 
 def add_redo_action(
-    context: ApplicationContext, widget: QtWidgets.QWidget
+    context: ApplicationContext, widget: QtWidgets.QWidget, add_hotkey: bool = False
 ) -> QtGui.QAction:
     """Create a Redo action"""
-    redo_action = add_action_with_icon(
+    action = add_action_with_icon(
         widget,
         icons.redo(),
         N_('Redo'),
         lambda: cmd.redo(context),
     )
-    redo_action.setEnabled(False)
-    return redo_action
+    action.setEnabled(False)
+    if add_hotkey:
+        action.setShortcut(hotkeys.REDO)
+        if hasattr(Qt, 'WidgetWithChildrenShortcut'):
+            action.setShortcutContext(Qt.WidgetWithChildrenShortcut)
+        widget.addAction(action)
+    return action
 
 
 def app() -> QCoreApplication | None:
