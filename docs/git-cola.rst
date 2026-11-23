@@ -407,8 +407,13 @@ The diff viewer/editor displays diffs for selected files.
 Additions are shown in green and removals are displayed in light red.
 Extraneous whitespace is shown with a pure-red background.
 
-Right-clicking in the diff provides access to additional actions
-that use either the cursor location or text selection.
+The ``Ctrl + J`` keyboard shortcut moves the focus to the Diff Editor so that you can
+interactively edit the staging area and worktree. The Diff Editor supports vim-like
+``{h,j,k,l}`` keyboard shortcuts for moving the cursor so that you do not need to
+leave the home row when making edits.
+
+Right-clicking in the diff provides access to additional actions that use either the
+cursor location or text selection.
 
 The "Copy Diff" action at ``Alt + Shift + C`` copies the selected lines to the
 clipboard. The ``+``, ``-`` and `` `` diff line prefixes are stripped from each line
@@ -417,14 +422,22 @@ when copying diffs using the "Copy Diff" action.
 Staging content for commit
 --------------------------
 
+Use the ``s`` keyboard shortcut to stages / unstage selected lines or the current diff hunk.
+
 The ``@@`` patterns denote a new diff hunk.  Selecting lines of diff
 and using the `Stage Selected Lines` command will stage just the selected
 lines.  Clicking within a diff hunk and selecting `Stage Diff Hunk` stages the
 entire patch diff hunk.
 
-The corresponding opposite commands can be performed on staged files as well,
-e.g. staged content can be selectively removed from the index when we are
-viewing diffs for staged content.
+The corresponding opposite commands can be performed on staged files as well, e.g.
+staged content can be selectively removed from the index when viewing diffs for staged
+content.
+
+Reverting unstaged edits
+------------------------
+
+The ``Ctrl + U`` hotkey reverts unstaged modifications from the worktree.
+This is used to restore file context back to its previously-committed state.
 
 Diff Against Commit (Diff Mode)
 -------------------------------
