@@ -189,6 +189,7 @@ class CommandGraph:
 class CommandBus(QtCore.QObject):
     do_command = Signal(object)
     undo_command = Signal(object)
+    command_dispatched = Signal()
 
     def __init__(self, parent: QtCore.QObject | None = None) -> None:
         super().__init__(parent)
@@ -203,12 +204,14 @@ class CommandBus(QtCore.QObject):
             self.do_command.emit(cmd)
         else:
             cmd.do()
+        self.command_dispatched.emit()
 
     def redo(self) -> bool:
         cmd = self.cmd_graph.step_forward()
         if cmd is not None:
             cmd.refresh()
             self.do_command.emit(cmd)
+            self.command_dispatched.emit()
             return True
         return False
 
@@ -218,6 +221,7 @@ class CommandBus(QtCore.QObject):
         if cmd is not None:
             cmd.refresh()
             self.undo_command.emit(cmd)
+            self.command_dispatched.emit()
             return True
         return False
 
