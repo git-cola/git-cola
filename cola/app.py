@@ -63,7 +63,6 @@ from . import resources
 from . import themes
 from . import utils
 from . import version
-from .cmd import CommandBus
 from .i18n import N_
 from .interaction import Interaction
 from .models import main
@@ -844,7 +843,7 @@ class ApplicationContext:
         self.args = args
         self.app: ColaApplication | None = None  # ColaApplication
         self.shared_memory = None  # QSharedMemory
-        self.command_bus: CommandBus | None = None
+        self.command_bus = cmd.CommandBus()
         self.git: git.Git | None = None
         self.cfg: gitcfg.GitConfig | None = None
         self.model: main.MainModel | None = None
@@ -861,7 +860,7 @@ class ApplicationContext:
         """Initialize view-specific members"""
         self.view = view
         self.notifier.setParent(view)
-        self.command_bus = cmd.CommandBus(parent=view)
+        self.command_bus.setParent(view)
         self.runtask = qtutils.RunTask(parent=view)
         self.notifier.command.connect(self._command, Qt.QueuedConnection)
         self.notifier.critical.connect(self._critical, Qt.QueuedConnection)
