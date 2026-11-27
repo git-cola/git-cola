@@ -1,7 +1,6 @@
 from __future__ import annotations
 import os
 import threading
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Any
 
@@ -12,18 +11,13 @@ from . import fsmonitor
 from . import git
 from . import gitcfg
 from . import utils
+from .operations import CmdOutputToFile
 from .operations import IOperations
 
 if TYPE_CHECKING:
     from .fsmonitor import Monitor
 
 _MONITOR_LOCK = threading.Lock()
-
-
-@dataclass
-class CmdOutputToFile:
-    path: str
-    mode: str
 
 
 class MonitorContext:

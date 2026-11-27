@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING
 from typing import Any
 
 from . import core
+from .operations import CmdOutputToFile
 from .operations import IOperations
-from .operations_local import CmdOutputToFile
 
 if TYPE_CHECKING:
     from . import server

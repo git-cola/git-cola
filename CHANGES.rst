@@ -1,3 +1,12 @@
+v4.20.1
+=======
+
+Fixes
+-----
+* Fixed an exception when stashing staged items.
+  (`#1658 <https://github.com/git-cola/git-cola/issues/1658>`_)
+
+
 v4.20.0
 =======
 
