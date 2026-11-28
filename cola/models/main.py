@@ -280,9 +280,12 @@ class MainModel(QtCore.QObject):
         # Do not allow going into index or worktree mode when amending.
         if self.is_amend_mode() and mode != self.mode_none:
             return
-        # We cannot amend in the middle of git cherry-pick, git am or git merge.
+        # We cannot amend in the middle of git cherry-pick, git am, git rebase or git merge.
         if (
-            self.is_cherry_picking or self.is_merging or self.is_applying_patch
+            self.is_cherry_picking
+            or self.is_merging
+            or self.is_rebasing
+            or self.is_applying_patch
         ) and mode == self.mode_amend:
             mode = self.mode
 
@@ -430,7 +433,10 @@ class MainModel(QtCore.QObject):
         self.is_rebasing = rebase_merge and self.context.ops.exists(rebase_merge)
         self.is_applying_patch = rebase_apply and self.context.ops.exists(rebase_apply)
         if self.mode == self.mode_amend and (
-            self.is_merging or self.is_cherry_picking or self.is_applying_patch
+            self.is_merging
+            or self.is_cherry_picking
+            or self.is_rebasing
+            or self.is_applying_patch
         ):
             self.set_mode(self.mode_none)
 

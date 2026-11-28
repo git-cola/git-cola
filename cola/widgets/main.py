@@ -1523,7 +1523,7 @@ def _get_commitdock_tooltip(context):
     is_merging = context.model.is_merging
     is_rebasing = context.model.is_rebasing
     is_applying_patch = context.model.is_applying_patch
-    is_cherry_picking = context.model.is_rebasing
+    is_cherry_picking = context.model.is_cherry_picking
 
     msg = N_('Repository: %s') % curdir
     msg += '\n'
